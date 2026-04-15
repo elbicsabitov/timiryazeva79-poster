@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Статистика — Большой Цифровой</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #1e1f23;
+    color: #f5f5f0;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 64px;
+    background: #27282c;
+    border-right: 1px solid #3a3b3f;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    transition: width 200ms ease;
+    overflow: hidden;
+  }
+  .sidebar:hover {
+    width: 240px;
+  }
+  .sidebar-overlay {
+    display: none;
+  }
+  .sidebar:hover ~ .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 49;
+  }
+
+  .sidebar-logo {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    border-bottom: 1px solid #3a3b3f;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sidebar-logo .logo-icon {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background: #f5f5f0;
+    color: #1e1f23;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: -0.5px;
+  }
+  .sidebar-logo .logo-text {
+    margin-left: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    color: #f5f5f0;
+  }
+  .sidebar:hover .logo-text {
+    opacity: 1;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: #b5b6b0;
+    text-decoration: none;
+    transition: background 120ms ease, color 120ms ease;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .nav-item:hover {
+    background: #2f3035;
+    color: #f5f5f0;
+  }
+  .nav-item.active {
+    color: #f5f5f0;
+    background: #2f3035;
+  }
+  .nav-item .nav-icon {
+    width: 24px;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-item .nav-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .nav-item .nav-label {
+    margin-left: 12px;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .sidebar:hover .nav-label {
+    opacity: 1;
+  }
+
+  .sidebar-user {
+    border-top: 1px solid #3a3b3f;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 9999px;
+    background: #3a3b3f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    color: #b5b6b0;
+  }
+  .user-name {
+    margin-left: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #b5b6b0;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .sidebar:hover .user-name {
+    opacity: 1;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 64px;
+    padding: 32px 40px;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #f5f5f0;
+  }
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .date-input {
+    background: #27282c;
+    border: 1px solid #3a3b3f;
+    color: #f5f5f0;
+    padding: 7px 12px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 120ms ease;
+  }
+  .date-input:focus {
+    border-color: #7d7e78;
+  }
+  .date-sep {
+    color: #7d7e78;
+    font-size: 13px;
+  }
+  .btn-primary {
+    background: #f5f5f0;
+    color: #1e1f23;
+    border: none;
+    padding: 7px 18px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 120ms ease;
+  }
+  .btn-primary:hover {
+    opacity: 0.88;
+  }
+
+  /* Filter tabs */
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    background: #27282c;
+    border-radius: 6px;
+    padding: 4px;
+    width: fit-content;
+  }
+  .tab {
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #b5b6b0;
+    cursor: pointer;
+    transition: all 120ms ease;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+  .tab:hover {
+    color: #f5f5f0;
+  }
+  .tab.active {
+    background: #2f3035;
+    color: #f5f5f0;
+  }
+
+  /* Table */
+  .table-wrap {
+    background: #27282c;
+    border: 1px solid #3a3b3f;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #7d7e78;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #3a3b3f;
+    background: #2f3035;
+  }
+  tbody td {
+    padding: 12px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid #3a3b3f;
+    color: #f5f5f0;
+  }
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+  tbody tr:hover {
+    background: #2f3035;
+  }
+
+  .campaign-name {
+    color: #f5f5f0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 120ms ease;
+  }
+  .campaign-name:hover {
+    color: #F54E00;
+  }
+
+  .status-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .status-active {
+    background: rgba(72, 187, 120, 0.15);
+    color: #68d391;
+  }
+  .status-planned {
+    background: rgba(190, 178, 100, 0.15);
+    color: #d4c95a;
+  }
+  .status-done {
+    background: rgba(160, 160, 155, 0.12);
+    color: #7d7e78;
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid #3a3b3f;
+    background: #27282c;
+  }
+  .pagination-info {
+    font-size: 13px;
+    color: #7d7e78;
+  }
+  .pagination-controls {
+    display: flex;
+    gap: 4px;
+  }
+  .page-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #3a3b3f;
+    background: none;
+    color: #b5b6b0;
+    font-family: inherit;
+    transition: all 120ms ease;
+  }
+  .page-btn:hover {
+    background: #2f3035;
+    color: #f5f5f0;
+  }
+  .page-btn.active {
+    background: #f5f5f0;
+    color: #1e1f23;
+    border-color: #f5f5f0;
+  }
+  .page-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">БЦ</div>
+    <span class="logo-text">Большой Цифровой</span>
+  </div>
+  <div class="sidebar-nav">
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+      <span class="nav-label">Рекламный кабинет</span>
+    </a>
+    <a class="nav-item active" href="#">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+      <span class="nav-label">Статистика</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      <span class="nav-label">Wordstat</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 10l-.75-.07A4.001 4.001 0 0 1 12 2z"/><path d="M9 14h6l1 8H8l1-8z"/></svg></span>
+      <span class="nav-label">ИИ</span>
+    </a>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar">ЭС</div>
+    <span class="user-name">Элбик С.</span>
+  </div>
+</nav>
+<div class="sidebar-overlay"></div>
+
+<!-- Main -->
+<div class="main">
+  <div class="page-header">
+    <h1 class="page-title">Статистика</h1>
+    <div class="header-controls">
+      <input type="date" class="date-input" value="2026-03-01">
+      <span class="date-sep">&mdash;</span>
+      <input type="date" class="date-input" value="2026-04-15">
+      <button class="btn-primary">Применить</button>
+    </div>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="tab active">Все</button>
+    <button class="tab">Активные</button>
+    <button class="tab">Запланированные</button>
+    <button class="tab">Завершенные</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Кампания</th>
+          <th>Статус</th>
+          <th>Показы</th>
+          <th>Клики</th>
+          <th>CTR</th>
+          <th>Расход, ₸</th>
+          <th>Конверсии</th>
+          <th>CPA, ₸</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#" class="campaign-name">Корма для собак — Поиск</a></td>
+          <td><span class="status-pill status-active">Активна</span></td>
+          <td class="num">184 230</td>
+          <td class="num">4 812</td>
+          <td class="num">2.61%</td>
+          <td class="num">312 400</td>
+          <td class="num">87</td>
+          <td class="num">3 591</td>
+        </tr>
+        <tr>
+          <td><a href="#" class="campaign-name">Ветаптека — Ремаркетинг</a></td>
+          <td><span class="status-pill status-active">Активна</span></td>
+          <td class="num">97 650</td>
+          <td class="num">2 341</td>
+          <td class="num">2.40%</td>
+          <td class="num">156 800</td>
+          <td class="num">52</td>
+          <td class="num">3 015</td>
+        </tr>
+        <tr>
+          <td><a href="#" class="campaign-name">Груминг Алматы — РСЯ</a></td>
+          <td><span class="status-pill status-planned">Запланирована</span></td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">0</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+        </tr>
+        <tr>
+          <td><a href="#" class="campaign-name">Акция Весна — Баннер</a></td>
+          <td><span class="status-pill status-done">Завершена</span></td>
+          <td class="num">241 500</td>
+          <td class="num">5 120</td>
+          <td class="num">2.12%</td>
+          <td class="num">420 000</td>
+          <td class="num">104</td>
+          <td class="num">4 038</td>
+        </tr>
+        <tr>
+          <td><a href="#" class="campaign-name">Бренд — Поиск Астана</a></td>
+          <td><span class="status-pill status-active">Активна</span></td>
+          <td class="num">63 780</td>
+          <td class="num">3 945</td>
+          <td class="num">6.18%</td>
+          <td class="num">89 200</td>
+          <td class="num">128</td>
+          <td class="num">697</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span class="pagination-info">1 &ndash; 5 из 5 кампаний</span>
+      <div class="pagination-controls">
+        <button class="page-btn" disabled>&lsaquo;</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn" disabled>&rsaquo;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelector('.tab.active').classList.remove('active');
+      tab.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

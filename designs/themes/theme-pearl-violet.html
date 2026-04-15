@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>twinr. — Pearl Violet — Lavender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== THEME TOKENS ===== */
+:root {
+  --bg-page: #F2EEFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8F5FF;
+  --bg-elevated: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+  --border: #E0D6F5;
+  --border-light: #E8E0F8;
+  --text-primary: #1a1a2e;
+  --text-secondary: #6B6185;
+  --text-muted: #9B8FB8;
+  --accent: #7C3AED;
+  --accent-hover: #6D28D9;
+  --accent-bg: rgba(124,58,237,0.08);
+  --success: #059669;
+  --success-bg: rgba(5,150,105,0.08);
+  --warning: #D97706;
+  --warning-bg: rgba(217,119,6,0.08);
+  --danger: #DC2626;
+  --shadow-card: 0 1px 4px rgba(124,58,237,0.06);
+  --shadow-elevated: 0 4px 16px rgba(124,58,237,0.08);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 16px;
+  --sidebar-width: 64px;
+  --sidebar-expanded: 240px;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --bg-page: #0E0A1A;
+  --bg-card: #1A1528;
+  --bg-card-hover: #221C35;
+  --bg-elevated: #221C35;
+  --bg-input: #1A1528;
+  --bg-sidebar: #0A0714;
+  --border: #2D2545;
+  --border-light: rgba(255,255,255,0.06);
+  --text-primary: #F2EEFF;
+  --text-secondary: #A89CC0;
+  --text-muted: #6B5F85;
+  --accent: #A78BFA;
+  --accent-hover: #C4B5FD;
+  --accent-bg: rgba(167,139,250,0.15);
+  --success: #34d399;
+  --success-bg: rgba(52,211,153,0.12);
+  --warning: #fbbf24;
+  --warning-bg: rgba(251,191,36,0.12);
+  --danger: #f87171;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-elevated: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+input::placeholder { color: var(--text-muted); }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-accent:hover { background: var(--accent-hover); }
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+.btn-full { width: 100%; }
+.btn-lg { padding: 12px 28px; font-size: 15px; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.25s ease;
+  overflow: hidden;
+}
+.sidebar:hover { width: var(--sidebar-expanded); }
+.sidebar.hidden { display: none; }
+
+.sidebar-header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  border-bottom: 1px solid var(--border-light);
+}
+.sidebar-logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.sidebar-logo .full { display: none; }
+.sidebar:hover .sidebar-logo .short { display: none; }
+.sidebar:hover .sidebar-logo .full { display: inline; }
+.sidebar-subtitle {
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  display: none;
+  margin-top: 2px;
+}
+.sidebar:hover .sidebar-subtitle { display: block; }
+.sidebar-logo-block { display: flex; flex-direction: column; }
+
+.theme-toggle {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: all var(--transition);
+  opacity: 0;
+  pointer-events: none;
+}
+.sidebar:hover .theme-toggle { opacity: 1; pointer-events: auto; }
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+.sidebar-nav {
+  flex: 1;
+  padding: 8px 0;
+  overflow-y: auto;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  font-size: 14px;
+  position: relative;
+}
+.nav-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+.nav-item.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: var(--accent-bg);
+}
+.nav-icon { font-size: 18px; flex-shrink: 0; width: 24px; text-align: center; }
+.nav-label { overflow: hidden; opacity: 0; transition: opacity 0.15s ease; }
+.sidebar:hover .nav-label { opacity: 1; }
+.nav-item.admin-only { display: none; }
+.nav-item.admin-only.show { display: flex; }
+
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.user-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.user-info { overflow: hidden; opacity: 0; transition: opacity 0.15s ease; }
+.sidebar:hover .user-info { opacity: 1; }
+.user-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.user-logout {
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.user-logout:hover { color: var(--danger); }
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  margin-left: var(--sidebar-width);
+  padding: 32px;
+  min-height: 100vh;
+  transition: margin-left var(--transition);
+}
+.main-content.no-sidebar { margin-left: 0; }
+
+/* ===== PROMO LANDING ===== */
+.promo {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  text-align: center;
+  padding: 40px 20px;
+}
+.promo-logo {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+.promo h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  max-width: 700px;
+}
+.promo-subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+  max-width: 500px;
+}
+.promo-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 900px;
+  width: 100%;
+  margin-bottom: 48px;
+}
+.promo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: left;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.promo-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.promo-card-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+  display: block;
+}
+.promo-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.promo-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.promo-actions {
+  display: flex;
+  gap: 12px;
+}
+.promo-actions .btn-outline {
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+.promo-actions .btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent-hover);
+  background: var(--accent-bg);
+}
+
+/* ===== AUTH CARDS ===== */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-page);
+  padding: 40px 20px;
+}
+.auth-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-elevated);
+}
+.auth-card.wide { max-width: 640px; }
+.auth-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.auth-logo-text {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.auth-logo-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.form-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.password-wrapper {
+  position: relative;
+}
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+.password-toggle:hover { color: var(--text-secondary); }
+.auth-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.auth-link a { color: var(--accent); font-weight: 500; }
+.auth-link a:hover { color: var(--accent-hover); }
+.demo-links {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.demo-link {
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.demo-link:hover { color: var(--accent); }
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.checkbox-row input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== EMPTY PAGES ===== */
+.page { display: none; }
+.page-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  font-size: 18px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ===== ADDITIONAL VARS ===== */
+:root {
+  --error: #DC2626;
+}
+[data-theme="dark"] {
+  --error: #f87171;
+}
+
+/* ===== FORM ELEMENTS (fragments) ===== */
+.form-input, .form-select {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition);
+  box-sizing: border-box;
+}
+.form-select { cursor: pointer; }
+.form-input:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .promo h1 { font-size: 28px; }
+  .promo-features { grid-template-columns: 1fr; max-width: 400px; }
+  .form-row { grid-template-columns: 1fr; }
+  .auth-card.wide { max-width: 420px; }
+  .main-content { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar hidden" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo-block">
+      <div class="sidebar-logo"><span class="short">t.</span><span class="full">twinr.</span></div>
+      <div class="sidebar-subtitle">Большой Цифровой</div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">&#9728;</button>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item admin-only" data-page="page-advertisers" onclick="navigate('page-advertisers')">
+      <span class="nav-icon">&#128202;</span><span class="nav-label">Рекламный кабинет</span>
+    </div>
+    <div class="nav-item" data-page="page-stats" onclick="navigate('page-stats')">
+      <span class="nav-icon">&#128200;</span><span class="nav-label">Статистика</span>
+    </div>
+    <div class="nav-item" data-page="page-wordstat" onclick="navigate('page-wordstat')">
+      <span class="nav-icon">&#128269;</span><span class="nav-label">Wordstat</span>
+    </div>
+    <div class="nav-item" data-page="page-ai" onclick="navigate('page-ai')">
+      <span class="nav-icon">&#129302;</span><span class="nav-label">ИИ</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-avatar" id="userAvatar">U</div>
+    <div class="user-info">
+      <div class="user-name" id="userName">User</div>
+      <div class="user-logout" onclick="logout()">Выйти</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== MAIN WRAPPER ===== -->
+<div class="main-content no-sidebar" id="mainContent">
+
+  <!-- PROMO LANDING -->
+  <div class="page" id="page-promo" style="display:block">
+    <div class="promo">
+      <div class="promo-logo">twinr.</div>
+      <h1>Рекламный кабинет Большой Цифровой</h1>
+      <p class="promo-subtitle">Аналитика радиорекламы нового поколения</p>
+      <div class="promo-features">
+        <div class="promo-card">
+          <span class="promo-card-icon">&#128200;</span>
+          <h3>Статистика в реальном времени</h3>
+          <p>Прослушивания, уникальные слушатели, дослушивания — все метрики в одном месте.</p>
+        </div>
+        <div class="promo-card">
+          <span class="promo-card-icon">&#127919;</span>
+          <h3>Управление кампаниями</h3>
+          <p>Создание, привязка роликов, отслеживание эффективности в реальном времени.</p>
+        </div>
+        <div class="promo-card">
+          <span class="promo-card-icon">&#129302;</span>
+          <h3>ИИ-аналитика</h3>
+          <p>Транскрипция роликов, ключевые слова, Wordstat — интеллектуальный анализ рекламы.</p>
+        </div>
+      </div>
+      <div class="promo-actions">
+        <button class="btn btn-outline btn-lg" onclick="navigate('page-login')">Войти</button>
+        <button class="btn btn-accent btn-lg" onclick="navigate('page-register')">Зарегистрироваться</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="page" id="page-login">
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="auth-logo-text">twinr.</div>
+          <div class="auth-logo-sub">Большой Цифровой</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" placeholder="email@company.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Пароль</label>
+          <div class="password-wrapper">
+            <input type="password" id="loginPassword" placeholder="Введите пароль">
+            <button class="password-toggle" onclick="togglePassword('loginPassword', this)" type="button">&#128065;</button>
+          </div>
+        </div>
+        <button class="btn btn-accent btn-full" onclick="showApp('user')">Войти</button>
+        <div class="auth-link">Нет аккаунта? <a href="#" onclick="navigate('page-register'); return false;">Зарегистрироваться</a></div>
+        <div class="demo-links">
+          <span class="demo-link" onclick="showApp('admin')">Войти как Admin</span>
+          <span class="demo-link" onclick="showApp('user')">Войти как User</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTRATION -->
+  <div class="page" id="page-register">
+    <div class="auth-wrapper">
+      <div class="auth-card wide">
+        <div class="auth-logo">
+          <div class="auth-logo-text">twinr.</div>
+          <div class="auth-logo-sub">Большой Цифровой</div>
+        </div>
+        <div class="form-row">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" placeholder="email@company.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Пароль *</label>
+              <div class="password-wrapper">
+                <input type="password" id="regPassword" placeholder="Минимум 8 символов">
+                <button class="password-toggle" onclick="togglePassword('regPassword', this)" type="button">&#128065;</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Подтвердите пароль *</label>
+              <div class="password-wrapper">
+                <input type="password" id="regPasswordConfirm" placeholder="Повторите пароль">
+                <button class="password-toggle" onclick="togglePassword('regPasswordConfirm', this)" type="button">&#128065;</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <label class="form-label">Название компании *</label>
+              <input type="text" placeholder="ООО «Компания»">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ИНН</label>
+              <input type="text" placeholder="10 или 12 цифр">
+              <div class="form-hint">Данные подгрузятся из DaData</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Телефон</label>
+              <input type="tel" placeholder="+7 (___) ___-__-__">
+            </div>
+          </div>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="terms">
+          <label for="terms">Согласен с условиями использования</label>
+        </div>
+        <button class="btn btn-accent btn-full" onclick="showApp('user')">Зарегистрироваться</button>
+        <div class="auth-link">Уже есть аккаунт? <a href="#" onclick="navigate('page-login'); return false;">Войти</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPTY CONTENT PAGES -->
+  <div class="page" id="page-stats">
+<div class="page-header">
+  <h2 style="color: var(--text-primary); margin: 0 0 20px 0; font-size: 1.5rem;">Статистика</h2>
+</div>
+
+<div class="kpi-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid; border-image: linear-gradient(90deg, var(--accent), var(--accent-hover, var(--accent))) 1;">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Прослушивания</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">175 930</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Уникальные</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">120 240</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Дослушали до конца</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">67%</div>
+    <div style="margin-top: 8px; height: 6px; background: var(--bg-elevated); border-radius: 3px; overflow: hidden;">
+      <div style="width: 67%; height: 100%; background: var(--accent); border-radius: 3px;"></div>
+    </div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Изменение</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--success);">
+      <span style="font-size: 1rem;">&#9650;</span> +5.2%
+    </div>
+  </div>
+</div>
+
+<div class="filter-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+  <label style="color: var(--text-secondary); font-size: 0.85rem;">с</label>
+  <input type="date" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); font-size: 0.9rem;">
+  <label style="color: var(--text-secondary); font-size: 0.85rem;">по</label>
+  <input type="date" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); font-size: 0.9rem;">
+  <button style="padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">Применить</button>
+</div>
+
+<div class="tabs" style="display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--border);">
+  <button class="tab active" style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid var(--accent); margin-bottom: -2px; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 0.9rem;">Все</button>
+  <button class="tab" style="padding: 10px 20px; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Активные</button>
+  <button class="tab" style="padding: 10px 20px; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Запланированные</button>
+  <button class="tab" style="padding: 10px 20px; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Завершенные</button>
+</div>
+
+<div class="data-table-wrapper" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+  <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+    <thead>
+      <tr style="background: var(--bg-elevated);">
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Название кампании</th>
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Статус</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Прослушивания (сумм.)</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. прослушивания (сумм.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Летняя акция 2026</a></td>
+        <td style="padding: 14px 16px;"><span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: var(--success-bg); color: var(--success);">Активна</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">42 560</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">28 340</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Весна 2026</a></td>
+        <td style="padding: 14px 16px;"><span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: var(--bg-elevated); color: var(--text-secondary);">Завершена</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">31 200</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">21 780</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Зима 2025-2026</a></td>
+        <td style="padding: 14px 16px;"><span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: var(--bg-elevated); color: var(--text-secondary);">Завершена</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">58 100</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">39 450</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Новый год 2026</a></td>
+        <td style="padding: 14px 16px;"><span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: var(--warning-bg); color: var(--warning);">Запланирована</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">24 830</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">17 560</td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Осень 2025</a></td>
+        <td style="padding: 14px 16px;"><span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: var(--bg-elevated); color: var(--text-secondary);">Завершена</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">19 240</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">13 110</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination" style="display: flex; gap: 6px; justify-content: center; margin-top: 20px;">
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; font-size: 0.9rem;">1</button>
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">2</button>
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">3</button>
+  <span style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">...</span>
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">10</button>
+</div>
+  </div>
+  <div class="page" id="page-stats-clips">
+<div class="page-header" style="margin-bottom: 20px;">
+  <div class="breadcrumbs" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+    <a onclick="navigate('page-stats')" style="color: var(--accent); cursor: pointer; text-decoration: none;">Статистика</a>
+    <span style="margin: 0 6px;">&gt;</span>
+    <span style="color: var(--text-secondary);">Кампании</span>
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <h2 style="color: var(--text-primary); margin: 0; font-size: 1.5rem;">Кампания: &laquo;Весна 2026&raquo;</h2>
+    <button onclick="navigate('page-stats')" style="padding: 8px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">&larr; Назад к кампаниям</button>
+  </div>
+</div>
+
+<div class="data-table-wrapper" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+  <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+    <thead>
+      <tr style="background: var(--bg-elevated);">
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">ID ролика</th>
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Название ролика</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Прослушивания</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. прослушивания</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-003</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Весна_15с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">12 450</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">8 230</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-005</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Весна_30с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">9 870</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">6 140</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-007</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Акция_45с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">8 880</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">5 960</td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-009</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Скидка_30с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">5 240</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">3 810</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  </div>
+  <div class="page" id="page-stats-detail">
+<div class="page-header" style="margin-bottom: 20px;">
+  <div class="breadcrumbs" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+    <a onclick="navigate('page-stats')" style="color: var(--accent); cursor: pointer; text-decoration: none;">Статистика</a>
+    <span style="margin: 0 6px;">&gt;</span>
+    <a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none;">Кампания</a>
+    <span style="margin: 0 6px;">&gt;</span>
+    <span style="color: var(--text-secondary);">Ролик</span>
+  </div>
+  <h2 style="color: var(--text-primary); margin: 0; font-size: 1.5rem;">Ролик: Москва_Весна_30с</h2>
+</div>
+
+<div class="kpi-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid; border-image: linear-gradient(90deg, var(--accent), var(--accent-hover, var(--accent))) 1;">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Прослушивания</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">12 450</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Уникальные</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">8 230</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Дослушали до конца</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">67%</div>
+    <div style="margin-top: 8px; height: 6px; background: var(--bg-elevated); border-radius: 3px; overflow: hidden;">
+      <div style="width: 67%; height: 100%; background: var(--accent); border-radius: 3px;"></div>
+    </div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Изменение</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--success);">
+      <span style="font-size: 1rem;">&#9650;</span> +5.2%
+    </div>
+  </div>
+</div>
+
+<div class="data-table-wrapper" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto;">
+  <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.85rem; white-space: nowrap;">
+    <thead>
+      <tr style="background: var(--bg-elevated);">
+        <th style="text-align: left; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Дата выхода</th>
+        <th style="text-align: left; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Время</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Просл.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Досл. до к.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Досл. %</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. нач.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. кон.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Изм. %</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Просл. (средн.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">15.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">08:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 540</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 680</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 720</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">67%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 100</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 420</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+5.2%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 490</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">16.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">10:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 380</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 590</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 600</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">67%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 980</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 350</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+3.1%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 340</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">17.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">12:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 610</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 740</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 780</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">68%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 200</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 490</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+6.4%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 560</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">18.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">14:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 920</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 220</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 950</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">66%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 410</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 610</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--danger); font-weight: 500;">-1.2%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 710</td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 12px; color: var(--text-primary);">19.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">16:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 000</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 440</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 350</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">67%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 890</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 280</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+2.8%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 960</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="margin-top: 20px;">
+  <a href="#" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 500;">Скачать mp3</a>
+</div>
+  </div>
+  <div class="page" id="page-advertisers">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0;">Рекламодатели</h1>
+  <button class="btn-primary" onclick="navigate('page-add-advertiser')" style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Добавить рекламодателя</button>
+</div>
+
+<div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--accent);color:#fff;font-size:13px;cursor:pointer;">Все</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">ООО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">АО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">ЗАО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">ИП</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">НКО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">АНО</button>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;">
+  <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+    <thead>
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ИНН</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Форма</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Кампании</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Телефон</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigate('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">ООО "Медиа Групп"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7701234567</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ООО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">3</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 123-45-67</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">info@mediagroup.ru</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigate('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">АО "РМГ"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7709876543</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">АО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">7</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 987-65-43</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">adv@rmg.ru</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigate('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">ИП Иванов А.С.</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">772345678901</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ИП</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">1</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (916) 555-12-34</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ivanov@mail.ru</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigate('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">ООО "Радио Москвы"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7712345678</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ООО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">12</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 111-22-33</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">info@radiomsk.ru</td>
+      </tr>
+      <tr style="transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigate('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">НКО "Цифровые медиа"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7718765432</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">НКО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">2</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 444-55-66</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">contact@digmedia.org</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  </div>
+  <div class="page" id="page-add-advertiser">
+<div style="margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0 0 8px 0;">Добавить рекламодателя</h1>
+  <div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);">
+    <a href="#" onclick="navigate('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Новый</span>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:32px;max-width:700px;margin:0 auto;">
+  <form onsubmit="return false;">
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Название <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">ИНН <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+      <p style="margin:6px 0 0;font-size:12px;color:var(--accent);">Данные подгрузятся автоматически из DaData</p>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">КПП <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">ОГРН</label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Расчетный счет <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Организационная форма <span style="color:var(--accent);">*</span></label>
+      <select style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;cursor:pointer;">
+        <option value="">Выберите форму</option>
+        <option value="ooo">ООО</option>
+        <option value="ao">АО</option>
+        <option value="zao">ЗАО</option>
+        <option value="ip">ИП</option>
+        <option value="nko">НКО</option>
+        <option value="ano">АНО</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Адрес</label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Телефон</label>
+      <input type="text" placeholder="+7 (___) ___-__-__" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:28px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Email</label>
+      <input type="email" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="navigate('page-advertisers')" type="button" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-primary);font-size:14px;font-weight:600;cursor:pointer;">Отмена</button>
+      <button class="btn-primary" type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Сохранить</button>
+    </div>
+  </form>
+</div>
+  </div>
+  <div class="page" id="page-advertiser-details">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0;">ООО "Медиа Групп"</h1>
+  <button class="btn-outline" style="padding:10px 20px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;">Редактировать</button>
+</div>
+<div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);margin-bottom:24px;">
+  <a href="#" onclick="navigate('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+  <span style="margin:0 6px;">&gt;</span>
+  <span style="color:var(--text-secondary);">ООО "Медиа Групп"</span>
+</div>
+
+<div class="tabs" style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px;">
+  <button class="tab-btn" data-tab="tab-requisites" onclick="switchTab(this,'tab-requisites')" style="padding:12px 20px;border:none;background:transparent;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid var(--accent);margin-bottom:-2px;">Реквизиты</button>
+  <button class="tab-btn" data-tab="tab-campaigns" onclick="switchTab(this,'tab-campaigns')" style="padding:12px 20px;border:none;background:transparent;color:var(--text-muted);font-size:14px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;">Рекламные кампании</button>
+  <button class="tab-btn" data-tab="tab-clips" onclick="switchTab(this,'tab-clips')" style="padding:12px 20px;border:none;background:transparent;color:var(--text-muted);font-size:14px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;">Рекламные ролики</button>
+</div>
+
+<!-- Tab 1: Реквизиты -->
+<div class="tab-content" id="tab-requisites" style="display:block;">
+  <div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:28px 32px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;">
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Название</div>
+        <div style="font-size:14px;color:var(--text-primary);font-weight:500;">ООО "Медиа Групп"</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">ИНН</div>
+        <div style="font-size:14px;color:var(--text-primary);">7701234567</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">КПП</div>
+        <div style="font-size:14px;color:var(--text-primary);">770101001</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">ОГРН</div>
+        <div style="font-size:14px;color:var(--text-primary);">1027700123456</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Расчетный счет</div>
+        <div style="font-size:14px;color:var(--text-primary);">40702810900000012345</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Орг. форма</div>
+        <div style="font-size:14px;color:var(--text-primary);">ООО</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Адрес</div>
+        <div style="font-size:14px;color:var(--text-primary);">г. Москва, ул. Тверская, д. 12, оф. 301</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Телефон</div>
+        <div style="font-size:14px;color:var(--text-primary);">+7 (495) 123-45-67</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Email</div>
+        <div style="font-size:14px;"><a href="mailto:info@mediagroup.ru" style="color:var(--accent);text-decoration:none;">info@mediagroup.ru</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 2: Рекламные кампании -->
+<div class="tab-content" id="tab-campaigns" style="display:none;">
+  <div style="margin-bottom:16px;text-align:right;">
+    <button class="btn-primary" onclick="navigate('page-create-campaign')" style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Создать кампанию</button>
+  </div>
+  <div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;">
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ID</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название кампании</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Описание</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Статус</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Даты</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);">101</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Летняя акция 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Летняя рекламная кампания</td>
+          <td style="padding:12px 16px;"><span style="display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--success-bg);color:var(--success);">Активна</span></td>
+          <td style="padding:12px 16px;color:var(--text-secondary);white-space:nowrap;">01.06.2026 — 31.08.2026</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);">102</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Осенняя 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Реклама в осенний сезон</td>
+          <td style="padding:12px 16px;"><span style="display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--warning-bg);color:var(--warning);">Запланирована</span></td>
+          <td style="padding:12px 16px;color:var(--text-secondary);white-space:nowrap;">01.09.2026 — 30.11.2026</td>
+        </tr>
+        <tr onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);">100</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Весна 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Весенняя рекламная акция</td>
+          <td style="padding:12px 16px;"><span style="display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--bg-page);color:var(--text-muted);">Завершена</span></td>
+          <td style="padding:12px 16px;color:var(--text-secondary);white-space:nowrap;">01.03.2026 — 31.05.2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Tab 3: Рекламные ролики -->
+<div class="tab-content" id="tab-clips" style="display:none;">
+  <div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;">
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ID ролика</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название ролика</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Кампания</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Дата выхода</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Прослушивания</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-001</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Москва_2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Летняя акция 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">15.06.2026</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">4 250</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-002</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Промо_30с</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Летняя акция 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">22.06.2026</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">3 180</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-003</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Весна_15с</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Весна 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">10.04.2026</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">5 020</td>
+        </tr>
+        <tr onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-004</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Зима_45с</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Зимняя 2025</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">05.12.2025</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">7 640</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+  </div>
+  <div class="page" id="page-create-campaign">
+<div style="margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0 0 8px 0;">Создание рекламной кампании</h1>
+  <div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);">
+    <a href="#" onclick="navigate('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <a href="#" onclick="navigate('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;">ООО "Медиа Групп"</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Кампании</span>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Новая кампания</span>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:32px;max-width:700px;margin:0 auto;">
+  <form onsubmit="return false;">
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Название кампании <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:28px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Описание</label>
+      <textarea rows="4" placeholder="Опишите цели и особенности кампании" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;resize:vertical;font-family:inherit;"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="navigate('page-advertiser-details')" type="button" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-primary);font-size:14px;font-weight:600;cursor:pointer;">Отмена</button>
+      <button class="btn-primary" type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Создать</button>
+    </div>
+  </form>
+</div>
+  </div>
+  <div class="page" id="page-bind-clip">
+<div style="margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0 0 8px 0;">Привязать ролик к кампании</h1>
+  <div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);">
+    <a href="#" onclick="navigate('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <a href="#" onclick="navigate('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;">ООО "Медиа Групп"</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Кампания</span>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Привязать ролик</span>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:24px 28px;margin-bottom:20px;">
+  <div style="display:flex;gap:12px;align-items:flex-end;">
+    <div class="form-group" style="flex:1;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">ID ролика</label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <button class="btn-primary" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;white-space:nowrap;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Найти</button>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:24px 28px;margin-bottom:20px;">
+  <div style="margin-bottom:8px;">
+    <span style="font-size:13px;color:var(--text-muted);">Название:</span>
+    <span style="font-size:14px;color:var(--text-primary);font-weight:500;margin-left:8px;">Ролик_Москва_2026</span>
+  </div>
+  <div style="margin-bottom:16px;">
+    <span style="font-size:13px;color:var(--text-muted);">Длительность:</span>
+    <span style="font-size:14px;color:var(--text-primary);font-weight:500;margin-left:8px;">0:34</span>
+  </div>
+  <hr style="border:none;border-top:1px solid var(--border);margin:0;" />
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;margin-bottom:20px;">
+  <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+    <thead>
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:center;padding:14px 16px;width:40px;color:var(--text-muted);font-weight:600;font-size:12px;"></th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ID</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Дата выхода</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;text-align:center;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;" /></td>
+        <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-001</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Москва_2026</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">15.06.2026</td>
+      </tr>
+      <tr onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;text-align:center;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;" /></td>
+        <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-002</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Промо_30с</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">22.06.2026</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="text-align:right;">
+  <button class="btn-primary" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Привязать выбранные</button>
+</div>
+  </div>
+  <div class="page" id="page-wordstat">
+    <div class="page-placeholder">Wordstat — в разработке</div>
+  </div>
+  <div class="page" id="page-ai">
+    <div class="page-placeholder">ИИ-аналитика — в разработке</div>
+  </div>
+
+</div>
+
+<script>
+/* ===== STATE ===== */
+let currentRole = null;
+let currentPage = 'page-promo';
+
+/* ===== NAVIGATION ===== */
+function navigate(pageId) {
+  document.querySelectorAll('.page').forEach(function(p) { p.style.display = 'none'; });
+  var target = document.getElementById(pageId);
+  if (target) {
+    target.style.display = 'block';
+    currentPage = pageId;
+  }
+  // Update active nav
+  document.querySelectorAll('.nav-item').forEach(function(item) {
+    item.classList.toggle('active', item.getAttribute('data-page') === pageId);
+  });
+}
+
+/* ===== THEME ===== */
+function toggleTheme() {
+  var html = document.documentElement;
+  var current = html.getAttribute('data-theme');
+  var next = current === 'dark' ? '' : 'dark';
+  if (next) { html.setAttribute('data-theme', next); } else { html.removeAttribute('data-theme'); }
+  var btn = document.getElementById('themeToggle');
+  btn.innerHTML = next === 'dark' ? '&#9790;' : '&#9728;';
+}
+
+/* ===== PASSWORD TOGGLE ===== */
+function togglePassword(inputId, btn) {
+  var input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.innerHTML = '&#128064;';
+  } else {
+    input.type = 'password';
+    btn.innerHTML = '&#128065;';
+  }
+}
+
+/* ===== AUTH FLOW ===== */
+function showApp(role) {
+  currentRole = role;
+  // Show sidebar
+  document.getElementById('sidebar').classList.remove('hidden');
+  // Adjust main content
+  document.getElementById('mainContent').classList.remove('no-sidebar');
+  // Admin nav items
+  document.querySelectorAll('.nav-item.admin-only').forEach(function(item) {
+    item.classList.toggle('show', role === 'admin');
+  });
+  // Set user info
+  if (role === 'admin') {
+    document.getElementById('userName').textContent = 'Администратор';
+    document.getElementById('userAvatar').textContent = 'A';
+  } else {
+    document.getElementById('userName').textContent = 'Пользователь';
+    document.getElementById('userAvatar').textContent = 'П';
+  }
+  // Navigate to default page
+  navigate(role === 'admin' ? 'page-advertisers' : 'page-stats');
+}
+
+/* ===== TAB SWITCHING ===== */
+function switchTab(btn, tabId) {
+  document.querySelectorAll('#page-advertiser-details .tab-content').forEach(function(el) { el.style.display = 'none'; });
+  document.querySelectorAll('#page-advertiser-details .tab-btn').forEach(function(el) {
+    el.style.color = 'var(--text-muted)';
+    el.style.fontWeight = '500';
+    el.style.borderBottom = '2px solid transparent';
+  });
+  document.getElementById(tabId).style.display = 'block';
+  btn.style.color = 'var(--accent)';
+  btn.style.fontWeight = '600';
+  btn.style.borderBottom = '2px solid var(--accent)';
+}
+
+function logout() {
+  currentRole = null;
+  document.getElementById('sidebar').classList.add('hidden');
+  document.getElementById('mainContent').classList.add('no-sidebar');
+  document.querySelectorAll('.nav-item.admin-only').forEach(function(item) {
+    item.classList.remove('show');
+  });
+  navigate('page-promo');
+}
+</script>
+</body>
+</html>

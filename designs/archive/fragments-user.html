@@ -1,0 +1,269 @@
+<!-- PAGE: page-stats -->
+<div class="page-header">
+  <h2 style="color: var(--text-primary); margin: 0 0 20px 0; font-size: 1.5rem;">Статистика</h2>
+</div>
+
+<div class="kpi-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid; border-image: linear-gradient(90deg, var(--accent), var(--accent-hover, var(--accent))) 1;">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Прослушивания</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">175 930</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Уникальные</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">120 240</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Дослушали до конца</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">67%</div>
+    <div style="margin-top: 8px; height: 6px; background: var(--bg-secondary, #e0e0e0); border-radius: 3px; overflow: hidden;">
+      <div style="width: 67%; height: 100%; background: var(--accent); border-radius: 3px;"></div>
+    </div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Изменение</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--success);">
+      <span style="font-size: 1rem;">&#9650;</span> +5.2%
+    </div>
+  </div>
+</div>
+
+<div class="filter-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+  <label style="color: var(--text-secondary); font-size: 0.85rem;">с</label>
+  <input type="date" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); font-size: 0.9rem;">
+  <label style="color: var(--text-secondary); font-size: 0.85rem;">по</label>
+  <input type="date" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); font-size: 0.9rem;">
+  <button style="padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">Применить</button>
+</div>
+
+<div class="tabs" style="display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--border);">
+  <button class="tab active" style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid var(--accent); margin-bottom: -2px; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 0.9rem;">Все</button>
+  <button class="tab" style="padding: 10px 20px; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Активные</button>
+  <button class="tab" style="padding: 10px 20px; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Запланированные</button>
+  <button class="tab" style="padding: 10px 20px; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Завершенные</button>
+</div>
+
+<div class="data-table-wrapper" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+  <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+    <thead>
+      <tr style="background: var(--bg-secondary, rgba(0,0,0,0.03));">
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Название кампании</th>
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Статус</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Прослушивания (сумм.)</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. прослушивания (сумм.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Летняя акция 2026</a></td>
+        <td style="padding: 14px 16px;"><span class="badge badge-success" style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success);">Активна</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">42 560</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">28 340</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Весна 2026</a></td>
+        <td style="padding: 14px 16px;"><span class="badge badge-muted" style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: color-mix(in srgb, var(--text-secondary) 15%, transparent); color: var(--text-secondary);">Завершена</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">31 200</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">21 780</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Зима 2025-2026</a></td>
+        <td style="padding: 14px 16px;"><span class="badge badge-muted" style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: color-mix(in srgb, var(--text-secondary) 15%, transparent); color: var(--text-secondary);">Завершена</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">58 100</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">39 450</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Новый год 2026</a></td>
+        <td style="padding: 14px 16px;"><span class="badge badge-warning" style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: color-mix(in srgb, var(--warning) 15%, transparent); color: var(--warning);">Запланирована</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">24 830</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">17 560</td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Осень 2025</a></td>
+        <td style="padding: 14px 16px;"><span class="badge badge-muted" style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: color-mix(in srgb, var(--text-secondary) 15%, transparent); color: var(--text-secondary);">Завершена</span></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">19 240</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">13 110</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination" style="display: flex; gap: 6px; justify-content: center; margin-top: 20px;">
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; font-size: 0.9rem;">1</button>
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">2</button>
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">3</button>
+  <span style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">...</span>
+  <button style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">10</button>
+</div>
+
+<!-- PAGE: page-stats-clips -->
+<div class="page-header" style="margin-bottom: 20px;">
+  <div class="breadcrumbs" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+    <a onclick="navigate('page-stats')" style="color: var(--accent); cursor: pointer; text-decoration: none;">Статистика</a>
+    <span style="margin: 0 6px;">&gt;</span>
+    <span style="color: var(--text-secondary);">Кампании</span>
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <h2 style="color: var(--text-primary); margin: 0; font-size: 1.5rem;">Кампания: &laquo;Весна 2026&raquo;</h2>
+    <button onclick="navigate('page-stats')" style="padding: 8px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">&larr; Назад к кампаниям</button>
+  </div>
+</div>
+
+<div class="data-table-wrapper" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+  <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+    <thead>
+      <tr style="background: var(--bg-secondary, rgba(0,0,0,0.03));">
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">ID ролика</th>
+        <th style="text-align: left; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Название ролика</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Прослушивания</th>
+        <th style="text-align: right; padding: 14px 16px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. прослушивания</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-003</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Весна_15с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">12 450</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">8 230</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-005</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Весна_30с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">9 870</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">6 140</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-007</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Акция_45с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">8 880</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">5 960</td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 16px; color: var(--text-secondary);">ROL-009</td>
+        <td style="padding: 14px 16px;"><a onclick="navigate('page-stats-detail')" style="color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500;">Ролик_Скидка_30с</a></td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">5 240</td>
+        <td style="padding: 14px 16px; text-align: right; color: var(--text-primary); font-weight: 500;">3 810</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PAGE: page-stats-detail -->
+<div class="page-header" style="margin-bottom: 20px;">
+  <div class="breadcrumbs" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+    <a onclick="navigate('page-stats')" style="color: var(--accent); cursor: pointer; text-decoration: none;">Статистика</a>
+    <span style="margin: 0 6px;">&gt;</span>
+    <a onclick="navigate('page-stats-clips')" style="color: var(--accent); cursor: pointer; text-decoration: none;">Кампания</a>
+    <span style="margin: 0 6px;">&gt;</span>
+    <span style="color: var(--text-secondary);">Ролик</span>
+  </div>
+  <h2 style="color: var(--text-primary); margin: 0; font-size: 1.5rem;">Ролик: Москва_Весна_30с</h2>
+</div>
+
+<div class="kpi-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid; border-image: linear-gradient(90deg, var(--accent), var(--accent-hover, var(--accent))) 1;">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Прослушивания</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">12 450</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Уникальные</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">8 230</div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Дослушали до конца</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary);">67%</div>
+    <div style="margin-top: 8px; height: 6px; background: var(--bg-secondary, #e0e0e0); border-radius: 3px; overflow: hidden;">
+      <div style="width: 67%; height: 100%; background: var(--accent); border-radius: 3px;"></div>
+    </div>
+  </div>
+  <div class="kpi-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; border-top: 3px solid var(--border, var(--text-secondary));">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Изменение</div>
+    <div style="font-size: 1.75rem; font-weight: 700; color: var(--success);">
+      <span style="font-size: 1rem;">&#9650;</span> +5.2%
+    </div>
+  </div>
+</div>
+
+<div class="data-table-wrapper" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto;">
+  <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.85rem; white-space: nowrap;">
+    <thead>
+      <tr style="background: var(--bg-secondary, rgba(0,0,0,0.03));">
+        <th style="text-align: left; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Дата выхода</th>
+        <th style="text-align: left; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Время</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Просл.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Досл. до к.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Досл. %</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. нач.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Уник. кон.</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Изм. %</th>
+        <th style="text-align: right; padding: 14px 12px; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border);">Просл. (средн.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">15.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">08:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 540</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 680</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 720</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">67%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 100</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 420</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+5.2%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 490</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">16.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">10:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 380</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 590</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 600</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">67%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 980</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 350</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+3.1%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 340</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">17.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">12:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 610</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 740</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 780</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">68%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 200</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 490</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+6.4%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 560</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 14px 12px; color: var(--text-primary);">18.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">14:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 920</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 220</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 950</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">66%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 410</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 610</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--error, #e53e3e); font-weight: 500;">-1.2%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">2 710</td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 12px; color: var(--text-primary);">19.04.2026</td>
+        <td style="padding: 14px 12px; color: var(--text-secondary);">16:00</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">2 000</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary); font-weight: 500;">1 440</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 350</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">67%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 890</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 280</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--success); font-weight: 500;">+2.8%</td>
+        <td style="padding: 14px 12px; text-align: right; color: var(--text-primary);">1 960</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="margin-top: 20px;">
+  <a href="#" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 500;">Скачать mp3</a>
+</div>

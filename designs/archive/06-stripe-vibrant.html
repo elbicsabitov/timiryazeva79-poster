@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Статистика — Рекламный кабинет Большой Цифровой</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a2540;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: 64px;
+    height: 100vh;
+    background: #061b2e;
+    z-index: 50;
+    transition: width 200ms ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar:hover {
+    width: 240px;
+  }
+
+  .sidebar-logo {
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 64px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-logo .logo-icon {
+    min-width: 32px; height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #635bff, #a960ee);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; color: #fff;
+  }
+  .sidebar-logo .logo-text {
+    font-weight: 600; font-size: 14px;
+    background: linear-gradient(135deg, #80e9ff, #a960ee, #ff6b6b);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .sidebar:hover .logo-text { opacity: 1; }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    position: relative;
+    color: #6e7f8d;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 150ms, background 150ms;
+    text-decoration: none;
+  }
+  .nav-item:hover {
+    color: #adbdcc;
+    background: rgba(255,255,255,0.04);
+  }
+  .nav-item.active {
+    color: #ffffff;
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 6px; bottom: 6px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(180deg, #80e9ff, #a960ee, #ff6b6b);
+  }
+  .nav-item .nav-icon {
+    min-width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .nav-item .nav-label {
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .sidebar:hover .nav-label { opacity: 1; }
+
+  .sidebar-user {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sidebar-user .user-avatar {
+    min-width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #80e9ff, #a960ee);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 12px; color: #fff;
+  }
+  .sidebar-user .user-info {
+    opacity: 0;
+    transition: opacity 200ms ease;
+    white-space: nowrap;
+  }
+  .sidebar:hover .user-info { opacity: 1; }
+  .user-info .user-name { font-size: 13px; font-weight: 600; color: #fff; }
+  .user-info .user-role { font-size: 11px; color: #6e7f8d; }
+
+  /* ===== MAIN ===== */
+  .main {
+    margin-left: 64px;
+    padding: 32px 40px;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    margin-bottom: 28px;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 0%, #adbdcc 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .page-header p {
+    color: #6e7f8d;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* ===== KPI CARDS ===== */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: #0d2d4d;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    transition: transform 200ms, box-shadow 200ms;
+  }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #80e9ff, #a960ee, #ff6b6b);
+  }
+  .kpi-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #6e7f8d;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .kpi-value.positive {
+    color: #4cd964;
+  }
+  .kpi-sub {
+    font-size: 12px;
+    color: #6e7f8d;
+    margin-top: 4px;
+  }
+
+  /* Sparkline bars */
+  .sparkline {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 24px;
+    margin-top: 10px;
+  }
+  .sparkline .bar {
+    flex: 1;
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(128,233,255,0.6), rgba(169,96,238,0.3));
+    transition: height 300ms ease;
+  }
+
+  /* ===== DATE RANGE ===== */
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .date-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .date-range label {
+    font-size: 13px;
+    color: #6e7f8d;
+  }
+  .date-input {
+    background: #113552;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 150ms;
+  }
+  .date-input:focus {
+    border-color: #635bff;
+  }
+  .btn-apply {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #635bff, #a960ee);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(99,91,255,0.4);
+    transition: filter 150ms, box-shadow 150ms;
+  }
+  .btn-apply:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 28px rgba(99,91,255,0.55);
+  }
+
+  /* ===== FILTER TABS ===== */
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: #0d2d4d;
+    border-radius: 10px;
+    padding: 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .filter-tab {
+    padding: 7px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6e7f8d;
+    cursor: pointer;
+    transition: all 150ms;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+  }
+  .filter-tab:hover {
+    color: #adbdcc;
+  }
+  .filter-tab.active {
+    background: linear-gradient(135deg, #635bff, #a960ee);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(99,91,255,0.35);
+  }
+
+  /* ===== TABLE ===== */
+  .table-card {
+    background: #0d2d4d;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .table-card table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table-card th {
+    text-align: left;
+    padding: 14px 24px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #6e7f8d;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: #113552;
+  }
+  .table-card td {
+    padding: 14px 24px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #adbdcc;
+  }
+  .table-card tr:last-child td {
+    border-bottom: none;
+  }
+  .table-card tbody tr {
+    transition: background 150ms;
+  }
+  .table-card tbody tr:hover {
+    background: rgba(17,53,82,0.6);
+  }
+  .table-card td.name a {
+    color: #80e9ff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 150ms;
+  }
+  .table-card td.name a:hover {
+    color: #b4f0ff;
+    text-decoration: underline;
+  }
+  .table-card td.number {
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    color: #ffffff;
+  }
+
+  /* ===== PAGINATION ===== */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .page-btn {
+    min-width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: transparent;
+    color: #6e7f8d;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 150ms;
+  }
+  .page-btn:hover {
+    border-color: rgba(255,255,255,0.2);
+    color: #adbdcc;
+    background: rgba(255,255,255,0.04);
+  }
+  .page-btn.active {
+    background: linear-gradient(135deg, #635bff, #a960ee);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(99,91,255,0.35);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 700px) {
+    .kpi-grid { grid-template-columns: 1fr; }
+    .main { padding: 20px 16px; }
+    .controls-row { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">БЦ</div>
+    <span class="logo-text">Большой цифровой</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="7" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="7" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="11" width="7" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="7" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <span class="nav-label">Рекламный кабинет</span>
+    </a>
+    <a class="nav-item active" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 16V8l4-4 3 3 4-4 3 3v10H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 16h14" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <span class="nav-label">Статистика</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M12.5 12.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">Wordstat</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3L3 7v6l7 4 7-4V7l-7-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 11v6M3 7l7 4 7-4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nav-label">ИИ</span>
+    </a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">ЭС</div>
+    <div class="user-info">
+      <div class="user-name">Элбик С.</div>
+      <div class="user-role">Администратор</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="page-header">
+    <h1>Статистика</h1>
+    <p>Рекламный кабинет Большой Цифровой — обзор эффективности кампаний</p>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Прослушивания</div>
+      <div class="kpi-value">175 930</div>
+      <div class="kpi-sub">за выбранный период</div>
+      <div class="sparkline">
+        <div class="bar" style="height:40%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:45%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:85%"></div>
+        <div class="bar" style="height:75%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar" style="height:80%"></div>
+        <div class="bar" style="height:100%"></div>
+        <div class="bar" style="height:88%"></div>
+        <div class="bar" style="height:95%"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Уникальные</div>
+      <div class="kpi-value">120 240</div>
+      <div class="kpi-sub">уникальных слушателей</div>
+      <div class="sparkline">
+        <div class="bar" style="height:35%"></div>
+        <div class="bar" style="height:50%"></div>
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:72%"></div>
+        <div class="bar" style="height:68%"></div>
+        <div class="bar" style="height:80%"></div>
+        <div class="bar" style="height:76%"></div>
+        <div class="bar" style="height:92%"></div>
+        <div class="bar" style="height:85%"></div>
+        <div class="bar" style="height:97%"></div>
+        <div class="bar" style="height:90%"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Дослушали до конца</div>
+      <div class="kpi-value">67%</div>
+      <div class="kpi-sub">коэффициент удержания</div>
+      <div class="sparkline">
+        <div class="bar" style="height:58%"></div>
+        <div class="bar" style="height:62%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:67%"></div>
+        <div class="bar" style="height:64%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:66%"></div>
+        <div class="bar" style="height:72%"></div>
+        <div class="bar" style="height:68%"></div>
+        <div class="bar" style="height:74%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:67%"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Изменение</div>
+      <div class="kpi-value positive">+5.2%</div>
+      <div class="kpi-sub">по сравнению с пред. периодом</div>
+      <div class="sparkline">
+        <div class="bar" style="height:30%"></div>
+        <div class="bar" style="height:38%"></div>
+        <div class="bar" style="height:42%"></div>
+        <div class="bar" style="height:48%"></div>
+        <div class="bar" style="height:52%"></div>
+        <div class="bar" style="height:56%"></div>
+        <div class="bar" style="height:63%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:78%"></div>
+        <div class="bar" style="height:85%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar" style="height:100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-row">
+    <div class="date-range">
+      <label>с</label>
+      <input class="date-input" type="date" value="2026-01-01">
+      <label>по</label>
+      <input class="date-input" type="date" value="2026-12-31">
+      <button class="btn-apply">Применить</button>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active">Все</button>
+      <button class="filter-tab">Активные</button>
+      <button class="filter-tab">Запланированные</button>
+      <button class="filter-tab">Завершенные</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Название кампании</th>
+          <th>Прослушивания</th>
+          <th>Уник. прослушивания</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name"><a href="#">Летняя акция 2026</a></td>
+          <td class="number">42 560</td>
+          <td class="number">28 340</td>
+        </tr>
+        <tr>
+          <td class="name"><a href="#">Весна 2026</a></td>
+          <td class="number">31 200</td>
+          <td class="number">21 780</td>
+        </tr>
+        <tr>
+          <td class="name"><a href="#">Зима 2025-2026</a></td>
+          <td class="number">58 100</td>
+          <td class="number">39 450</td>
+        </tr>
+        <tr>
+          <td class="name"><a href="#">Новый год 2026</a></td>
+          <td class="number">24 830</td>
+          <td class="number">17 560</td>
+        </tr>
+        <tr>
+          <td class="name"><a href="#">Осень 2025</a></td>
+          <td class="number">19 240</td>
+          <td class="number">13 110</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="page-btn">&laquo;</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">&raquo;</button>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

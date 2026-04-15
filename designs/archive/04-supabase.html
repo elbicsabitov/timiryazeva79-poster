@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Статистика — Большой Цифровой</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #171717;
+    color: #fafafa;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 64px;
+    background: #171717;
+    border-right: 1px solid #242424;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    transition: width 200ms ease;
+    overflow: hidden;
+  }
+  .sidebar:hover {
+    width: 240px;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+  }
+
+  .sidebar-logo {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-bottom: 1px solid #242424;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .sidebar-logo .logo-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    background: #3ecf8e;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #171717;
+  }
+  .sidebar-logo .logo-text {
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .sidebar:hover .logo-text { opacity: 1; }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    height: 40px;
+    cursor: pointer;
+    color: #b4b4b4;
+    text-decoration: none;
+    transition: background 150ms, color 150ms;
+    white-space: nowrap;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.04); color: #fafafa; }
+  .nav-item.active { color: #3ecf8e; }
+  .nav-item.active .nav-icon { color: #3ecf8e; }
+
+  .nav-icon {
+    width: 32px;
+    min-width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .nav-label {
+    opacity: 0;
+    transition: opacity 200ms ease;
+    font-size: 14px;
+  }
+  .sidebar:hover .nav-label { opacity: 1; }
+
+  .sidebar-user {
+    border-top: 1px solid #242424;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 9999px;
+    background: #2e2e2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #b4b4b4;
+  }
+  .user-info {
+    opacity: 0;
+    transition: opacity 200ms ease;
+    white-space: nowrap;
+  }
+  .sidebar:hover .user-info { opacity: 1; }
+  .user-name { font-size: 13px; font-weight: 500; color: #fafafa; }
+  .user-role { font-size: 12px; color: #898989; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 64px;
+    padding: 32px 40px;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #fafafa;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .date-input {
+    background: #171717;
+    border: 1px solid #2e2e2e;
+    border-radius: 6px;
+    color: #fafafa;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+  .date-input:focus { border-color: #3ecf8e; }
+  .date-sep { color: #898989; font-size: 13px; }
+
+  .btn-primary {
+    background: #0f0f0f;
+    color: #fafafa;
+    border: 1px solid #fafafa;
+    border-radius: 9999px;
+    padding: 7px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 150ms;
+  }
+  .btn-primary:hover { background: #1a1a1a; }
+
+  .btn-secondary {
+    background: transparent;
+    color: #b4b4b4;
+    border: 1px solid #2e2e2e;
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 150ms, color 150ms;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.04); color: #fafafa; }
+
+  /* Filter tabs */
+  .filter-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #242424;
+  }
+  .filter-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    color: #898989;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 150ms, border-color 150ms;
+    font-weight: 400;
+  }
+  .filter-tab:hover { color: #b4b4b4; }
+  .filter-tab.active {
+    color: #fafafa;
+    border-bottom-color: #3ecf8e;
+  }
+
+  /* Table card */
+  .table-card {
+    border: 1px solid #242424;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #171717;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #898989;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #242424;
+    background: rgba(255,255,255,0.02);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 14px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid #242424;
+    color: #fafafa;
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  .campaign-name {
+    color: #00c573;
+    text-decoration: none;
+    font-weight: 400;
+  }
+  .campaign-name:hover { text-decoration: underline; }
+
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .status-active {
+    background: rgba(62,207,142,0.12);
+    color: #3ecf8e;
+  }
+  .status-planned {
+    background: rgba(250,204,21,0.1);
+    color: #facc15;
+  }
+  .status-finished {
+    background: rgba(180,180,180,0.1);
+    color: #898989;
+  }
+
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-top: 1px solid #242424;
+    font-size: 13px;
+    color: #898989;
+  }
+  .pagination-pages {
+    display: flex;
+    gap: 4px;
+  }
+  .page-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #b4b4b4;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 150ms, color 150ms;
+  }
+  .page-btn:hover { background: rgba(255,255,255,0.04); color: #fafafa; }
+  .page-btn.active {
+    border-color: #3ecf8e;
+    color: #3ecf8e;
+    background: rgba(62,207,142,0.06);
+  }
+  .page-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* ── SVG icons (inline) ── */
+  .icon-svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">БЦ</div>
+    <span class="logo-text">Большой Цифровой</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </span>
+      <span class="nav-label">Рекламный кабинет</span>
+    </a>
+    <a class="nav-item active" href="#">
+      <span class="nav-icon">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      </span>
+      <span class="nav-label">Статистика</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </span>
+      <span class="nav-label">Wordstat</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 2-2 3.5-2 5h-4c0-1.5-2-3-2-5a4 4 0 0 1 4-4z"/><path d="M10 17h4"/><path d="M10 20h4"/></svg>
+      </span>
+      <span class="nav-label">ИИ</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">ЭС</div>
+    <div class="user-info">
+      <div class="user-name">Элбик С.</div>
+      <div class="user-role">Администратор</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">Статистика</h1>
+    <div class="header-actions">
+      <input type="date" class="date-input" value="2026-03-01">
+      <span class="date-sep">—</span>
+      <input type="date" class="date-input" value="2026-04-15">
+      <button class="btn-primary">Применить</button>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    <div class="filter-tab active">Все</div>
+    <div class="filter-tab">Активные</div>
+    <div class="filter-tab">Запланированные</div>
+    <div class="filter-tab">Завершенные</div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Кампания</th>
+          <th>Статус</th>
+          <th>Показы</th>
+          <th>Клики</th>
+          <th>CTR</th>
+          <th>Расход, ₸</th>
+          <th>Конверсии</th>
+          <th>CPA, ₸</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a class="campaign-name" href="#">Корма_Астана_Поиск</a></td>
+          <td><span class="status-badge status-active">Активна</span></td>
+          <td class="num">24 830</td>
+          <td class="num">1 012</td>
+          <td class="num">4.07%</td>
+          <td class="num">185 400</td>
+          <td class="num">48</td>
+          <td class="num">3 863</td>
+        </tr>
+        <tr>
+          <td><a class="campaign-name" href="#">Аксессуары_Ретаргет</a></td>
+          <td><span class="status-badge status-active">Активна</span></td>
+          <td class="num">18 540</td>
+          <td class="num">743</td>
+          <td class="num">4.01%</td>
+          <td class="num">112 600</td>
+          <td class="num">29</td>
+          <td class="num">3 883</td>
+        </tr>
+        <tr>
+          <td><a class="campaign-name" href="#">Ветпрепараты_Алматы</a></td>
+          <td><span class="status-badge status-planned">Запланирована</span></td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+        </tr>
+        <tr>
+          <td><a class="campaign-name" href="#">Брендовая_Общая</a></td>
+          <td><span class="status-badge status-active">Активна</span></td>
+          <td class="num">52 110</td>
+          <td class="num">3 287</td>
+          <td class="num">6.31%</td>
+          <td class="num">294 000</td>
+          <td class="num">112</td>
+          <td class="num">2 625</td>
+        </tr>
+        <tr>
+          <td><a class="campaign-name" href="#">Весенняя_Акция_2026</a></td>
+          <td><span class="status-badge status-finished">Завершена</span></td>
+          <td class="num">31 400</td>
+          <td class="num">1 580</td>
+          <td class="num">5.03%</td>
+          <td class="num">210 500</td>
+          <td class="num">67</td>
+          <td class="num">3 142</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span>Показано 1-5 из 5</span>
+      <div class="pagination-pages">
+        <button class="page-btn" disabled>&lsaquo;</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn" disabled>&rsaquo;</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  // Filter tab switching
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelector('.filter-tab.active').classList.remove('active');
+      tab.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

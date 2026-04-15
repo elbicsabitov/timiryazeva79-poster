@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Статистика — Рекламный кабинет Большой Цифровой</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;510;600&display=swap');
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg-canvas: #08090a;
+    --bg-surface: #0f1011;
+    --bg-elevated: #191a1b;
+    --text-primary: #f7f8f8;
+    --text-secondary: #8a8f98;
+    --text-muted: #565b63;
+    --accent: #5e6ad2;
+    --accent-hover: #7170ff;
+    --border: rgba(255,255,255,0.08);
+    --border-elevated: rgba(255,255,255,0.1);
+    --radius-btn: 6px;
+    --radius-card: 8px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 64px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    transition: width 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
+    overflow: hidden;
+  }
+
+  .sidebar:hover {
+    width: 240px;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+  }
+
+  .sidebar-logo {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo .logo-collapsed {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-primary);
+    min-width: 24px;
+    text-align: center;
+  }
+
+  .sidebar-logo .logo-full {
+    font-weight: 510;
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-left: 12px;
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+
+  .sidebar:hover .logo-full {
+    opacity: 1;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 120ms;
+    border-radius: 0;
+    margin: 0 8px;
+    border-radius: var(--radius-btn);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 510;
+    font-size: 13px;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.04);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+  }
+
+  .nav-item .nav-icon {
+    min-width: 24px;
+    text-align: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .nav-item .nav-label {
+    margin-left: 12px;
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+
+  .sidebar:hover .nav-label {
+    opacity: 1;
+  }
+
+  .sidebar-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer .user-name {
+    font-weight: 510;
+    font-size: 13px;
+    color: var(--text-primary);
+    opacity: 0;
+    transition: opacity 200ms;
+    margin-bottom: 2px;
+  }
+
+  .sidebar:hover .user-name {
+    opacity: 1;
+  }
+
+  .sidebar-footer .user-logout {
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 200ms, color 120ms;
+  }
+
+  .sidebar-footer .user-logout:hover {
+    color: var(--text-secondary);
+  }
+
+  .sidebar:hover .user-logout {
+    opacity: 1;
+  }
+
+  .sidebar-footer .user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sidebar-footer-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    margin-left: 64px;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .content-header {
+    padding: 24px 32px 0;
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .page-title {
+    font-size: 20px;
+    font-weight: 510;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .date-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .date-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 510;
+  }
+
+  .date-input {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-elevated);
+    border-radius: var(--radius-btn);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 400;
+    padding: 6px 10px;
+    outline: none;
+    transition: border-color 120ms;
+    width: 130px;
+  }
+
+  .date-input:focus {
+    border-color: var(--accent);
+  }
+
+  .btn-apply {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-btn);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 510;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background 120ms;
+    line-height: 1.5;
+  }
+
+  .btn-apply:hover {
+    background: var(--accent-hover);
+  }
+
+  /* ─── FILTER TABS ─── */
+  .filter-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+  }
+
+  .filter-tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 120ms, border-color 120ms;
+    user-select: none;
+  }
+
+  .filter-tab:hover {
+    color: var(--text-primary);
+  }
+
+  .filter-tab.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ─── TABLE ─── */
+  .table-wrapper {
+    padding: 0 32px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 510;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  thead th:not(:first-child) {
+    text-align: right;
+  }
+
+  tbody tr {
+    transition: background 80ms;
+  }
+
+  tbody tr:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+
+  tbody td:not(:first-child) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+  }
+
+  tbody td a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 510;
+    transition: color 120ms;
+  }
+
+  tbody td a:hover {
+    color: var(--accent-hover);
+  }
+
+  /* ─── PAGINATION ─── */
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 16px 32px 32px;
+  }
+
+  .page-btn {
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-btn);
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 120ms, color 120ms;
+    user-select: none;
+    border: none;
+    background: none;
+    font-family: var(--font);
+  }
+
+  .page-btn:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+  }
+
+  .page-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .page-btn.active:hover {
+    background: var(--accent-hover);
+  }
+
+  .page-ellipsis {
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    user-select: none;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-collapsed">БЦ</span>
+    <span class="logo-full">Большой цифровой</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#">
+      <span class="nav-icon">&#9881;</span>
+      <span class="nav-label">Рекламный кабинет</span>
+    </a>
+    <a class="nav-item active" href="#">
+      <span class="nav-icon">&#9636;</span>
+      <span class="nav-label">Статистика</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">&#9906;</span>
+      <span class="nav-label">Wordstat</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">&#10024;</span>
+      <span class="nav-label">ИИ</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-row">
+      <div class="user-avatar">И</div>
+      <div class="sidebar-footer-info">
+        <span class="user-name">Имя_AI_USER</span>
+        <a class="user-logout" href="#">Выйти</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="content-header">
+    <div class="header-row">
+      <h1 class="page-title">Статистика</h1>
+      <div class="date-controls">
+        <span class="date-label">с</span>
+        <input type="date" class="date-input" value="2026-01-01">
+        <span class="date-label">по</span>
+        <input type="date" class="date-input" value="2026-12-31">
+        <button class="btn-apply">Применить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-tabs">
+    <div class="filter-tab active">Все</div>
+    <div class="filter-tab">Активные</div>
+    <div class="filter-tab">Запланированные</div>
+    <div class="filter-tab">Завершенные</div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Название кампании</th>
+          <th>Прослушивания (сумм.)</th>
+          <th>Уник. прослушивания (сумм.)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#">Летняя акция 2026</a></td>
+          <td>42 560</td>
+          <td>28 340</td>
+        </tr>
+        <tr>
+          <td><a href="#">Весна 2026</a></td>
+          <td>31 200</td>
+          <td>21 780</td>
+        </tr>
+        <tr>
+          <td><a href="#">Зима 2025-2026</a></td>
+          <td>58 100</td>
+          <td>39 450</td>
+        </tr>
+        <tr>
+          <td><a href="#">Новый год 2026</a></td>
+          <td>24 830</td>
+          <td>17 560</td>
+        </tr>
+        <tr>
+          <td><a href="#">Осень 2025</a></td>
+          <td>19 240</td>
+          <td>13 110</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <span class="page-ellipsis">...</span>
+    <button class="page-btn">10</button>
+  </div>
+</main>
+
+<script>
+  // Filter tab switching
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Pagination switching
+  document.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

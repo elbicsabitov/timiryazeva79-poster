@@ -1,0 +1,404 @@
+<!-- PAGE: page-advertisers -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0;">Рекламодатели</h1>
+  <button class="btn-primary" onclick="navigateTo('page-add-advertiser')" style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Добавить рекламодателя</button>
+</div>
+
+<div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--accent);color:#fff;font-size:13px;cursor:pointer;">Все</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">ООО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">АО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">ЗАО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">ИП</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">НКО</button>
+  <button class="filter-pill" style="padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:13px;cursor:pointer;">АНО</button>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;">
+  <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+    <thead>
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ИНН</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Форма</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Кампании</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Телефон</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigateTo('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">ООО "Медиа Групп"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7701234567</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ООО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">3</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 123-45-67</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">info@mediagroup.ru</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigateTo('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">АО "РМГ"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7709876543</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">АО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">7</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 987-65-43</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">adv@rmg.ru</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigateTo('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">ИП Иванов А.С.</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">772345678901</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ИП</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">1</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (916) 555-12-34</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ivanov@mail.ru</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigateTo('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">ООО "Радио Москвы"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7712345678</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">ООО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">12</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 111-22-33</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">info@radiomsk.ru</td>
+      </tr>
+      <tr style="transition:background .15s;" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;"><a href="#" onclick="navigateTo('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;font-weight:500;">НКО "Цифровые медиа"</a></td>
+        <td style="padding:12px 16px;color:var(--text-primary);">7718765432</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">НКО</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">2</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">+7 (495) 444-55-66</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">contact@digmedia.org</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- PAGE: page-add-advertiser -->
+<div style="margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0 0 8px 0;">Добавить рекламодателя</h1>
+  <div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);">
+    <a href="#" onclick="navigateTo('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Новый</span>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:32px;max-width:700px;margin:0 auto;">
+  <form onsubmit="return false;">
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Название <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">ИНН <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+      <p style="margin:6px 0 0;font-size:12px;color:var(--accent);">Данные подгрузятся автоматически из DaData</p>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">КПП <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">ОГРН</label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Расчетный счет <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Организационная форма <span style="color:var(--accent);">*</span></label>
+      <select style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;cursor:pointer;">
+        <option value="">Выберите форму</option>
+        <option value="ooo">ООО</option>
+        <option value="ao">АО</option>
+        <option value="zao">ЗАО</option>
+        <option value="ip">ИП</option>
+        <option value="nko">НКО</option>
+        <option value="ano">АНО</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Адрес</label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Телефон</label>
+      <input type="text" placeholder="+7 (___) ___-__-__" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:28px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Email</label>
+      <input type="email" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="navigateTo('page-advertisers')" type="button" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-primary);font-size:14px;font-weight:600;cursor:pointer;">Отмена</button>
+      <button class="btn-primary" type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Сохранить</button>
+    </div>
+  </form>
+</div>
+
+
+<!-- PAGE: page-advertiser-details -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0;">ООО "Медиа Групп"</h1>
+  <button class="btn-outline" style="padding:10px 20px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;">Редактировать</button>
+</div>
+<div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);margin-bottom:24px;">
+  <a href="#" onclick="navigateTo('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+  <span style="margin:0 6px;">&gt;</span>
+  <span style="color:var(--text-secondary);">ООО "Медиа Групп"</span>
+</div>
+
+<div class="tabs" style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px;">
+  <button class="tab-btn" data-tab="tab-requisites" onclick="switchTab(this,'tab-requisites')" style="padding:12px 20px;border:none;background:transparent;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid var(--accent);margin-bottom:-2px;">Реквизиты</button>
+  <button class="tab-btn" data-tab="tab-campaigns" onclick="switchTab(this,'tab-campaigns')" style="padding:12px 20px;border:none;background:transparent;color:var(--text-muted);font-size:14px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;">Рекламные кампании</button>
+  <button class="tab-btn" data-tab="tab-clips" onclick="switchTab(this,'tab-clips')" style="padding:12px 20px;border:none;background:transparent;color:var(--text-muted);font-size:14px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;">Рекламные ролики</button>
+</div>
+
+<!-- Tab 1: Реквизиты -->
+<div class="tab-content" id="tab-requisites" style="display:block;">
+  <div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:28px 32px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;">
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Название</div>
+        <div style="font-size:14px;color:var(--text-primary);font-weight:500;">ООО "Медиа Групп"</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">ИНН</div>
+        <div style="font-size:14px;color:var(--text-primary);">7701234567</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">КПП</div>
+        <div style="font-size:14px;color:var(--text-primary);">770101001</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">ОГРН</div>
+        <div style="font-size:14px;color:var(--text-primary);">1027700123456</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Расчетный счет</div>
+        <div style="font-size:14px;color:var(--text-primary);">40702810900000012345</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Орг. форма</div>
+        <div style="font-size:14px;color:var(--text-primary);">ООО</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Адрес</div>
+        <div style="font-size:14px;color:var(--text-primary);">г. Москва, ул. Тверская, д. 12, оф. 301</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Телефон</div>
+        <div style="font-size:14px;color:var(--text-primary);">+7 (495) 123-45-67</div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Email</div>
+        <div style="font-size:14px;"><a href="mailto:info@mediagroup.ru" style="color:var(--accent);text-decoration:none;">info@mediagroup.ru</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 2: Рекламные кампании -->
+<div class="tab-content" id="tab-campaigns" style="display:none;">
+  <div style="margin-bottom:16px;text-align:right;">
+    <button class="btn-primary" onclick="navigateTo('page-create-campaign')" style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Создать кампанию</button>
+  </div>
+  <div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;">
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ID</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название кампании</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Описание</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Статус</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Даты</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);">101</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Летняя акция 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Летняя рекламная кампания</td>
+          <td style="padding:12px 16px;"><span class="badge" style="display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--success-bg);color:var(--success);">Активна</span></td>
+          <td style="padding:12px 16px;color:var(--text-secondary);white-space:nowrap;">01.06.2026 — 31.08.2026</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);">102</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Осенняя 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Реклама в осенний сезон</td>
+          <td style="padding:12px 16px;"><span class="badge" style="display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--warning-bg);color:var(--warning);">Запланирована</span></td>
+          <td style="padding:12px 16px;color:var(--text-secondary);white-space:nowrap;">01.09.2026 — 30.11.2026</td>
+        </tr>
+        <tr onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);">100</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Весна 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Весенняя рекламная акция</td>
+          <td style="padding:12px 16px;"><span class="badge" style="display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--bg-page);color:var(--text-muted);">Завершена</span></td>
+          <td style="padding:12px 16px;color:var(--text-secondary);white-space:nowrap;">01.03.2026 — 31.05.2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Tab 3: Рекламные ролики -->
+<div class="tab-content" id="tab-clips" style="display:none;">
+  <div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;">
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ID ролика</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название ролика</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Кампания</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Дата выхода</th>
+          <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Прослушивания</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-001</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Москва_2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Летняя акция 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">15.06.2026</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">4 250</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-002</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Промо_30с</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Летняя акция 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">22.06.2026</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">3 180</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-003</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Весна_15с</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Весна 2026</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">10.04.2026</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">5 020</td>
+        </tr>
+        <tr onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+          <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-004</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Зима_45с</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">Зимняя 2025</td>
+          <td style="padding:12px 16px;color:var(--text-secondary);">05.12.2025</td>
+          <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">7 640</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function switchTab(btn, tabId) {
+  document.querySelectorAll('#page-advertiser-details .tab-content').forEach(function(el) { el.style.display = 'none'; });
+  document.querySelectorAll('#page-advertiser-details .tab-btn').forEach(function(el) {
+    el.style.color = 'var(--text-muted)';
+    el.style.fontWeight = '500';
+    el.style.borderBottom = '2px solid transparent';
+  });
+  document.getElementById(tabId).style.display = 'block';
+  btn.style.color = 'var(--accent)';
+  btn.style.fontWeight = '600';
+  btn.style.borderBottom = '2px solid var(--accent)';
+}
+</script>
+
+
+<!-- PAGE: page-create-campaign -->
+<div style="margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0 0 8px 0;">Создание рекламной кампании</h1>
+  <div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);">
+    <a href="#" onclick="navigateTo('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <a href="#" onclick="navigateTo('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;">ООО "Медиа Групп"</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Кампании</span>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Новая кампания</span>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:32px;max-width:700px;margin:0 auto;">
+  <form onsubmit="return false;">
+    <div class="form-group" style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Название кампании <span style="color:var(--accent);">*</span></label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="form-group" style="margin-bottom:28px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Описание</label>
+      <textarea rows="4" placeholder="Опишите цели и особенности кампании" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;resize:vertical;font-family:inherit;"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="navigateTo('page-advertiser-details')" type="button" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-primary);font-size:14px;font-weight:600;cursor:pointer;">Отмена</button>
+      <button class="btn-primary" type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Создать</button>
+    </div>
+  </form>
+</div>
+
+
+<!-- PAGE: page-bind-clip -->
+<div style="margin-bottom:24px;">
+  <h1 style="font-size:24px;font-weight:700;color:var(--text-primary);margin:0 0 8px 0;">Привязать ролик к кампании</h1>
+  <div class="breadcrumbs" style="font-size:13px;color:var(--text-muted);">
+    <a href="#" onclick="navigateTo('page-advertisers');return false;" style="color:var(--accent);text-decoration:none;">Рекламодатели</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <a href="#" onclick="navigateTo('page-advertiser-details');return false;" style="color:var(--accent);text-decoration:none;">ООО "Медиа Групп"</a>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Кампания</span>
+    <span style="margin:0 6px;">&gt;</span>
+    <span style="color:var(--text-secondary);">Привязать ролик</span>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:24px 28px;margin-bottom:20px;">
+  <div style="display:flex;gap:12px;align-items:flex-end;">
+    <div class="form-group" style="flex:1;">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">ID ролика</label>
+      <input type="text" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-input);color:var(--text-primary);outline:none;box-sizing:border-box;" />
+    </div>
+    <button class="btn-primary" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;white-space:nowrap;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Найти</button>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);padding:24px 28px;margin-bottom:20px;">
+  <div style="margin-bottom:8px;">
+    <span style="font-size:13px;color:var(--text-muted);">Название:</span>
+    <span style="font-size:14px;color:var(--text-primary);font-weight:500;margin-left:8px;">Ролик_Москва_2026</span>
+  </div>
+  <div style="margin-bottom:16px;">
+    <span style="font-size:13px;color:var(--text-muted);">Длительность:</span>
+    <span style="font-size:14px;color:var(--text-primary);font-weight:500;margin-left:8px;">0:34</span>
+  </div>
+  <hr style="border:none;border-top:1px solid var(--border);margin:0;" />
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;margin-bottom:20px;">
+  <table class="data-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+    <thead>
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:center;padding:14px 16px;width:40px;color:var(--text-muted);font-weight:600;font-size:12px;"></th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">ID</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Название</th>
+        <th style="text-align:left;padding:14px 16px;color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Дата выхода</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;text-align:center;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;" /></td>
+        <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-001</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Москва_2026</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">15.06.2026</td>
+      </tr>
+      <tr onmouseenter="this.style.background='var(--bg-card-hover)'" onmouseleave="this.style.background='transparent'">
+        <td style="padding:12px 16px;text-align:center;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;" /></td>
+        <td style="padding:12px 16px;color:var(--text-secondary);font-family:monospace;">ROL-002</td>
+        <td style="padding:12px 16px;color:var(--text-primary);font-weight:500;">Ролик_Промо_30с</td>
+        <td style="padding:12px 16px;color:var(--text-secondary);">22.06.2026</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="text-align:right;">
+  <button class="btn-primary" style="padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;" onmouseenter="this.style.background='var(--accent-hover)'" onmouseleave="this.style.background='var(--accent)'">Привязать выбранные</button>
+</div>
