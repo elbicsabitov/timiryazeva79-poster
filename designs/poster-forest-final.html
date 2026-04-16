@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Постер — Тимирязева 79 — Зелёный</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .poster {
+    width: 980px;
+    height: 420px;
+    position: relative;
+    overflow: hidden;
+    background: #0a1810;
+    border: 2px solid #163522;
+  }
+
+  .stripe {
+    position: absolute;
+    left: 0; right: 0; height: 5px;
+    background: #c8a86e;
+  }
+  .stripe.top { top: 0; }
+  .stripe.bot { bottom: 0; }
+
+  .grid {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .line-kz {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+    font-size: clamp(40px, 6.2vw, 62px);
+    transform: scaleY(1.15);
+    color: #c8a86e;
+  }
+
+  .line-ru {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+    font-size: clamp(40px, 6.2vw, 62px);
+    transform: scaleY(1.15);
+    color: #eef5ee;
+  }
+
+  .sep {
+    height: 2px;
+    width: 100%;
+    background: #c8a86e;
+    opacity: 0.25;
+    flex-shrink: 0;
+  }
+
+  .phone {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    letter-spacing: 2px;
+    font-size: clamp(54px, 8.8vw, 88px);
+    white-space: nowrap;
+    color: #eef5ee;
+  }
+
+  .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(238,245,238,0.25);
+  }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <div class="stripe top"></div>
+    <div class="stripe bot"></div>
+    <div class="grid">
+      <div class="line-kz">Жылжымайтын мүлік сатылады</div>
+      <div class="line-ru">Помещение продаётся</div>
+      <div class="sep"></div>
+      <div class="phone">+7 777 6 777 964</div>
+      <div class="label">собственник</div>
+    </div>
+  </div>
+</body>
+</html>
