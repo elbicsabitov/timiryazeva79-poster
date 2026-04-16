@@ -131,72 +131,63 @@
   .grommet.tc { top: 10px; left: 50%; transform: translateX(-50%); }
   .grommet.bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
 
-  /* Сетка: всё пространство, 2 зоны — левая (текст) и правая (телефон) */
+  /* Сетка: всё пространство, 2 зоны — верх (текст) и низ (телефон) */
   .grid {
     position: absolute;
-    top: 24px;
-    bottom: 24px;
+    top: 22px;
+    bottom: 22px;
     left: 36px;
     right: 36px;
     display: flex;
-    flex-direction: row;
-    align-items: stretch;
-  }
-
-  /* Левая зона — САТЫЛАДЫ / ПРОДАЁТСЯ */
-  .zone-left {
-    flex: 1;
-    display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 0;
-    padding-right: 30px;
   }
 
-  .text-kz {
+  /* Верхняя зона — САТЫЛАДЫ / ПРОДАЁТСЯ */
+  .zone-top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .text-pair {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .text-small {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 3px;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  .text-big {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
     text-transform: uppercase;
     line-height: 1;
-    letter-spacing: 3px;
-  }
-
-  .text-kz.big {
-    font-size: 58px;
-  }
-
-  .text-kz.small {
-    font-size: 22px;
-    margin-bottom: 4px;
-    font-weight: 700;
     letter-spacing: 4px;
+    font-size: 72px;
   }
 
-  .text-ru {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    text-transform: uppercase;
-    line-height: 1;
-    letter-spacing: 3px;
-  }
+  .text-kz { }
+  .text-ru { }
 
-  .text-ru.big {
-    font-size: 58px;
-  }
-
-  .text-ru.small {
-    font-size: 22px;
-    margin-bottom: 4px;
-    font-weight: 700;
-    letter-spacing: 4px;
-  }
-
-  /* Разделитель вертикальный */
+  /* Разделитель горизонтальный */
   .sep {
-    width: 2px;
-    align-self: stretch;
-    margin: 20px 0;
+    height: 2px;
+    width: 85%;
+    margin: 14px 0;
     opacity: 0.3;
   }
 
@@ -205,14 +196,13 @@
   .ivory .sep { background: #6b5535; }
   .forest .sep { background: #c8a86e; }
 
-  /* Правая зона — ТЕЛЕФОН */
-  .zone-right {
+  /* Нижняя зона — ТЕЛЕФОН */
+  .zone-bot {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: baseline;
     justify-content: center;
-    padding-left: 30px;
-    min-width: 420px;
+    gap: 0;
   }
 
   .phone {
@@ -220,26 +210,26 @@
     font-weight: 900;
     line-height: 1;
     text-align: center;
-  }
-
-  .phone .row1 {
-    font-size: 42px;
-    letter-spacing: 4px;
-    opacity: 0.6;
-  }
-
-  .phone .row2 {
-    font-size: 86px;
     letter-spacing: 3px;
+    font-size: 80px;
+    white-space: nowrap;
+  }
+
+  .phone .code {
+    font-size: 52px;
+    font-weight: 700;
+    opacity: 0.55;
+    letter-spacing: 4px;
   }
 
   .label {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 5px;
     text-transform: uppercase;
-    margin-top: 8px;
+    margin-top: 6px;
+    text-align: center;
   }
 
   .size-info {
@@ -319,20 +309,21 @@
     <div class="grommet tc"></div><div class="grommet bc"></div>
 
     <div class="grid">
-      <div class="zone-left">
-        <div class="text-kz small">Жылжымайтын мүлік</div>
-        <div class="text-kz big">САТЫЛАДЫ</div>
-        <div class="text-ru small" style="margin-top: 14px;">Помещение</div>
-        <div class="text-ru big">ПРОДАЁТСЯ</div>
+      <div class="zone-top">
+        <div class="text-pair">
+          <div class="text-small text-kz">Жылжымайтын мүлік</div>
+          <div class="text-big text-kz">САТЫЛАДЫ</div>
+        </div>
+        <div class="text-pair">
+          <div class="text-small text-ru">Помещение</div>
+          <div class="text-big text-ru">ПРОДАЁТСЯ</div>
+        </div>
       </div>
       <div class="sep"></div>
-      <div class="zone-right">
-        <div class="phone">
-          <div class="row1">+7 777</div>
-          <div class="row2">6 777 964</div>
-        </div>
-        <div class="label">собственник</div>
+      <div class="zone-bot">
+        <div class="phone"><span class="code">+7 777 </span>6 777 964</div>
       </div>
+      <div class="label">собственник</div>
     </div>
   </div>
   <div class="size-info">130 &times; 56 см</div>
