@@ -75,243 +75,129 @@
     letter-spacing: 2px;
   }
 
-  /* HORIZONTAL: 130cm wide × 56cm tall
-     Scale ~1:3.5 → 980px × 420px */
+  /* 130cm × 56cm at ~1:3.5 */
   .poster {
     width: 980px;
     height: 420px;
     position: relative;
     overflow: hidden;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     transition: all 0.4s ease;
   }
 
-  /* ============================================
-     VARIANT 1: DEEP NAVY — синий = primary цвет города
-     ============================================ */
-  .poster.deep-navy {
-    background: #0f1b2d;
-    border: 2px solid #1e3a5f;
-  }
-  .poster.deep-navy .accent-bar-left { background: #c8a86e; }
-  .poster.deep-navy .accent-bar-right { background: #c8a86e; }
-  .poster.deep-navy .divider-v { background: #c8a86e; }
-  .poster.deep-navy .main-text { color: #ffffff; }
-  .poster.deep-navy .type-label { color: #c8a86e; }
-  .poster.deep-navy .phone-text { color: #ffffff; }
-  .poster.deep-navy .phone-label { color: #7a9cc6; }
-  .poster.deep-navy .addr-text { color: #5a7a9e; }
+  /* === DEEP NAVY === */
+  .poster.deep-navy { background: #0f1b2d; border: 2px solid #1e3a5f; }
+  .poster.deep-navy .line1 { color: #c8a86e; }
+  .poster.deep-navy .line2 { color: #ffffff; }
+  .poster.deep-navy .line3 { color: #ffffff; }
+  .poster.deep-navy .bar-t, .poster.deep-navy .bar-b { background: #c8a86e; }
   .poster.deep-navy .corner-mark { border-color: #c8a86e; }
 
-  /* ============================================
-     VARIANT 2: WARM CHARCOAL — серый/коричневый
-     ============================================ */
-  .poster.warm-charcoal {
-    background: #1e1c19;
-    border: 2px solid #3a3530;
-  }
-  .poster.warm-charcoal .accent-bar-left { background: #b8956a; }
-  .poster.warm-charcoal .accent-bar-right { background: #b8956a; }
-  .poster.warm-charcoal .divider-v { background: #b8956a; }
-  .poster.warm-charcoal .main-text { color: #f5f0e8; }
-  .poster.warm-charcoal .type-label { color: #b8956a; }
-  .poster.warm-charcoal .phone-text { color: #f5f0e8; }
-  .poster.warm-charcoal .phone-label { color: #8a7a68; }
-  .poster.warm-charcoal .addr-text { color: #6a5e52; }
+  /* === WARM CHARCOAL === */
+  .poster.warm-charcoal { background: #1e1c19; border: 2px solid #3a3530; }
+  .poster.warm-charcoal .line1 { color: #b8956a; }
+  .poster.warm-charcoal .line2 { color: #f5f0e8; }
+  .poster.warm-charcoal .line3 { color: #f5f0e8; }
+  .poster.warm-charcoal .bar-t, .poster.warm-charcoal .bar-b { background: #b8956a; }
   .poster.warm-charcoal .corner-mark { border-color: #b8956a; }
 
-  /* ============================================
-     VARIANT 3: IVORY — светлый + коричневый
-     ============================================ */
-  .poster.ivory-contrast {
-    background: #f8f5f0;
-    border: 2px solid #d4cdc2;
-  }
-  .poster.ivory-contrast .accent-bar-left { background: #2c2216; }
-  .poster.ivory-contrast .accent-bar-right { background: #2c2216; }
-  .poster.ivory-contrast .divider-v { background: #8b7355; }
-  .poster.ivory-contrast .main-text { color: #1a1510; }
-  .poster.ivory-contrast .type-label { color: #8b7355; }
-  .poster.ivory-contrast .phone-text { color: #1a1510; }
-  .poster.ivory-contrast .phone-label { color: #a09080; }
-  .poster.ivory-contrast .addr-text { color: #b0a898; }
+  /* === IVORY === */
+  .poster.ivory-contrast { background: #f8f5f0; border: 2px solid #d4cdc2; }
+  .poster.ivory-contrast .line1 { color: #8b7355; }
+  .poster.ivory-contrast .line2 { color: #1a1510; }
+  .poster.ivory-contrast .line3 { color: #1a1510; }
+  .poster.ivory-contrast .bar-t, .poster.ivory-contrast .bar-b { background: #2c2216; }
   .poster.ivory-contrast .corner-mark { border-color: #8b7355; }
 
-  /* ============================================
-     VARIANT 4: FOREST — зелёный = primary цвет города
-     ============================================ */
-  .poster.forest {
-    background: #0d1f15;
-    border: 2px solid #1a3a28;
-  }
-  .poster.forest .accent-bar-left { background: #c8a86e; }
-  .poster.forest .accent-bar-right { background: #c8a86e; }
-  .poster.forest .divider-v { background: #6a9a78; }
-  .poster.forest .main-text { color: #f0f5f0; }
-  .poster.forest .type-label { color: #c8a86e; }
-  .poster.forest .phone-text { color: #f0f5f0; }
-  .poster.forest .phone-label { color: #6a9a78; }
-  .poster.forest .addr-text { color: #4a7a58; }
+  /* === FOREST === */
+  .poster.forest { background: #0d1f15; border: 2px solid #1a3a28; }
+  .poster.forest .line1 { color: #c8a86e; }
+  .poster.forest .line2 { color: #f0f5f0; }
+  .poster.forest .line3 { color: #f0f5f0; }
+  .poster.forest .bar-t, .poster.forest .bar-b { background: #c8a86e; }
   .poster.forest .corner-mark { border-color: #c8a86e; }
 
-  /* ============================================
-     VARIANT 5: SLATE BLUE — светлый современный
-     ============================================ */
-  .poster.slate-blue {
-    background: #f0f2f5;
-    border: 2px solid #c8cdd5;
-  }
-  .poster.slate-blue .accent-bar-left { background: #1e3a5f; }
-  .poster.slate-blue .accent-bar-right { background: #1e3a5f; }
-  .poster.slate-blue .divider-v { background: #1e3a5f; }
-  .poster.slate-blue .main-text { color: #1e3a5f; }
-  .poster.slate-blue .type-label { color: #4a6a8a; }
-  .poster.slate-blue .phone-text { color: #1e3a5f; }
-  .poster.slate-blue .phone-label { color: #7a9ab8; }
-  .poster.slate-blue .addr-text { color: #9ab0c8; }
+  /* === SLATE BLUE === */
+  .poster.slate-blue { background: #f0f2f5; border: 2px solid #c8cdd5; }
+  .poster.slate-blue .line1 { color: #4a6a8a; }
+  .poster.slate-blue .line2 { color: #1e3a5f; }
+  .poster.slate-blue .line3 { color: #1e3a5f; }
+  .poster.slate-blue .bar-t, .poster.slate-blue .bar-b { background: #1e3a5f; }
   .poster.slate-blue .corner-mark { border-color: #1e3a5f; }
 
-  /* ============================================
-     LAYOUT — горизонтальный баннер
-     ============================================ */
-
-  .accent-bar-left {
-    width: 10px;
-    flex-shrink: 0;
+  /* === LAYOUT === */
+  .bar-t, .bar-b {
+    position: absolute;
+    left: 0; right: 0;
+    height: 8px;
   }
+  .bar-t { top: 0; }
+  .bar-b { bottom: 0; }
 
-  .accent-bar-right {
-    width: 10px;
-    flex-shrink: 0;
+  .corner-mark { position: absolute; width: 14px; height: 14px; }
+  .corner-mark.tl { top: 16px; left: 16px; border-top: 2px solid; border-left: 2px solid; }
+  .corner-mark.tr { top: 16px; right: 16px; border-top: 2px solid; border-right: 2px solid; }
+  .corner-mark.bl { bottom: 16px; left: 16px; border-bottom: 2px solid; border-left: 2px solid; }
+  .corner-mark.br { bottom: 16px; right: 16px; border-bottom: 2px solid; border-right: 2px solid; }
+
+  .grommet {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(150,150,150,0.3);
+    background: rgba(200,200,200,0.08);
+    z-index: 10;
   }
+  .grommet.tl { top: 5px; left: 5px; }
+  .grommet.tr { top: 5px; right: 5px; }
+  .grommet.bl { bottom: 5px; left: 5px; }
+  .grommet.br { bottom: 5px; right: 5px; }
+  .grommet.tc { top: 5px; left: 50%; transform: translateX(-50%); }
+  .grommet.bc { bottom: 5px; left: 50%; transform: translateX(-50%); }
 
-  .poster-body {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 40px;
-    gap: 0;
-    position: relative;
-  }
-
-  /* Левая часть — текст САТЫЛАДЫ / ПРОДАЁТСЯ */
-  .text-block {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-
-  .main-text.kz {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 64px;
-    font-weight: 900;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    line-height: 1.1;
-  }
-
-  .main-text.ru {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 64px;
-    font-weight: 900;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    line-height: 1.1;
-  }
-
-  .type-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    margin-top: 8px;
-  }
-
-  /* Вертикальный разделитель */
-  .divider-v {
-    width: 2px;
-    height: 65%;
-    flex-shrink: 0;
-    margin: 0 40px;
-    align-self: center;
-  }
-
-  /* Правая часть — телефон */
-  .phone-block {
+  /* 3 строки, всё по центру, максимально крупно */
+  .poster-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    min-width: 260px;
+    gap: 2px;
+    padding: 0 30px;
   }
 
-  .phone-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-  }
-
-  .phone-text {
+  /* Строка 1: САТЫЛАДЫ / ПРОДАЁТСЯ */
+  .line1 {
     font-family: 'Montserrat', sans-serif;
     font-size: 42px;
     font-weight: 800;
-    letter-spacing: 2px;
-    line-height: 1.2;
-    text-align: center;
-  }
-
-  .phone-text .code {
-    font-weight: 600;
-    font-size: 30px;
-    opacity: 0.6;
-  }
-
-  .addr-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 4px;
+    letter-spacing: 8px;
     text-transform: uppercase;
-    margin-top: 12px;
+    line-height: 1.1;
   }
 
-  /* Декоративные уголки */
-  .corner-mark {
-    position: absolute;
-    width: 16px;
-    height: 16px;
+  /* Строка 2: ТЕЛЕФОН — самая крупная */
+  .line2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 96px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    line-height: 1;
+    white-space: nowrap;
   }
-  .corner-mark.tl { top: 14px; left: 14px; border-top: 2px solid; border-left: 2px solid; }
-  .corner-mark.tr { top: 14px; right: 14px; border-top: 2px solid; border-right: 2px solid; }
-  .corner-mark.bl { bottom: 14px; left: 14px; border-bottom: 2px solid; border-left: 2px solid; }
-  .corner-mark.br { bottom: 14px; right: 14px; border-bottom: 2px solid; border-right: 2px solid; }
 
-  /* Люверсы */
-  .grommet {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid rgba(150,150,150,0.35);
-    background: rgba(200,200,200,0.1);
-    z-index: 10;
+  /* Строка 3: мелкая инфо — собственник */
+  .line3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    opacity: 0.5;
   }
-  .grommet.tl { top: 6px; left: 6px; }
-  .grommet.tr { top: 6px; right: 6px; }
-  .grommet.bl { bottom: 6px; left: 6px; }
-  .grommet.br { bottom: 6px; right: 6px; }
-  .grommet.tc { top: 6px; left: 50%; transform: translateX(-50%); }
-  .grommet.bc { bottom: 6px; left: 50%; transform: translateX(-50%); }
 
   .size-info {
     font-size: 10px;
@@ -319,7 +205,6 @@
     letter-spacing: 1px;
   }
 
-  /* Notes */
   .legal-notes {
     max-width: 980px;
     display: grid;
@@ -354,7 +239,7 @@
 <body>
 
 <h1 class="page-title">Информационное объявление — Тимирязева 79</h1>
-<div class="subtitle">Информационное сообщение собственника о продаже объекта (не реклама). Горизонтальный баннер 130 × 56 см, крепится на перила с двух сторон.</div>
+<div class="subtitle">Баннер 130 × 56 см. Телефон — максимально крупно, читается с машины.</div>
 
 <div class="controls">
   <button class="active" onclick="setVariant('deep-navy')">Синий</button>
@@ -366,112 +251,66 @@
 
 <!-- Сторона A -->
 <div class="poster-col">
-  <div class="poster-label">Сторона A — пешеходы</div>
+  <div class="poster-label">Сторона A</div>
   <div class="poster deep-navy" id="posterA">
-    <div class="accent-bar-left"></div>
+    <div class="bar-t"></div>
+    <div class="bar-b"></div>
+    <div class="grommet tl"></div><div class="grommet tr"></div>
+    <div class="grommet bl"></div><div class="grommet br"></div>
+    <div class="grommet tc"></div><div class="grommet bc"></div>
+    <div class="corner-mark tl"></div><div class="corner-mark tr"></div>
+    <div class="corner-mark bl"></div><div class="corner-mark br"></div>
 
-    <div class="grommet tl"></div>
-    <div class="grommet tr"></div>
-    <div class="grommet bl"></div>
-    <div class="grommet br"></div>
-    <div class="grommet tc"></div>
-    <div class="grommet bc"></div>
-
-    <div class="poster-body">
-      <div class="corner-mark tl"></div>
-      <div class="corner-mark tr"></div>
-      <div class="corner-mark bl"></div>
-      <div class="corner-mark br"></div>
-
-      <div class="text-block">
-        <div class="main-text kz">САТЫЛАДЫ</div>
-        <div class="main-text ru">ПРОДАЁТСЯ</div>
-        <div class="type-label">коммерциялық объект</div>
-      </div>
-
-      <div class="divider-v"></div>
-
-      <div class="phone-block">
-        <div class="phone-label">Собственник</div>
-        <div class="phone-text">
-          <span class="code">+7 777</span><br>
-          6 777 964
-        </div>
-        <div class="addr-text">Тимирязева 79</div>
-      </div>
+    <div class="poster-content">
+      <div class="line1">САТЫЛАДЫ &nbsp;/&nbsp; ПРОДАЁТСЯ</div>
+      <div class="line2">+7 777 6 777 964</div>
+      <div class="line3">собственник &bull; Тимирязева 79</div>
     </div>
-
-    <div class="accent-bar-right"></div>
   </div>
-  <div class="size-info">130 &times; 56 см &mdash; масштаб ~1:3.5</div>
+  <div class="size-info">130 &times; 56 см</div>
 </div>
 
 <!-- Сторона B -->
 <div class="poster-col">
-  <div class="poster-label">Сторона B — автомобили</div>
+  <div class="poster-label">Сторона B</div>
   <div class="poster deep-navy" id="posterB">
-    <div class="accent-bar-left"></div>
+    <div class="bar-t"></div>
+    <div class="bar-b"></div>
+    <div class="grommet tl"></div><div class="grommet tr"></div>
+    <div class="grommet bl"></div><div class="grommet br"></div>
+    <div class="grommet tc"></div><div class="grommet bc"></div>
+    <div class="corner-mark tl"></div><div class="corner-mark tr"></div>
+    <div class="corner-mark bl"></div><div class="corner-mark br"></div>
 
-    <div class="grommet tl"></div>
-    <div class="grommet tr"></div>
-    <div class="grommet bl"></div>
-    <div class="grommet br"></div>
-    <div class="grommet tc"></div>
-    <div class="grommet bc"></div>
-
-    <div class="poster-body">
-      <div class="corner-mark tl"></div>
-      <div class="corner-mark tr"></div>
-      <div class="corner-mark bl"></div>
-      <div class="corner-mark br"></div>
-
-      <div class="text-block">
-        <div class="main-text kz">САТЫЛАДЫ</div>
-        <div class="main-text ru">ПРОДАЁТСЯ</div>
-        <div class="type-label">коммерциялық объект</div>
-      </div>
-
-      <div class="divider-v"></div>
-
-      <div class="phone-block">
-        <div class="phone-label">Собственник</div>
-        <div class="phone-text">
-          <span class="code">+7 777</span><br>
-          6 777 964
-        </div>
-        <div class="addr-text">Тимирязева 79</div>
-      </div>
+    <div class="poster-content">
+      <div class="line1">САТЫЛАДЫ &nbsp;/&nbsp; ПРОДАЁТСЯ</div>
+      <div class="line2">+7 777 6 777 964</div>
+      <div class="line3">собственник &bull; Тимирязева 79</div>
     </div>
-
-    <div class="accent-bar-right"></div>
   </div>
-  <div class="size-info">130 &times; 56 см &mdash; масштаб ~1:3.5</div>
+  <div class="size-info">130 &times; 56 см</div>
 </div>
 
 <div class="legal-notes">
   <div class="legal-card">
     <strong>Дизайн-код (V23R0001751)</strong>
     <span class="c">&#10003;</span> Цвета палитры города<br>
-    <span class="c">&#10003;</span> Отдельный баннер, не на фасаде<br>
     <span class="c">&#10003;</span> Без неона/кислоты
   </div>
   <div class="legal-card">
-    <strong>Закон «О рекламе» (ст. 11)</strong>
-    <span class="c">&#10003;</span> Каз. сверху, рус. снизу<br>
-    <span class="c">&#10003;</span> Одинаковый шрифт/размер<br>
+    <strong>Закон «О рекламе»</strong>
+    <span class="c">&#10003;</span> Каз. + рус., одинаковый размер<br>
     <span class="c">&#10003;</span> 0.73 м² &lt; 2 м²
   </div>
   <div class="legal-card">
     <strong>Информ. сообщение</strong>
     <span class="c">&#10003;</span> Факт + телефон собственника<br>
-    <span class="c">&#10003;</span> Без цены и промо<br>
     <span class="w">!</span> eOtinish для подстраховки
   </div>
   <div class="legal-card">
     <strong>Печать</strong>
     130 &times; 56 см, баннерная ткань<br>
-    6 люверсов, 2 экземпляра<br>
-    PDF/TIFF, 300 DPI, CMYK
+    6 люверсов, 2 шт, CMYK 300 DPI
   </div>
 </div>
 
