@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMG Smartwatch - 5 Brands</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Montserrat:ital,wght@0,600;0,800;0,900;1,800&family=Jost:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #121212;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #FFF;
+            user-select: none;
+            gap: 80px;
+        }
+
+        /* ПАНЕЛЬ ПЕРЕКЛЮЧЕНИЯ ТЕМ */
+        .theme-switcher {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #1A1A1A;
+            padding: 30px;
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 220px;
+            border: 1px solid #333;
+        }
+
+        .theme-switcher h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .theme-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #FFF;
+            text-align: left;
+            background: #111;
+        }
+
+        /* Маркеры кнопок в панели */
+        .btn-max {
+            border-left: 6px solid #FFCC00;
+        }
+
+        .btn-dfm {
+            border-left: 6px solid #FFED00;
+        }
+
+        .btn-hit {
+            border-left: 6px solid #FF007F;
+        }
+
+        .btn-rr {
+            border-left: 6px solid #E30613;
+        }
+
+        .btn-rmc {
+            border-left: 6px solid #D4AF37;
+            color: #D4AF37;
+        }
+
+        .theme-btn:active {
+            transform: scale(0.95);
+        }
+
+        .theme-btn.active-theme {
+            background: #333;
+            outline: 1px solid #555;
+        }
+
+        /* ================= ЕДИНЫЕ СТАНДАРТЫ (ТОКЕНЫ) ================= */
+        .watch-screen {
+            --bg-color: #000000;
+            --size: 466px;
+
+            /* Жесткие стандарты формы для всех тем (НЕ МЕНЯЮТСЯ) */
+            --radius-card: 24px;
+            --radius-btn: 50%;
+            --icon-radius: 50%;
+
+            width: var(--size);
+            height: var(--size);
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            transition: background-color 0.4s ease;
+        }
+
+        /* 1. MAXIMUM */
+        .watch-screen.theme-max {
+            --accent: #FFCC00;
+            --surface: #1A1A1A;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+            --font-family: 'Manrope', sans-serif;
+            --font-style: normal;
+            --text-transform: none;
+            --btn-bg: var(--accent);
+            --btn-color: #000000;
+            --btn-border: none;
+            --letter-spacing: 0px;
+        }
+
+        /* 2. DFM */
+        .watch-screen.theme-dfm {
+            --accent: #FFED00;
+            --surface: #131313;
+            --text-main: #FFFFFF;
+            --text-muted: #777777;
+            --font-family: 'Montserrat', sans-serif;
+            --font-style: normal;
+            --text-transform: uppercase;
+            --btn-bg: var(--accent);
+            --btn-color: #000000;
+            --btn-border: none;
+            --letter-spacing: 0px;
+        }
+
+        /* 3. ХИТ FM */
+        .watch-screen.theme-hit {
+            --accent: #FF007F;
+            --surface: #1A002A;
+            --text-main: #FFFFFF;
+            --text-muted: #B388C9;
+            --font-family: 'Montserrat', sans-serif;
+            --font-style: italic;
+            --text-transform: uppercase;
+            --btn-bg: #CCFF00;
+            --btn-color: #000000;
+            --btn-border: none;
+            --letter-spacing: 0px;
+        }
+
+        /* 4. Русское Радио */
+        .watch-screen.theme-rr {
+            --accent: #E30613;
+            --surface: #0A1128;
+            --text-main: #FFFFFF;
+            --text-muted: #8B9DC3;
+            --font-family: 'Inter', sans-serif;
+            --font-style: normal;
+            --text-transform: none;
+            --btn-bg: var(--accent);
+            --btn-color: #FFFFFF;
+            --btn-border: none;
+            --letter-spacing: 0px;
+        }
+
+        /* 5. Radio Monte Carlo */
+        .watch-screen.theme-rmc {
+            --accent: #D4AF37;
+            --surface: #10312B;
+            --text-main: #F5F0E6;
+            --text-muted: #C6BEAF;
+            --font-family: 'Jost', sans-serif;
+            --font-style: normal;
+            --text-transform: uppercase;
+            --btn-bg: transparent;
+            --btn-color: var(--accent);
+            --btn-border: 2px solid var(--accent);
+            --letter-spacing: 1px;
+        }
+
+        /* ================= БАЗОВЫЕ СТИЛИ ИНТЕРФЕЙСА ================= */
+        .watch-case {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(145deg, #2a2a2a, #111);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .watch-screen:active {
+            cursor: grabbing;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 25px;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-muted);
+            z-index: 50;
+            pointer-events: none;
+            font-family: var(--font-family);
+            transition: color 0.4s;
+        }
+
+        .volume-arc {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 40;
+            transition: opacity 0.3s;
+        }
+
+        .vol-stroke {
+            stroke: var(--accent);
+            transition: stroke 0.4s;
+        }
+
+        .pagination {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 40;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #444;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background: var(--accent);
+            width: 22px;
+            border-radius: 4px;
+        }
+
+        /* Карусель и Списки */
+        .carousel {
+            display: flex;
+            width: 400%;
+            height: 100%;
+            z-index: 10;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateX(-25%);
+            font-family: var(--font-family);
+            font-style: var(--font-style);
+        }
+
+        .screen {
+            width: var(--size);
+            height: var(--size);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .scroll-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 80px 30px;
+            box-sizing: border-box;
+            scrollbar-width: none;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .list-title {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: var(--letter-spacing);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            transition: color 0.4s;
+        }
+
+        /* КАРТОЧКИ (ЕДИНАЯ ГЕОМЕТРИЯ) */
+        .list-item {
+            background: var(--surface);
+            padding: 12px 16px;
+            border-radius: var(--radius-card);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.4s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .list-item:active {
+            transform: scale(0.97);
+        }
+
+        .list-item.playing {
+            border-color: var(--accent);
+        }
+
+        .item-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* ИКОНКИ (ЕДИНАЯ ГЕОМЕТРИЯ) */
+        .item-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--icon-radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: 0.4s;
+            color: var(--text-main);
+        }
+
+        .list-item.playing .item-icon {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .item-text {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: var(--text-main);
+            transition: color 0.4s;
+            flex-grow: 1;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: var(--text-transform);
+            letter-spacing: var(--letter-spacing);
+            transition: 0.4s;
+        }
+
+        .item-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-style: normal;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Inter', sans-serif;
+            transition: 0.4s;
+        }
+
+        /* Бегущая строка для длинных названий треков */
+        .item-sub.marquee {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .item-sub.marquee .marquee-inner {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee-scroll 8s linear infinite;
+            padding-right: 40px;
+        }
+
+        @keyframes marquee-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .fav-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transition: 0.4s;
+            background: rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+        }
+
+        .fav-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            transition: 0.4s;
+        }
+
+        .fav-btn.active svg {
+            fill: var(--accent);
+            stroke: var(--accent);
+        }
+
+        /* ================= ЭКРАН ПЛЕЕРА ================= */
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            margin-top: 25px;
+            transition: color 0.4s;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            transition: background 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .skip-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--surface);
+            border-radius: var(--radius-btn);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .skip-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-main);
+            transition: fill 0.4s;
+        }
+
+        .watch-screen.theme-rmc .skip-btn svg {
+            fill: var(--accent);
+        }
+
+        .skip-btn:active {
+            transform: scale(0.9);
+        }
+
+        .play-btn {
+            width: 96px;
+            height: 96px;
+            background: var(--btn-bg);
+            border: var(--btn-border);
+            border-radius: var(--radius-btn);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .play-icon {
+            width: 28px;
+            height: 32px;
+            background-color: var(--btn-color);
+            clip-path: polygon(0 0, 0 100%, 100% 50%);
+            margin-left: 6px;
+            transition: 0.4s;
+        }
+
+        .play-btn.playing .play-icon {
+            clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%, 0 0, 65% 0, 100% 0, 100% 100%, 65% 100%, 65% 0);
+            margin-left: 0;
+            width: 24px;
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .track-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            width: 80%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: var(--text-transform);
+            color: var(--text-main);
+            letter-spacing: var(--letter-spacing);
+            transition: 0.4s;
+        }
+
+        .track-artist {
+            font-size: 16px;
+            color: var(--text-muted);
+            font-style: normal;
+            margin-top: 4px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 15px;
+            transition: 0.4s;
+        }
+
+        .player-fav-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--surface);
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .player-fav-wrap svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            transition: 0.4s;
+        }
+
+        .player-fav-wrap.active svg {
+            fill: var(--accent);
+            stroke: var(--accent);
+        }
+
+        .player-fav-wrap:active {
+            transform: scale(0.9);
+        }
+
+        /* ================= ПОДКАСТЫ: ЭКРАН ЭПИЗОДОВ ================= */
+        .episodes-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 60;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            font-family: var(--font-family);
+            font-style: var(--font-style);
+        }
+
+        .episodes-overlay.open {
+            transform: translateX(0%);
+        }
+
+        .episodes-overlay .scroll-container {
+            padding-top: 65px;
+        }
+
+        .back-btn {
+            text-align: center;
+            color: var(--accent);
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 12px;
+            background: var(--surface);
+            border-radius: var(--radius-card);
+            border: 1px solid transparent;
+            transition: 0.4s;
+            margin-bottom: 16px;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+            border-color: var(--accent);
+        }
+
+        .episode-item {
+            background: var(--surface);
+            padding: 14px 16px;
+            border-radius: var(--radius-card);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.4s;
+        }
+
+        .episode-item:active {
+            transform: scale(0.97);
+        }
+
+        .episode-item.playing {
+            border-color: var(--accent);
+        }
+
+        .ep-num {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: 0.4s;
+        }
+
+        .episode-item.playing .ep-num {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .ep-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .ep-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: 0.4s;
+        }
+
+        .ep-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            margin-top: 2px;
+            transition: 0.4s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="theme-switcher">
+        <h3>Выбор станции:</h3>
+        <button class="theme-btn btn-max active-theme"
+            onclick="switchTheme('theme-max', this, 'MAXIMUM', 'Sonne — Rammstein', '⚡', 'MaxiCast')">MAXIMUM</button>
+        <button class="theme-btn btn-dfm"
+            onclick="switchTheme('theme-dfm', this, 'DFM', 'Baby Don\'t Hurt Me — David Guetta', 'D', 'Dance Mix')">DFM</button>
+        <button class="theme-btn btn-hit"
+            onclick="switchTheme('theme-hit', this, 'ХИТ FM', 'Bad Guy — Billie Eilish', 'Х', 'Хит на днюхе')">ХИТ FM</button>
+        <button class="theme-btn btn-rr"
+            onclick="switchTheme('theme-rr', this, 'Русское Радио', 'Я русский — SHAMAN', 'Р', 'Вкрутую')">Русское
+            Радио</button>
+        <button class="theme-btn btn-rmc"
+            onclick="switchTheme('theme-rmc', this, 'Monte Carlo', 'Smooth Operator — Sade', '♔', 'Утреннее Шоу')">Monte
+            Carlo</button>
+        <div style="font-size:11px; color:#666; margin-top:10px; line-height:1.5;">* Свайп по экрану вбок.</div>
+    </div>
+
+    <div class="watch-case">
+        <div class="watch-screen theme-max" id="watchScreen">
+
+            <div class="status-bar">14:20</div>
+
+            <svg class="volume-arc" id="volArc" viewBox="0 0 466 466">
+                <circle cx="233" cy="233" r="226" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6"
+                    stroke-dasharray="1419" stroke-dashoffset="1000" stroke-linecap="round"
+                    transform="rotate(135 233 233)" />
+                <circle class="vol-stroke" cx="233" cy="233" r="226" fill="none" stroke-width="6"
+                    stroke-dasharray="1419" stroke-dashoffset="1180" stroke-linecap="round"
+                    transform="rotate(135 233 233)" />
+            </svg>
+
+            <div class="pagination" id="pagination">
+                <div class="dot" id="dot0"></div>
+                <div class="dot active" id="dot1"></div>
+                <div class="dot" id="dot2"></div>
+                <div class="dot" id="dot3"></div>
+            </div>
+
+            <!-- ОВЕРЛЕЙ ЭПИЗОДОВ ПОДКАСТА -->
+            <div class="episodes-overlay" id="episodesOverlay">
+                <div class="scroll-container">
+                    <div class="back-btn" onclick="closeEpisodes()">← Назад</div>
+                    <div class="list-title" id="episodesPodTitle">MaxiCast</div>
+                    <div class="episode-item" onclick="playEpisode(this, 'Выпуск 15', '24 мин')">
+                        <div class="ep-num">15</div>
+                        <div class="ep-info">
+                            <div class="ep-title">Рок в 2026: что слушать</div>
+                            <div class="ep-meta">24 мин • 10 апр</div>
+                        </div>
+                        <div class="fav-btn" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg></div>
+                    </div>
+                    <div class="episode-item" onclick="playEpisode(this, 'Выпуск 14', '31 мин')">
+                        <div class="ep-num">14</div>
+                        <div class="ep-info">
+                            <div class="ep-title">Интервью с группой</div>
+                            <div class="ep-meta">31 мин • 3 апр</div>
+                        </div>
+                        <div class="fav-btn" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg></div>
+                    </div>
+                    <div class="episode-item" onclick="playEpisode(this, 'Выпуск 13', '18 мин')">
+                        <div class="ep-num">13</div>
+                        <div class="ep-info">
+                            <div class="ep-title">Топ-10 альбомов весны</div>
+                            <div class="ep-meta">18 мин • 27 мар</div>
+                        </div>
+                        <div class="fav-btn" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg></div>
+                    </div>
+                    <div class="episode-item" onclick="playEpisode(this, 'Выпуск 12', '22 мин')">
+                        <div class="ep-num">12</div>
+                        <div class="ep-info">
+                            <div class="ep-title">Фестивальный сезон</div>
+                            <div class="ep-meta">22 мин • 20 мар</div>
+                        </div>
+                        <div class="fav-btn" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg></div>
+                    </div>
+                    <div style="height: 60px;"></div>
+                </div>
+            </div>
+
+            <div class="carousel" id="carousel">
+
+                <!-- ЭКРАН 0: ИЗБРАННОЕ -->
+                <div class="screen">
+                    <div class="scroll-container">
+                        <div class="list-title" style="color:var(--accent);">★ Избранное</div>
+                        <div class="list-item trigger-play playing" onclick="playItem(this)">
+                            <div class="item-content">
+                                <div class="item-icon dyn-icon">⚡</div>
+                                <div class="item-text">
+                                    <div class="item-title dyn-station">MAXIMUM</div>
+                                    <div class="item-sub dyn-track">Sonne — Rammstein</div>
+                                </div>
+                            </div>
+                            <div class="fav-btn active" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg></div>
+                        </div>
+                        <div class="list-item trigger-play" onclick="playPodcast(this)">
+                            <div class="item-content">
+                                <div class="item-icon">🎙️</div>
+                                <div class="item-text">
+                                    <div class="item-title dyn-pod">MaxiCast</div>
+                                    <div class="item-sub">4 эпизода</div>
+                                </div>
+                            </div>
+                            <div class="fav-btn active" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg></div>
+                        </div>
+                        <div style="height: 60px;"></div>
+                    </div>
+                </div>
+
+                <!-- ЭКРАН 1: ПЛЕЕР -->
+                <div class="screen">
+                    <div class="live-badge">
+                        <div class="live-dot"></div> В ЭФИРЕ
+                    </div>
+
+                    <div class="player-controls">
+                        <div class="skip-btn"><svg viewBox="0 0 24 24">
+                                <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+                            </svg></div>
+                        <div class="play-btn playing" id="playBtn">
+                            <div class="play-icon"></div>
+                        </div>
+                        <div class="skip-btn"><svg viewBox="0 0 24 24">
+                                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+                            </svg></div>
+                    </div>
+
+                    <div class="track-title dyn-station" id="playerTitle">MAXIMUM</div>
+                    <div class="track-artist dyn-track" id="playerSub">Sonne — Rammstein</div>
+
+                    <div class="player-fav-wrap active" id="mainPlayerFav" onclick="toggleFav(event, this)">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- ЭКРАН 2: СТАНЦИИ -->
+                <div class="screen">
+                    <div class="scroll-container">
+                        <div class="list-title">Станции</div>
+                        <div class="list-item playing trigger-play" onclick="playItem(this)">
+                            <div class="item-content">
+                                <div class="item-icon dyn-icon">⚡</div>
+                                <div class="item-text">
+                                    <div class="item-title dyn-station">MAXIMUM</div>
+                                    <div class="item-sub dyn-track">Sonne — Rammstein</div>
+                                </div>
+                            </div>
+                            <div class="fav-btn active" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg></div>
+                        </div>
+                        <div style="height: 60px;"></div>
+                    </div>
+                </div>
+
+                <!-- ЭКРАН 3: ПОДКАСТЫ (список подкастов → клик = эпизоды) -->
+                <div class="screen">
+                    <div class="scroll-container">
+                        <div class="list-title">Подкасты</div>
+                        <div class="list-item" onclick="openEpisodes(this)">
+                            <div class="item-content">
+                                <div class="item-icon">🎙️</div>
+                                <div class="item-text">
+                                    <div class="item-title dyn-pod">MaxiCast</div>
+                                    <div class="item-sub">4 эпизода ›</div>
+                                </div>
+                            </div>
+                            <div class="fav-btn" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg></div>
+                        </div>
+                        <div class="list-item" onclick="openEpisodes(this)">
+                            <div class="item-content">
+                                <div class="item-icon">💬</div>
+                                <div class="item-text">
+                                    <div class="item-title">Интервью</div>
+                                    <div class="item-sub">3 эпизода ›</div>
+                                </div>
+                            </div>
+                            <div class="fav-btn" onclick="toggleFav(event, this)"><svg viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg></div>
+                        </div>
+                        <div style="height: 60px;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === ДАННЫЕ ТРЕКОВ ПО СТАНЦИЯМ ===
+        const stationTracks = {
+            'theme-max': 'Sonne — Rammstein',
+            'theme-dfm': 'Baby Don\'t Hurt Me — David Guetta',
+            'theme-hit': 'Bad Guy — Billie Eilish',
+            'theme-rr': 'Я русский — SHAMAN',
+            'theme-rmc': 'Smooth Operator — Sade'
+        };
+
+        const stationPods = {
+            'theme-max': 'MaxiCast',
+            'theme-dfm': 'Dance Mix',
+            'theme-hit': 'Хит на днюхе',
+            'theme-rr': 'Вкрутую',
+            'theme-rmc': 'Утреннее Шоу'
+        };
+
+        let currentTheme = 'theme-max';
+
+        // === ЛОГИКА ТЕМИЗАЦИИ ===
+        function switchTheme(themeClass, btn, station, track, icon, podName) {
+            currentTheme = themeClass;
+            document.getElementById('watchScreen').className = 'watch-screen ' + themeClass;
+
+            document.querySelectorAll('.dyn-station').forEach(el => el.innerText = station);
+            document.querySelectorAll('.dyn-track').forEach(el => el.innerText = track);
+            document.querySelectorAll('.dyn-icon').forEach(el => el.innerText = icon);
+            document.querySelectorAll('.dyn-pod').forEach(el => el.innerText = podName);
+
+            // Обновляем плеер если играет станция
+            const currentTitle = document.getElementById('playerTitle').innerText;
+            if (['MAXIMUM', 'DFM', 'ХИТ FM', 'Русское Радио', 'Monte Carlo'].includes(currentTitle)) {
+                document.getElementById('playerTitle').innerText = station;
+                document.getElementById('playerSub').innerText = track;
+            }
+
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active-theme'));
+            btn.classList.add('active-theme');
+        }
+
+        // === СВАЙПЫ (только горизонтальные, без истории) ===
+        const screenEl = document.getElementById('watchScreen'), carousel = document.getElementById('carousel');
+        const volArc = document.getElementById('volArc');
+        const pagination = document.getElementById('pagination');
+        const dots = [document.getElementById('dot0'), document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
+
+        let isDragging = false, startX = 0, startY = 0, dragDir = null, currentIndex = 1;
+        let currentTranslateX = currentIndex * -25;
+
+        screenEl.addEventListener('mousedown', dragStart);
+        screenEl.addEventListener('mousemove', drag);
+        screenEl.addEventListener('mouseup', dragEnd);
+        screenEl.addEventListener('mouseleave', dragEnd);
+
+        function dragStart(e) {
+            if (e.target.closest('.fav-btn') || e.target.closest('.player-fav-wrap') || e.target.closest('.skip-btn') || e.target.closest('.play-btn') || e.target.closest('.back-btn') || e.target.closest('.episode-item')) return;
+            isDragging = true; startX = e.clientX; startY = e.clientY; dragDir = null;
+            carousel.style.transition = 'none';
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            const diffX = e.clientX - startX;
+            if (dragDir === null) {
+                if (Math.abs(diffX) > 5) dragDir = 'x'; else return;
+            }
+            if (dragDir === 'x') {
+                carousel.style.transform = `translateX(${currentTranslateX + ((diffX / screenEl.offsetWidth) * 100 / 4)}%)`;
+            }
+        }
+
+        function dragEnd(e) {
+            if (!isDragging) return; isDragging = false;
+            carousel.style.transition = 'transform 0.4s';
+
+            if (dragDir === 'x') {
+                const diffX = e.clientX - startX;
+                if (diffX < -40 && currentIndex < 3) currentIndex++; else if (diffX > 40 && currentIndex > 0) currentIndex--;
+                goToScreen(currentIndex);
+            }
+        }
+
+        function goToScreen(index) {
+            currentIndex = index; currentTranslateX = currentIndex * -25;
+            carousel.style.transform = `translateX(${currentTranslateX}%)`;
+            dots.forEach(d => d.classList.remove('active')); dots[currentIndex].classList.add('active');
+            volArc.style.opacity = (currentIndex === 1) ? '1' : '0';
+        }
+
+        // === КНОПКИ УПРАВЛЕНИЯ ===
+        window.toggleFav = function (e, element) { e.stopPropagation(); element.classList.toggle('active'); }
+
+        window.playItem = function (element) {
+            const title = element.querySelector('.item-title').innerText;
+            const track = element.querySelector('.item-sub').innerText;
+            document.getElementById('playerTitle').innerText = title;
+            document.getElementById('playerSub').innerText = track;
+
+            document.querySelectorAll('.list-item').forEach(el => el.classList.remove('playing'));
+            element.classList.add('playing');
+            document.getElementById('playBtn').classList.add('playing');
+
+            const isFav = element.querySelector('.fav-btn').classList.contains('active');
+            isFav ? document.getElementById('mainPlayerFav').classList.add('active') : document.getElementById('mainPlayerFav').classList.remove('active');
+            setTimeout(() => goToScreen(1), 150);
+        }
+
+        // === ПОДКАСТЫ: ЭПИЗОДЫ ===
+        window.openEpisodes = function (element) {
+            const podName = element.querySelector('.item-title').innerText;
+            document.getElementById('episodesPodTitle').innerText = podName;
+            document.getElementById('episodesOverlay').classList.add('open');
+        }
+
+        window.closeEpisodes = function () {
+            document.getElementById('episodesOverlay').classList.remove('open');
+        }
+
+        window.playEpisode = function (element, epName, duration) {
+            const title = element.querySelector('.ep-title').innerText;
+            const podName = document.getElementById('episodesPodTitle').innerText;
+            document.getElementById('playerTitle').innerText = title;
+            document.getElementById('playerSub').innerText = podName + ' • ' + duration;
+
+            document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('playing'));
+            element.classList.add('playing');
+            document.getElementById('playBtn').classList.add('playing');
+
+            // Закрываем оверлей и переходим на плеер
+            setTimeout(() => {
+                closeEpisodes();
+                goToScreen(1);
+            }, 300);
+        }
+
+        window.playPodcast = function (element) {
+            const podName = element.querySelector('.item-title').innerText;
+            document.getElementById('episodesPodTitle').innerText = podName;
+            document.getElementById('episodesOverlay').classList.add('open');
+        }
+
+        document.getElementById('playBtn').addEventListener('click', function () { this.classList.toggle('playing'); });
+    </script>
+</body>
+
+</html>
