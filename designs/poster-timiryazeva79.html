@@ -124,19 +124,23 @@
     background: rgba(200,200,200,0.06);
     z-index: 10;
   }
-  .grommet.tl { top: 5px; left: 5px; }
-  .grommet.tr { top: 5px; right: 5px; }
-  .grommet.bl { bottom: 5px; left: 5px; }
-  .grommet.br { bottom: 5px; right: 5px; }
-  .grommet.tc { top: 5px; left: 50%; transform: translateX(-50%); }
-  .grommet.bc { bottom: 5px; left: 50%; transform: translateX(-50%); }
+  .grommet.tl { top: 10px; left: 10px; }
+  .grommet.tr { top: 10px; right: 10px; }
+  .grommet.bl { bottom: 10px; left: 10px; }
+  .grommet.br { bottom: 10px; right: 10px; }
+  .grommet.tc { top: 10px; left: 50%; transform: translateX(-50%); }
+  .grommet.bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
 
   .content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding: 0 40px;
+    gap: 8px;
+    padding: 28px 50px;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    box-sizing: border-box;
   }
 
   /* Строка 1: плашка ҮЙЖАЙ / ПОМЕЩЕНИЕ САТЫЛАДЫ / ПРОДАЁТСЯ */
@@ -155,7 +159,7 @@
   /* Строка 2: ТЕЛЕФОН — гигант */
   .phone {
     font-family: 'Montserrat', sans-serif;
-    font-size: 108px;
+    font-size: 100px;
     font-weight: 900;
     letter-spacing: 3px;
     line-height: 1;
