@@ -73,55 +73,55 @@
     height: 420px;
     position: relative;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     transition: all 0.4s ease;
   }
 
   /* === DEEP NAVY === */
   .poster.deep-navy { background: #0c1524; border: 2px solid #1a3050; }
-  .poster.deep-navy .tag { color: #c8a86e; border-color: #c8a86e; }
+  .poster.deep-navy .text-kz { color: #c8a86e; }
+  .poster.deep-navy .text-ru { color: #ffffff; }
   .poster.deep-navy .phone { color: #ffffff; }
-  .poster.deep-navy .owner { color: rgba(255,255,255,0.35); }
-  .poster.deep-navy .bar { background: #c8a86e; }
+  .poster.deep-navy .label { color: rgba(255,255,255,0.3); }
+  .poster.deep-navy .stripe { background: #c8a86e; }
 
   /* === CHARCOAL === */
   .poster.charcoal { background: #181614; border: 2px solid #332e28; }
-  .poster.charcoal .tag { color: #c9a96e; border-color: #c9a96e; }
+  .poster.charcoal .text-kz { color: #c9a96e; }
+  .poster.charcoal .text-ru { color: #f5f0e8; }
   .poster.charcoal .phone { color: #f5f0e8; }
-  .poster.charcoal .owner { color: rgba(245,240,232,0.3); }
-  .poster.charcoal .bar { background: #c9a96e; }
+  .poster.charcoal .label { color: rgba(245,240,232,0.25); }
+  .poster.charcoal .stripe { background: #c9a96e; }
 
   /* === IVORY === */
   .poster.ivory { background: #f6f3ed; border: 2px solid #d0c9bc; }
-  .poster.ivory .tag { color: #6b5535; border-color: #6b5535; }
+  .poster.ivory .text-kz { color: #6b5535; }
+  .poster.ivory .text-ru { color: #1a1510; }
   .poster.ivory .phone { color: #1a1510; }
-  .poster.ivory .owner { color: rgba(26,21,16,0.3); }
-  .poster.ivory .bar { background: #6b5535; }
+  .poster.ivory .label { color: rgba(26,21,16,0.25); }
+  .poster.ivory .stripe { background: #6b5535; }
 
   /* === FOREST === */
   .poster.forest { background: #0a1810; border: 2px solid #163522; }
-  .poster.forest .tag { color: #c8a86e; border-color: #c8a86e; }
+  .poster.forest .text-kz { color: #c8a86e; }
+  .poster.forest .text-ru { color: #eef5ee; }
   .poster.forest .phone { color: #eef5ee; }
-  .poster.forest .owner { color: rgba(238,245,238,0.3); }
-  .poster.forest .bar { background: #c8a86e; }
+  .poster.forest .label { color: rgba(238,245,238,0.25); }
+  .poster.forest .stripe { background: #c8a86e; }
 
   /* === LAYOUT === */
-  .bar {
+  .stripe {
     position: absolute;
-    left: 0; right: 0; height: 7px;
+    left: 0; right: 0; height: 6px;
   }
-  .bar.top { top: 0; }
-  .bar.bot { bottom: 0; }
+  .stripe.top { top: 0; }
+  .stripe.bot { bottom: 0; }
 
   .grommet {
     position: absolute;
     width: 11px; height: 11px;
     border-radius: 50%;
-    border: 2px solid rgba(150,150,150,0.25);
-    background: rgba(200,200,200,0.06);
+    border: 2px solid rgba(150,150,150,0.2);
+    background: rgba(200,200,200,0.05);
     z-index: 10;
   }
   .grommet.tl { top: 10px; left: 10px; }
@@ -131,48 +131,115 @@
   .grommet.tc { top: 10px; left: 50%; transform: translateX(-50%); }
   .grommet.bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
 
-  .content {
+  /* Сетка: всё пространство, 2 зоны — левая (текст) и правая (телефон) */
+  .grid {
+    position: absolute;
+    top: 24px;
+    bottom: 24px;
+    left: 36px;
+    right: 36px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* Левая зона — САТЫЛАДЫ / ПРОДАЁТСЯ */
+  .zone-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    padding-right: 30px;
+  }
+
+  .text-kz {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 3px;
+  }
+
+  .text-kz.big {
+    font-size: 58px;
+  }
+
+  .text-kz.small {
+    font-size: 22px;
+    margin-bottom: 4px;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+
+  .text-ru {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 3px;
+  }
+
+  .text-ru.big {
+    font-size: 58px;
+  }
+
+  .text-ru.small {
+    font-size: 22px;
+    margin-bottom: 4px;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+
+  /* Разделитель вертикальный */
+  .sep {
+    width: 2px;
+    align-self: stretch;
+    margin: 20px 0;
+    opacity: 0.3;
+  }
+
+  .deep-navy .sep { background: #c8a86e; }
+  .charcoal .sep { background: #c9a96e; }
+  .ivory .sep { background: #6b5535; }
+  .forest .sep { background: #c8a86e; }
+
+  /* Правая зона — ТЕЛЕФОН */
+  .zone-right {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 28px 50px;
-    width: 100%;
-    height: 100%;
     justify-content: center;
-    box-sizing: border-box;
+    padding-left: 30px;
+    min-width: 420px;
   }
 
-  /* Строка 1: плашка ҮЙЖАЙ / ПОМЕЩЕНИЕ САТЫЛАДЫ / ПРОДАЁТСЯ */
-  .tag {
+  .phone {
     font-family: 'Montserrat', sans-serif;
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    line-height: 1.3;
-    border: 2px solid;
-    padding: 10px 32px;
+    font-weight: 900;
+    line-height: 1;
     text-align: center;
   }
 
-  /* Строка 2: ТЕЛЕФОН — гигант */
-  .phone {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 100px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    line-height: 1;
-    white-space: nowrap;
+  .phone .row1 {
+    font-size: 42px;
+    letter-spacing: 4px;
+    opacity: 0.6;
   }
 
-  /* Строка 3: собственник */
-  .owner {
+  .phone .row2 {
+    font-size: 86px;
+    letter-spacing: 3px;
+  }
+
+  .label {
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 6px;
+    letter-spacing: 5px;
     text-transform: uppercase;
+    margin-top: 8px;
   }
 
   .size-info {
@@ -181,35 +248,26 @@
     letter-spacing: 1px;
   }
 
-  /* Sim day/night */
-  .sim-row {
+  /* Day/Night sim */
+  .sim-wrap {
     display: flex;
     gap: 20px;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .sim-label {
-    font-size: 10px;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
+  .sim-wrap .poster {
+    transform: scale(0.48);
+    transform-origin: top center;
   }
-
   .sim-day {
     filter: brightness(1.15) saturate(0.9);
     box-shadow: 0 0 60px rgba(255,255,200,0.08);
-    transform: scale(0.48);
-    transform-origin: top center;
   }
   .sim-night {
-    filter: brightness(0.7) contrast(1.1);
+    filter: brightness(0.65) contrast(1.15);
     box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    transform: scale(0.48);
-    transform-origin: top center;
   }
 
-  /* Notes */
   .notes {
     max-width: 980px;
     display: grid;
@@ -254,42 +312,75 @@
 <!-- Основной вид -->
 <div class="poster-col">
   <div class="poster deep-navy" id="posterA">
-    <div class="bar top"></div>
-    <div class="bar bot"></div>
+    <div class="stripe top"></div>
+    <div class="stripe bot"></div>
     <div class="grommet tl"></div><div class="grommet tr"></div>
     <div class="grommet bl"></div><div class="grommet br"></div>
     <div class="grommet tc"></div><div class="grommet bc"></div>
 
-    <div class="content">
-      <div class="tag">Жылжымайтын мүлік сатылады<br>Помещение продаётся</div>
-      <div class="phone">+7 777 6 777 964</div>
-      <div class="owner">собственник</div>
+    <div class="grid">
+      <div class="zone-left">
+        <div class="text-kz small">Жылжымайтын мүлік</div>
+        <div class="text-kz big">САТЫЛАДЫ</div>
+        <div class="text-ru small" style="margin-top: 14px;">Помещение</div>
+        <div class="text-ru big">ПРОДАЁТСЯ</div>
+      </div>
+      <div class="sep"></div>
+      <div class="zone-right">
+        <div class="phone">
+          <div class="row1">+7 777</div>
+          <div class="row2">6 777 964</div>
+        </div>
+        <div class="label">собственник</div>
+      </div>
     </div>
   </div>
-  <div class="size-info">130 &times; 56 см &mdash; масштаб ~1:3.5</div>
+  <div class="size-info">130 &times; 56 см</div>
 </div>
 
-<!-- День / Ночь симуляция -->
-<div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+<!-- День / Ночь -->
+<div class="sim-wrap">
   <div class="poster-col">
     <div class="poster-label">&#9728; День</div>
-    <div class="poster deep-navy sim-day" id="simDay">
-      <div class="bar top"></div><div class="bar bot"></div>
-      <div class="content">
-        <div class="tag">Жылжымайтын мүлік сатылады<br>Помещение продаётся</div>
-        <div class="phone">+7 777 6 777 964</div>
-        <div class="owner">собственник</div>
+    <div class="poster deep-navy sim-day">
+      <div class="stripe top"></div><div class="stripe bot"></div>
+      <div class="grid">
+        <div class="zone-left">
+          <div class="text-kz small">Жылжымайтын мүлік</div>
+          <div class="text-kz big">САТЫЛАДЫ</div>
+          <div class="text-ru small" style="margin-top: 14px;">Помещение</div>
+          <div class="text-ru big">ПРОДАЁТСЯ</div>
+        </div>
+        <div class="sep"></div>
+        <div class="zone-right">
+          <div class="phone">
+            <div class="row1">+7 777</div>
+            <div class="row2">6 777 964</div>
+          </div>
+          <div class="label">собственник</div>
+        </div>
       </div>
     </div>
   </div>
   <div class="poster-col">
     <div class="poster-label">&#9790; Ночь</div>
-    <div class="poster deep-navy sim-night" id="simNight">
-      <div class="bar top"></div><div class="bar bot"></div>
-      <div class="content">
-        <div class="tag">Жылжымайтын мүлік сатылады<br>Помещение продаётся</div>
-        <div class="phone">+7 777 6 777 964</div>
-        <div class="owner">собственник</div>
+    <div class="poster deep-navy sim-night">
+      <div class="stripe top"></div><div class="stripe bot"></div>
+      <div class="grid">
+        <div class="zone-left">
+          <div class="text-kz small">Жылжымайтын мүлік</div>
+          <div class="text-kz big">САТЫЛАДЫ</div>
+          <div class="text-ru small" style="margin-top: 14px;">Помещение</div>
+          <div class="text-ru big">ПРОДАЁТСЯ</div>
+        </div>
+        <div class="sep"></div>
+        <div class="zone-right">
+          <div class="phone">
+            <div class="row1">+7 777</div>
+            <div class="row2">6 777 964</div>
+          </div>
+          <div class="label">собственник</div>
+        </div>
       </div>
     </div>
   </div>
@@ -297,18 +388,17 @@
 
 <div class="notes">
   <div class="note">
-    <strong>Почему не жёлтый?</strong>
-    Жёлтый/кислотный фон днём бросается в глаза, но ночью при уличном освещении вымывается — белый текст на жёлтом теряет контраст. Тёмный фон + белый текст читается <span class="g">и днём и ночью</span> — белые буквы ловят любой свет.
+    <strong>Контраст день / ночь</strong>
+    Тёмный фон + белый/золотой текст читается <span class="g">24/7</span>. Белые буквы отражают любой свет — фонари, фары. Жёлтый фон ночью вымывается.
   </div>
   <div class="note">
     <strong>Помещение, не бизнес</strong>
-    Написано <span class="g">«Үйжай / Помещение»</span> — сразу ясно что продаётся недвижимость, а не ломбард «Успех» или «Сейф». Адрес убран — баннер висит на самом объекте, дублировать не нужно.
+    <span class="g">«Жылжымайтын мүлік / Помещение»</span> — сразу ясно что недвижимость, а не ломбард. Термин с Krisha.kz / OLX.
   </div>
   <div class="note">
-    <strong>Юридически</strong>
-    <span class="g">&#10003;</span> Информ. сообщение собственника<br>
-    <span class="g">&#10003;</span> Каз. + рус., одинаковый размер<br>
-    <span class="g">&#10003;</span> Цвета дизайн-кода Алматы<br>
+    <strong>Закон</strong>
+    <span class="g">&#10003;</span> Каз. + рус., одинаковый шрифт<br>
+    <span class="g">&#10003;</span> Цвета дизайн-кода<br>
     <span class="g">&#10003;</span> 0.73 м² &lt; 2 м²<br>
     <span class="y">!</span> eOtinish для подстраховки
   </div>
