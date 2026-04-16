@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Информационное объявление — Тимирязева 79 (130×56 см)</title>
+<title>Информационное объявление — Тимирязева 79 н.п. 18</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -17,24 +17,16 @@
     align-items: center;
     padding: 40px 20px;
     font-family: 'Inter', sans-serif;
-    gap: 40px;
+    gap: 36px;
     min-height: 100vh;
   }
 
   h1.page-title {
-    font-size: 16px;
+    font-size: 15px;
     color: #888;
     text-transform: uppercase;
     letter-spacing: 3px;
     text-align: center;
-  }
-
-  .subtitle {
-    font-size: 12px;
-    color: #666;
-    text-align: center;
-    max-width: 700px;
-    line-height: 1.6;
   }
 
   .controls {
@@ -65,17 +57,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
   .poster-label {
     font-size: 11px;
-    color: #666;
+    color: #555;
     text-transform: uppercase;
     letter-spacing: 2px;
   }
 
-  /* 130cm × 56cm at ~1:3.5 */
+  /* 130cm × 56cm — scale ~1:3.5 → 980 × 420 */
   .poster {
     width: 980px;
     height: 420px;
@@ -89,66 +81,47 @@
   }
 
   /* === DEEP NAVY === */
-  .poster.deep-navy { background: #0f1b2d; border: 2px solid #1e3a5f; }
-  .poster.deep-navy .line1 { color: #c8a86e; }
-  .poster.deep-navy .line2 { color: #ffffff; }
-  .poster.deep-navy .line3 { color: #ffffff; }
-  .poster.deep-navy .bar-t, .poster.deep-navy .bar-b { background: #c8a86e; }
-  .poster.deep-navy .corner-mark { border-color: #c8a86e; }
+  .poster.deep-navy { background: #0c1524; border: 2px solid #1a3050; }
+  .poster.deep-navy .tag { color: #c8a86e; border-color: #c8a86e; }
+  .poster.deep-navy .phone { color: #ffffff; }
+  .poster.deep-navy .owner { color: rgba(255,255,255,0.35); }
+  .poster.deep-navy .bar { background: #c8a86e; }
 
-  /* === WARM CHARCOAL === */
-  .poster.warm-charcoal { background: #1e1c19; border: 2px solid #3a3530; }
-  .poster.warm-charcoal .line1 { color: #b8956a; }
-  .poster.warm-charcoal .line2 { color: #f5f0e8; }
-  .poster.warm-charcoal .line3 { color: #f5f0e8; }
-  .poster.warm-charcoal .bar-t, .poster.warm-charcoal .bar-b { background: #b8956a; }
-  .poster.warm-charcoal .corner-mark { border-color: #b8956a; }
+  /* === CHARCOAL === */
+  .poster.charcoal { background: #181614; border: 2px solid #332e28; }
+  .poster.charcoal .tag { color: #c9a96e; border-color: #c9a96e; }
+  .poster.charcoal .phone { color: #f5f0e8; }
+  .poster.charcoal .owner { color: rgba(245,240,232,0.3); }
+  .poster.charcoal .bar { background: #c9a96e; }
 
   /* === IVORY === */
-  .poster.ivory-contrast { background: #f8f5f0; border: 2px solid #d4cdc2; }
-  .poster.ivory-contrast .line1 { color: #8b7355; }
-  .poster.ivory-contrast .line2 { color: #1a1510; }
-  .poster.ivory-contrast .line3 { color: #1a1510; }
-  .poster.ivory-contrast .bar-t, .poster.ivory-contrast .bar-b { background: #2c2216; }
-  .poster.ivory-contrast .corner-mark { border-color: #8b7355; }
+  .poster.ivory { background: #f6f3ed; border: 2px solid #d0c9bc; }
+  .poster.ivory .tag { color: #6b5535; border-color: #6b5535; }
+  .poster.ivory .phone { color: #1a1510; }
+  .poster.ivory .owner { color: rgba(26,21,16,0.3); }
+  .poster.ivory .bar { background: #6b5535; }
 
   /* === FOREST === */
-  .poster.forest { background: #0d1f15; border: 2px solid #1a3a28; }
-  .poster.forest .line1 { color: #c8a86e; }
-  .poster.forest .line2 { color: #f0f5f0; }
-  .poster.forest .line3 { color: #f0f5f0; }
-  .poster.forest .bar-t, .poster.forest .bar-b { background: #c8a86e; }
-  .poster.forest .corner-mark { border-color: #c8a86e; }
-
-  /* === SLATE BLUE === */
-  .poster.slate-blue { background: #f0f2f5; border: 2px solid #c8cdd5; }
-  .poster.slate-blue .line1 { color: #4a6a8a; }
-  .poster.slate-blue .line2 { color: #1e3a5f; }
-  .poster.slate-blue .line3 { color: #1e3a5f; }
-  .poster.slate-blue .bar-t, .poster.slate-blue .bar-b { background: #1e3a5f; }
-  .poster.slate-blue .corner-mark { border-color: #1e3a5f; }
+  .poster.forest { background: #0a1810; border: 2px solid #163522; }
+  .poster.forest .tag { color: #c8a86e; border-color: #c8a86e; }
+  .poster.forest .phone { color: #eef5ee; }
+  .poster.forest .owner { color: rgba(238,245,238,0.3); }
+  .poster.forest .bar { background: #c8a86e; }
 
   /* === LAYOUT === */
-  .bar-t, .bar-b {
+  .bar {
     position: absolute;
-    left: 0; right: 0;
-    height: 8px;
+    left: 0; right: 0; height: 7px;
   }
-  .bar-t { top: 0; }
-  .bar-b { bottom: 0; }
-
-  .corner-mark { position: absolute; width: 14px; height: 14px; }
-  .corner-mark.tl { top: 16px; left: 16px; border-top: 2px solid; border-left: 2px solid; }
-  .corner-mark.tr { top: 16px; right: 16px; border-top: 2px solid; border-right: 2px solid; }
-  .corner-mark.bl { bottom: 16px; left: 16px; border-bottom: 2px solid; border-left: 2px solid; }
-  .corner-mark.br { bottom: 16px; right: 16px; border-bottom: 2px solid; border-right: 2px solid; }
+  .bar.top { top: 0; }
+  .bar.bot { bottom: 0; }
 
   .grommet {
     position: absolute;
-    width: 12px; height: 12px;
+    width: 11px; height: 11px;
     border-radius: 50%;
-    border: 2px solid rgba(150,150,150,0.3);
-    background: rgba(200,200,200,0.08);
+    border: 2px solid rgba(150,150,150,0.25);
+    background: rgba(200,200,200,0.06);
     z-index: 10;
   }
   .grommet.tl { top: 5px; left: 5px; }
@@ -158,167 +131,190 @@
   .grommet.tc { top: 5px; left: 50%; transform: translateX(-50%); }
   .grommet.bc { bottom: 5px; left: 50%; transform: translateX(-50%); }
 
-  /* 3 строки, всё по центру, максимально крупно */
-  .poster-content {
+  .content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 2px;
-    padding: 0 30px;
+    gap: 10px;
+    padding: 0 40px;
   }
 
-  /* Строка 1: САТЫЛАДЫ / ПРОДАЁТСЯ */
-  .line1 {
+  /* Строка 1: плашка ҮЙЖАЙ / ПОМЕЩЕНИЕ САТЫЛАДЫ / ПРОДАЁТСЯ */
+  .tag {
     font-family: 'Montserrat', sans-serif;
-    font-size: 42px;
+    font-size: 28px;
     font-weight: 800;
-    letter-spacing: 8px;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    line-height: 1.1;
+    line-height: 1;
+    border: 2px solid;
+    padding: 8px 28px;
+    white-space: nowrap;
   }
 
-  /* Строка 2: ТЕЛЕФОН — самая крупная */
-  .line2 {
+  /* Строка 2: ТЕЛЕФОН — гигант */
+  .phone {
     font-family: 'Montserrat', sans-serif;
-    font-size: 96px;
+    font-size: 108px;
     font-weight: 900;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     line-height: 1;
     white-space: nowrap;
   }
 
-  /* Строка 3: мелкая инфо — собственник */
-  .line3 {
+  /* Строка 3: собственник */
+  .owner {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 6px;
     text-transform: uppercase;
-    margin-top: 6px;
-    opacity: 0.5;
   }
 
   .size-info {
     font-size: 10px;
-    color: #555;
+    color: #444;
     letter-spacing: 1px;
   }
 
-  .legal-notes {
-    max-width: 980px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 12px;
-    margin-top: 10px;
+  /* Sim day/night */
+  .sim-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .sim-label {
+    font-size: 10px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
   }
 
-  .legal-card {
-    background: #2a2a2a;
+  .sim-day {
+    filter: brightness(1.15) saturate(0.9);
+    box-shadow: 0 0 60px rgba(255,255,200,0.08);
+    transform: scale(0.48);
+    transform-origin: top center;
+  }
+  .sim-night {
+    filter: brightness(0.7) contrast(1.1);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    transform: scale(0.48);
+    transform-origin: top center;
+  }
+
+  /* Notes */
+  .notes {
+    max-width: 980px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .note {
+    background: #232323;
     border: 1px solid #333;
     border-radius: 8px;
     padding: 14px;
     font-size: 11px;
-    color: #999;
-    line-height: 1.6;
+    color: #888;
+    line-height: 1.7;
   }
 
-  .legal-card strong {
-    color: #ccc;
+  .note strong {
+    color: #bbb;
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
-  .legal-card .c { color: #6a9a78; }
-  .legal-card .w { color: #c8a86e; }
+  .note .g { color: #5a9a68; }
+  .note .y { color: #c8a86e; }
 </style>
 </head>
 <body>
 
-<h1 class="page-title">Информационное объявление — Тимирязева 79</h1>
-<div class="subtitle">Баннер 130 × 56 см. Телефон — максимально крупно, читается с машины.</div>
+<h1 class="page-title">Тимирязева 79, н.п. 18 — информационное объявление</h1>
 
 <div class="controls">
-  <button class="active" onclick="setVariant('deep-navy')">Синий</button>
-  <button onclick="setVariant('warm-charcoal')">Угольный</button>
-  <button onclick="setVariant('ivory-contrast')">Слоновая кость</button>
-  <button onclick="setVariant('forest')">Зелёный</button>
-  <button onclick="setVariant('slate-blue')">Светлый сланец</button>
+  <button class="active" onclick="setV('deep-navy')">Синий</button>
+  <button onclick="setV('charcoal')">Угольный</button>
+  <button onclick="setV('ivory')">Слоновая кость</button>
+  <button onclick="setV('forest')">Зелёный</button>
 </div>
 
-<!-- Сторона A -->
+<!-- Основной вид -->
 <div class="poster-col">
-  <div class="poster-label">Сторона A</div>
   <div class="poster deep-navy" id="posterA">
-    <div class="bar-t"></div>
-    <div class="bar-b"></div>
+    <div class="bar top"></div>
+    <div class="bar bot"></div>
     <div class="grommet tl"></div><div class="grommet tr"></div>
     <div class="grommet bl"></div><div class="grommet br"></div>
     <div class="grommet tc"></div><div class="grommet bc"></div>
-    <div class="corner-mark tl"></div><div class="corner-mark tr"></div>
-    <div class="corner-mark bl"></div><div class="corner-mark br"></div>
 
-    <div class="poster-content">
-      <div class="line1">САТЫЛАДЫ &nbsp;/&nbsp; ПРОДАЁТСЯ</div>
-      <div class="line2">+7 777 6 777 964</div>
-      <div class="line3">собственник &bull; Тимирязева 79</div>
+    <div class="content">
+      <div class="tag">Үйжай / Помещение &mdash; Сатылады / Продаётся</div>
+      <div class="phone">+7 777 6 777 964</div>
+      <div class="owner">собственник</div>
     </div>
   </div>
-  <div class="size-info">130 &times; 56 см</div>
+  <div class="size-info">130 &times; 56 см &mdash; масштаб ~1:3.5</div>
 </div>
 
-<!-- Сторона B -->
-<div class="poster-col">
-  <div class="poster-label">Сторона B</div>
-  <div class="poster deep-navy" id="posterB">
-    <div class="bar-t"></div>
-    <div class="bar-b"></div>
-    <div class="grommet tl"></div><div class="grommet tr"></div>
-    <div class="grommet bl"></div><div class="grommet br"></div>
-    <div class="grommet tc"></div><div class="grommet bc"></div>
-    <div class="corner-mark tl"></div><div class="corner-mark tr"></div>
-    <div class="corner-mark bl"></div><div class="corner-mark br"></div>
-
-    <div class="poster-content">
-      <div class="line1">САТЫЛАДЫ &nbsp;/&nbsp; ПРОДАЁТСЯ</div>
-      <div class="line2">+7 777 6 777 964</div>
-      <div class="line3">собственник &bull; Тимирязева 79</div>
+<!-- День / Ночь симуляция -->
+<div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+  <div class="poster-col">
+    <div class="poster-label">&#9728; День</div>
+    <div class="poster deep-navy sim-day" id="simDay">
+      <div class="bar top"></div><div class="bar bot"></div>
+      <div class="content">
+        <div class="tag">Үйжай / Помещение &mdash; Сатылады / Продаётся</div>
+        <div class="phone">+7 777 6 777 964</div>
+        <div class="owner">собственник</div>
+      </div>
     </div>
   </div>
-  <div class="size-info">130 &times; 56 см</div>
+  <div class="poster-col">
+    <div class="poster-label">&#9790; Ночь</div>
+    <div class="poster deep-navy sim-night" id="simNight">
+      <div class="bar top"></div><div class="bar bot"></div>
+      <div class="content">
+        <div class="tag">Үйжай / Помещение &mdash; Сатылады / Продаётся</div>
+        <div class="phone">+7 777 6 777 964</div>
+        <div class="owner">собственник</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="legal-notes">
-  <div class="legal-card">
-    <strong>Дизайн-код (V23R0001751)</strong>
-    <span class="c">&#10003;</span> Цвета палитры города<br>
-    <span class="c">&#10003;</span> Без неона/кислоты
+<div class="notes">
+  <div class="note">
+    <strong>Почему не жёлтый?</strong>
+    Жёлтый/кислотный фон днём бросается в глаза, но ночью при уличном освещении вымывается — белый текст на жёлтом теряет контраст. Тёмный фон + белый текст читается <span class="g">и днём и ночью</span> — белые буквы ловят любой свет.
   </div>
-  <div class="legal-card">
-    <strong>Закон «О рекламе»</strong>
-    <span class="c">&#10003;</span> Каз. + рус., одинаковый размер<br>
-    <span class="c">&#10003;</span> 0.73 м² &lt; 2 м²
+  <div class="note">
+    <strong>Помещение, не бизнес</strong>
+    Написано <span class="g">«Үйжай / Помещение»</span> — сразу ясно что продаётся недвижимость, а не ломбард «Успех» или «Сейф». Адрес убран — баннер висит на самом объекте, дублировать не нужно.
   </div>
-  <div class="legal-card">
-    <strong>Информ. сообщение</strong>
-    <span class="c">&#10003;</span> Факт + телефон собственника<br>
-    <span class="w">!</span> eOtinish для подстраховки
-  </div>
-  <div class="legal-card">
-    <strong>Печать</strong>
-    130 &times; 56 см, баннерная ткань<br>
-    6 люверсов, 2 шт, CMYK 300 DPI
+  <div class="note">
+    <strong>Юридически</strong>
+    <span class="g">&#10003;</span> Информ. сообщение собственника<br>
+    <span class="g">&#10003;</span> Каз. + рус., одинаковый размер<br>
+    <span class="g">&#10003;</span> Цвета дизайн-кода Алматы<br>
+    <span class="g">&#10003;</span> 0.73 м² &lt; 2 м²<br>
+    <span class="y">!</span> eOtinish для подстраховки
   </div>
 </div>
 
 <script>
-  const variants = ['deep-navy','warm-charcoal','ivory-contrast','forest','slate-blue'];
-  function setVariant(v) {
+  const vs = ['deep-navy','charcoal','ivory','forest'];
+  function setV(v) {
     document.querySelectorAll('.poster').forEach(p => {
-      variants.forEach(c => p.classList.remove(c));
+      vs.forEach(c => p.classList.remove(c));
       p.classList.add(v);
     });
     document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
