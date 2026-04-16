@@ -131,64 +131,49 @@
   .grommet.tc { top: 10px; left: 50%; transform: translateX(-50%); }
   .grommet.bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
 
-  /* Сетка: всё пространство, 2 зоны — верх (текст) и низ (телефон) */
+  /* Сетка: всё пространство с отступами */
   .grid {
     position: absolute;
-    top: 22px;
-    bottom: 22px;
-    left: 36px;
-    right: 36px;
+    top: 26px;
+    bottom: 26px;
+    left: 40px;
+    right: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0;
+    justify-content: space-between;
   }
 
-  /* Верхняя зона — САТЫЛАДЫ / ПРОДАЁТСЯ */
-  .zone-top {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    width: 100%;
-  }
-
-  .text-pair {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .text-small {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    line-height: 1;
-    letter-spacing: 3px;
-    font-size: 16px;
-    margin-bottom: 2px;
-  }
-
-  .text-big {
+  /* Строка 1: каз */
+  .line-kz {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
     text-transform: uppercase;
     line-height: 1;
-    letter-spacing: 4px;
-    font-size: 72px;
+    letter-spacing: 3px;
+    font-size: 52px;
+    white-space: nowrap;
   }
 
   .text-kz { }
   .text-ru { }
 
-  /* Разделитель горизонтальный */
+  /* Строка 2: рус */
+  .line-ru {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 3px;
+    font-size: 52px;
+    white-space: nowrap;
+  }
+
+  /* Разделитель */
   .sep {
     height: 2px;
-    width: 85%;
-    margin: 14px 0;
-    opacity: 0.3;
+    width: 90%;
+    opacity: 0.25;
   }
 
   .deep-navy .sep { background: #c8a86e; }
@@ -196,39 +181,29 @@
   .ivory .sep { background: #6b5535; }
   .forest .sep { background: #c8a86e; }
 
-  /* Нижняя зона — ТЕЛЕФОН */
-  .zone-bot {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: center;
-    gap: 0;
-  }
-
+  /* Телефон */
   .phone {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
     line-height: 1;
     text-align: center;
     letter-spacing: 3px;
-    font-size: 80px;
+    font-size: 82px;
     white-space: nowrap;
   }
 
   .phone .code {
-    font-size: 52px;
     font-weight: 700;
-    opacity: 0.55;
-    letter-spacing: 4px;
+    opacity: 0.5;
   }
 
+  /* Собственник */
   .label {
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: 5px;
+    letter-spacing: 8px;
     text-transform: uppercase;
-    margin-top: 6px;
     text-align: center;
   }
 
@@ -309,20 +284,10 @@
     <div class="grommet tc"></div><div class="grommet bc"></div>
 
     <div class="grid">
-      <div class="zone-top">
-        <div class="text-pair">
-          <div class="text-small text-kz">Жылжымайтын мүлік</div>
-          <div class="text-big text-kz">САТЫЛАДЫ</div>
-        </div>
-        <div class="text-pair">
-          <div class="text-small text-ru">Помещение</div>
-          <div class="text-big text-ru">ПРОДАЁТСЯ</div>
-        </div>
-      </div>
+      <div class="line-kz text-kz">Жылжымайтын мүлік сатылады</div>
+      <div class="line-ru text-ru">Помещение продаётся</div>
       <div class="sep"></div>
-      <div class="zone-bot">
-        <div class="phone"><span class="code">+7 777 </span>6 777 964</div>
-      </div>
+      <div class="phone"><span class="code">+7 777 </span>6 777 964</div>
       <div class="label">собственник</div>
     </div>
   </div>
