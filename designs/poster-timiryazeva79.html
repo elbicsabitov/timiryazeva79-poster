@@ -134,46 +134,40 @@
   /* Сетка: всё пространство с отступами */
   .grid {
     position: absolute;
-    top: 26px;
-    bottom: 26px;
-    left: 40px;
-    right: 40px;
+    top: 28px;
+    bottom: 28px;
+    left: 44px;
+    right: 44px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-  }
-
-  /* Строка 1: каз */
-  .line-kz {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    text-transform: uppercase;
-    line-height: 1;
-    letter-spacing: 3px;
-    font-size: 52px;
-    white-space: nowrap;
+    justify-content: center;
+    gap: 12px;
   }
 
   .text-kz { }
   .text-ru { }
 
-  /* Строка 2: рус */
+  /* Строка 1: каз — авто-масштаб под ширину */
+  .line-kz,
   .line-ru {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
     text-transform: uppercase;
     line-height: 1;
-    letter-spacing: 3px;
-    font-size: 52px;
-    white-space: nowrap;
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+    /* Масштабируем шрифт под контейнер */
+    font-size: clamp(32px, 5.2vw, 50px);
   }
 
   /* Разделитель */
   .sep {
     height: 2px;
-    width: 90%;
+    width: 100%;
     opacity: 0.25;
+    flex-shrink: 0;
   }
 
   .deep-navy .sep { background: #c8a86e; }
@@ -181,14 +175,14 @@
   .ivory .sep { background: #6b5535; }
   .forest .sep { background: #c8a86e; }
 
-  /* Телефон */
+  /* Телефон — крупнее текста */
   .phone {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
     line-height: 1;
     text-align: center;
-    letter-spacing: 3px;
-    font-size: 82px;
+    letter-spacing: 2px;
+    font-size: clamp(48px, 7.5vw, 76px);
     white-space: nowrap;
   }
 
@@ -200,7 +194,7 @@
   /* Собственник */
   .label {
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: 8px;
     text-transform: uppercase;
