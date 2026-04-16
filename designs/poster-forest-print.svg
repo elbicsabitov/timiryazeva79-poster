@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1300mm" height="560mm"
+     viewBox="0 0 1300 560"
+     style="font-family:'Montserrat',sans-serif">
+
+  <!-- Background -->
+  <rect width="1300" height="560" fill="#0a1810"/>
+
+  <!-- Top accent stripe -->
+  <rect x="0" y="0" width="1300" height="12" fill="#c8a86e"/>
+
+  <!-- Bottom accent stripe -->
+  <rect x="0" y="548" width="1300" height="12" fill="#c8a86e"/>
+
+  <!-- Separator line -->
+  <rect x="30" y="310" width="1240" height="2" fill="#c8a86e" opacity="0.25"/>
+
+  <!-- Line 1: Kazakh — golden -->
+  <text x="650" y="155"
+        text-anchor="middle"
+        fill="#c8a86e"
+        font-family="Montserrat, Arial Black, sans-serif"
+        font-weight="900"
+        font-size="62"
+        letter-spacing="3"
+        transform="scale(1,1.15) translate(0,-18)"
+        text-rendering="geometricPrecision">ЖЫЛЖЫМАЙТЫН МҮЛІК САТЫЛАДЫ</text>
+
+  <!-- Line 2: Russian — white -->
+  <text x="650" y="265"
+        text-anchor="middle"
+        fill="#eef5ee"
+        font-family="Montserrat, Arial Black, sans-serif"
+        font-weight="900"
+        font-size="62"
+        letter-spacing="3"
+        transform="scale(1,1.15) translate(0,-33)"
+        text-rendering="geometricPrecision">ПОМЕЩЕНИЕ ПРОДАЁТСЯ</text>
+
+  <!-- Phone number -->
+  <text x="650" y="430"
+        text-anchor="middle"
+        fill="#eef5ee"
+        font-family="Montserrat, Arial Black, sans-serif"
+        font-weight="900"
+        font-size="88"
+        letter-spacing="3"
+        text-rendering="geometricPrecision">+7 777 6 777 964</text>
+
+  <!-- Label: собственник -->
+  <text x="650" y="500"
+        text-anchor="middle"
+        fill="#eef5ee"
+        fill-opacity="0.25"
+        font-family="Inter, Arial, sans-serif"
+        font-weight="600"
+        font-size="16"
+        letter-spacing="8"
+        text-rendering="geometricPrecision">СОБСТВЕННИК</text>
+
+</svg>
