@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>PRINT — Тимирязева 79 — Forest</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  @page {
+    size: 134cm 60cm; /* +2cm bleed each side */
+    margin: 0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 134cm;
+    height: 60cm;
+    background: #0a1810;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .poster {
+    width: 130cm;
+    height: 56cm;
+    background: #0a1810;
+    position: relative;
+    overflow: visible;
+  }
+
+  /* Bleed area — фон выходит за край */
+  .poster::before {
+    content: '';
+    position: absolute;
+    top: -2cm;
+    left: -2cm;
+    right: -2cm;
+    bottom: -2cm;
+    background: #0a1810;
+    z-index: -1;
+  }
+
+  /* Метки реза */
+  .crop-tl, .crop-tr, .crop-bl, .crop-br {
+    position: absolute;
+    z-index: 100;
+  }
+  .crop-tl { top: -1.5cm; left: -0.5mm; width: 1cm; border-top: 0.5mm solid #666; }
+  .crop-tl::after { content:''; position:absolute; top: 0.5mm; left: -0.5mm; height: 1cm; border-left: 0.5mm solid #666; }
+  .crop-tr { top: -1.5cm; right: -0.5mm; width: 1cm; border-top: 0.5mm solid #666; }
+  .crop-tr::after { content:''; position:absolute; top: 0.5mm; right: -0.5mm; height: 1cm; border-left: 0.5mm solid #666; }
+  .crop-bl { bottom: -1.5cm; left: -0.5mm; width: 1cm; border-bottom: 0.5mm solid #666; }
+  .crop-bl::after { content:''; position:absolute; bottom: 0.5mm; left: -0.5mm; height: 1cm; border-left: 0.5mm solid #666; }
+  .crop-br { bottom: -1.5cm; right: -0.5mm; width: 1cm; border-bottom: 0.5mm solid #666; }
+  .crop-br::after { content:''; position:absolute; bottom: 0.5mm; right: -0.5mm; height: 1cm; border-left: 0.5mm solid #666; }
+
+  /* Акцентные полосы */
+  .stripe {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1.2cm;
+    background: #c8a86e;
+  }
+  .stripe.top { top: 0; }
+  .stripe.bot { bottom: 0; }
+
+  /* Сетка контента */
+  .grid {
+    position: absolute;
+    top: 2cm;
+    bottom: 2cm;
+    left: 3cm;
+    right: 3cm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2cm;
+  }
+
+  .line-kz {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.4cm;
+    text-align: center;
+    color: #c8a86e;
+    font-size: 11cm;
+    transform: scaleY(1.15);
+  }
+
+  .line-ru {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.4cm;
+    text-align: center;
+    color: #eef5ee;
+    font-size: 11cm;
+    transform: scaleY(1.15);
+  }
+
+  .sep {
+    height: 0.4cm;
+    width: 100%;
+    background: #c8a86e;
+    opacity: 0.25;
+  }
+
+  .phone {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    letter-spacing: 0.3cm;
+    font-size: 15cm;
+    color: #eef5ee;
+    white-space: nowrap;
+  }
+
+  .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 2.8cm;
+    font-weight: 600;
+    letter-spacing: 1cm;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(238,245,238,0.25);
+  }
+
+  /* Инструкция (не печатается) */
+  .instructions {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.9);
+    color: #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    z-index: 9999;
+    max-width: 400px;
+  }
+  .instructions strong { color: white; }
+  .instructions code { background: #333; padding: 2px 6px; border-radius: 3px; color: #c8a86e; }
+
+  @media print {
+    .instructions { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="instructions">
+  <strong>Как сохранить PDF для типографии:</strong><br><br>
+  1. <code>Ctrl+P</code> (печать)<br>
+  2. Принтер → <code>Save as PDF</code><br>
+  3. Размер → <code>Custom</code> → 134 × 60 cm<br>
+  4. Поля → <code>None</code><br>
+  5. Галочка <code>Background graphics</code> ✓<br>
+  6. Сохранить<br><br>
+  <strong>Или:</strong> скриншот в полном масштабе<br><br>
+  Размер: 130×56 см + 2 см bleed<br>
+  Цвета: нужно конвертировать в CMYK в типографии
+</div>
+
+<div class="poster">
+  <div class="crop-tl"></div>
+  <div class="crop-tr"></div>
+  <div class="crop-bl"></div>
+  <div class="crop-br"></div>
+
+  <div class="stripe top"></div>
+  <div class="stripe bot"></div>
+
+  <div class="grid">
+    <div class="line-kz">Жылжымайтын мүлік сатылады</div>
+    <div class="line-ru">Помещение продаётся</div>
+    <div class="sep"></div>
+    <div class="phone">+7 777 6 777 964</div>
+    <div class="label">собственник</div>
+  </div>
+</div>
+
+</body>
+</html>
