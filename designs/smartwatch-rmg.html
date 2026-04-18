@@ -582,6 +582,130 @@
             transform: scale(0.9);
         }
 
+        /* ================= ШТОРКА ИСТОРИЯ / ПЛЕЙЛИСТ ================= */
+        .history-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 30;
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            font-family: var(--font-family);
+            font-style: var(--font-style);
+        }
+
+        .history-item {
+            background: var(--surface);
+            padding: 12px 16px;
+            border-radius: var(--radius-card);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            transition: 0.4s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .history-item:active {
+            transform: scale(0.97);
+        }
+
+        .h-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: var(--text-main);
+            transition: color 0.4s;
+            flex-grow: 1;
+        }
+
+        .h-title {
+            font-size: 15px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: var(--text-transform);
+            letter-spacing: var(--letter-spacing);
+            transition: 0.4s;
+        }
+
+        .h-artist {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-style: normal;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Inter', sans-serif;
+            transition: 0.4s;
+        }
+
+        .h-time {
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 15px;
+            flex-shrink: 0;
+            transition: color 0.4s;
+        }
+
+        .close-btn {
+            text-align: center;
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 12px;
+            background: var(--surface);
+            border-radius: var(--radius-card);
+            border: 1px solid transparent;
+            transition: 0.4s;
+        }
+
+        .close-btn:active {
+            transform: scale(0.95);
+            border-color: var(--accent);
+        }
+
+        .swipe-hint {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            animation: bounce 2s infinite;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 10;
+            font-family: var(--font-family);
+        }
+
+        .swipe-hint svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+            margin-bottom: 2px;
+            transition: fill 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 4px); }
+        }
+
         /* ================= ПОДКАСТЫ: ЭКРАН ЭПИЗОДОВ ================= */
         .episodes-overlay {
             position: absolute;
@@ -711,7 +835,7 @@
         <button class="theme-btn btn-rmc"
             onclick="switchTheme('theme-rmc', this, 'Monte Carlo', 'Smooth Operator — Sade', '♔', 'Утреннее Шоу')">Monte
             Carlo</button>
-        <div style="font-size:11px; color:#666; margin-top:10px; line-height:1.5;">* Свайп по экрану вбок.</div>
+        <div style="font-size:11px; color:#666; margin-top:10px; line-height:1.5;">* Свайп вбок — экраны.<br>* Свайп вниз на плеере — история/плейлист.</div>
     </div>
 
     <div class="watch-case">
@@ -733,6 +857,18 @@
                 <div class="dot active" id="dot1"></div>
                 <div class="dot" id="dot2"></div>
                 <div class="dot" id="dot3"></div>
+            </div>
+
+            <!-- ШТОРКА ИСТОРИЯ / ПЛЕЙЛИСТ (свайп вниз на плеере) -->
+            <div class="history-panel" id="historyPanel">
+                <div class="scroll-container" style="padding-top: 65px;">
+                    <div class="list-title" id="historyTitle">История эфира</div>
+                    <div id="historyContent">
+                        <!-- Заполняется JS в зависимости от режима -->
+                    </div>
+                    <div class="close-btn" onclick="closeHistory()">▲ Закрыть</div>
+                    <div style="height: 60px;"></div>
+                </div>
             </div>
 
             <!-- ОВЕРЛЕЙ ЭПИЗОДОВ ПОДКАСТА -->
@@ -814,6 +950,9 @@
 
                 <!-- ЭКРАН 1: ПЛЕЕР -->
                 <div class="screen">
+                    <div class="swipe-hint" id="swipeHint"><svg viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                        </svg><span id="swipeHintText">ИСТОРИЯ</span></div>
                     <div class="live-badge">
                         <div class="live-dot"></div> В ЭФИРЕ
                     </div>
@@ -899,26 +1038,47 @@
     </div>
 
     <script>
-        // === ДАННЫЕ ТРЕКОВ ПО СТАНЦИЯМ ===
-        const stationTracks = {
-            'theme-max': 'Sonne — Rammstein',
-            'theme-dfm': 'Baby Don\'t Hurt Me — David Guetta',
-            'theme-hit': 'Bad Guy — Billie Eilish',
-            'theme-rr': 'Я русский — SHAMAN',
-            'theme-rmc': 'Smooth Operator — Sade'
+        // === ДАННЫЕ ===
+        const stationHistory = {
+            'theme-max': [
+                { time: '14:15', title: 'Sonne', artist: 'Rammstein' },
+                { time: '14:10', title: 'Smells Like Teen Spirit', artist: 'Nirvana' },
+                { time: '14:03', title: 'Numb', artist: 'Linkin Park' }
+            ],
+            'theme-dfm': [
+                { time: '14:15', title: 'Baby Don\'t Hurt Me', artist: 'David Guetta' },
+                { time: '14:10', title: 'Satisfaction', artist: 'Benassi Bros' },
+                { time: '14:03', title: 'Плакал Голливуд', artist: 'Люся Чеботина' }
+            ],
+            'theme-hit': [
+                { time: '14:15', title: 'Bad Guy', artist: 'Billie Eilish' },
+                { time: '14:10', title: 'Blinding Lights', artist: 'The Weeknd' },
+                { time: '14:03', title: 'Credo', artist: 'Zivert' }
+            ],
+            'theme-rr': [
+                { time: '14:15', title: 'Я русский', artist: 'SHAMAN' },
+                { time: '14:10', title: 'Солнце Монако', artist: 'Люся Чеботина' },
+                { time: '14:03', title: 'Молния', artist: 'Дима Билан' }
+            ],
+            'theme-rmc': [
+                { time: '14:15', title: 'Smooth Operator', artist: 'Sade' },
+                { time: '14:10', title: 'Shape Of My Heart', artist: 'Sting' },
+                { time: '14:03', title: 'Careless Whisper', artist: 'George Michael' }
+            ]
         };
 
-        const stationPods = {
-            'theme-max': 'MaxiCast',
-            'theme-dfm': 'Dance Mix',
-            'theme-hit': 'Хит на днюхе',
-            'theme-rr': 'Вкрутую',
-            'theme-rmc': 'Утреннее Шоу'
-        };
+        const podcastEpisodes = [
+            { num: 15, title: 'Рок в 2026: что слушать', meta: '24 мин • 10 апр' },
+            { num: 14, title: 'Интервью с группой', meta: '31 мин • 3 апр' },
+            { num: 13, title: 'Топ-10 альбомов весны', meta: '18 мин • 27 мар' },
+            { num: 12, title: 'Фестивальный сезон', meta: '22 мин • 20 мар' }
+        ];
 
         let currentTheme = 'theme-max';
+        let playingMode = 'radio'; // 'radio' или 'podcast'
+        let currentPodName = 'MaxiCast';
 
-        // === ЛОГИКА ТЕМИЗАЦИИ ===
+        // === ТЕМИЗАЦИЯ ===
         function switchTheme(themeClass, btn, station, track, icon, podName) {
             currentTheme = themeClass;
             document.getElementById('watchScreen').className = 'watch-screen ' + themeClass;
@@ -928,25 +1088,78 @@
             document.querySelectorAll('.dyn-icon').forEach(el => el.innerText = icon);
             document.querySelectorAll('.dyn-pod').forEach(el => el.innerText = podName);
 
-            // Обновляем плеер если играет станция
             const currentTitle = document.getElementById('playerTitle').innerText;
             if (['MAXIMUM', 'DFM', 'ХИТ FM', 'Русское Радио', 'Monte Carlo'].includes(currentTitle)) {
                 document.getElementById('playerTitle').innerText = station;
                 document.getElementById('playerSub').innerText = track;
+                playingMode = 'radio';
+                updateSwipeHint();
             }
 
             document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active-theme'));
             btn.classList.add('active-theme');
         }
 
-        // === СВАЙПЫ (только горизонтальные, без истории) ===
+        // === СВАЙП-ХИНТ ===
+        function updateSwipeHint() {
+            document.getElementById('swipeHintText').innerText = playingMode === 'radio' ? 'ИСТОРИЯ' : 'ПЛЕЙЛИСТ';
+        }
+
+        // === ИСТОРИЯ / ПЛЕЙЛИСТ — наполнение ===
+        function fillHistoryPanel() {
+            const container = document.getElementById('historyContent');
+            const titleEl = document.getElementById('historyTitle');
+
+            if (playingMode === 'radio') {
+                titleEl.innerText = 'История эфира';
+                const tracks = stationHistory[currentTheme] || stationHistory['theme-max'];
+                container.innerHTML = tracks.map(t =>
+                    `<div class="history-item">
+                        <div class="h-time">${t.time}</div>
+                        <div class="h-info">
+                            <div class="h-title">${t.title}</div>
+                            <div class="h-artist">${t.artist}</div>
+                        </div>
+                    </div>`
+                ).join('');
+            } else {
+                titleEl.innerText = currentPodName + ' — эпизоды';
+                container.innerHTML = podcastEpisodes.map(ep =>
+                    `<div class="history-item" onclick="playEpisodeFromHistory(this, '${ep.title}', '${ep.meta}')">
+                        <div class="h-time">${ep.num}</div>
+                        <div class="h-info">
+                            <div class="h-title">${ep.title}</div>
+                            <div class="h-artist">${ep.meta}</div>
+                        </div>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        // === СВАЙПЫ ===
         const screenEl = document.getElementById('watchScreen'), carousel = document.getElementById('carousel');
+        const historyPanel = document.getElementById('historyPanel');
         const volArc = document.getElementById('volArc');
         const pagination = document.getElementById('pagination');
         const dots = [document.getElementById('dot0'), document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
 
-        let isDragging = false, startX = 0, startY = 0, dragDir = null, currentIndex = 1;
+        let isDragging = false, startX = 0, startY = 0, dragDir = null, isHistoryOpen = false, currentIndex = 1;
         let currentTranslateX = currentIndex * -25;
+
+        window.closeHistory = function () {
+            isHistoryOpen = false;
+            historyPanel.style.transform = 'translateY(-100%)';
+            volArc.style.opacity = (currentIndex === 1) ? '1' : '0';
+            pagination.style.opacity = '1';
+        }
+
+        window.openHistory = function () {
+            fillHistoryPanel();
+            isHistoryOpen = true;
+            historyPanel.style.transform = 'translateY(0%)';
+            volArc.style.opacity = '0';
+            pagination.style.opacity = '0';
+        }
 
         screenEl.addEventListener('mousedown', dragStart);
         screenEl.addEventListener('mousemove', drag);
@@ -954,18 +1167,24 @@
         screenEl.addEventListener('mouseleave', dragEnd);
 
         function dragStart(e) {
-            if (e.target.closest('.fav-btn') || e.target.closest('.player-fav-wrap') || e.target.closest('.skip-btn') || e.target.closest('.play-btn') || e.target.closest('.back-btn') || e.target.closest('.episode-item')) return;
+            if (e.target.closest('.fav-btn') || e.target.closest('.player-fav-wrap') || e.target.closest('.skip-btn') || e.target.closest('.play-btn') || e.target.closest('.back-btn') || e.target.closest('.episode-item') || e.target.closest('.close-btn') || e.target.closest('.history-item')) return;
             isDragging = true; startX = e.clientX; startY = e.clientY; dragDir = null;
             carousel.style.transition = 'none';
+            historyPanel.style.transition = 'none';
         }
 
         function drag(e) {
             if (!isDragging) return;
-            const diffX = e.clientX - startX;
+            const diffX = e.clientX - startX, diffY = e.clientY - startY;
             if (dragDir === null) {
-                if (Math.abs(diffX) > 5) dragDir = 'x'; else return;
+                if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) dragDir = Math.abs(diffX) > Math.abs(diffY) ? 'x' : 'y'; else return;
             }
-            if (dragDir === 'x') {
+            if (dragDir === 'y') {
+                if (currentIndex === 1 && !isHistoryOpen && diffY > 0)
+                    historyPanel.style.transform = `translateY(${Math.min((diffY / screenEl.offsetHeight) * 100 - 100, 0)}%)`;
+                else if (isHistoryOpen && diffY < 0)
+                    historyPanel.style.transform = `translateY(${Math.max((diffY / screenEl.offsetHeight) * 100, -100)}%)`;
+            } else if (dragDir === 'x' && !isHistoryOpen) {
                 carousel.style.transform = `translateX(${currentTranslateX + ((diffX / screenEl.offsetWidth) * 100 / 4)}%)`;
             }
         }
@@ -973,8 +1192,14 @@
         function dragEnd(e) {
             if (!isDragging) return; isDragging = false;
             carousel.style.transition = 'transform 0.4s';
+            historyPanel.style.transition = 'transform 0.4s';
 
-            if (dragDir === 'x') {
+            if (dragDir === 'y') {
+                const diffY = e.clientY - startY;
+                if (!isHistoryOpen && diffY > 50 && currentIndex === 1) openHistory();
+                else if (isHistoryOpen && diffY < -50) closeHistory();
+                else historyPanel.style.transform = isHistoryOpen ? 'translateY(0%)' : 'translateY(-100%)';
+            } else if (dragDir === 'x' && !isHistoryOpen) {
                 const diffX = e.clientX - startX;
                 if (diffX < -40 && currentIndex < 3) currentIndex++; else if (diffX > 40 && currentIndex > 0) currentIndex--;
                 goToScreen(currentIndex);
@@ -985,10 +1210,10 @@
             currentIndex = index; currentTranslateX = currentIndex * -25;
             carousel.style.transform = `translateX(${currentTranslateX}%)`;
             dots.forEach(d => d.classList.remove('active')); dots[currentIndex].classList.add('active');
-            volArc.style.opacity = (currentIndex === 1) ? '1' : '0';
+            if (!isHistoryOpen) volArc.style.opacity = (currentIndex === 1) ? '1' : '0';
         }
 
-        // === КНОПКИ УПРАВЛЕНИЯ ===
+        // === КНОПКИ ===
         window.toggleFav = function (e, element) { e.stopPropagation(); element.classList.toggle('active'); }
 
         window.playItem = function (element) {
@@ -996,6 +1221,8 @@
             const track = element.querySelector('.item-sub').innerText;
             document.getElementById('playerTitle').innerText = title;
             document.getElementById('playerSub').innerText = track;
+            playingMode = 'radio';
+            updateSwipeHint();
 
             document.querySelectorAll('.list-item').forEach(el => el.classList.remove('playing'));
             element.classList.add('playing');
@@ -1006,7 +1233,7 @@
             setTimeout(() => goToScreen(1), 150);
         }
 
-        // === ПОДКАСТЫ: ЭПИЗОДЫ ===
+        // === ПОДКАСТЫ ===
         window.openEpisodes = function (element) {
             const podName = element.querySelector('.item-title').innerText;
             document.getElementById('episodesPodTitle').innerText = podName;
@@ -1022,16 +1249,23 @@
             const podName = document.getElementById('episodesPodTitle').innerText;
             document.getElementById('playerTitle').innerText = title;
             document.getElementById('playerSub').innerText = podName + ' • ' + duration;
+            playingMode = 'podcast';
+            currentPodName = podName;
+            updateSwipeHint();
 
             document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('playing'));
             element.classList.add('playing');
             document.getElementById('playBtn').classList.add('playing');
 
-            // Закрываем оверлей и переходим на плеер
-            setTimeout(() => {
-                closeEpisodes();
-                goToScreen(1);
-            }, 300);
+            setTimeout(() => { closeEpisodes(); goToScreen(1); }, 300);
+        }
+
+        window.playEpisodeFromHistory = function (element, title, meta) {
+            document.getElementById('playerTitle').innerText = title;
+            document.getElementById('playerSub').innerText = currentPodName + ' • ' + meta;
+            document.querySelectorAll('.history-item').forEach(el => el.style.borderColor = 'transparent');
+            element.style.borderColor = 'var(--accent)';
+            document.getElementById('playBtn').classList.add('playing');
         }
 
         window.playPodcast = function (element) {
