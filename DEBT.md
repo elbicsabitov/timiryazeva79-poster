@@ -55,6 +55,27 @@
 | LG-013 | Backdrop picker (midnight / ocean / desert как варианты) | pending |
 | LG-014 | Next.js + shadcn/ui реализация на базе утверждённой темы | pending |
 
+## Турбо AI-модуль (2026-04-18 evening)
+
+Расширение прототипа экранами Турбо-перформанс из Figma — интеграция в existing Liquid Glass дизайн-систему, без нарушения структуры 13 оригинальных экранов.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| TURBO-001 | 9 AI-экранов (Источники/Промпты/Рерайтинг/Чат/Транскрибация/Документы/Видео/Wordstat/Работа с источником) | done |
+| TURBO-002 | 5 модалок (edit group, sources selector, prompt editor, tags, keywords) | done |
+| TURBO-003 | Discovery Hub на странице ИИ: 4 группы × карточки tools | done |
+| TURBO-004 | Sub-nav chip-row с slide-morph indicator + group separators | done |
+| TURBO-005 | Apple HIG fixes: aria-current, sidebar tooltips, destructive confirm, button loading, dropzone drag-enter | done |
+| TURBO-006 | Modal luminance lift (панель светлее dimmed фона) | done |
+| TURBO-007 | Страница «Руководство»: long-form reading с sticky TOC + scroll-spy | done |
+| TURBO-008 | Standalone обновлён (1.6 MB, base64 backdrop inline) | done |
+| TURBO-009 | **Показ заказчику новых 9 экранов + Guide** | pending |
+| TURBO-010 | Real data (MOS.RU, RUSSPASS и т.д. из Figma) вместо lorem ipsum | pending |
+| TURBO-011 | Empty states для zero-data scenarios (пустая история, нет источников и т.п.) | pending |
+| TURBO-012 | Mobile/tablet responsive для AI-модуля (chip-row → scroll, 2col → stack) | pending |
+| TURBO-013 | Dynamic glass reactivity (саmtop-filter saturate on scroll) | pending |
+| TURBO-014 | VoiceOver pass + контраст audit (WCAG AA) | pending |
+
 ## Постер Тимирязева 79
 
 | ID | Задача | Статус |

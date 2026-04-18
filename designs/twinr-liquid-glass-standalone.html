@@ -1435,6 +1435,795 @@ body[data-theme="dawn"]::after {
 .text-coral { color: var(--coral); }
 .font-bold { font-weight: 700; }
 .mb-0 { margin-bottom: 0 !important; }
+
+/* ════════════════════════════════════════════════
+   TURBO MODULE — ТОЛЬКО компоненты без аналогов
+   (все остальное переиспользует .card/.pill/.tabs/.btn/.t-table/.dropzone/.field)
+   Токены — существующие (--glass-*, --coral, --ink-*, --r-*, --spec-rim)
+   ════════════════════════════════════════════════ */
+
+/* ═══ SECTION-HERO — компактный banner с иконкой перед .page-header ═══ */
+.section-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 28px;
+  margin-bottom: 18px;
+  background: var(--glass-thin);
+  backdrop-filter: var(--blur-thick);
+  -webkit-backdrop-filter: var(--blur-thick);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-card), var(--spec-rim);
+}
+.section-hero .sh-icon {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 138, 110, 0.22), rgba(255, 193, 113, 0.1));
+  border: 1px solid rgba(255, 138, 110, 0.28);
+  color: var(--coral);
+  flex-shrink: 0;
+  box-shadow: var(--spec-rim);
+}
+.section-hero .sh-icon svg { width: 20px; height: 20px; stroke-width: 1.8; }
+.section-hero .sh-title {
+  font-size: var(--t-title-1);
+  font-weight: 700;
+  letter-spacing: -0.033em;
+  color: var(--ink-1);
+}
+
+/* ═══ HISTORY-SCROLL — горизонтальный scroll chips (Транскрибация, Чат, Рерайтинг) ═══ */
+.history-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.history-scroll .hs-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--glass-thin);
+  border: 1px solid var(--glass-border);
+  color: var(--ink-2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: var(--spec-rim);
+  transition: background var(--duration-fast) var(--ease-out-quart);
+}
+.history-scroll .hs-arrow:hover { background: var(--glass-regular); color: var(--ink-1); }
+.history-scroll .hs-arrow svg { width: 14px; height: 14px; }
+.history-scroll .hs-track {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  flex: 1;
+  scrollbar-width: none;
+  padding: 2px;
+}
+.history-scroll .hs-track::-webkit-scrollbar { display: none; }
+
+/* ═══ MODAL (Apple HIG: luminance lift — панель СВЕТЛЕЕ dimmed фона) ═══ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  /* overlay ≈ половина затемнения — фон фото всё ещё читается */
+  background: rgba(10, 4, 18, 0.42);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity var(--duration-glass) var(--ease-glass);
+}
+.modal-overlay.open { display: flex; opacity: 1; }
+.modal-panel {
+  width: min(860px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 26px 28px 22px;
+  /* Luminance lift: светлый градиент поверх regular glass —
+     панель поднимается на уровень ярче dimmed фона */
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.06) 40%,
+      rgba(255, 255, 255, 0.03) 100%),
+    var(--glass-regular);
+  backdrop-filter: var(--blur-thick);
+  -webkit-backdrop-filter: var(--blur-thick);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--r-xl);
+  box-shadow:
+    0 24px 64px -16px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  transform: scale(0.96) translateY(6px);
+  transition: transform var(--duration-glass) var(--ease-spring);
+}
+.modal-overlay.open .modal-panel { transform: scale(1) translateY(0); }
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.modal-title {
+  font-size: var(--t-title-2);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  color: var(--ink-1);
+  margin: 0 0 6px;
+}
+.modal-desc {
+  font-size: var(--t-footnote);
+  color: var(--ink-3);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.modal-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--glass-thin);
+  border: 1px solid var(--glass-border);
+  color: var(--ink-2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--duration-fast);
+}
+.modal-close:hover { background: var(--glass-regular); color: var(--ink-1); }
+.modal-close svg { width: 14px; height: 14px; stroke-width: 2; }
+.modal-body { margin-bottom: 16px; }
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  flex-wrap: wrap;
+}
+
+/* ═══ CB-GRID — grid чекбокс-пилюль (модалки тегов/источников/слов) ═══ */
+.cbgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.cbgrid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cbrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  min-height: 46px;
+  background: var(--glass-thin);
+  backdrop-filter: var(--blur-thin);
+  -webkit-backdrop-filter: var(--blur-thin);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  font-size: var(--t-subhead);
+  color: var(--ink-1);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out-quart);
+  box-shadow: var(--spec-rim);
+  user-select: none;
+}
+.cbrow:hover { background: var(--glass-regular); }
+.cbrow input[type="checkbox"] {
+  width: 17px; height: 17px;
+  accent-color: var(--coral);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.cbrow.checked {
+  background: linear-gradient(135deg, rgba(255, 138, 110, 0.16), rgba(255, 193, 113, 0.06));
+  border-color: rgba(255, 138, 110, 0.35);
+}
+.cbrow .cbrow-trash {
+  width: 16px; height: 16px;
+  color: var(--ink-4);
+}
+.cbrow .cbrow-trash:hover { color: var(--danger); }
+@media (max-width: 1280px) { .cbgrid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .cbgrid, .cbgrid.cols-4 { grid-template-columns: 1fr; } }
+
+/* ═══ VIDEO-PLACEHOLDER — 16:9 плеер-заглушка ═══ */
+.video-placeholder {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: var(--blur-thin);
+  border: 1.5px dashed rgba(255, 138, 110, 0.55);
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--ink-2);
+}
+.video-placeholder .vp-play {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 1.5px solid var(--ink-2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.2);
+  transition: all var(--duration-fast) var(--ease-out-quart);
+}
+.video-placeholder .vp-play:hover {
+  border-color: var(--coral); color: var(--coral);
+  background: var(--coral-glow);
+}
+.video-placeholder .vp-play svg { width: 20px; height: 20px; margin-left: 3px; }
+.video-placeholder .vp-timer {
+  font-size: var(--t-caption-1);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══ BAR-CHART-V — вертикальные бары с подписями дней (Wordstat) ═══ */
+.bar-chart-v {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 220px;
+  padding: 10px 0 22px;
+  position: relative;
+}
+.bar-chart-v .bcv-wrap {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  position: relative;
+}
+.bar-chart-v .bcv-bar {
+  width: 70%;
+  max-width: 10px;
+  background: linear-gradient(180deg, var(--coral) 0%, var(--rose) 70%, rgba(255, 125, 157, 0.55) 100%);
+  border-radius: 4px 4px 1px 1px;
+  min-height: 4px;
+  box-shadow: 0 0 10px -2px var(--coral-glow);
+  transition: filter var(--duration-fast);
+}
+.bar-chart-v .bcv-bar:hover { filter: brightness(1.18); }
+.bar-chart-v .bcv-label {
+  font-size: 8px;
+  color: var(--ink-4);
+  font-weight: 500;
+  position: absolute;
+  bottom: 4px;
+  white-space: nowrap;
+}
+
+/* ═══ TAG-CELL — ячейка таблицы с множественными тегами + add ═══ */
+.tag-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tag-cell .tc-edit {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: var(--glass-thin);
+  border: 1px solid var(--glass-border);
+  color: var(--ink-3);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.tag-cell .tc-edit:hover { color: var(--coral); }
+.tag-cell .tc-edit svg { width: 11px; height: 11px; stroke-width: 2; }
+.tc-pill {
+  display: inline-flex; align-items: center;
+  padding: 4px 11px;
+  background: var(--glass-regular);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  font-size: var(--t-caption-1);
+  color: var(--ink-1);
+  font-weight: 500;
+  box-shadow: var(--spec-rim);
+}
+.tc-pill.more { color: var(--ink-3); background: transparent; border-color: transparent; box-shadow: none; }
+.tc-add {
+  display: inline-flex; align-items: center;
+  gap: 4px;
+  padding: 4px 10px 4px 8px;
+  background: transparent;
+  border: 1px dashed rgba(255, 138, 110, 0.45);
+  border-radius: var(--r-pill);
+  font-size: var(--t-caption-1);
+  color: var(--ink-4);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+.tc-add:hover { color: var(--coral); border-color: var(--coral); }
+.tc-add svg { width: 10px; height: 10px; }
+
+/* ═══ NAV-SECTION — лейбл секции в sidebar ═══ */
+.nav-section {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  padding: 14px 12px 6px;
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+  white-space: nowrap;
+}
+.sidebar:hover .nav-section { opacity: 1; transition-delay: 0.1s; }
+
+/* ═══ AI SUB-NAV — Apple iOS 26 GlassEffectContainer pattern
+     Переиспользует существующий .tabs + .tab, добавляет модификатор .tabs-wide
+     для горизонтального scroll и более крупных chips с иконками ═══ */
+.tabs.tabs-wide {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  scrollbar-width: none;
+  margin-bottom: 18px;
+}
+.tabs.tabs-wide::-webkit-scrollbar { display: none; }
+.tabs.tabs-wide .tab {
+  flex-shrink: 0;
+  padding: 9px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--t-footnote);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.tabs.tabs-wide .tab svg {
+  width: 14px; height: 14px;
+  stroke-width: 1.8;
+  flex-shrink: 0;
+}
+/* Slide-morph: active подсветка движется плавно между чипами
+   (Apple iOS 26 GlassEffectContainer + namespace morph паттерн) */
+.tabs.tabs-wide { position: relative; }
+.tabs.tabs-wide .tab {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink-3);
+}
+.tabs.tabs-wide .tab:hover { color: var(--ink-1); background: transparent; }
+.tabs.tabs-wide .tab.active {
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink-1);
+}
+.tabs.tabs-wide .chip-indicator {
+  position: absolute;
+  top: 4px; bottom: 4px;
+  left: 0;
+  width: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
+  border-radius: var(--r-pill);
+  box-shadow: var(--spec-rim-strong);
+  pointer-events: none;
+  transform: translateX(0);
+  transition: transform 0.38s var(--ease-glass), width 0.38s var(--ease-glass), opacity 0.2s var(--ease-out-quart);
+  z-index: 0;
+  opacity: 0;
+}
+.tabs.tabs-wide .chip-indicator.ready { opacity: 1; }
+
+/* Group separator между семантическими кластерами (Контент/Генерация/Медиа/Анализ) */
+.tabs.tabs-wide .chip-sep {
+  width: 1px;
+  align-self: center;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.14);
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+/* ═══ DISCOVERY HUB (page-ai landing — 4 группы × карточки tools) ═══ */
+.tool-hub {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  margin-top: 4px;
+}
+.thg-label {
+  font-size: var(--t-caption-2);
+  color: var(--ink-3);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+.thg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: 14px;
+}
+.tool-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  background: var(--glass-regular);
+  backdrop-filter: var(--blur-regular);
+  -webkit-backdrop-filter: var(--blur-regular);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-card), var(--spec-rim);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s var(--ease-spring),
+              background 0.2s var(--ease-out-quart),
+              box-shadow 0.2s var(--ease-out-quart);
+}
+.tool-card:hover {
+  transform: translateY(-3px) scale(1.005);
+  background: var(--glass-thick);
+  box-shadow: var(--shadow-hover), var(--spec-rim-strong);
+}
+.tool-card:active { transform: translateY(-1px) scale(0.995); }
+.tool-card .tc-icon {
+  width: 44px; height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(255, 138, 110, 0.22), rgba(255, 193, 113, 0.1));
+  border: 1px solid rgba(255, 138, 110, 0.28);
+  color: var(--coral);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--spec-rim);
+}
+.tool-card .tc-icon svg { width: 22px; height: 22px; stroke-width: 1.7; }
+.tool-card .tc-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.tool-card .tc-title {
+  display: block;
+  font-size: var(--t-headline);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink-1);
+}
+.tool-card .tc-desc {
+  display: block;
+  font-size: var(--t-footnote);
+  color: var(--ink-3);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+}
+.tool-card .tc-arrow {
+  flex-shrink: 0;
+  color: var(--ink-4);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s, transform 0.2s var(--ease-out-quart);
+}
+.tool-card:hover .tc-arrow { opacity: 1; transform: translateX(0); color: var(--coral); }
+.tool-card .tc-arrow svg { width: 16px; height: 16px; }
+
+/* ═══ SIDEBAR TOOLTIP (iOS-like popover, появляется при hover на collapsed sidebar) ═══ */
+.sidebar:not(:hover) .nav-item[data-tooltip] { overflow: visible; }
+.sidebar:not(:hover) .nav-item[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px);
+  padding: 7px 12px;
+  background: var(--glass-thick);
+  backdrop-filter: var(--blur-thick);
+  -webkit-backdrop-filter: var(--blur-thick);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card), var(--spec-rim);
+  white-space: nowrap;
+  font-size: var(--t-footnote);
+  font-weight: 500;
+  color: var(--ink-1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s var(--ease-out-quart), transform 0.22s var(--ease-spring);
+  z-index: 200;
+  letter-spacing: -0.01em;
+}
+.sidebar:not(:hover) .nav-item[data-tooltip]:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  transition-delay: 0.35s;
+}
+
+/* ═══ DROPZONE drag-enter state (prominent visual feedback) ═══ */
+.dropzone.is-over {
+  background: linear-gradient(135deg, rgba(255, 138, 110, 0.14), rgba(255, 193, 113, 0.06)), var(--glass-regular);
+  border-color: var(--coral);
+  border-width: 2px;
+  box-shadow: 0 0 0 5px var(--coral-glow), var(--shadow-hover), var(--spec-rim-strong);
+  transform: scale(1.005);
+}
+.dropzone.is-over .dropzone-icon {
+  transform: scale(1.08);
+  color: var(--coral);
+}
+.dropzone, .dropzone-icon { transition: all 0.2s var(--ease-spring); }
+
+/* ═══ BUTTON LOADING STATE (feedback для async actions) ═══ */
+.btn.is-loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+.btn.is-loading > *:not(.btn-spinner) { opacity: 0.6; }
+.btn .btn-spinner {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  animation: btnSpin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+
+/* ═══ CONFIRM DIALOG (Apple-style alert с двумя действиями) ═══ */
+.confirm-dialog .modal-panel { width: min(440px, 100%); }
+.confirm-dialog .modal-title { font-size: var(--t-title-3); }
+.confirm-dialog .modal-body { margin-bottom: 18px; }
+.btn.btn-danger {
+  background: linear-gradient(135deg, #FF8A8A, #FF6B6B);
+  color: #fff;
+  box-shadow: 0 4px 12px -3px rgba(255, 138, 138, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+.btn.btn-danger:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+/* ═══ HIT-TARGET increases (Apple min 32px, рекомендуется 44px) ═══ */
+.tag-cell .tc-edit {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+}
+.tag-cell .tc-edit svg { width: 13px; height: 13px; }
+
+/* ═══ PRIMARY ACTION ROW (унифицированный footer-CTA для форм — Apple HIG bottom-right) ═══ */
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 16px;
+  margin-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  flex-wrap: wrap;
+}
+
+/* ═══ TABLE BREATHING ROOM (уменьшаем density, Apple Mac guidance) ═══ */
+.t-table.t-relaxed td { padding: 16px 14px; }
+.t-table.t-relaxed th { padding: 12px 14px; }
+
+/* ════════════════════════════════════════════════
+   GUIDE / READING LAYOUT
+   Apple HIG reading: 60-72ch line · 1.7 line-height · 17-19px body
+   ════════════════════════════════════════════════ */
+.guide-layout {
+  display: grid;
+  grid-template-columns: 1fr 248px;
+  gap: 44px;
+  align-items: start;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 4px 0;
+}
+.guide-article {
+  /* Glass reading panel — Apple Books / Safari Reader */
+  padding: 44px 48px 40px;
+  background: var(--glass-regular);
+  backdrop-filter: var(--blur-regular);
+  -webkit-backdrop-filter: var(--blur-regular);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-card), var(--spec-rim);
+  /* Базовая типография для чтения */
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  letter-spacing: -0.003em;
+}
+.guide-article > * { max-width: 64ch; }
+.guide-article > h2, .guide-article > h3, .guide-article > .section-divider { max-width: 64ch; }
+.guide-article > .guide-callout { max-width: 64ch; }
+.guide-article .guide-lead {
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-1);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  margin-bottom: 42px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.guide-article h2 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.024em;
+  color: var(--ink-1);
+  line-height: 1.22;
+  margin: 56px 0 18px;
+  scroll-margin-top: 110px;
+}
+.guide-article h2:first-of-type { margin-top: 8px; }
+.guide-article h3 {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+  color: var(--ink-1);
+  line-height: 1.32;
+  margin: 34px 0 10px;
+  scroll-margin-top: 110px;
+}
+.guide-article p {
+  margin-bottom: 18px;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.guide-article p strong {
+  color: var(--ink-1);
+  font-weight: 600;
+}
+.guide-article ul, .guide-article ol {
+  margin: 18px 0 22px;
+  padding-left: 24px;
+  color: var(--ink-2);
+}
+.guide-article li {
+  margin-bottom: 10px;
+  line-height: 1.65;
+  padding-left: 4px;
+}
+.guide-article li::marker { color: var(--coral); }
+.guide-article ol li::marker { font-weight: 700; color: var(--ink-3); }
+.guide-article a {
+  color: var(--coral);
+  text-decoration: none;
+  background-image: linear-gradient(to right, rgba(255, 138, 110, 0.35), rgba(255, 138, 110, 0.35));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  padding-bottom: 1px;
+  transition: background-size 0.2s, color 0.2s;
+}
+.guide-article a:hover {
+  color: var(--amber);
+  background-size: 100% 2px;
+}
+.guide-article .guide-callout {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 14px;
+  padding: 18px 22px 16px;
+  background: linear-gradient(135deg, rgba(255, 138, 110, 0.1), rgba(255, 193, 113, 0.04));
+  border: 1px solid rgba(255, 138, 110, 0.22);
+  border-left: 3px solid var(--coral);
+  border-radius: var(--r-md);
+  margin: 26px 0 30px;
+  box-shadow: var(--spec-rim);
+}
+.guide-article .guide-callout .co-ico {
+  width: 24px; height: 24px;
+  border-radius: 8px;
+  background: rgba(255, 138, 110, 0.18);
+  border: 1px solid rgba(255, 138, 110, 0.35);
+  color: var(--coral);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  box-shadow: var(--spec-rim);
+}
+.guide-article .guide-callout .co-ico svg { width: 13px; height: 13px; stroke-width: 2.2; }
+.guide-article .guide-callout .co-body .co-label {
+  font-size: var(--t-caption-2);
+  color: var(--coral);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+.guide-article .guide-callout .co-body p {
+  margin: 0;
+  color: var(--ink-1);
+  line-height: 1.6;
+  font-size: 16px;
+}
+.guide-article kbd, .guide-kbd {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid var(--glass-border);
+  border-bottom-color: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  font-family: 'SF Mono', 'JetBrains Mono', Consolas, monospace;
+  font-size: 13px;
+  color: var(--ink-1);
+  font-weight: 600;
+  box-shadow: var(--spec-rim), 0 1px 0 rgba(0, 0, 0, 0.25);
+  letter-spacing: -0.01em;
+  vertical-align: baseline;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+.guide-article .section-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 48px 0;
+}
+
+/* TOC (Table of Contents) — sticky sidebar справа */
+.guide-toc {
+  position: sticky;
+  top: 24px;
+  padding: 20px 18px;
+  background: var(--glass-thin);
+  backdrop-filter: var(--blur-thin);
+  -webkit-backdrop-filter: var(--blur-thin);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--spec-rim), var(--shadow-soft);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+.guide-toc .toc-label {
+  font-size: var(--t-caption-2);
+  color: var(--ink-3);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+.guide-toc a {
+  display: block;
+  padding: 8px 10px;
+  font-size: var(--t-footnote);
+  color: var(--ink-3);
+  text-decoration: none;
+  border-radius: 8px;
+  border-left: 2px solid transparent;
+  transition: all 0.18s var(--ease-out-quart);
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.guide-toc a:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-1);
+}
+.guide-toc a.is-active {
+  color: var(--ink-1);
+  background: linear-gradient(90deg, rgba(255, 138, 110, 0.14), rgba(255, 138, 110, 0.02));
+  border-left-color: var(--coral);
+  font-weight: 600;
+}
+@media (max-width: 1080px) {
+  .guide-layout { grid-template-columns: 1fr; max-width: 700px; }
+  .guide-toc { display: none; }
+}
+
+
+
 </style>
 </head>
 <body>
@@ -1446,22 +2235,26 @@ body[data-theme="dawn"]::after {
     <div class="brand-name">Большой Цифровой</div>
   </div>
 
-  <nav class="nav">
-    <a href="#page-advertisers" class="nav-item admin-only" data-route="advertisers">
+  <nav class="nav" aria-label="Основная навигация">
+    <a href="#page-advertisers" class="nav-item admin-only" data-route="advertisers" data-tooltip="Рекламный кабинет">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10"/><path d="M8 14l3-3 2 2 4-4"/></svg>
       <span class="label">Рекламный кабинет</span>
     </a>
-    <a href="#page-stats" class="nav-item" data-route="stats">
+    <a href="#page-stats" class="nav-item" data-route="stats" data-tooltip="Статистика">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 6-6"/></svg>
       <span class="label">Статистика</span>
     </a>
-    <a href="#page-wordstat" class="nav-item" data-route="wordstat">
+    <a href="#page-wordstat" class="nav-item" data-route="wordstat" data-tooltip="Wordstat">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <span class="label">Wordstat</span>
     </a>
-    <a href="#page-ai" class="nav-item" data-route="ai">
+    <a href="#page-ai" class="nav-item" data-route="ai" data-tooltip="ИИ — инструменты">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
       <span class="label">ИИ</span>
+    </a>
+    <a href="#page-guide" class="nav-item" data-route="guide" data-tooltip="Руководство">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span class="label">Руководство</span>
     </a>
   </nav>
 
@@ -2261,20 +3054,16 @@ body[data-theme="dawn"]::after {
   </div>
 </section>
 
-<!-- ═══ PAGE: AI ANALYTICS (placeholder — в разработке) ═══ -->
+<!-- ═══ PAGE: ИИ HUB — Discovery Hub (Apple Settings/Shortcuts-style grid) ═══ -->
 <section class="page" id="page-ai">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">ИИ-аналитика</h1>
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
     </div>
+    <div class="sh-title">ИИ — инструменты для контента</div>
   </div>
-  <div class="card placeholder-card">
-    <div class="placeholder-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
-    </div>
-    <div class="placeholder-title">ИИ-аналитика — в разработке</div>
-    <div class="placeholder-sub">Автоматические инсайты, прогноз эффективности и рекомендации появятся в одном из следующих обновлений.</div>
-  </div>
+  <!-- chip-row injected by JS ниже -->
+  <div class="tool-hub" id="aiToolHub"></div>
 
   <!-- Превью будущего функционала (скрыто по умолчанию) -->
   <div class="two-col" style="grid-template-columns: 1.25fr 1fr; display: none;">
@@ -2343,7 +3132,1108 @@ body[data-theme="dawn"]::after {
   </div>
 </section>
 
+<!-- ═══ PAGE: РУКОВОДСТВО (long-form reading — Apple HIG) ═══ -->
+<section class="page" id="page-guide">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    </div>
+    <div class="sh-title">Руководство</div>
+  </div>
+
+  <div class="guide-layout">
+    <article class="guide-article" id="guideArticle">
+      <p class="guide-lead">Twinr — это рекламный кабинет «Большой Цифровой» и набор из девяти AI-инструментов для работы с контентом. Один интерфейс, две роли: маркетолог-аналитик радиорекламы и контент-редактор, собирающий материал из разных источников. Руководство объясняет, как использовать каждый модуль, в каком порядке проходят типичные сценарии и что делать, если что-то идёт не так.</p>
+
+      <h2 id="g-intro">Введение</h2>
+      <p>Продукт разделён на два модуля. <strong>Радиореклама</strong> управляет рекламодателями, кампаниями, роликами и статистикой прослушиваний. <strong>ИИ</strong> содержит девять инструментов: источники, промпты, работа с источником, рерайтинг, транскрибация, чат, документы, генерация видео и ключевые слова. Оба модуля используют единую дизайн-систему Liquid Glass и доступны из левой боковой панели.</p>
+      <p>Переключение между модулями — один клик. Переключение между инструментами внутри ИИ — клик по chip-row сверху любой AI-страницы. Контекст подсвечивается в хлебных крошках топ-бара: «Twinr / ИИ — Источники».</p>
+
+      <div class="guide-callout">
+        <div class="co-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <div class="co-body">
+          <span class="co-label">Совет</span>
+          <p>Клик по пункту «ИИ» в боковой панели всегда возвращает вас к последнему открытому инструменту. Если хотите полный обзор — на главной странице ИИ есть Discovery Hub с карточками всех девяти функций.</p>
+        </div>
+      </div>
+
+      <h2 id="g-start">Начало работы</h2>
+      <p>Авторизуйтесь по email или через SSO. После входа вы попадёте на <strong>Статистику</strong> — дашборд с KPI-виджетами по радиорекламе и графиком прослушиваний за последние тридцать дней.</p>
+      <p>Навигация построена вокруг принципа «куда вам нужно — там вы и есть». Четыре уровня ориентации работают одновременно:</p>
+      <ul>
+        <li><strong>Боковая панель</strong> — четыре раздела верхнего уровня: Рекламный кабинет, Статистика, Wordstat, ИИ. При наведении разворачивается в ширину с подписями.</li>
+        <li><strong>Топ-бар</strong> — хлебные крошки, поиск по всему приложению (<kbd>⌘&nbsp;K</kbd>) и меню профиля справа.</li>
+        <li><strong>Chip-row</strong> на AI-страницах — быстрое переключение между инструментами без возврата в sidebar.</li>
+        <li><strong>Вложенные табы</strong> на многошаговых страницах (Wordstat, Промпты, Работа с источником) — переключение между режимами внутри одного инструмента.</li>
+      </ul>
+
+      <h2 id="g-sources">Библиотека источников</h2>
+      <p>Источник — это RSS-лента, API-endpoint или сайт, с которого платформа регулярно собирает контент. Чтобы добавить новый источник:</p>
+      <ol>
+        <li>Откройте <strong>ИИ → Источники</strong></li>
+        <li>В форме «Новый источник» сверху страницы укажите название, ссылку и выберите группу</li>
+        <li>Нажмите <strong>Создать источник</strong></li>
+      </ol>
+      <p>Источники организуются в тематические группы — Новости, События, ОИВы, Проекты, Парки, КГХ, Культура, Спорт и другие. Группу можно переименовать или удалить — иконки карандаша и корзины появляются на каждой chip-пилюле в горизонтальном списке групп.</p>
+      <p>Чекбоксы в сетке источников работают для пакетных операций: выберите несколько, затем нажмите <strong>Удалить выбранные</strong> или <strong>Привязать выбранные к группе</strong>. Подтверждение удаления — в отдельном диалоге, действие обратимо в течение пяти секунд.</p>
+
+      <h2 id="g-prompts">Библиотека промптов</h2>
+      <p>Промпт — это инструкция для AI-модели, описывающая желаемый стиль, формат и ограничения вывода. Четыре типа:</p>
+      <ul>
+        <li><strong>Промпт анализа</strong> — глубокое понимание темы, извлечение смысла, выделение ключевых тезисов</li>
+        <li><strong>Промпт отбора</strong> — фильтрация релевантных материалов из потока новостей</li>
+        <li><strong>Промпт обработки</strong> — генерация финального текста в нужном стиле (рерайт, перевод, суммаризация)</li>
+        <li><strong>Служебный</strong> — системные префиксы, постобработка, утилиты</li>
+      </ul>
+      <p>Каждый промпт состоит из названия и текста. Название нужно для выбора в других инструментах (Работа с источником, Рерайтинг). Текст — это сам промпт, который модель получит как систему. Рекомендуется держать промпты короткими и фокусными: одна цель на один промпт.</p>
+
+      <h2 id="g-rewrite">Рерайтинг по источникам</h2>
+      <p>Батч-рерайтинг работает по трём параметрам: <strong>действие</strong> (перевод на английский, суммаризация, адаптация), <strong>источники</strong> (откуда брать материалы) и <strong>отборочный промпт</strong> (как фильтровать). После нажатия «Сгенерировать» платформа:</p>
+      <ol>
+        <li>Собирает новости со всех выбранных источников за указанный период</li>
+        <li>Фильтрует их отборочным промптом, оставляя только релевантные</li>
+        <li>Генерирует заголовок, описание и основной текст для каждой отобранной новости</li>
+        <li>Предлагает сгенерировать видео или перейти к анализу выбранных материалов</li>
+      </ol>
+
+      <div class="guide-callout">
+        <div class="co-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div class="co-body">
+          <span class="co-label">Важно</span>
+          <p>Для точного отбора указывайте период <strong>60–180 минут</strong>. Слишком узкий период (5–15 мин) часто оставляет ноль релевантных материалов. Слишком широкий (24 часа и больше) увеличивает стоимость обработки и размывает фокус.</p>
+        </div>
+      </div>
+
+      <h2 id="g-media">Медиа: транскрибация и видео</h2>
+      <h3>Транскрибация</h3>
+      <p>Подаём аудио, видео или PDF — получаем текст. Поддерживаются форматы MP3, WAV, MP4, PDF до 500 МБ. История файлов сохраняется в правой панели — можно быстро вернуться к любому предыдущему результату и скопировать текст одним кликом.</p>
+
+      <h3>Генерация видео</h3>
+      <p>Text-to-video: вы пишете текст, модель превращает его в готовый ролик. История генераций организована в две группы — «Все» и «В процессе». Готовое видео можно скачать или удалить. Срок хранения — девяносто дней с момента генерации.</p>
+
+      <h2 id="g-wordstat">Ключевые слова (Wordstat)</h2>
+      <p>Анализ частоты запросов по дням. Два режима просмотра: <strong>Данные</strong> (таблица с датой, рекламой и долей запросов) и <strong>Графики</strong> (вертикальные бары по дням и неделям).</p>
+      <p>Период задаётся готовыми пресетами — «Базовый», «Среднесрочный», «7 дней до», «30 дней до» — или через ручной выбор дат. Сравнение ведётся с тем же периодом предыдущего месяца или года. Шаг статистики — по неделям или по месяцам.</p>
+      <p>Ключевые слова для анализа можно ввести вручную или извлечь из аудио/видеофайла через вкладку «Анализ аудио/видео» в модалке «Ключевые слова».</p>
+
+      <h2 id="g-docs">Документы</h2>
+      <p>Хранилище файлов с тегами, поиском и пакетной обработкой. Каждый документ можно пометить несколькими тегами — это упрощает фильтрацию и поиск. Теги редактируются прямо в ячейке таблицы: клик по иконке карандаша открывает модалку с полным списком.</p>
+
+      <h2 id="g-faq">FAQ</h2>
+
+      <h3>Как поменять модель LLM в Чате?</h3>
+      <p>В левой панели Чата есть dropdown <strong>Модель обработчик</strong>. Доступны Deepseek (дефолт, быстрый и дешёвый), GPT-4o (универсальный) и Claude Sonnet 4.6 (для сложных задач). Выбор модели сохраняется на уровне отдельного чата — в новом чате модель можно выбрать другую.</p>
+
+      <h3>Что делать, если транскрибация выдаёт ошибки?</h3>
+      <p>Сначала проверьте формат и размер файла: MP3, WAV, MP4 и PDF до 500 МБ. Если формат другой (AAC, OGG, FLAC) — используйте конвертер или обратитесь в поддержку. Для MP4 убедитесь, что видео содержит звуковую дорожку — без звука распознавание невозможно.</p>
+
+      <h3>Можно ли работать через мобильный?</h3>
+      <p>Да, интерфейс адаптивен, но дизайн оптимизирован под разрешения от <kbd>1280&nbsp;px</kbd> и выше. На iPad (1024–1280) работает штатно. На телефонах некоторые таблицы скроллятся горизонтально, а sub-nav chip-row превращается в скроллируемую полосу.</p>
+
+      <h3>Как удалить источник без потери новостей?</h3>
+      <p>Перед удалением источника пометьте его чекбоксом и нажмите <strong>Привязать выбранные к группе</strong> — выберите группу-архив. После этого источник можно удалить — привязанные к нему новости останутся в группе.</p>
+
+      <h3>Где посмотреть лимиты тарифа?</h3>
+      <p>В профиле пользователя (правый верхний угол, клик по аватару) → «Тариф и лимиты». Там видны остатки токенов по каждой модели, лимит транскрибированных минут и количество сгенерированных видео за текущий биллинговый период.</p>
+
+      <div class="section-divider"></div>
+
+      <p style="color: var(--ink-3); font-size: 15px; text-align: center; margin-top: 12px;">Документ обновляется по мере развития платформы. Последняя редакция: апрель 2026.</p>
+    </article>
+
+    <aside class="guide-toc" aria-label="Содержание">
+      <div class="toc-label">Содержание</div>
+      <a href="#g-intro" data-toc="g-intro">Введение</a>
+      <a href="#g-start" data-toc="g-start">Начало работы</a>
+      <a href="#g-sources" data-toc="g-sources">Библиотека источников</a>
+      <a href="#g-prompts" data-toc="g-prompts">Библиотека промптов</a>
+      <a href="#g-rewrite" data-toc="g-rewrite">Рерайтинг по источникам</a>
+      <a href="#g-media" data-toc="g-media">Медиа</a>
+      <a href="#g-wordstat" data-toc="g-wordstat">Ключевые слова</a>
+      <a href="#g-docs" data-toc="g-docs">Документы</a>
+      <a href="#g-faq" data-toc="g-faq">FAQ</a>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     ТУРБО МОДУЛЬ — AI-инструменты (экраны из Figma, Liquid Glass стиль)
+     ══════════════════════════════════════════════════════════════════ -->
+
+<!-- ═══ PAGE: БИБЛИОТЕКА ИСТОЧНИКОВ ═══ -->
+<section class="page" id="page-sources">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <div class="sh-title">Библиотека источников</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Новый источник</div>
+      <div class="card-sub">Добавьте RSS-ленту, сайт или API-endpoint в библиотеку</div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1.2fr 1fr auto; gap: 12px; align-items: end;">
+      <div class="field" style="margin: 0;">
+        <label class="field-label">Название</label>
+        <input class="input" type="text" placeholder="Напр. MOS.RU">
+      </div>
+      <div class="field" style="margin: 0;">
+        <label class="field-label">Ссылка</label>
+        <input class="input" type="url" placeholder="https://...">
+      </div>
+      <div class="field" style="margin: 0;">
+        <label class="field-label">Группа</label>
+        <select class="select">
+          <option>Выбрать группу</option><option>Новости</option><option>События</option><option>ОИВы</option><option>Проекты</option><option>Парки</option><option>КГХ</option><option>Культура</option><option>Спорт</option>
+        </select>
+      </div>
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Создать источник
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Группы <span class="count">11</span></div>
+      <div class="card-sub">Активна: <span id="src-group-active" style="color:var(--ink-1);font-weight:600;">Все источники</span></div>
+    </div>
+
+    <div class="history-scroll" style="margin-bottom: 18px;">
+      <button class="hs-arrow" aria-label="scroll left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="hs-track" id="srcGroupTabs">
+        <button class="pill active">Все источники</button>
+        <button class="pill">Новости
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">События
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">ОИВы
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">Проекты
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">Парки
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">КГХ
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">Культура
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">Спорт
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;margin-left:4px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="pill">фиды</button>
+      </div>
+      <button class="hs-arrow" aria-label="scroll right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <div class="cbgrid cols-4">
+      <label class="cbrow"><input type="checkbox" checked> Chertanovo Football</label>
+      <label class="cbrow"><input type="checkbox"> MOS.RU</label>
+      <label class="cbrow"><input type="checkbox"> RUSSPASS.Москва</label>
+      <label class="cbrow"><input type="checkbox"> SMART-контроль</label>
+      <label class="cbrow"><input type="checkbox"> STOлица</label>
+      <label class="cbrow"><input type="checkbox"> Академия инноваторов</label>
+      <label class="cbrow"><input type="checkbox"> АКИлогия</label>
+      <label class="cbrow"><input type="checkbox"> Активный гражданин</label>
+      <label class="cbrow"><input type="checkbox"> АО Мосводоканал</label>
+      <label class="cbrow"><input type="checkbox"> АО Мосгаз</label>
+      <label class="cbrow"><input type="checkbox"> АО Москоллектор</label>
+      <label class="cbrow"><input type="checkbox"> АО Мослифт</label>
+      <label class="cbrow"><input type="checkbox"> АО Мосэнергосбыт</label>
+      <label class="cbrow"><input type="checkbox"> АО ОЭК</label>
+      <label class="cbrow"><input type="checkbox"> АО Экотехпром</label>
+      <label class="cbrow"><input type="checkbox"> АСО 1 ГБУ Автодороги</label>
+      <label class="cbrow"><input type="checkbox"> Бизнес Апдейт</label>
+      <label class="cbrow"><input type="checkbox"> ВДНХ</label>
+      <label class="cbrow"><input type="checkbox"> Велобайк</label>
+      <label class="cbrow"><input type="checkbox"> ГБУ Автодороги</label>
+    </div>
+
+    <div class="row" style="padding-top: 14px; margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap; gap: 10px;">
+      <button class="btn btn-glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Удалить выбранные
+      </button>
+      <button class="btn btn-glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        Привязать выбранные к группе
+      </button>
+      <select class="select" style="max-width: 200px;">
+        <option>Выбрать группу</option><option>Новости</option><option>События</option><option>ОИВы</option>
+      </select>
+      <div style="flex: 1;"></div>
+      <div class="pagination" style="margin: 0;">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn">5</button>
+        <button class="page-btn" style="min-width: auto; padding: 0 14px;">Последняя</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: БИБЛИОТЕКА ПРОМПТОВ ═══ -->
+<section class="page" id="page-prompts">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+    </div>
+    <div class="sh-title">Библиотека промптов</div>
+  </div>
+
+  <div class="two-col" style="grid-template-columns: 380px 1fr; gap: 18px;">
+    <!-- Left aside: editor -->
+    <div class="card" id="promptEditor" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="card-title" id="promptEditorTitle">Новый промпт анализа</div>
+
+      <div class="field" style="margin: 0;">
+        <label class="field-label">Тип</label>
+        <select class="select" id="promptTypeSelect">
+          <option>Промпт анализа</option><option>Промпт отбора</option><option>Промпт обработки</option><option>Служебный</option>
+        </select>
+      </div>
+
+      <div class="field" style="margin: 0;">
+        <label class="field-label">Название</label>
+        <input class="input" type="text" id="promptName" placeholder="Введите название" value="По умолчанию 1">
+      </div>
+
+      <div class="field" style="margin: 0; flex: 1; display: flex; flex-direction: column;">
+        <label class="field-label">Промпт</label>
+        <textarea class="textarea" style="flex: 1; min-height: 240px;" placeholder="Вставить текст"></textarea>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 13px 20px;" id="promptEditorCta">Сохранить изменения</button>
+    </div>
+
+    <!-- Right main: types + prompts grid -->
+    <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="card-sub" style="margin-bottom: 0;">Типы промптов</div>
+
+      <div class="tabs" data-tabs-group="promptTypes">
+        <button class="tab active" data-tab="analyze">Промпт анализа</button>
+        <button class="tab" data-tab="select">Промпт отбора</button>
+        <button class="tab" data-tab="process">Промпт обработки</button>
+        <button class="tab" data-tab="service">Служебный</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
+        <button class="pill active" style="justify-content: flex-start; padding: 14px 20px; font-size: var(--t-subhead);">По умолчанию 1</button>
+        <button class="pill" style="justify-content: flex-start; padding: 14px 20px; font-size: var(--t-subhead);">По умолчанию 2</button>
+        <button class="pill" style="justify-content: flex-start; padding: 14px 20px; font-size: var(--t-subhead);">По умолчанию 3</button>
+      </div>
+
+      <div style="flex: 1;"></div>
+
+      <div class="row" style="justify-content: space-between; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07);">
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          Создать новый промпт обработки
+        </button>
+        <div class="pagination" style="margin: 0;">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">4</button>
+          <button class="page-btn">5</button>
+          <button class="page-btn" style="min-width: auto; padding: 0 14px;">Последняя</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: РАБОТА С ИСТОЧНИКОМ ═══ -->
+<section class="page" id="page-source-work">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>
+    </div>
+    <div class="sh-title">Работа с источником</div>
+  </div>
+
+  <div class="two-col" style="grid-template-columns: 380px 1fr; gap: 18px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="card-title">Использовать промпт</div>
+
+      <select class="select">
+        <option>Тестовый промпт</option>
+        <option>Промпт анализа #1</option>
+        <option>Промпт обработки #2</option>
+      </select>
+
+      <div class="card-title" style="margin-top: 4px;">Источник текста</div>
+
+      <div class="tabs" data-tabs-group="srcInput">
+        <button class="tab active" data-tab="manual">Ручной ввод</button>
+        <button class="tab" data-tab="doc">Документ</button>
+        <button class="tab" data-tab="url">Ссылка</button>
+      </div>
+
+      <!-- Панель: ручной ввод -->
+      <div data-panel="manual" style="flex: 1; display: flex; flex-direction: column;">
+        <textarea class="textarea" style="flex: 1; min-height: 220px;" placeholder="Вставить текст"></textarea>
+      </div>
+
+      <!-- Панель: документ -->
+      <div data-panel="doc" style="display: none;">
+        <div class="dropzone" style="min-height: 220px;">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div style="font-size: var(--t-subhead); color: var(--ink-1); font-weight: 600;">Перетащите документ сюда</div>
+          <div style="font-size: var(--t-footnote); color: var(--ink-3);">или <span style="color: var(--coral); font-weight: 600;">нажмите на кнопку</span> чтобы загрузить</div>
+          <button class="btn btn-glass" style="margin-top: 6px;">Выбрать файл</button>
+        </div>
+      </div>
+
+      <!-- Панель: ссылка -->
+      <div data-panel="url" style="display: none;">
+        <div class="field" style="margin: 0;">
+          <label class="field-label">Ссылка на ресурс</label>
+          <input class="input" type="url" placeholder="Вставить ссылку">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 13px 20px; margin-top: auto;">Сгенерировать</button>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column;">
+      <div class="card-sub" style="margin-bottom: 12px;">История</div>
+
+      <div class="history-scroll" style="margin-bottom: 18px;">
+        <button class="hs-arrow" aria-label="scroll left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="hs-track">
+          <button class="pill active">Московские видоигры…</button>
+          <button class="pill">Московские видоигры…</button>
+          <button class="pill">Московские видоигры…</button>
+          <button class="pill">Московские видоигры…</button>
+          <button class="pill">Московские видоигры…</button>
+        </div>
+        <button class="hs-arrow" aria-label="scroll right">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="chat-output" style="flex: 1;">
+        <div style="font-size: var(--t-title-3); font-weight: 700; color: var(--ink-1); margin-bottom: 14px; letter-spacing: -0.02em;">1. Вывод</div>
+        <p style="color: var(--ink-2); line-height: 1.55; margin-bottom: 14px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor dolor sed ex ultrices, at accumsan risus sodales. Quisque vitae magna eget mi luctus finibus. Pellentesque convallis turpis id justo laoreet vestibulum. Vivamus ornare leo ut interdum tincidunt.</p>
+        <p style="color: var(--ink-2); line-height: 1.55; margin-bottom: 14px;">In hac habitasse platea dictumst. Vivamus quis vehicula lacus, in ornare metus. Fusce vel lacinia lorem, id vestibulum sapien. In hac habitasse platea dictumst. Donec luctus, mi et placerat blandit, risus leo tincidunt diam, vel tristique tortor orci nec nisl. Cras sed diam sapien.</p>
+        <p style="color: var(--ink-2); line-height: 1.55;">Vestibulum eget nisl eu orci lacinia viverra. Etiam eu porta diam. Aenean vulputate, sapien id efficitur ultricies, augue nisl lobortis orci, eget bibendum sem velit a odio.</p>
+      </div>
+
+      <div class="row" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07);">
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Скопировать текст в буфер обмена
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: РЕРАЙТИНГ ═══ -->
+<section class="page" id="page-rewrite">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </div>
+    <div class="sh-title">Рерайтинг по источникам</div>
+  </div>
+
+  <div class="two-col" style="grid-template-columns: 380px 1fr; gap: 18px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="card-title">Выберите действие</div>
+
+      <select class="select">
+        <option>Перевод на английский</option>
+        <option>Суммаризация</option>
+        <option>Адаптация для молодёжной аудитории</option>
+      </select>
+
+      <div>
+        <label class="field-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          Источники
+          <button class="btn btn-glass" style="padding: 6px 12px; font-size: var(--t-caption-1);" onclick="openModal('modal-rewrite-sources')">
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            редактировать
+          </button>
+        </label>
+      </div>
+
+      <div>
+        <label class="field-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          Отборочный промпт
+          <button class="btn btn-glass" style="padding: 6px 12px; font-size: var(--t-caption-1);" onclick="openModal('modal-rewrite-prompt')">
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            редактировать
+          </button>
+        </label>
+      </div>
+
+      <div class="field" style="margin: 0;">
+        <label class="field-label">Период для отбора новостей (в минутах)</label>
+        <input class="input" type="number" value="120" style="font-variant-numeric: tabular-nums;">
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 13px 20px; margin-top: auto;">Сгенерировать</button>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column;">
+      <div style="overflow-x: auto; flex: 1;">
+        <table class="t-table detail-table">
+          <thead>
+            <tr>
+              <th style="width: 30px;"></th>
+              <th style="width: 140px;">Название</th>
+              <th style="width: 180px;">Описание</th>
+              <th>Текст</th>
+              <th style="width: 90px;">Видео</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="check" checked></td>
+              <td>Как москвичи меняют свои дворы: уже больше 1400 идей воплотили в жизнь</td>
+              <td>Платформа «Город идей» превращает предложения жителей в реальные проекты благоустройства — от новых площадок до обновлённых стадионов.</td>
+              <td style="color: var(--ink-2); line-height: 1.55;">С 2021 года в Москве преобразилось больше 1400 дворов — и всё благодаря инициативам самих горожан. Их идеи можно предложить на платформе «Город идей», превращаясь в реальные проекты. Это около 6% от всех дворов столицы, а их, напомним, больше 24 тысяч.</td>
+              <td><span class="tc-pill" style="background: rgba(125,211,168,0.16); color: var(--success); border-color: rgba(125,211,168,0.25);">Готово</span></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="check"></td>
+              <td>«Фабрика видеоигр» запускает новый сезон: как превратить идею в проект</td>
+              <td>До 13 февраля можно подать заявку на участие в московском акселераторе для разработчиков игр.</td>
+              <td style="color: var(--ink-2); line-height: 1.55;">В Москве стартовал приём заявок на седьмой сезон «Фабрики видеоигр» — акселерационной программы для разработчиков. Организатором выступает Агентство креативных индустрий столицы.</td>
+              <td><span class="tc-pill" style="background: rgba(255,193,113,0.16); color: var(--amber); border-color: rgba(255,193,113,0.25);">Генерируется</span></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="check"></td>
+              <td>«Фабрика видеоигр» — 2026</td>
+              <td>До 13 февраля можно подать заявку на участие в московском акселераторе.</td>
+              <td style="color: var(--ink-2); line-height: 1.55;">В Москве стартовал приём заявок на седьмой сезон. Организатором выступает Агентство креативных индустрий столицы. Участвовать могут как опытные студии.</td>
+              <td><span class="tc-pill" style="background: rgba(255,193,113,0.16); color: var(--amber); border-color: rgba(255,193,113,0.25);">Генерируется</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap;">
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Сгенерировать видео для выбранных материалов
+        </button>
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 6-6"/></svg>
+          Перейти к анализу выбранных материалов
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: ТРАНСКРИБАЦИЯ ═══ -->
+<section class="page" id="page-transcribe">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+    </div>
+    <div class="sh-title">Транскрибация</div>
+  </div>
+
+  <div class="two-col" style="grid-template-columns: 380px 1fr; gap: 18px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="card-title">Новый файл</div>
+
+      <div class="dropzone" style="flex: 1; min-height: 340px;">
+        <div class="dropzone-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div style="font-size: var(--t-subhead); color: var(--ink-1); font-weight: 600; text-align: center;">Перетащите файл сюда</div>
+        <div style="font-size: var(--t-footnote); color: var(--ink-3); text-align: center;">или <span style="color: var(--coral); font-weight: 600;">нажмите на кнопку</span> чтобы загрузить</div>
+        <button class="btn btn-glass" style="margin-top: 8px;">Выбрать файл</button>
+        <div style="font-size: var(--t-caption-2); color: var(--ink-4); margin-top: 14px;">MP3 · WAV · MP4 · PDF · до 500 МБ</div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column;">
+      <div class="card-sub" style="margin-bottom: 12px;">История</div>
+
+      <div class="history-scroll" style="margin-bottom: 18px;">
+        <div class="hs-track">
+          <button class="pill active">Название_файла.pdf</button>
+          <button class="pill">Название_файла.pdf</button>
+          <button class="pill">Название_файла.pdf</button>
+          <button class="pill">Название_файла.pdf</button>
+          <button class="pill">Название_файла.mp3</button>
+        </div>
+      </div>
+
+      <div class="chat-output" style="flex: 1;">
+        <div style="font-size: var(--t-headline); font-weight: 700; color: var(--ink-1); margin-bottom: 14px; letter-spacing: -0.015em;">Текст, получаемый при распознавании.</div>
+        <p style="color: var(--ink-2); line-height: 1.55; margin-bottom: 14px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor dolor sed ex ultrices, at accumsan risus sodales. Quisque vitae magna eget mi luctus finibus. Pellentesque convallis turpis id justo laoreet vestibulum. Vivamus ornare leo ut interdum tincidunt. Nullam posuere sodales luctus. Nullam molestie feugiat pellentesque. Donec vel ex dapibus magna commodo porta.</p>
+        <p style="color: var(--ink-2); line-height: 1.55; margin-bottom: 14px;">In hac habitasse platea dictumst. Vivamus quis vehicula lacus, in ornare metus. Fusce vel lacinia lorem, id vestibulum sapien. In hac habitasse platea dictumst. Donec luctus, mi et placerat blandit, risus leo tincidunt diam, vel tristique tortor orci nec nisl. Cras sed diam sapien. Aliquam porta consequat urna, id ullamcorper ipsum finibus in.</p>
+        <p style="color: var(--ink-2); line-height: 1.55;">Vestibulum eget nisl eu orci lacinia viverra. Etiam eu porta diam. Aenean vulputate, sapien id efficitur ultricies, augue nisl lobortis orci, eget bibendum sem velit a odio.</p>
+      </div>
+
+      <div class="row" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07);">
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Транскрибировать новый файл
+        </button>
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Скопировать текст в буфер обмена
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: ЧАТ ═══ -->
+<section class="page" id="page-chat">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <div class="sh-title">Чат</div>
+  </div>
+
+  <div class="two-col" style="grid-template-columns: 380px 1fr; gap: 18px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="card-title">Новый чат</div>
+
+      <input class="input" type="text" placeholder="Название чата">
+
+      <select class="select">
+        <option>Модель обработчик — Deepseek</option>
+        <option>Модель обработчик — GPT-4o</option>
+        <option>Модель обработчик — Claude Sonnet 4.6</option>
+      </select>
+
+      <div class="field" style="margin: 0; flex: 1; display: flex; flex-direction: column;">
+        <textarea class="textarea" style="flex: 1; min-height: 220px;" placeholder="Ваш запрос"></textarea>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 13px 20px;">Отправить</button>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column;">
+      <div class="card-sub" style="margin-bottom: 12px;">История</div>
+
+      <div class="history-scroll" style="margin-bottom: 18px;">
+        <div class="hs-track">
+          <button class="pill active">Анализ. 28.01.2026 17:28
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-left:4px;opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+          <button class="pill">Московские видоигры
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-left:4px;opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+          <button class="pill">Московские видоигры
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-left:4px;opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+          <button class="pill">Московские видоигры
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-left:4px;opacity:0.6;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+          <button class="pill">Московские видоигры</button>
+        </div>
+      </div>
+
+      <div class="chat-output" style="flex: 1;">
+        <div style="font-size: var(--t-headline); font-weight: 700; color: var(--ink-1); margin-bottom: 14px; letter-spacing: -0.015em; font-variant-numeric: tabular-nums;">Анализ. 28.01.2026 17:28</div>
+        <p style="color: var(--ink-2); line-height: 1.55; margin-bottom: 14px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor dolor sed ex ultrices, at accumsan risus sodales. Quisque vitae magna eget mi luctus finibus. Pellentesque convallis turpis id justo laoreet vestibulum. Vivamus ornare leo ut interdum tincidunt.</p>
+        <p style="color: var(--ink-2); line-height: 1.55; margin-bottom: 14px;">In hac habitasse platea dictumst. Vivamus quis vehicula lacus, in ornare metus. Fusce vel lacinia lorem, id vestibulum sapien. In hac habitasse platea dictumst. Donec luctus, mi et placerat blandit, risus leo tincidunt diam, vel tristique tortor orci nec nisl.</p>
+        <p style="color: var(--ink-2); line-height: 1.55;">Vestibulum eget nisl eu orci lacinia viverra. Etiam eu porta diam. Aenean vulputate, sapien id efficitur ultricies, augue nisl lobortis orci, eget bibendum sem velit a odio.</p>
+      </div>
+
+      <div class="row" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07);">
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Создать новый чат
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: ГЕНЕРАЦИЯ ВИДЕО ═══ -->
+<section class="page" id="page-video-gen">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+    </div>
+    <div class="sh-title">Генерация видео</div>
+  </div>
+
+  <div class="two-col" style="grid-template-columns: 380px 1fr; gap: 18px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="card-title">Создание нового видео</div>
+
+      <div class="field" style="margin: 0; flex: 1; display: flex; flex-direction: column;">
+        <textarea class="textarea" style="flex: 1; min-height: 340px;" placeholder="Текст видео"></textarea>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 13px 20px;">Сгенерировать</button>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="card-sub" style="margin-bottom: 0;">История генераций</div>
+
+      <div class="tabs">
+        <button class="tab active">Все</button>
+        <button class="tab">В процессе</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; flex: 1;">
+        <div style="padding: 18px; background: var(--glass-thin); border: 1px solid var(--glass-border); border-radius: var(--r-lg); box-shadow: var(--spec-rim);">
+          <div class="row" style="margin-bottom: 8px;">
+            <span style="font-size: var(--t-footnote); color: var(--ink-1); font-weight: 600; font-variant-numeric: tabular-nums;">16.10.2025 16:30</span>
+            <span style="font-size: var(--t-footnote); color: var(--coral); font-weight: 600;">Имя_AI_USER</span>
+          </div>
+          <p style="font-size: var(--t-subhead); color: var(--ink-2); line-height: 1.5; margin-bottom: 12px;">Привет! Я Москва 2030. И я расскажу вам историю о национальном самосознании.<br>— Скажи, а ты как — сначала напишешь, а потом уже вставляешь национальное самосознание?</p>
+
+          <div class="video-placeholder">
+            <button class="vp-play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div class="vp-timer">0:00 / 0:34</div>
+          </div>
+
+          <div class="row" style="margin-top: 12px;">
+            <button class="btn btn-glass">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Скачать видео
+            </button>
+            <button class="btn btn-ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              Удалить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: ДОКУМЕНТЫ ═══ -->
+<section class="page" id="page-docs">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </div>
+    <div class="sh-title">Документы</div>
+  </div>
+
+  <div class="card">
+    <div style="overflow-x: auto;">
+      <table class="t-table detail-table">
+        <thead>
+          <tr>
+            <th style="width: 36px;"></th>
+            <th style="width: 50px;">ID</th>
+            <th>Название</th>
+            <th style="width: 170px;">Дата загрузки</th>
+            <th style="width: 80px;">Размер</th>
+            <th>Тэги</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" class="check" checked></td>
+            <td class="mono">1</td>
+            <td>Тест название . docx</td>
+            <td class="mono muted">2026-03-18T 15:46:02</td>
+            <td class="mono">15051</td>
+            <td>
+              <div class="tag-cell">
+                <button class="tc-edit" aria-label="редактировать теги" onclick="openModal('modal-tag-select')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </button>
+                <span class="tc-pill">Документы</span>
+                <span class="tc-pill">Личное</span>
+                <span class="tc-pill">Тэг 3</span>
+                <span class="tc-pill">Тэг 4</span>
+                <span class="tc-pill">Тэг 5</span>
+                <span class="tc-pill">Тэг 6</span>
+                <span class="tc-pill more">+2</span>
+              </div>
+            </td>
+          </tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">2</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">3</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">4</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">5</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">6</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">7</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">8</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">9</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr><td><input type="checkbox" class="check"></td><td class="mono">10</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap;">
+      <button class="btn btn-glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Загрузить файл
+      </button>
+      <button class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Удалить
+      </button>
+      <div style="flex: 1;"></div>
+      <div class="pagination" style="margin: 0;">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn">5</button>
+        <button class="page-btn" style="min-width: auto; padding: 0 14px;">Последняя</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE: КЛЮЧЕВЫЕ СЛОВА (Wordstat — полная реализация из Figma) ═══ -->
+<section class="page" id="page-keywords">
+  <div class="section-hero">
+    <div class="sh-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    </div>
+    <div class="sh-title">Ключевые слова</div>
+  </div>
+
+  <!-- Период + Ключевые слова CTA строкой (как filter-strip в Figma) -->
+  <div class="card" style="border-radius: var(--r-pill); padding: 8px 14px; margin-bottom: 14px;">
+    <div class="row" style="gap: 4px; flex-wrap: nowrap; overflow-x: auto;">
+      <button class="pill" style="border: none; box-shadow: none;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Базовый</button>
+      <button class="pill" style="border: none; box-shadow: none;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Среднесрочный</button>
+      <button class="pill" style="border: none; box-shadow: none;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>30 дней до</button>
+      <button class="pill" style="border: none; box-shadow: none;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>7 дней до</button>
+      <button class="pill active" style="font-variant-numeric: tabular-nums;">26.05.1994 — 26.05.2026
+        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-left:4px;opacity:0.7;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </button>
+      <button class="pill" style="border: none; box-shadow: none;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>7 дней после</button>
+      <button class="pill" style="border: none; box-shadow: none;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>30 дней после</button>
+      <button class="pill" style="border: none; box-shadow: none;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Краткосрочный</button>
+      <div style="flex: 1;"></div>
+      <button class="btn btn-primary" style="padding: 8px 18px;" onclick="openModal('modal-keywords')">Ключевые слова</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding: 14px 18px; margin-bottom: 14px;">
+    <div class="row" style="gap: 24px; flex-wrap: wrap;">
+      <div>
+        <div style="font-size: var(--t-caption-2); color: var(--ink-3); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px;">Сравнение с тем же периодом</div>
+        <div class="row">
+          <button class="pill active"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>В предыдущем месяце</button>
+          <button class="pill"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>В предыдущем году</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: var(--t-caption-2); color: var(--ink-3); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px;">Шаг статистики</div>
+        <div class="row">
+          <button class="pill active"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>По неделям</button>
+          <button class="pill"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>По месяцам</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tabs" data-tabs-group="kwView">
+      <button class="tab active" data-tab="kw-data">Данные</button>
+      <button class="tab" data-tab="kw-graph">Графики</button>
+    </div>
+
+    <!-- Таб: Данные -->
+    <div data-panel="kw-data">
+      <div style="overflow-x: auto;">
+        <table class="t-table">
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th class="num">Реклама</th>
+              <th class="num">Доля запросов</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+            <tr><td class="mono">2025-12-06</td><td class="num mono">404&nbsp;971</td><td class="num mono">0.118</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Таб: Графики -->
+    <div data-panel="kw-graph" style="display: none;">
+      <div style="margin-bottom: 22px;">
+        <div style="font-size: var(--t-subhead); font-weight: 600; color: var(--ink-1); margin-bottom: 8px; letter-spacing: -0.01em;">Запросы по дням</div>
+        <div class="bar-chart-v" id="barsQueries"></div>
+      </div>
+      <div>
+        <div style="font-size: var(--t-subhead); font-weight: 600; color: var(--ink-1); margin-bottom: 8px; letter-spacing: -0.01em;">Доля запросов</div>
+        <div class="bar-chart-v" id="barsShare"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 </div> <!-- /.stage -->
+
+<!-- ══════════════════════════════════════════════════════════════════
+     МОДАЛКИ (turbo module)
+     ══════════════════════════════════════════════════════════════════ -->
+
+<!-- Модалка: редактировать группу источников -->
+<div class="modal-overlay" id="modal-edit-group">
+  <div class="modal-panel" style="width: min(680px, 100%);">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Подтвердите действие на dev.turbo-performance.ru</div>
+        <div class="modal-desc">Введите новое название для группы ОИВа</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-edit-group')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input class="input" type="text" value="ОИВа">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-glass" onclick="closeModal('modal-edit-group')">Отмена</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-edit-group')">Ок</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка: выбор источников (Рерайтинг) -->
+<div class="modal-overlay" id="modal-rewrite-sources">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Выбор источников</div>
+        <div class="modal-desc">Отметьте источники для батч-рерайтинга</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-rewrite-sources')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="history-scroll" style="margin-bottom: 14px;">
+        <div class="hs-track">
+          <button class="pill active">Все</button>
+          <button class="pill">События</button>
+          <button class="pill">ОИВы</button>
+          <button class="pill">Проекты</button>
+          <button class="pill">Парки</button>
+          <button class="pill">КГХ</button>
+          <button class="pill">Культура</button>
+          <button class="pill">тест1</button>
+        </div>
+      </div>
+      <div class="cbgrid">
+        <label class="cbrow checked"><input type="checkbox" checked> Chertanovo Football</label>
+        <label class="cbrow"><input type="checkbox"> MOS.RU</label>
+        <label class="cbrow"><input type="checkbox"> STOлица</label>
+        <label class="cbrow"><input type="checkbox"> Академия инноваторов</label>
+        <label class="cbrow"><input type="checkbox"> АО Мосводоканал</label>
+        <label class="cbrow"><input type="checkbox"> АО Мосгаз</label>
+        <label class="cbrow"><input type="checkbox"> АО Мосэнергосбыт</label>
+        <label class="cbrow"><input type="checkbox"> АО ОЭК</label>
+        <label class="cbrow"><input type="checkbox"> Бизнес Апдейт</label>
+        <label class="cbrow"><input type="checkbox"> ВДНХ</label>
+      </div>
+      <div class="pagination" style="justify-content: flex-start; margin-top: 14px;">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn">5</button>
+        <button class="page-btn" style="min-width: auto; padding: 0 14px;">Последняя</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-glass" onclick="closeModal('modal-rewrite-sources')">Отмена</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-rewrite-sources')">Готово</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка: отборочный промпт -->
+<div class="modal-overlay" id="modal-rewrite-prompt">
+  <div class="modal-panel" style="width: min(680px, 100%);">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Отборочный промпт</div>
+        <div class="modal-desc">Выберите критерии, по которым будет фильтроваться контент</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-rewrite-prompt')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+      <select class="select">
+        <option>по умолчанию 1</option>
+        <option>по умолчанию 2</option>
+        <option>пользовательский — краткосрочный</option>
+      </select>
+      <textarea class="textarea" style="min-height: 80px;">Выбери не более 5 самых перспективных новостей для молодёжной редакции.</textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-glass" onclick="closeModal('modal-rewrite-prompt')">Отмена</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-rewrite-prompt')">Готово</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка: выбор тегов -->
+<div class="modal-overlay" id="modal-tag-select">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Теги документа</div>
+        <div class="modal-desc">Выберите существующие или создайте новый тег</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-tag-select')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="cbgrid">
+        <label class="cbrow checked"><input type="checkbox" checked> Тег 1</label>
+        <label class="cbrow"><input type="checkbox"> Тег 2</label>
+        <label class="cbrow"><input type="checkbox"> Тег 3</label>
+        <label class="cbrow"><input type="checkbox"> Тег 4</label>
+        <label class="cbrow"><input type="checkbox"> Тег 5</label>
+        <label class="cbrow"><input type="checkbox"> Тег 6</label>
+        <label class="cbrow"><input type="checkbox"> Тег 7</label>
+        <label class="cbrow"><input type="checkbox"> Тег 8</label>
+        <label class="cbrow"><input type="checkbox"> Тег 9</label>
+        <label class="cbrow"><input type="checkbox"> Тег 10</label>
+        <label class="cbrow"><input type="checkbox"> Тег 11</label>
+        <label class="cbrow"><input type="checkbox"> Тег 12</label>
+      </div>
+      <div class="pagination" style="justify-content: flex-start; margin-top: 14px;">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn">5</button>
+        <button class="page-btn" style="min-width: auto; padding: 0 14px;">Последняя</button>
+      </div>
+      <div class="row" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07);">
+        <button class="btn btn-glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить тег
+        </button>
+        <button class="btn btn-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Удалить
+        </button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-glass" onclick="closeModal('modal-tag-select')">Отмена</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-tag-select')">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка: ключевые слова (Wordstat) -->
+<div class="modal-overlay" id="modal-keywords">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Ключевые слова</div>
+        <div class="modal-desc">Введите вручную или загрузите файл для анализа</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-keywords')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" data-tabs-group="kwModal" style="margin: 0 0 14px; width: 100%;">
+        <button class="tab active" data-tab="kw-manual" style="flex: 1; padding: 10px 18px;">Ручной ввод</button>
+        <button class="tab" data-tab="kw-file" style="flex: 1; padding: 10px 18px;">Анализ аудио/видео</button>
+      </div>
+
+      <!-- Ручной ввод -->
+      <div data-panel="kw-manual">
+        <div class="cbgrid">
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 1</label>
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 2</label>
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 3</label>
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 4</label>
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 5</label>
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 6</label>
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 7</label>
+          <label class="cbrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" class="cbrow-trash" style="margin-right:auto;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Слово 8</label>
+        </div>
+        <div class="pagination" style="justify-content: flex-start; margin-top: 14px;">
+          <button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">4</button><button class="page-btn">5</button>
+          <button class="page-btn" style="min-width: auto; padding: 0 14px;">Последняя</button>
+        </div>
+        <button class="btn btn-glass" style="margin-top: 14px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить ключевое слово / словосочетание
+        </button>
+      </div>
+
+      <!-- Анализ файла -->
+      <div data-panel="kw-file" style="display: none;">
+        <div class="dropzone" style="min-height: 200px;">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div style="font-size: var(--t-subhead); color: var(--ink-1); font-weight: 600;">Перетащите файл сюда</div>
+          <div style="font-size: var(--t-footnote); color: var(--ink-3);">или <span style="color: var(--coral); font-weight: 600;">нажмите на кнопку</span> чтобы загрузить</div>
+          <button class="btn btn-glass" style="margin-top: 6px;">Выбрать файл</button>
+        </div>
+        <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 10px;">
+          <select class="select"><option>по умолчанию 1</option><option>по умолчанию 2</option></select>
+          <textarea class="textarea" style="min-height: 70px;">Действуй как сео эксперт. Выбери 5 ключевых фраз, оптимальных для рекламы этого продукта.</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-glass" onclick="closeModal('modal-keywords')">Отмена</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-keywords')">Анализировать</button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ═══ HASH ROUTING ═══ */
@@ -2360,7 +4250,17 @@ const routeToTitle = {
   'page-create-campaign': 'Новая кампания',
   'page-bind-clip': 'Привязка ролика',
   'page-wordstat': 'Wordstat',
-  'page-ai': 'ИИ-аналитика'
+  'page-ai': 'ИИ-аналитика',
+  'page-sources': 'Библиотека источников',
+  'page-prompts': 'Библиотека промптов',
+  'page-source-work': 'Работа с источником',
+  'page-rewrite': 'Рерайтинг по источникам',
+  'page-transcribe': 'Транскрибация',
+  'page-chat': 'Чат',
+  'page-video-gen': 'Генерация видео',
+  'page-docs': 'Документы',
+  'page-keywords': 'Ключевые слова',
+  'page-guide': 'Руководство'
 };
 
 const routeToNav = {
@@ -2373,8 +4273,92 @@ const routeToNav = {
   'page-create-campaign': 'advertisers',
   'page-bind-clip': 'advertisers',
   'page-wordstat': 'wordstat',
-  'page-ai': 'ai'
+  'page-ai': 'ai',
+  /* Все ИИ-инструменты подсвечивают в sidebar один пункт «ИИ» */
+  'page-sources': 'ai',
+  'page-prompts': 'ai',
+  'page-source-work': 'ai',
+  'page-rewrite': 'ai',
+  'page-transcribe': 'ai',
+  'page-chat': 'ai',
+  'page-video-gen': 'ai',
+  'page-docs': 'ai',
+  'page-keywords': 'ai',
+  'page-guide': 'guide'
 };
+
+/* ИИ-инструменты: справочник с семантическими группами (Apple HIG — max 5-7 per segment).
+   9 элементов → 4 кластера: Контент / Генерация / Медиа / Анализ. */
+const AI_TOOLS = [
+  { id: 'page-sources',     group: 'Контент',    label: 'Источники',          desc: 'RSS, API и сайты — единый пул источников для рерайта',  icon: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>' },
+  { id: 'page-prompts',     group: 'Контент',    label: 'Промпты',            desc: 'Библиотека промптов по типам: анализ · отбор · обработка · служебный', icon: '<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>' },
+  { id: 'page-source-work', group: 'Генерация',  label: 'Работа с источником', desc: 'Рерайт одного текста, документа или ссылки по выбранному промпту', icon: '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/>' },
+  { id: 'page-rewrite',     group: 'Генерация',  label: 'Рерайтинг',          desc: 'Батч-обработка новостей из библиотеки источников за период',  icon: '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>' },
+  { id: 'page-chat',        group: 'Генерация',  label: 'Чат',                desc: 'Диалог с LLM-моделью: Deepseek, GPT-4o, Claude Sonnet',      icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' },
+  { id: 'page-transcribe',  group: 'Медиа',      label: 'Транскрибация',       desc: 'Аудио, видео и PDF → текст, готовый к обработке',           icon: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/>' },
+  { id: 'page-video-gen',   group: 'Медиа',      label: 'Генерация видео',     desc: 'Text-to-video: превращаем текст в готовый видео-ролик',      icon: '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>' },
+  { id: 'page-docs',        group: 'Анализ',     label: 'Документы',          desc: 'Хранилище файлов с тегами, поиском и пакетной обработкой',  icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
+  { id: 'page-keywords',    group: 'Анализ',     label: 'Ключевые слова',      desc: 'Wordstat-анализ запросов: частоты, тренды, сезонность',     icon: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>' }
+];
+const AI_GROUPS = ['Контент', 'Генерация', 'Медиа', 'Анализ'];
+const AI_IDS = AI_TOOLS.map(t => t.id).concat(['page-ai']);
+
+/* sub-nav: сгруппированный chip-row + slide-morph indicator (Apple HIG) */
+function buildAiSubnav() {
+  const parts = ['<div class="chip-indicator" aria-hidden="true"></div>'];
+  AI_GROUPS.forEach((g, gi) => {
+    AI_TOOLS.filter(t => t.group === g).forEach(t => {
+      parts.push(`<a href="#${t.id}" class="tab" data-ai-chip="${t.id}" data-group="${g}" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>${t.label}</a>`);
+    });
+    if (gi < AI_GROUPS.length - 1) parts.push('<div class="chip-sep" aria-hidden="true"></div>');
+  });
+  return `<nav class="tabs tabs-wide" aria-label="ИИ-инструменты">${parts.join('')}</nav>`;
+}
+
+function injectAiSubnav() {
+  AI_IDS.forEach(id => {
+    const page = document.getElementById(id);
+    if (!page) return;
+    if (page.querySelector('.tabs.tabs-wide[aria-label="ИИ-инструменты"]')) return;
+    const hero = page.querySelector('.section-hero') || page.firstElementChild;
+    if (!hero) return;
+    hero.insertAdjacentHTML('afterend', buildAiSubnav());
+  });
+}
+
+/* Slide-morph: активная подсветка плавно двигается между chips */
+function syncAiSubnavActive(currentId) {
+  document.querySelectorAll('.tabs.tabs-wide[aria-label="ИИ-инструменты"]').forEach(nav => {
+    const activeChip = nav.querySelector(`[data-ai-chip="${currentId}"]`);
+    nav.querySelectorAll('.tab').forEach(a => {
+      const isActive = a === activeChip;
+      a.classList.toggle('active', isActive);
+      a.setAttribute('aria-current', isActive ? 'page' : 'false');
+    });
+    const indicator = nav.querySelector('.chip-indicator');
+    if (!indicator) return;
+    if (!activeChip) { indicator.classList.remove('ready'); return; }
+    /* рассчитываем позицию чипа относительно nav с учётом scroll */
+    const navRect = nav.getBoundingClientRect();
+    const chipRect = activeChip.getBoundingClientRect();
+    const offsetX = chipRect.left - navRect.left + nav.scrollLeft;
+    indicator.style.transform = `translateX(${offsetX}px)`;
+    indicator.style.width = `${chipRect.width}px`;
+    requestAnimationFrame(() => indicator.classList.add('ready'));
+  });
+}
+
+/* Discovery Hub — 4 группы × карточки tools внутри #page-ai */
+function buildDiscoveryHub() {
+  const hub = document.getElementById('aiToolHub');
+  if (!hub) return;
+  const html = AI_GROUPS.map(g => {
+    const tools = AI_TOOLS.filter(t => t.group === g);
+    const cards = tools.map(t => `<a href="#${t.id}" class="tool-card" data-ai-chip="${t.id}"><span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg></span><span class="tc-body"><span class="tc-title">${t.label}</span><span class="tc-desc">${t.desc}</span></span><span class="tc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span></a>`).join('');
+    return `<div class="tool-hub-group"><div class="thg-label">${g}</div><div class="thg-grid">${cards}</div></div>`;
+  }).join('');
+  hub.innerHTML = html;
+}
 
 function route() {
   let hash = location.hash.replace('#', '') || 'page-stats';
@@ -2382,30 +4366,182 @@ function route() {
   document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === hash));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.route === routeToNav[hash]));
   const crumb = document.getElementById('crumbCurrent');
-  if (crumb) crumb.textContent = routeToTitle[hash] || 'Twinr';
+  if (crumb) {
+    const toolLabel = AI_TOOLS.find(t => t.id === hash)?.label;
+    crumb.textContent = hash === 'page-ai' ? 'ИИ' : (toolLabel ? 'ИИ — ' + toolLabel : (routeToTitle[hash] || 'Twinr'));
+  }
   localStorage.setItem('twinr-last-route', hash);
+  if (AI_TOOLS.some(t => t.id === hash)) localStorage.setItem('twinr-last-ai-tool', hash);
+  syncAiSubnavActive(hash);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 window.addEventListener('hashchange', route);
 document.addEventListener('DOMContentLoaded', () => {
+  injectAiSubnav();
+  buildDiscoveryHub();
   if (!location.hash) {
     const saved = localStorage.getItem('twinr-last-route') || 'page-stats';
     location.hash = saved;
   } else route();
 });
 
+/* Ресинхрон slide-morph indicator при ресайзе окна (chips меняют ширину) */
+let _indicatorResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(_indicatorResizeTimer);
+  _indicatorResizeTimer = setTimeout(() => {
+    const hash = location.hash.replace('#', '');
+    syncAiSubnavActive(hash);
+  }, 80);
+});
+
+/* ═══ DROPZONE drag-enter state (Apple HIG prominent drop feedback) ═══ */
+document.querySelectorAll('.dropzone').forEach(dz => {
+  const add = () => dz.classList.add('is-over');
+  const remove = () => dz.classList.remove('is-over');
+  dz.addEventListener('dragenter', (e) => { e.preventDefault(); add(); });
+  dz.addEventListener('dragover',  (e) => { e.preventDefault(); add(); });
+  dz.addEventListener('dragleave', (e) => {
+    if (e.target === dz || !dz.contains(e.relatedTarget)) remove();
+  });
+  dz.addEventListener('drop',      (e) => { e.preventDefault(); remove(); });
+});
+
+/* ═══ PRIMARY button loading — симуляция async для «Сгенерировать»/«Отправить»/etc ═══ */
+document.querySelectorAll('.btn.btn-primary').forEach(btn => {
+  if (btn.closest('.modal-panel')) return; /* в модалках — это confirm */
+  btn.addEventListener('click', (e) => {
+    if (btn.type === 'submit' || btn.classList.contains('is-loading')) return;
+    const originalHTML = btn.innerHTML;
+    btn.classList.add('is-loading');
+    btn.insertAdjacentHTML('afterbegin', '<span class="btn-spinner"></span>');
+    setTimeout(() => {
+      btn.classList.remove('is-loading');
+      const spinner = btn.querySelector('.btn-spinner');
+      if (spinner) spinner.remove();
+    }, 1100);
+  });
+});
+
+/* ═══ DESTRUCTIVE actions — confirm dialog (Apple alert pattern) ═══ */
+function askConfirm({ title, message, confirmText = 'Удалить', cancelText = 'Отмена', destructive = true }, onOk) {
+  /* Ленивая модалка — создаётся по требованию, удаляется после закрытия */
+  const id = 'confirm-' + Date.now();
+  const html = `
+    <div class="modal-overlay open confirm-dialog" id="${id}" role="alertdialog" aria-modal="true">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <div>
+            <div class="modal-title">${title}</div>
+            <div class="modal-desc">${message}</div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-glass" data-action="cancel">${cancelText}</button>
+          <button class="btn ${destructive ? 'btn-danger' : 'btn-primary'}" data-action="ok">${confirmText}</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  const modal = document.getElementById(id);
+  document.body.style.overflow = 'hidden';
+  const cleanup = () => { document.body.style.overflow = ''; modal.remove(); };
+  modal.querySelector('[data-action="cancel"]').addEventListener('click', cleanup);
+  modal.querySelector('[data-action="ok"]').addEventListener('click', () => { cleanup(); onOk && onOk(); });
+  modal.addEventListener('click', (e) => { if (e.target === modal) cleanup(); });
+  document.addEventListener('keydown', function onEsc(e) {
+    if (e.key === 'Escape') { cleanup(); document.removeEventListener('keydown', onEsc); }
+  });
+  modal.querySelector('[data-action="ok"]').focus();
+}
+
+/* ═══ GUIDE TOC — smooth-scroll + scroll-spy (Apple Reader-style active section) ═══ */
+(function setupGuideToc() {
+  const article = document.getElementById('guideArticle');
+  if (!article) return;
+  const tocLinks = document.querySelectorAll('.guide-toc a[data-toc]');
+  if (!tocLinks.length) return;
+
+  /* smooth-scroll on click — НЕ меняем hash чтобы не триггерить route() */
+  tocLinks.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(a.dataset.toc);
+      if (!target) return;
+      const top = target.getBoundingClientRect().top + window.scrollY - 24;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  /* scroll-spy — подсвечиваем активную секцию */
+  const sections = [...tocLinks].map(a => document.getElementById(a.dataset.toc)).filter(Boolean);
+  const byId = new Map([...tocLinks].map(a => [a.dataset.toc, a]));
+  function updateActive() {
+    const offset = 120;
+    let current = sections[0]?.id;
+    for (const s of sections) {
+      const top = s.getBoundingClientRect().top;
+      if (top - offset <= 0) current = s.id;
+      else break;
+    }
+    tocLinks.forEach(a => a.classList.toggle('is-active', a.dataset.toc === current));
+  }
+  let raf;
+  const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(updateActive); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateActive();
+})();
+
+/* Перехват destructive кнопок (Удалить выбранные / Удалить) */
+document.body.addEventListener('click', (e) => {
+  const btn = e.target.closest('button, .btn');
+  if (!btn) return;
+  /* confirm только на top-level "Удалить" кнопках с явной Ctrl-иконкой trash — не ссылки в .tc-add/модалках */
+  if (btn.dataset.confirmed) return;
+  const text = btn.textContent.trim();
+  if (/^Удалить выбранные/i.test(text) || (/^Удалить$/i.test(text) && btn.classList.contains('btn-ghost'))) {
+    if (btn.closest('.modal-panel')) return; /* в модалках — это финальное действие */
+    e.preventDefault();
+    e.stopPropagation();
+    askConfirm({
+      title: 'Удалить выбранное?',
+      message: 'Действие нельзя отменить. Выбранные элементы будут удалены навсегда.',
+      confirmText: 'Удалить',
+    }, () => {
+      btn.dataset.confirmed = '1';
+      btn.click();
+      delete btn.dataset.confirmed;
+    });
+  }
+}, true);
+
+/* Sidebar «ИИ»: при клике ведём на последний открытый ИИ-инструмент
+   (или по умолчанию Источники). Apple pattern: возврат в контекст. */
+document.querySelectorAll('.nav-item[data-route="ai"]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    const last = localStorage.getItem('twinr-last-ai-tool');
+    if (last && AI_TOOLS.some(t => t.id === last)) {
+      e.preventDefault();
+      location.hash = last;
+    }
+    /* иначе href="#page-ai" сработает как обычно */
+  });
+});
+
 /* Theme locked to sunset (photo-forward, no toggle) */
 document.documentElement.setAttribute('data-theme', 'sunset');
 document.body.setAttribute('data-theme', 'sunset');
 
-/* ═══ TABS (advertiser details) ═══ */
-document.querySelectorAll('.tabs').forEach(tabs => {
+/* ═══ TABS (advertiser details — legacy, работает с .tab-panel по id) ═══ */
+document.querySelectorAll('.tabs:not([data-tabs-group])').forEach(tabs => {
   tabs.addEventListener('click', (e) => {
     const btn = e.target.closest('.tab');
     if (!btn) return;
     tabs.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === btn));
     const target = btn.dataset.tab;
-    document.querySelectorAll('.tab-panel').forEach(p => {
+    /* Скопируем легаси-логику, но scope — только ближайшая страница, не глобал */
+    const scope = tabs.closest('.page') || document;
+    scope.querySelectorAll('.tab-panel').forEach(p => {
       p.style.display = p.id === 'tab-' + target ? 'block' : 'none';
     });
   });
@@ -2437,6 +4573,100 @@ document.querySelectorAll('#page-register .pill').forEach(p => {
     const siblings = p.parentElement.querySelectorAll('.pill');
     siblings.forEach(s => s.classList.remove('active'));
     p.classList.add('active');
+  });
+});
+
+/* ═══ MODAL open/close + ESC + overlay click ═══ */
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal(overlay.id);
+  });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+  }
+});
+
+/* ═══ DATA-PANEL TABS (tabs с switch внутри секции через data-tab/data-panel) ═══ */
+document.querySelectorAll('.tabs[data-tabs-group]').forEach(tabs => {
+  const section = tabs.closest('.card, .page, .modal-panel') || tabs.parentElement;
+  tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tab');
+    if (!btn || !btn.dataset.tab) return;
+    tabs.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === btn));
+    const target = btn.dataset.tab;
+    section.querySelectorAll('[data-panel]').forEach(p => {
+      p.style.display = p.dataset.panel === target ? '' : 'none';
+    });
+  });
+});
+
+/* ═══ CHECKBOX ROW .cbrow — синхрон .checked class с input состоянием ═══ */
+document.querySelectorAll('.cbrow').forEach(row => {
+  const cb = row.querySelector('input[type="checkbox"]');
+  if (!cb) return;
+  const sync = () => row.classList.toggle('checked', cb.checked);
+  sync();
+  cb.addEventListener('change', sync);
+});
+
+/* ═══ BAR CHART — генерация вертикальных баров для Wordstat Графики ═══ */
+function buildBars(containerId, count, seedStart) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let s = seedStart;
+  const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  const html = [];
+  for (let i = 0; i < count; i++) {
+    const h = 20 + Math.floor(rand() * 80);
+    const show = i % 7 === 0;
+    html.push(`<div class="bcv-wrap"><div class="bcv-bar" style="height:${h}%"></div>${show ? `<span class="bcv-label">${days[Math.floor(rand()*7)]}</span>` : ''}</div>`);
+  }
+  el.innerHTML = html.join('');
+}
+buildBars('barsQueries', 90, 7);
+buildBars('barsShare', 90, 31);
+
+/* ═══ SCROLL ARROWS (history-scroll left/right) ═══ */
+document.querySelectorAll('.history-scroll').forEach(scroll => {
+  const track = scroll.querySelector('.hs-track');
+  const arrows = scroll.querySelectorAll('.hs-arrow');
+  if (!track || arrows.length < 1) return;
+  arrows.forEach((arrow, i) => {
+    arrow.addEventListener('click', () => {
+      const delta = (i === 0) ? -240 : 240;
+      track.scrollBy({ left: delta, behavior: 'smooth' });
+    });
+  });
+});
+
+/* ═══ HISTORY CHIP / PILL toggle (single active в группе) ═══ */
+document.querySelectorAll('.hs-track, [id="srcGroupTabs"]').forEach(track => {
+  track.addEventListener('click', (e) => {
+    const pill = e.target.closest('.pill');
+    if (!pill) return;
+    const siblings = track.querySelectorAll('.pill');
+    siblings.forEach(s => s.classList.remove('active'));
+    pill.classList.add('active');
+    /* Подсветка названия активной группы в Источниках */
+    const srcActive = document.getElementById('src-group-active');
+    if (srcActive && track.id === 'srcGroupTabs') {
+      srcActive.textContent = pill.textContent.trim().split(/\s+/)[0] || pill.textContent.trim();
+    }
   });
 });
 </script>
