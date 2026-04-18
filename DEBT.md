@@ -36,6 +36,25 @@
 | INT-003 | MicroIT API интеграция | pending |
 | INT-004 | DaData API для ИНН | pending |
 
+## Liquid Glass Redesign (2026-04-18)
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| LG-001 | Liquid Glass токены (Apple iOS 26 grey-tinted) | done |
+| LG-002 | Photo backdrop (Matterhorn + clouds, Unsplash CC0) | done |
+| LG-003 | 13 экранов по оригинальной иерархии twinr-full.html | done |
+| LG-004 | Hash-routing + localStorage | done |
+| LG-005 | Мок-данные радио-тематики (ООО Медиа Групп, ROL-XXX) | done |
+| LG-006 | Single-file standalone версия (base64 embed) для заказчика | done |
+| LG-007 | Apple-ревью через FigMCP (8002:114 Liquid Glass Effect) | done |
+| LG-008 | Backdrop-filter performance fix (страницы remain mounted) | done |
+| LG-009 | **Показ заказчику + фидбек/одобрение** | pending |
+| LG-010 | Responsive адаптация (mobile/tablet breakpoints) | pending |
+| LG-011 | Light theme (dawn) — опционально | pending |
+| LG-012 | Figma перенос новой темы (обновить РК экраны) | pending |
+| LG-013 | Backdrop picker (midnight / ocean / desert как варианты) | pending |
+| LG-014 | Next.js + shadcn/ui реализация на базе утверждённой темы | pending |
+
 ## Постер Тимирязева 79
 
 | ID | Задача | Статус |
