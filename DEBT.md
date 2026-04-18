@@ -76,6 +76,28 @@
 | TURBO-013 | Dynamic glass reactivity (саmtop-filter saturate on scroll) | pending |
 | TURBO-014 | VoiceOver pass + контраст audit (WCAG AA) | pending |
 
+## Liquid Glass Customizer (2026-04-18 night)
+
+Фулл-аудит Apple Liquid Glass HIG + iOS 26 skill + текущих токенов. Разбиение страницы «Руководство» на 38 droplet-капель + плавающая панель кастомайзера (фактура/оттенок/насыщенность/затемнение/форма/текстура + 6 пресетов). SVG-фильтры для frosted/grain + data-URI noise для линии/призмы.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| CUST-001 | Research Apple HIG Liquid Glass (materials, variants, tints, Reduce Transparency) | done |
+| CUST-002 | Audit current prototype: 5-tier material scale, blur/border/specular/ink tokens | done |
+| CUST-003 | SVG filter defs (lg-frosted, lg-grain, lg-crystal) — inline в body | done |
+| CUST-004 | CSS: 6 materials + 12 Apple system tints + 5 intensity steps + 4 dim levels + 4 shapes + 5 textures | done |
+| CUST-005 | Droplet primitive — `.droplet` с tint/dim pseudo-overlay + texture overlay | done |
+| CUST-006 | Split Guide content: 38 droplets (lead + headings dr-heading + para/list/callout/faq) | done |
+| CUST-007 | Customizer panel: sticky sidebar, segment buttons, colour swatches, slider, preset chips | done |
+| CUST-008 | 6 пресетов: Apple iOS 26 / Sunset / Ocean / Forest / Mono / A11y | done |
+| CUST-009 | JS: data-attr control, localStorage persist, copy-CSS, reset, collapse | done |
+| CUST-010 | Standalone пересобран (1.7 MB) с base64 backdrop | done |
+| CUST-011 | Показ кастомайзера заказчику для выбора финальной фактуры/оттенка | pending |
+| CUST-012 | После утверждения — зафиксировать глобальные glass-* токены на выбранной комбинации | pending |
+| CUST-013 | Применить утверждённые токены ко ВСЕМ экранам (не только Руководство) | pending |
+| CUST-014 | Figma sync: обновить компоненты в Figma на утверждённую фактуру | pending |
+| CUST-015 | Удалить кастомайзер из production-сборки (оставить только для internal review) | pending |
+
 ## Постер Тимирязева 79
 
 | ID | Задача | Статус |

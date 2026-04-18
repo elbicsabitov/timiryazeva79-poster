@@ -2222,11 +2222,460 @@ body[data-theme="dawn"]::after {
   .guide-toc { display: none; }
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   LIQUID GLASS CUSTOMIZER — droplet system + material/tint/texture/dim
+   Apple HIG: ultraThin/thin/regular/thick/chrome + clear variant
+   ══════════════════════════════════════════════════════════════════ */
 
+/* Material variants (CSS vars scoped to .guide-layout) */
+.guide-layout[data-material="ultrathin"] { --dr-bg: rgba(51,51,51,0.12); --dr-blur: blur(14px) saturate(140%); --dr-border: rgba(255,255,255,0.14); --dr-rim: inset 0 1px 0 rgba(255,255,255,0.35); }
+.guide-layout[data-material="thin"]      { --dr-bg: rgba(51,51,51,0.22); --dr-blur: blur(22px) saturate(160%); --dr-border: rgba(255,255,255,0.18); --dr-rim: inset 0 1px 0 rgba(255,255,255,0.40); }
+.guide-layout[data-material="regular"]   { --dr-bg: rgba(51,51,51,0.34); --dr-blur: blur(32px) saturate(180%); --dr-border: rgba(255,255,255,0.22); --dr-rim: inset 0 1px 0 rgba(255,255,255,0.44); }
+.guide-layout[data-material="thick"]     { --dr-bg: rgba(51,51,51,0.48); --dr-blur: blur(44px) saturate(190%); --dr-border: rgba(255,255,255,0.28); --dr-rim: inset 0 1px 0 rgba(255,255,255,0.48); }
+.guide-layout[data-material="chrome"]    { --dr-bg: rgba(51,51,51,0.56); --dr-blur: blur(40px) saturate(150%); --dr-border: rgba(255,255,255,0.30); --dr-rim: inset 0 1px 0 rgba(255,255,255,0.50); }
+.guide-layout[data-material="clear"]     { --dr-bg: rgba(51,51,51,0.04); --dr-blur: blur(6px)  saturate(160%); --dr-border: rgba(255,255,255,0.10); --dr-rim: inset 0 1px 0 rgba(255,255,255,0.28); }
+
+/* Apple system tint palette (адаптированы под тёплый фон) */
+.guide-layout[data-tint="none"]     { --dr-tint-rgb: 0, 0, 0; }
+.guide-layout[data-tint="coral"]    { --dr-tint-rgb: 255, 138, 110; }
+.guide-layout[data-tint="blue"]     { --dr-tint-rgb: 10, 132, 255; }
+.guide-layout[data-tint="indigo"]   { --dr-tint-rgb: 94, 92, 230; }
+.guide-layout[data-tint="teal"]     { --dr-tint-rgb: 100, 210, 255; }
+.guide-layout[data-tint="mint"]     { --dr-tint-rgb: 102, 212, 207; }
+.guide-layout[data-tint="green"]    { --dr-tint-rgb: 48, 209, 88; }
+.guide-layout[data-tint="yellow"]   { --dr-tint-rgb: 255, 214, 10; }
+.guide-layout[data-tint="orange"]   { --dr-tint-rgb: 255, 159, 10; }
+.guide-layout[data-tint="pink"]     { --dr-tint-rgb: 255, 55, 95; }
+.guide-layout[data-tint="purple"]   { --dr-tint-rgb: 191, 90, 242; }
+.guide-layout[data-tint="graphite"] { --dr-tint-rgb: 142, 142, 147; }
+
+.guide-layout[data-tint="none"] { --dr-tint-a-max: 0; }
+.guide-layout:not([data-tint="none"]) { --dr-tint-a-max: 1; }
+
+.guide-layout[data-tint-intensity="0"] { --dr-tint-a: 0; }
+.guide-layout[data-tint-intensity="1"] { --dr-tint-a: calc(0.07 * var(--dr-tint-a-max, 1)); }
+.guide-layout[data-tint-intensity="2"] { --dr-tint-a: calc(0.14 * var(--dr-tint-a-max, 1)); }
+.guide-layout[data-tint-intensity="3"] { --dr-tint-a: calc(0.22 * var(--dr-tint-a-max, 1)); }
+.guide-layout[data-tint-intensity="4"] { --dr-tint-a: calc(0.32 * var(--dr-tint-a-max, 1)); }
+
+/* Dim layer — симулирует «Reduce Transparency» для читаемости */
+.guide-layout[data-dim="none"]   { --dr-dim-a: 0; }
+.guide-layout[data-dim="soft"]   { --dr-dim-a: 0.14; }
+.guide-layout[data-dim="medium"] { --dr-dim-a: 0.26; }
+.guide-layout[data-dim="strong"] { --dr-dim-a: 0.40; }
+
+/* Shape variants */
+.guide-layout[data-shape="pill"]     .droplet { border-radius: 999px; padding-left: 34px; padding-right: 34px; }
+.guide-layout[data-shape="rounded"]  .droplet { border-radius: 22px; }
+.guide-layout[data-shape="squircle"] .droplet { border-radius: 32px; }
+.guide-layout[data-shape="organic"]  .droplet:nth-child(3n)   { border-radius: 44px 28px 44px 28px; }
+.guide-layout[data-shape="organic"]  .droplet:nth-child(3n+1) { border-radius: 28px 44px 28px 44px; }
+.guide-layout[data-shape="organic"]  .droplet:nth-child(3n+2) { border-radius: 999px 28px 44px 28px; }
+
+/* Texture overlays — через background-image data URI (cross-browser) */
+.guide-layout[data-texture="smooth"]  .droplet::before { background-image: none; opacity: 0; }
+.guide-layout[data-texture="frosted"] .droplet::before {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.85 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px; mix-blend-mode: overlay; opacity: 0.22;
+}
+.guide-layout[data-texture="grain"] .droplet::before {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.4' numOctaves='1' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.95 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px; mix-blend-mode: overlay; opacity: 0.28;
+}
+.guide-layout[data-texture="linen"] .droplet::before {
+  background-image:
+    linear-gradient(45deg, rgba(255,255,255,0.055) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.055) 75%),
+    linear-gradient(45deg, rgba(255,255,255,0.055) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.055) 75%);
+  background-size: 5px 5px; background-position: 0 0, 2.5px 2.5px; opacity: 0.55;
+}
+.guide-layout[data-texture="prism"] .droplet::before {
+  background-image: conic-gradient(from 210deg at 80% 20%, rgba(255, 138, 110, 0.18), rgba(94, 92, 230, 0.12), rgba(100, 210, 255, 0.15), rgba(255, 214, 10, 0.10), rgba(255, 138, 110, 0.18));
+  mix-blend-mode: screen; opacity: 0.65;
+}
+
+/* ═══ DROPLET PRIMITIVE ═══ */
+.droplet {
+  position: relative;
+  padding: 20px 26px;
+  margin: 12px 0;
+  max-width: 64ch;
+  background: var(--dr-bg, rgba(51,51,51,0.34));
+  backdrop-filter: var(--dr-blur, blur(32px) saturate(180%));
+  -webkit-backdrop-filter: var(--dr-blur, blur(32px) saturate(180%));
+  border: 1px solid var(--dr-border, rgba(255,255,255,0.22));
+  border-radius: 22px;
+  box-shadow:
+    0 6px 20px -8px rgba(0, 0, 0, 0.32),
+    var(--dr-rim, inset 0 1px 0 rgba(255,255,255,0.44)),
+    inset 0 -1px 0 rgba(255,255,255,0.06),
+    inset 0 0 0 0.5px rgba(255,255,255,0.08);
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    background 320ms var(--ease-glass),
+    border-color 320ms var(--ease-glass),
+    backdrop-filter 320ms var(--ease-glass),
+    -webkit-backdrop-filter 320ms var(--ease-glass),
+    border-radius 320ms var(--ease-glass),
+    box-shadow 200ms var(--ease-out-quart);
+}
+.droplet::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 240ms var(--ease-out-quart);
+  border-radius: inherit;
+}
+.droplet::after {
+  /* tint + dim overlay */
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,var(--dr-dim-a, 0)), rgba(0,0,0,var(--dr-dim-a, 0))),
+    linear-gradient(180deg,
+      rgba(var(--dr-tint-rgb, 255,138,110), var(--dr-tint-a, 0)),
+      rgba(var(--dr-tint-rgb, 255,138,110), calc(var(--dr-tint-a, 0) * 0.55)));
+  transition: background 240ms var(--ease-out-quart);
+}
+.droplet > * { position: relative; z-index: 1; }
+.droplet p { margin-bottom: 0; color: var(--ink-2); }
+.droplet p strong { color: var(--ink-1); font-weight: 600; }
+.droplet p + p { margin-top: 12px; }
+.droplet ul, .droplet ol { margin: 4px 0 0 0; padding-left: 20px; color: var(--ink-2); }
+.droplet ul li, .droplet ol li { margin-bottom: 8px; line-height: 1.6; padding-left: 2px; }
+.droplet ul li::marker { color: var(--coral); }
+.droplet ol li::marker { font-weight: 700; color: var(--ink-2); }
+.droplet h3 { font-size: 17px; font-weight: 600; color: var(--ink-1); margin-bottom: 6px; letter-spacing: -0.014em; }
+
+.droplet.dr-lead { padding: 26px 32px; font-size: 19px; line-height: 1.6; color: var(--ink-1); font-weight: 500; letter-spacing: -0.012em; }
+.droplet.dr-lead p { color: var(--ink-1); font-size: 19px; line-height: 1.6; }
+.droplet.dr-callout {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 18px 22px 16px;
+  border-left: 3px solid rgba(var(--dr-tint-rgb, 255,138,110), 0.9);
+}
+.droplet.dr-callout .co-ico {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: rgba(var(--dr-tint-rgb, 255,138,110), 0.24);
+  border: 1px solid rgba(var(--dr-tint-rgb, 255,138,110), 0.5);
+  color: rgb(var(--dr-tint-rgb, 255,138,110));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.droplet.dr-callout .co-ico svg { width: 14px; height: 14px; stroke-width: 2.2; }
+.droplet.dr-callout .co-label {
+  font-size: 11px;
+  color: rgb(var(--dr-tint-rgb, 255,138,110));
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+.droplet.dr-callout .co-body p { color: var(--ink-1); line-height: 1.55; font-size: 16px; }
+.droplet.dr-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 16px;
+  margin: 32px 0 14px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink-1);
+  max-width: max-content;
+}
+.droplet.dr-heading::before { display: none; }
+.droplet.dr-heading::after { display: none; }
+.droplet.dr-heading {
+  /* Heading-droplet use lighter glass */
+  background: rgba(51,51,51,0.26);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-radius: 999px;
+}
+.droplet.dr-heading .dr-h-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgb(var(--dr-tint-rgb, 255,138,110));
+  box-shadow: 0 0 10px rgba(var(--dr-tint-rgb, 255,138,110), 0.7);
+  flex-shrink: 0;
+}
+.droplet.dr-faq h3 { margin-bottom: 6px; }
+
+/* Remove opaque background on guide-article in droplet mode */
+.guide-article.dr-mode {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.guide-article.dr-mode > h2, .guide-article.dr-mode > h3 { display: none; /* заменены на dr-heading */ }
+.guide-article.dr-mode .guide-lead { display: none; /* lead теперь внутри droplet */ }
+
+/* ═══ CUSTOMIZER PANEL ═══ */
+.lg-customizer {
+  position: sticky;
+  top: 24px;
+  width: 296px;
+  padding: 18px 18px 16px;
+  background: rgba(28, 28, 32, 0.58);
+  backdrop-filter: blur(44px) saturate(190%);
+  -webkit-backdrop-filter: blur(44px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 22px;
+  box-shadow:
+    0 16px 44px -14px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  z-index: 60;
+  color: var(--ink-1);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: width 300ms var(--ease-glass), padding 220ms var(--ease-glass);
+  font-size: 13px;
+}
+.lg-customizer::-webkit-scrollbar { width: 6px; }
+.lg-customizer::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 999px; }
+.lg-customizer.is-collapsed {
+  width: 54px; padding: 10px; overflow: hidden;
+}
+.lg-customizer.is-collapsed .lg-customizer-body,
+.lg-customizer.is-collapsed .lg-customizer-title { display: none; }
+.lg-customizer.is-collapsed .lg-customizer-header { margin-bottom: 0; }
+.lg-customizer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.lg-customizer-title {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--ink-2);
+  display: flex; align-items: center; gap: 8px;
+}
+.lg-customizer-title::before {
+  content: ''; width: 10px; height: 10px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(var(--dr-tint-rgb, 255,138,110), 0.9), rgba(var(--dr-tint-rgb, 255,138,110), 0.4));
+  box-shadow: 0 0 12px rgba(var(--dr-tint-rgb, 255,138,110), 0.7);
+}
+.lg-customizer-toggle {
+  width: 32px; height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: var(--ink-1);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 150ms;
+  flex-shrink: 0;
+}
+.lg-customizer-toggle:hover { background: rgba(255,255,255,0.14); }
+.lg-customizer-toggle svg { width: 14px; height: 14px; stroke-width: 2.2; }
+.lg-group { margin-bottom: 12px; }
+.lg-group-label {
+  font-size: 10px; font-weight: 600;
+  color: var(--ink-3);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 6px;
+}
+.lg-group-value { color: var(--ink-2); text-transform: none; letter-spacing: -0.01em; font-weight: 500; font-size: 11px; }
+
+.lg-seg {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+}
+.lg-seg button {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 11px; font-weight: 600;
+  font-family: inherit;
+  color: var(--ink-3);
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 150ms, color 150ms, transform 90ms;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.lg-seg button:hover { color: var(--ink-2); background: rgba(255,255,255,0.06); }
+.lg-seg button.active {
+  background: rgba(255,255,255,0.18);
+  color: var(--ink-1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 1px 3px rgba(0,0,0,0.18);
+}
+.lg-seg button:active { transform: scale(0.96); }
+
+.lg-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 7px;
+  padding: 2px 0;
+}
+.lg-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,0.20);
+  cursor: pointer;
+  position: relative;
+  transition: transform 140ms var(--ease-spring), border-color 140ms, box-shadow 140ms;
+  padding: 0;
+  overflow: visible;
+}
+.lg-swatch:hover { transform: scale(1.12); }
+.lg-swatch.active {
+  border-color: var(--ink-1);
+  box-shadow: 0 0 0 2.5px rgba(255,255,255,0.22), 0 2px 8px rgba(0,0,0,0.3);
+  transform: scale(1.06);
+}
+.lg-swatch[data-value="none"] {
+  background:
+    linear-gradient(135deg, transparent 45%, rgba(255,90,90,0.8) 45%, rgba(255,90,90,0.8) 55%, transparent 55%),
+    rgba(255,255,255,0.06);
+}
+
+.lg-slider input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none; appearance: none;
+  height: 4px;
+  background: rgba(255,255,255,0.14);
+  border-radius: 999px;
+  outline: none;
+  margin: 4px 0;
+}
+.lg-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--ink-1);
+  border: 2px solid rgba(0,0,0,0.3);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+}
+.lg-slider input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--ink-1);
+  border: 2px solid rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+
+.lg-actions {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.lg-actions button {
+  padding: 9px 10px;
+  font-size: 12px; font-weight: 600;
+  font-family: inherit;
+  color: var(--ink-2);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 140ms, color 140ms, transform 90ms;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.lg-actions button:hover { background: rgba(255,255,255,0.14); color: var(--ink-1); }
+.lg-actions button:active { transform: scale(0.98); }
+.lg-actions button svg { width: 13px; height: 13px; stroke-width: 2.2; }
+
+.lg-preset-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  font-size: 11px; font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 140ms;
+}
+.lg-preset-chip:hover { background: rgba(255,255,255,0.14); color: var(--ink-1); }
+.lg-preset-row {
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.lg-readout {
+  display: flex; justify-content: space-between;
+  font-size: 10px; font-family: 'SF Mono', Consolas, monospace;
+  color: var(--ink-4);
+  padding: 2px 2px 0;
+  letter-spacing: -0.02em;
+}
+
+/* ═══ GUIDE LAYOUT — expanded for customizer ═══ */
+.guide-layout.has-customizer {
+  grid-template-columns: 1fr 220px 296px;
+  max-width: 1400px;
+  gap: 28px;
+}
+@media (max-width: 1380px) {
+  .guide-layout.has-customizer {
+    grid-template-columns: 1fr 220px;
+    max-width: 1100px;
+  }
+  .guide-layout.has-customizer .lg-customizer {
+    position: fixed; top: 20px; right: 20px;
+    max-height: calc(100vh - 40px);
+  }
+}
+@media (max-width: 1080px) {
+  .guide-layout.has-customizer { grid-template-columns: 1fr; max-width: 720px; }
+  .guide-layout.has-customizer .guide-toc { display: none; }
+  .guide-layout.has-customizer .lg-customizer { position: fixed; top: auto; bottom: 16px; right: 16px; left: 16px; width: auto; max-height: 48vh; }
+}
+
+/* ═══ PRESET DEFAULTS ═══ */
+/* Initial state: material=regular, tint=coral, intensity=1, dim=none, shape=rounded, texture=smooth */
 
 </style>
 </head>
 <body>
+
+<!-- ═══ SVG FILTER DEFS (Liquid Glass textures for guide customizer) ═══ -->
+<svg class="lg-svg-defs" aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;pointer-events:none;">
+  <defs>
+    <!-- Frosted: low-frequency soft noise для мягкой инеистой фактуры -->
+    <filter id="lg-frosted" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" seed="3"/>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.18 0"/>
+    </filter>
+    <!-- Grain: высокочастотная зернистость (film grain) -->
+    <filter id="lg-grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="1" stitchTiles="stitch" seed="5"/>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.28 0"/>
+    </filter>
+    <!-- Crystal: преломление краёв (refraction через displacement) -->
+    <filter id="lg-crystal" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="turbulence" baseFrequency="0.012 0.02" numOctaves="2" seed="7" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 
 <!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar" id="sidebar">
@@ -3141,15 +3590,29 @@ body[data-theme="dawn"]::after {
     <div class="sh-title">Руководство</div>
   </div>
 
-  <div class="guide-layout">
-    <article class="guide-article" id="guideArticle">
-      <p class="guide-lead">Twinr — это рекламный кабинет «Большой Цифровой» и набор из девяти AI-инструментов для работы с контентом. Один интерфейс, две роли: маркетолог-аналитик радиорекламы и контент-редактор, собирающий материал из разных источников. Руководство объясняет, как использовать каждый модуль, в каком порядке проходят типичные сценарии и что делать, если что-то идёт не так.</p>
+  <div class="guide-layout has-customizer" id="guideLayout"
+       data-material="regular"
+       data-tint="coral"
+       data-tint-intensity="2"
+       data-dim="none"
+       data-shape="rounded"
+       data-texture="smooth">
+    <article class="guide-article dr-mode" id="guideArticle">
 
-      <h2 id="g-intro">Введение</h2>
-      <p>Продукт разделён на два модуля. <strong>Радиореклама</strong> управляет рекламодателями, кампаниями, роликами и статистикой прослушиваний. <strong>ИИ</strong> содержит девять инструментов: источники, промпты, работа с источником, рерайтинг, транскрибация, чат, документы, генерация видео и ключевые слова. Оба модуля используют единую дизайн-систему Liquid Glass и доступны из левой боковой панели.</p>
-      <p>Переключение между модулями — один клик. Переключение между инструментами внутри ИИ — клик по chip-row сверху любой AI-страницы. Контекст подсвечивается в хлебных крошках топ-бара: «Twinr / ИИ — Источники».</p>
+      <!-- Lead -->
+      <div class="droplet dr-lead">
+        <p>Twinr — это рекламный кабинет «Большой Цифровой» и набор из девяти AI-инструментов для работы с контентом. Один интерфейс, две роли: маркетолог-аналитик радиорекламы и контент-редактор, собирающий материал из разных источников. Руководство объясняет, как использовать каждый модуль, в каком порядке проходят типичные сценарии и что делать, если что-то идёт не так.</p>
+      </div>
 
-      <div class="guide-callout">
+      <!-- Введение -->
+      <div class="droplet dr-heading" id="g-intro"><span class="dr-h-dot"></span>Введение</div>
+      <div class="droplet dr-para">
+        <p>Продукт разделён на два модуля. <strong>Радиореклама</strong> управляет рекламодателями, кампаниями, роликами и статистикой прослушиваний. <strong>ИИ</strong> содержит девять инструментов: источники, промпты, работа с источником, рерайтинг, транскрибация, чат, документы, генерация видео и ключевые слова. Оба модуля используют единую дизайн-систему Liquid Glass и доступны из левой боковой панели.</p>
+      </div>
+      <div class="droplet dr-para">
+        <p>Переключение между модулями — один клик. Переключение между инструментами внутри ИИ — клик по chip-row сверху любой AI-страницы. Контекст подсвечивается в хлебных крошках топ-бара: «Twinr / ИИ — Источники».</p>
+      </div>
+      <div class="droplet dr-callout">
         <div class="co-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
         <div class="co-body">
           <span class="co-label">Совет</span>
@@ -3157,46 +3620,73 @@ body[data-theme="dawn"]::after {
         </div>
       </div>
 
-      <h2 id="g-start">Начало работы</h2>
-      <p>Авторизуйтесь по email или через SSO. После входа вы попадёте на <strong>Статистику</strong> — дашборд с KPI-виджетами по радиорекламе и графиком прослушиваний за последние тридцать дней.</p>
-      <p>Навигация построена вокруг принципа «куда вам нужно — там вы и есть». Четыре уровня ориентации работают одновременно:</p>
-      <ul>
-        <li><strong>Боковая панель</strong> — четыре раздела верхнего уровня: Рекламный кабинет, Статистика, Wordstat, ИИ. При наведении разворачивается в ширину с подписями.</li>
-        <li><strong>Топ-бар</strong> — хлебные крошки, поиск по всему приложению (<kbd>⌘&nbsp;K</kbd>) и меню профиля справа.</li>
-        <li><strong>Chip-row</strong> на AI-страницах — быстрое переключение между инструментами без возврата в sidebar.</li>
-        <li><strong>Вложенные табы</strong> на многошаговых страницах (Wordstat, Промпты, Работа с источником) — переключение между режимами внутри одного инструмента.</li>
-      </ul>
+      <!-- Начало работы -->
+      <div class="droplet dr-heading" id="g-start"><span class="dr-h-dot"></span>Начало работы</div>
+      <div class="droplet dr-para">
+        <p>Авторизуйтесь по email или через SSO. После входа вы попадёте на <strong>Статистику</strong> — дашборд с KPI-виджетами по радиорекламе и графиком прослушиваний за последние тридцать дней.</p>
+      </div>
+      <div class="droplet dr-para">
+        <p>Навигация построена вокруг принципа «куда вам нужно — там вы и есть». Четыре уровня ориентации работают одновременно:</p>
+      </div>
+      <div class="droplet dr-list">
+        <ul>
+          <li><strong>Боковая панель</strong> — четыре раздела верхнего уровня: Рекламный кабинет, Статистика, Wordstat, ИИ. При наведении разворачивается в ширину с подписями.</li>
+          <li><strong>Топ-бар</strong> — хлебные крошки, поиск по всему приложению (<kbd>⌘&nbsp;K</kbd>) и меню профиля справа.</li>
+          <li><strong>Chip-row</strong> на AI-страницах — быстрое переключение между инструментами без возврата в sidebar.</li>
+          <li><strong>Вложенные табы</strong> на многошаговых страницах (Wordstat, Промпты, Работа с источником) — переключение между режимами внутри одного инструмента.</li>
+        </ul>
+      </div>
 
-      <h2 id="g-sources">Библиотека источников</h2>
-      <p>Источник — это RSS-лента, API-endpoint или сайт, с которого платформа регулярно собирает контент. Чтобы добавить новый источник:</p>
-      <ol>
-        <li>Откройте <strong>ИИ → Источники</strong></li>
-        <li>В форме «Новый источник» сверху страницы укажите название, ссылку и выберите группу</li>
-        <li>Нажмите <strong>Создать источник</strong></li>
-      </ol>
-      <p>Источники организуются в тематические группы — Новости, События, ОИВы, Проекты, Парки, КГХ, Культура, Спорт и другие. Группу можно переименовать или удалить — иконки карандаша и корзины появляются на каждой chip-пилюле в горизонтальном списке групп.</p>
-      <p>Чекбоксы в сетке источников работают для пакетных операций: выберите несколько, затем нажмите <strong>Удалить выбранные</strong> или <strong>Привязать выбранные к группе</strong>. Подтверждение удаления — в отдельном диалоге, действие обратимо в течение пяти секунд.</p>
+      <!-- Библиотека источников -->
+      <div class="droplet dr-heading" id="g-sources"><span class="dr-h-dot"></span>Библиотека источников</div>
+      <div class="droplet dr-para">
+        <p>Источник — это RSS-лента, API-endpoint или сайт, с которого платформа регулярно собирает контент. Чтобы добавить новый источник:</p>
+      </div>
+      <div class="droplet dr-list">
+        <ol>
+          <li>Откройте <strong>ИИ → Источники</strong></li>
+          <li>В форме «Новый источник» сверху страницы укажите название, ссылку и выберите группу</li>
+          <li>Нажмите <strong>Создать источник</strong></li>
+        </ol>
+      </div>
+      <div class="droplet dr-para">
+        <p>Источники организуются в тематические группы — Новости, События, ОИВы, Проекты, Парки, КГХ, Культура, Спорт и другие. Группу можно переименовать или удалить — иконки карандаша и корзины появляются на каждой chip-пилюле в горизонтальном списке групп.</p>
+      </div>
+      <div class="droplet dr-para">
+        <p>Чекбоксы в сетке источников работают для пакетных операций: выберите несколько, затем нажмите <strong>Удалить выбранные</strong> или <strong>Привязать выбранные к группе</strong>. Подтверждение удаления — в отдельном диалоге, действие обратимо в течение пяти секунд.</p>
+      </div>
 
-      <h2 id="g-prompts">Библиотека промптов</h2>
-      <p>Промпт — это инструкция для AI-модели, описывающая желаемый стиль, формат и ограничения вывода. Четыре типа:</p>
-      <ul>
-        <li><strong>Промпт анализа</strong> — глубокое понимание темы, извлечение смысла, выделение ключевых тезисов</li>
-        <li><strong>Промпт отбора</strong> — фильтрация релевантных материалов из потока новостей</li>
-        <li><strong>Промпт обработки</strong> — генерация финального текста в нужном стиле (рерайт, перевод, суммаризация)</li>
-        <li><strong>Служебный</strong> — системные префиксы, постобработка, утилиты</li>
-      </ul>
-      <p>Каждый промпт состоит из названия и текста. Название нужно для выбора в других инструментах (Работа с источником, Рерайтинг). Текст — это сам промпт, который модель получит как систему. Рекомендуется держать промпты короткими и фокусными: одна цель на один промпт.</p>
+      <!-- Библиотека промптов -->
+      <div class="droplet dr-heading" id="g-prompts"><span class="dr-h-dot"></span>Библиотека промптов</div>
+      <div class="droplet dr-para">
+        <p>Промпт — это инструкция для AI-модели, описывающая желаемый стиль, формат и ограничения вывода. Четыре типа:</p>
+      </div>
+      <div class="droplet dr-list">
+        <ul>
+          <li><strong>Промпт анализа</strong> — глубокое понимание темы, извлечение смысла, выделение ключевых тезисов</li>
+          <li><strong>Промпт отбора</strong> — фильтрация релевантных материалов из потока новостей</li>
+          <li><strong>Промпт обработки</strong> — генерация финального текста в нужном стиле (рерайт, перевод, суммаризация)</li>
+          <li><strong>Служебный</strong> — системные префиксы, постобработка, утилиты</li>
+        </ul>
+      </div>
+      <div class="droplet dr-para">
+        <p>Каждый промпт состоит из названия и текста. Название нужно для выбора в других инструментах (Работа с источником, Рерайтинг). Текст — это сам промпт, который модель получит как систему. Рекомендуется держать промпты короткими и фокусными: одна цель на один промпт.</p>
+      </div>
 
-      <h2 id="g-rewrite">Рерайтинг по источникам</h2>
-      <p>Батч-рерайтинг работает по трём параметрам: <strong>действие</strong> (перевод на английский, суммаризация, адаптация), <strong>источники</strong> (откуда брать материалы) и <strong>отборочный промпт</strong> (как фильтровать). После нажатия «Сгенерировать» платформа:</p>
-      <ol>
-        <li>Собирает новости со всех выбранных источников за указанный период</li>
-        <li>Фильтрует их отборочным промптом, оставляя только релевантные</li>
-        <li>Генерирует заголовок, описание и основной текст для каждой отобранной новости</li>
-        <li>Предлагает сгенерировать видео или перейти к анализу выбранных материалов</li>
-      </ol>
-
-      <div class="guide-callout">
+      <!-- Рерайтинг -->
+      <div class="droplet dr-heading" id="g-rewrite"><span class="dr-h-dot"></span>Рерайтинг по источникам</div>
+      <div class="droplet dr-para">
+        <p>Батч-рерайтинг работает по трём параметрам: <strong>действие</strong> (перевод на английский, суммаризация, адаптация), <strong>источники</strong> (откуда брать материалы) и <strong>отборочный промпт</strong> (как фильтровать). После нажатия «Сгенерировать» платформа:</p>
+      </div>
+      <div class="droplet dr-list">
+        <ol>
+          <li>Собирает новости со всех выбранных источников за указанный период</li>
+          <li>Фильтрует их отборочным промптом, оставляя только релевантные</li>
+          <li>Генерирует заголовок, описание и основной текст для каждой отобранной новости</li>
+          <li>Предлагает сгенерировать видео или перейти к анализу выбранных материалов</li>
+        </ol>
+      </div>
+      <div class="droplet dr-callout">
         <div class="co-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
         <div class="co-body">
           <span class="co-label">Важно</span>
@@ -3204,41 +3694,61 @@ body[data-theme="dawn"]::after {
         </div>
       </div>
 
-      <h2 id="g-media">Медиа: транскрибация и видео</h2>
-      <h3>Транскрибация</h3>
-      <p>Подаём аудио, видео или PDF — получаем текст. Поддерживаются форматы MP3, WAV, MP4, PDF до 500 МБ. История файлов сохраняется в правой панели — можно быстро вернуться к любому предыдущему результату и скопировать текст одним кликом.</p>
+      <!-- Медиа -->
+      <div class="droplet dr-heading" id="g-media"><span class="dr-h-dot"></span>Медиа: транскрибация и видео</div>
+      <div class="droplet dr-faq">
+        <h3>Транскрибация</h3>
+        <p>Подаём аудио, видео или PDF — получаем текст. Поддерживаются форматы MP3, WAV, MP4, PDF до 500 МБ. История файлов сохраняется в правой панели — можно быстро вернуться к любому предыдущему результату и скопировать текст одним кликом.</p>
+      </div>
+      <div class="droplet dr-faq">
+        <h3>Генерация видео</h3>
+        <p>Text-to-video: вы пишете текст, модель превращает его в готовый ролик. История генераций организована в две группы — «Все» и «В процессе». Готовое видео можно скачать или удалить. Срок хранения — девяносто дней с момента генерации.</p>
+      </div>
 
-      <h3>Генерация видео</h3>
-      <p>Text-to-video: вы пишете текст, модель превращает его в готовый ролик. История генераций организована в две группы — «Все» и «В процессе». Готовое видео можно скачать или удалить. Срок хранения — девяносто дней с момента генерации.</p>
+      <!-- Wordstat -->
+      <div class="droplet dr-heading" id="g-wordstat"><span class="dr-h-dot"></span>Ключевые слова (Wordstat)</div>
+      <div class="droplet dr-para">
+        <p>Анализ частоты запросов по дням. Два режима просмотра: <strong>Данные</strong> (таблица с датой, рекламой и долей запросов) и <strong>Графики</strong> (вертикальные бары по дням и неделям).</p>
+      </div>
+      <div class="droplet dr-para">
+        <p>Период задаётся готовыми пресетами — «Базовый», «Среднесрочный», «7 дней до», «30 дней до» — или через ручной выбор дат. Сравнение ведётся с тем же периодом предыдущего месяца или года. Шаг статистики — по неделям или по месяцам.</p>
+      </div>
+      <div class="droplet dr-para">
+        <p>Ключевые слова для анализа можно ввести вручную или извлечь из аудио/видеофайла через вкладку «Анализ аудио/видео» в модалке «Ключевые слова».</p>
+      </div>
 
-      <h2 id="g-wordstat">Ключевые слова (Wordstat)</h2>
-      <p>Анализ частоты запросов по дням. Два режима просмотра: <strong>Данные</strong> (таблица с датой, рекламой и долей запросов) и <strong>Графики</strong> (вертикальные бары по дням и неделям).</p>
-      <p>Период задаётся готовыми пресетами — «Базовый», «Среднесрочный», «7 дней до», «30 дней до» — или через ручной выбор дат. Сравнение ведётся с тем же периодом предыдущего месяца или года. Шаг статистики — по неделям или по месяцам.</p>
-      <p>Ключевые слова для анализа можно ввести вручную или извлечь из аудио/видеофайла через вкладку «Анализ аудио/видео» в модалке «Ключевые слова».</p>
+      <!-- Документы -->
+      <div class="droplet dr-heading" id="g-docs"><span class="dr-h-dot"></span>Документы</div>
+      <div class="droplet dr-para">
+        <p>Хранилище файлов с тегами, поиском и пакетной обработкой. Каждый документ можно пометить несколькими тегами — это упрощает фильтрацию и поиск. Теги редактируются прямо в ячейке таблицы: клик по иконке карандаша открывает модалку с полным списком.</p>
+      </div>
 
-      <h2 id="g-docs">Документы</h2>
-      <p>Хранилище файлов с тегами, поиском и пакетной обработкой. Каждый документ можно пометить несколькими тегами — это упрощает фильтрацию и поиск. Теги редактируются прямо в ячейке таблицы: клик по иконке карандаша открывает модалку с полным списком.</p>
+      <!-- FAQ -->
+      <div class="droplet dr-heading" id="g-faq"><span class="dr-h-dot"></span>FAQ</div>
+      <div class="droplet dr-faq">
+        <h3>Как поменять модель LLM в Чате?</h3>
+        <p>В левой панели Чата есть dropdown <strong>Модель обработчик</strong>. Доступны Deepseek (дефолт, быстрый и дешёвый), GPT-4o (универсальный) и Claude Sonnet 4.6 (для сложных задач). Выбор модели сохраняется на уровне отдельного чата — в новом чате модель можно выбрать другую.</p>
+      </div>
+      <div class="droplet dr-faq">
+        <h3>Что делать, если транскрибация выдаёт ошибки?</h3>
+        <p>Сначала проверьте формат и размер файла: MP3, WAV, MP4 и PDF до 500 МБ. Если формат другой (AAC, OGG, FLAC) — используйте конвертер или обратитесь в поддержку. Для MP4 убедитесь, что видео содержит звуковую дорожку — без звука распознавание невозможно.</p>
+      </div>
+      <div class="droplet dr-faq">
+        <h3>Можно ли работать через мобильный?</h3>
+        <p>Да, интерфейс адаптивен, но дизайн оптимизирован под разрешения от <kbd>1280&nbsp;px</kbd> и выше. На iPad (1024–1280) работает штатно. На телефонах некоторые таблицы скроллятся горизонтально, а sub-nav chip-row превращается в скроллируемую полосу.</p>
+      </div>
+      <div class="droplet dr-faq">
+        <h3>Как удалить источник без потери новостей?</h3>
+        <p>Перед удалением источника пометьте его чекбоксом и нажмите <strong>Привязать выбранные к группе</strong> — выберите группу-архив. После этого источник можно удалить — привязанные к нему новости останутся в группе.</p>
+      </div>
+      <div class="droplet dr-faq">
+        <h3>Где посмотреть лимиты тарифа?</h3>
+        <p>В профиле пользователя (правый верхний угол, клик по аватару) → «Тариф и лимиты». Там видны остатки токенов по каждой модели, лимит транскрибированных минут и количество сгенерированных видео за текущий биллинговый период.</p>
+      </div>
 
-      <h2 id="g-faq">FAQ</h2>
-
-      <h3>Как поменять модель LLM в Чате?</h3>
-      <p>В левой панели Чата есть dropdown <strong>Модель обработчик</strong>. Доступны Deepseek (дефолт, быстрый и дешёвый), GPT-4o (универсальный) и Claude Sonnet 4.6 (для сложных задач). Выбор модели сохраняется на уровне отдельного чата — в новом чате модель можно выбрать другую.</p>
-
-      <h3>Что делать, если транскрибация выдаёт ошибки?</h3>
-      <p>Сначала проверьте формат и размер файла: MP3, WAV, MP4 и PDF до 500 МБ. Если формат другой (AAC, OGG, FLAC) — используйте конвертер или обратитесь в поддержку. Для MP4 убедитесь, что видео содержит звуковую дорожку — без звука распознавание невозможно.</p>
-
-      <h3>Можно ли работать через мобильный?</h3>
-      <p>Да, интерфейс адаптивен, но дизайн оптимизирован под разрешения от <kbd>1280&nbsp;px</kbd> и выше. На iPad (1024–1280) работает штатно. На телефонах некоторые таблицы скроллятся горизонтально, а sub-nav chip-row превращается в скроллируемую полосу.</p>
-
-      <h3>Как удалить источник без потери новостей?</h3>
-      <p>Перед удалением источника пометьте его чекбоксом и нажмите <strong>Привязать выбранные к группе</strong> — выберите группу-архив. После этого источник можно удалить — привязанные к нему новости останутся в группе.</p>
-
-      <h3>Где посмотреть лимиты тарифа?</h3>
-      <p>В профиле пользователя (правый верхний угол, клик по аватару) → «Тариф и лимиты». Там видны остатки токенов по каждой модели, лимит транскрибированных минут и количество сгенерированных видео за текущий биллинговый период.</p>
-
-      <div class="section-divider"></div>
-
-      <p style="color: var(--ink-3); font-size: 15px; text-align: center; margin-top: 12px;">Документ обновляется по мере развития платформы. Последняя редакция: апрель 2026.</p>
+      <div class="droplet dr-para" style="text-align: center; opacity: 0.85;">
+        <p style="color: var(--ink-3); font-size: 14px;">Документ обновляется по мере развития платформы. Последняя редакция: апрель 2026.</p>
+      </div>
     </article>
 
     <aside class="guide-toc" aria-label="Содержание">
@@ -3252,6 +3762,114 @@ body[data-theme="dawn"]::after {
       <a href="#g-wordstat" data-toc="g-wordstat">Ключевые слова</a>
       <a href="#g-docs" data-toc="g-docs">Документы</a>
       <a href="#g-faq" data-toc="g-faq">FAQ</a>
+    </aside>
+
+    <!-- ═══ LIQUID GLASS CUSTOMIZER ═══ -->
+    <aside class="lg-customizer" id="lgCustomizer" aria-label="Liquid Glass Customizer">
+      <div class="lg-customizer-header">
+        <div class="lg-customizer-title">Liquid Glass</div>
+        <button class="lg-customizer-toggle" id="lgToggle" aria-label="Свернуть панель" title="Свернуть">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+
+      <div class="lg-customizer-body">
+
+        <div class="lg-group">
+          <div class="lg-group-label">Фактура <span class="lg-group-value" id="lgMaterialValue">regular</span></div>
+          <div class="lg-seg" data-control="material">
+            <button data-value="clear" title="Почти прозрачное (clear)">clear</button>
+            <button data-value="ultrathin" title="Самое тонкое стекло">ultra</button>
+            <button data-value="thin" title="Тонкое">thin</button>
+            <button data-value="regular" class="active" title="Стандарт (Apple default)">regular</button>
+            <button data-value="thick" title="Плотное">thick</button>
+            <button data-value="chrome" title="Chrome (toolbar)">chrome</button>
+          </div>
+        </div>
+
+        <div class="lg-group">
+          <div class="lg-group-label">Оттенок <span class="lg-group-value" id="lgTintValue">coral</span></div>
+          <div class="lg-swatches" data-control="tint">
+            <button class="lg-swatch" data-value="none" data-label="none" title="Без оттенка"></button>
+            <button class="lg-swatch active" data-value="coral" data-label="coral" title="Coral (default)" style="background: linear-gradient(135deg, #FF8A6E, #FF5E3A);"></button>
+            <button class="lg-swatch" data-value="blue" data-label="blue" title="systemBlue" style="background: linear-gradient(135deg, #5AC8FA, #007AFF);"></button>
+            <button class="lg-swatch" data-value="indigo" data-label="indigo" title="systemIndigo" style="background: linear-gradient(135deg, #7873E0, #5E5CE6);"></button>
+            <button class="lg-swatch" data-value="teal" data-label="teal" title="systemTeal" style="background: linear-gradient(135deg, #64D2FF, #30B0C7);"></button>
+            <button class="lg-swatch" data-value="mint" data-label="mint" title="systemMint" style="background: linear-gradient(135deg, #66D4CF, #00C7BE);"></button>
+            <button class="lg-swatch" data-value="green" data-label="green" title="systemGreen" style="background: linear-gradient(135deg, #30D158, #248A3D);"></button>
+            <button class="lg-swatch" data-value="yellow" data-label="yellow" title="systemYellow" style="background: linear-gradient(135deg, #FFD60A, #FFB800);"></button>
+            <button class="lg-swatch" data-value="orange" data-label="orange" title="systemOrange" style="background: linear-gradient(135deg, #FF9F0A, #FF7A00);"></button>
+            <button class="lg-swatch" data-value="pink" data-label="pink" title="systemPink" style="background: linear-gradient(135deg, #FF375F, #D70036);"></button>
+            <button class="lg-swatch" data-value="purple" data-label="purple" title="systemPurple" style="background: linear-gradient(135deg, #BF5AF2, #8944AB);"></button>
+            <button class="lg-swatch" data-value="graphite" data-label="graphite" title="systemGray" style="background: linear-gradient(135deg, #AEAEB2, #636366);"></button>
+          </div>
+        </div>
+
+        <div class="lg-group">
+          <div class="lg-group-label">Насыщенность <span class="lg-group-value" id="lgIntensityValue">14%</span></div>
+          <div class="lg-slider">
+            <input type="range" min="0" max="4" step="1" value="2" id="lgIntensity" aria-label="Насыщенность оттенка">
+          </div>
+          <div class="lg-readout">
+            <span>0</span><span>·</span><span>7%</span><span>·</span><span>14%</span><span>·</span><span>22%</span><span>·</span><span>32%</span>
+          </div>
+        </div>
+
+        <div class="lg-group">
+          <div class="lg-group-label">Затемнение <span class="lg-group-value" id="lgDimValue">none</span></div>
+          <div class="lg-seg" data-control="dim">
+            <button data-value="none" class="active" title="Без затемнения">none</button>
+            <button data-value="soft" title="Лёгкое (14%)">soft</button>
+            <button data-value="medium" title="Среднее (26%)">medium</button>
+            <button data-value="strong" title="Сильное — Reduce Transparency">strong</button>
+          </div>
+        </div>
+
+        <div class="lg-group">
+          <div class="lg-group-label">Форма <span class="lg-group-value" id="lgShapeValue">rounded</span></div>
+          <div class="lg-seg" data-control="shape">
+            <button data-value="pill" title="Пилюля">pill</button>
+            <button data-value="rounded" class="active" title="Скруглённая 22px">rounded</button>
+            <button data-value="squircle" title="Squircle 32px (iOS)">squircle</button>
+            <button data-value="organic" title="Органичные разные радиусы">organic</button>
+          </div>
+        </div>
+
+        <div class="lg-group">
+          <div class="lg-group-label">Текстура <span class="lg-group-value" id="lgTextureValue">smooth</span></div>
+          <div class="lg-seg" data-control="texture">
+            <button data-value="smooth" class="active" title="Гладкое">smooth</button>
+            <button data-value="frosted" title="Морозный иней">frosted</button>
+            <button data-value="grain" title="Зернистость (film grain)">grain</button>
+            <button data-value="linen" title="Льняное плетение">linen</button>
+            <button data-value="prism" title="Призматическое преломление">prism</button>
+          </div>
+        </div>
+
+        <div class="lg-group">
+          <div class="lg-group-label">Пресеты</div>
+          <div class="lg-preset-row">
+            <button class="lg-preset-chip" data-preset="apple">Apple iOS 26</button>
+            <button class="lg-preset-chip" data-preset="sunset">Sunset</button>
+            <button class="lg-preset-chip" data-preset="ocean">Ocean</button>
+            <button class="lg-preset-chip" data-preset="forest">Forest</button>
+            <button class="lg-preset-chip" data-preset="mono">Mono</button>
+            <button class="lg-preset-chip" data-preset="a11y">A11y</button>
+          </div>
+        </div>
+
+        <div class="lg-actions">
+          <button id="lgCopy" title="Скопировать CSS в буфер">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Копировать CSS
+          </button>
+          <button id="lgReset" title="Сбросить к дефолту">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><polyline points="21 3 21 8 16 8"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><polyline points="3 21 3 16 8 16"/></svg>
+            Сбросить
+          </button>
+        </div>
+
+      </div>
     </aside>
   </div>
 </section>
@@ -4490,6 +5108,175 @@ function askConfirm({ title, message, confirmText = 'Удалить', cancelText
   const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(updateActive); };
   window.addEventListener('scroll', onScroll, { passive: true });
   updateActive();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   LIQUID GLASS CUSTOMIZER — фактура/оттенок/затемнение/форма/текстура
+   Управляет data-* атрибутами .guide-layout; CSS реагирует через переменные.
+   Настройки сохраняются в localStorage. Пресеты — быстрые комбинации Apple HIG.
+   ══════════════════════════════════════════════════════════════════ */
+(function setupLgCustomizer() {
+  const root = document.getElementById('guideLayout');
+  const panel = document.getElementById('lgCustomizer');
+  if (!root || !panel) return;
+
+  const STORAGE_KEY = 'twinr.lg.customizer';
+  const DEFAULTS = {
+    material: 'regular',
+    tint: 'coral',
+    intensity: 2,
+    dim: 'none',
+    shape: 'rounded',
+    texture: 'smooth',
+    collapsed: false,
+  };
+  const INTENSITY_LABELS = ['0%', '7%', '14%', '22%', '32%'];
+  const MATERIAL_HINTS = {
+    clear: 'clear (≈4% opacity · 6px blur)',
+    ultrathin: 'ultraThin (12% · 14px)',
+    thin: 'thin (22% · 22px)',
+    regular: 'regular (34% · 32px · Apple default)',
+    thick: 'thick (48% · 44px)',
+    chrome: 'chrome (56% · 40px · toolbar)',
+  };
+  const PRESETS = {
+    apple:  { material: 'regular', tint: 'none',     intensity: 0, dim: 'none',   shape: 'rounded',  texture: 'smooth' },
+    sunset: { material: 'regular', tint: 'coral',    intensity: 2, dim: 'none',   shape: 'organic',  texture: 'smooth' },
+    ocean:  { material: 'thin',    tint: 'teal',     intensity: 2, dim: 'none',   shape: 'squircle', texture: 'frosted' },
+    forest: { material: 'thick',   tint: 'green',    intensity: 1, dim: 'soft',   shape: 'rounded',  texture: 'grain' },
+    mono:   { material: 'chrome',  tint: 'graphite', intensity: 3, dim: 'medium', shape: 'rounded',  texture: 'linen' },
+    a11y:   { material: 'thick',   tint: 'none',     intensity: 0, dim: 'strong', shape: 'rounded',  texture: 'smooth' },
+  };
+
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      return { ...DEFAULTS, ...saved };
+    } catch { return { ...DEFAULTS }; }
+  }
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+
+  function apply() {
+    root.setAttribute('data-material', state.material);
+    root.setAttribute('data-tint', state.tint);
+    root.setAttribute('data-tint-intensity', String(state.intensity));
+    root.setAttribute('data-dim', state.dim);
+    root.setAttribute('data-shape', state.shape);
+    root.setAttribute('data-texture', state.texture);
+    panel.classList.toggle('is-collapsed', !!state.collapsed);
+    /* Update labels */
+    const mv = document.getElementById('lgMaterialValue'); if (mv) mv.textContent = MATERIAL_HINTS[state.material] || state.material;
+    const tv = document.getElementById('lgTintValue');     if (tv) tv.textContent = state.tint;
+    const iv = document.getElementById('lgIntensityValue');if (iv) iv.textContent = INTENSITY_LABELS[state.intensity] || '0%';
+    const dv = document.getElementById('lgDimValue');      if (dv) dv.textContent = state.dim;
+    const sv = document.getElementById('lgShapeValue');    if (sv) sv.textContent = state.shape;
+    const xv = document.getElementById('lgTextureValue');  if (xv) xv.textContent = state.texture;
+    /* Sync active state on controls */
+    panel.querySelectorAll('.lg-seg[data-control]').forEach(seg => {
+      const key = seg.dataset.control;
+      seg.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.value === String(state[key])));
+    });
+    panel.querySelectorAll('.lg-swatches[data-control="tint"] .lg-swatch').forEach(sw => {
+      sw.classList.toggle('active', sw.dataset.value === state.tint);
+    });
+    const slider = document.getElementById('lgIntensity');
+    if (slider && Number(slider.value) !== state.intensity) slider.value = state.intensity;
+  }
+
+  function set(key, value) {
+    state[key] = value;
+    apply();
+    saveState();
+  }
+
+  /* Segment controls */
+  panel.querySelectorAll('.lg-seg').forEach(seg => {
+    const key = seg.dataset.control;
+    if (!key) return;
+    seg.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-value]');
+      if (!btn) return;
+      set(key, btn.dataset.value);
+    });
+  });
+
+  /* Swatches (tint) */
+  panel.querySelectorAll('.lg-swatches[data-control="tint"]').forEach(grid => {
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.lg-swatch[data-value]');
+      if (!btn) return;
+      set('tint', btn.dataset.value);
+    });
+  });
+
+  /* Intensity slider */
+  const slider = document.getElementById('lgIntensity');
+  if (slider) {
+    slider.addEventListener('input', () => set('intensity', Number(slider.value)));
+  }
+
+  /* Presets */
+  panel.querySelectorAll('.lg-preset-chip[data-preset]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const p = PRESETS[chip.dataset.preset];
+      if (!p) return;
+      state = { ...state, ...p };
+      apply();
+      saveState();
+    });
+  });
+
+  /* Copy CSS */
+  const copyBtn = document.getElementById('lgCopy');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const cs = getComputedStyle(root);
+      const css = `/* Twinr Liquid Glass — current customizer snapshot */
+.droplet {
+  background: ${cs.getPropertyValue('--dr-bg').trim() || 'rgba(51,51,51,0.34)'};
+  backdrop-filter: ${cs.getPropertyValue('--dr-blur').trim() || 'blur(32px) saturate(180%)'};
+  -webkit-backdrop-filter: ${cs.getPropertyValue('--dr-blur').trim() || 'blur(32px) saturate(180%)'};
+  border: 1px solid ${cs.getPropertyValue('--dr-border').trim() || 'rgba(255,255,255,0.22)'};
+  box-shadow: 0 6px 20px -8px rgba(0,0,0,0.32), ${cs.getPropertyValue('--dr-rim').trim() || 'inset 0 1px 0 rgba(255,255,255,0.44)'};
+}
+/* State: material=${state.material}, tint=${state.tint}, intensity=${state.intensity} (${INTENSITY_LABELS[state.intensity]}), dim=${state.dim}, shape=${state.shape}, texture=${state.texture} */`;
+      try {
+        await navigator.clipboard.writeText(css);
+        const orig = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Скопировано';
+        setTimeout(() => copyBtn.innerHTML = orig, 1400);
+      } catch {
+        copyBtn.textContent = '⚠ clipboard blocked';
+      }
+    });
+  }
+
+  /* Reset */
+  const resetBtn = document.getElementById('lgReset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      state = { ...DEFAULTS, collapsed: state.collapsed };
+      apply();
+      saveState();
+    });
+  }
+
+  /* Collapse */
+  const toggleBtn = document.getElementById('lgToggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      state.collapsed = !state.collapsed;
+      apply();
+      saveState();
+    });
+  }
+
+  /* Initial paint */
+  apply();
 })();
 
 /* Перехват destructive кнопок (Удалить выбранные / Удалить) */
