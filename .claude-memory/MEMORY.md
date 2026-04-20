@@ -7,6 +7,7 @@
 - [session_2026_04_18.md](session_2026_04_18.md) — Liquid Glass редизайн РК: Apple iOS 26 через FigMCP, photo backdrop, 13 экранов по структуре оригинала
 - [session_2026_04_18_turbo.md](session_2026_04_18_turbo.md) — Турбо AI-модуль: 9 экранов из Figma + Discovery Hub + Guide + Apple HIG refinement
 - [session_2026_04_18_customizer.md](session_2026_04_18_customizer.md) — Liquid Glass Customizer: 38 droplet-капель на Руководстве + plug-in panel (material/tint/intensity/dim/shape/texture + 6 presets)
+- [session_2026_04_20.md](session_2026_04_20.md) — Cross-project: чтение фидбека Harvid для bereke-kp через Telethon, TODO сохранён в paws-kp, аудит SYNC_PROMPT (5 гэпов)
 
 ## Current Design Iteration
 
