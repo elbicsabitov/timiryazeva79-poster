@@ -123,3 +123,37 @@
 | SW-006 | Избранное на подкастах/эпизодах | done |
 | SW-007 | Ревью Stas/Alexei | pending |
 | SW-008 | Остальные станции по брендбукам (PDF скачаны) | pending |
+
+## CRM Glass — Turbo Performance CMS (2026-04-22)
+
+Редизайн CMS dev.turbo-performance.ru в Liquid Glass стиле — для заказчика «Турбо Перформанс» (отдельный клиент от Twinr, пересобран стилевой язык 1-в-1 с Twinr LG). Single-file HTML + base64 standalone.
+
+**Артефакты:**
+- `designs/crm-glass.html` — primary, 230 KB
+- `designs/crm-glass-standalone.html` — для заказчика, 934 KB (base64 backdrop)
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| CRM-001 | Аудит CMS: 4 раздела, 15+ экранов, rich-data таблица с 17 колонками | done |
+| CRM-002 | Liquid Glass дизайн-система портирована (sunset backdrop тот же) | done |
+| CRM-003 | Home dashboard: 4 KPI + activity feed (6 событий) + presence + quick actions | done |
+| CRM-004 | Проекты: list + detail × 4 вкладки (Общая/Опции/Документы/Права) + edit | done |
+| CRM-005 | Организации: list + detail × 3 вкладки (Реквизиты/Сотрудники/Документы) + new/edit | done |
+| CRM-006 | Опции: list + new/edit | done |
+| CRM-007 | Ресурсы опции — rich-data (17 колонок, 6 фильтров, column-toggle, bulk-actions, sort) | done |
+| CRM-008 | Ресурс: new/edit (сложная форма с auto-compute ₽+НДС, radio-toggle Хронометраж/Символы) | done |
+| CRM-009 | Ресурс: Создание материала + Файлы + Эфирные справки | done |
+| CRM-010 | Библиотека: list (8 справочников) + item detail (Ресурсы с inline-add) + edit | done |
+| CRM-011 | Документы (global) + Файлы опции + Справки опции (empty states) | done |
+| CRM-012 | Права доступа: list + new (5 типов + cascade org→employee) | done |
+| CRM-013 | Сотрудники: new + empty state | done |
+| CRM-014 | Dropdowns: user-menu · notifications (5 шт, 3 unread) · kebab-меню | done |
+| CRM-015 | Action column перемещена влево (после чекбокса) по UX | done |
+| CRM-016 | Базовый стиль `.cell-link` (glob.) — тонкое coral-подчёркивание вместо браузерного default | done |
+| CRM-017 | Standalone rebuild с inline base64 backdrop | done |
+| CRM-018 | Показ заказчику — ждём первый фидбек | pending |
+| CRM-019 | Ревью: покрытие всех CMS-экранов, особенно empty states | pending |
+| CRM-020 | Responsive адаптация (mobile/tablet breakpoints) | pending |
+| CRM-021 | Тёмный/светлый переключатель темы (если попросят) | pending |
+| CRM-022 | Реализация в Next.js на базе утверждённой темы | pending |
+| CRM-023 | Интеграция с реальным API turbo-performance.ru | pending |

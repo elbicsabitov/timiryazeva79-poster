@@ -8,11 +8,34 @@
 - [session_2026_04_18_turbo.md](session_2026_04_18_turbo.md) — Турбо AI-модуль: 9 экранов из Figma + Discovery Hub + Guide + Apple HIG refinement
 - [session_2026_04_18_customizer.md](session_2026_04_18_customizer.md) — Liquid Glass Customizer: 38 droplet-капель на Руководстве + plug-in panel (material/tint/intensity/dim/shape/texture + 6 presets)
 - [session_2026_04_20.md](session_2026_04_20.md) — Cross-project: чтение фидбека Harvid для bereke-kp через Telethon, TODO сохранён в paws-kp, аудит SYNC_PROMPT (5 гэпов)
+- [session_2026_04_22.md](session_2026_04_22.md) — **CRM Glass**: полный прототип CMS dev.turbo-performance.ru в Liquid Glass стиле (29 экранов, 230 KB + 934 KB standalone)
 
 ## Current Design Iteration
 
+### Клиент: Twinr (Большой Цифровой)
 **Active prototype:** `designs/twinr-liquid-glass.html` (~267 KB, ~4990 строк, **22 страницы** + 5 модалок + **Liquid Glass Customizer** на #page-guide)
 **Client-facing standalone:** `designs/twinr-liquid-glass-standalone.html` (**1.7 MB**, base64 backdrop inline, открывается двойным кликом без сервера)
+
+### Клиент: Turbo Performance (CRM Glass) — 2026-04-22
+**Active prototype:** `designs/crm-glass.html` (230 KB, 4306 строк, **29 экранов** + 4 модалки)
+**Client-facing standalone:** `designs/crm-glass-standalone.html` (934 KB, base64 backdrop inline)
+**Sidebar:** 5 пунктов (Главная · Проекты · Организации · Документы · Библиотека) + Выйти в footer
+**Разделы (29 экранов):**
+- Home: KPI x4 + activity feed (6 событий) + presence + quick actions + pinned
+- Проекты: list + detail × 4 вкладки (Общая/Опции/Документы/Права) + edit + delete-modal
+- Опции: list + new + edit (+удаление)
+- Ресурсы опции: rich-data таблица 17 колонок (вкл. checkbox + actions слева), column-toggle, 6 фильтров, sort, bulk-bar, total row
+- Ресурс: new/edit (auto-compute ₽ с НДС, radio Хронометраж/Символы)
+- Ресурс: Создание материала (dropzone) + Файлы + Эфирные справки
+- Опция: Общая таблица файлов + Справок
+- Организации: list + detail × 3 вкладки + new + edit
+- Сотрудник: new (ФИО/Должность/Email/Телефон)
+- Документы global: empty
+- Библиотека: list (8 справочников) + item detail (inline-add) + edit элемента
+- Права доступа: list + new (5 типов + cascade org→employee)
+**Эстетика:** тот же Liquid Glass — sunset backdrop (Matterhorn + clouds), coral/amber/rose акценты, grey-tinted glass (НЕ фиолетовый), pill/squircle radii (iOS 26 concentric), spec-rim specular highlights. Adapted 1-в-1 с Twinr.
+**Dropdowns:** user-menu (Профиль/Настройки/Помощь/Выйти), notifications (5 шт с coral pulse на unread), kebab ⋮ на rows (Создание/Файлы/Справки/Дублировать/Удалить).
+**Routing:** hash-based `#page-X`, localStorage persist `crm-glass.last-route`.
 
 **Sidebar — 4 пункта (Apple HIG):**
 1. Рекламный кабинет (admin) — `page-advertisers` + вложенные (add, details, campaign, bind)
