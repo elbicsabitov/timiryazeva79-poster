@@ -9,6 +9,7 @@
 - [session_2026_04_18_customizer.md](session_2026_04_18_customizer.md) — Liquid Glass Customizer: 38 droplet-капель на Руководстве + plug-in panel (material/tint/intensity/dim/shape/texture + 6 presets)
 - [session_2026_04_20.md](session_2026_04_20.md) — Cross-project: чтение фидбека Harvid для bereke-kp через Telethon, TODO сохранён в paws-kp, аудит SYNC_PROMPT (5 гэпов)
 - [session_2026_04_22.md](session_2026_04_22.md) — **CRM Glass**: полный прототип CMS dev.turbo-performance.ru в Liquid Glass стиле (29 экранов, 230 KB + 934 KB standalone)
+- [session_2026_04_24.md](session_2026_04_24.md) — **PST-007 ресёрч**: процедура eOtinish/egov для постера Тимирязева 79, факт-чек 3 законов, штрафы, разбивка на 6 подзадач + скрипт `tools/read_arina.py`
 
 ## Current Design Iteration
 
