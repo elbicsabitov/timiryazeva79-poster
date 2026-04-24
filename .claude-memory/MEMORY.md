@@ -10,12 +10,60 @@
 - [session_2026_04_20.md](session_2026_04_20.md) — Cross-project: чтение фидбека Harvid для bereke-kp через Telethon, TODO сохранён в paws-kp, аудит SYNC_PROMPT (5 гэпов)
 - [session_2026_04_22.md](session_2026_04_22.md) — **CRM Glass**: полный прототип CMS dev.turbo-performance.ru в Liquid Glass стиле (29 экранов, 230 KB + 934 KB standalone)
 - [session_2026_04_24.md](session_2026_04_24.md) — **PST-007 ресёрч**: процедура eOtinish/egov для постера Тимирязева 79, факт-чек 3 законов, штрафы, разбивка на 6 подзадач + скрипт `tools/read_arina.py`
+- [session_2026_04_24_kinolog.md](session_2026_04_24_kinolog.md) — **Лендинг «Обучение кинологов»**: 3 варианта (paws / glass / material) для курса Анастасии Сундеевой под брендом Paws.kz. Контент из Telegram-чата через Telethon, стиль из FigMCP, 48 блоков ТЗ сверены, WCAG AA Large, standalone-файлы собраны
 
 ## Current Design Iteration
 
 ### Клиент: Twinr (Большой Цифровой)
 **Active prototype:** `designs/twinr-liquid-glass.html` (~267 KB, ~4990 строк, **22 страницы** + 5 модалок + **Liquid Glass Customizer** на #page-guide)
 **Client-facing standalone:** `designs/twinr-liquid-glass-standalone.html` (**1.7 MB**, base64 backdrop inline, открывается двойным кликом без сервера)
+
+### Клиент: Paws.kz / курс кинологов (Лендинг) — 2026-04-24
+**Active prototypes:**
+- `designs/kinolog-paws.html` (40 KB, 125 KB standalone) — основной paws-брендинг с оранжевым градиентом
+- `designs/kinolog-glass.html` (42 KB, 851 KB standalone с Matterhorn backdrop) — Liquid Glass + paws accent, белое лого
+- `designs/kinolog-material.html` (48 KB, 133 KB standalone) — Material 3 + paws accent CTA
+
+**Клиент:** Paws.kz (наш проект). Курс ведёт **Анастасия Сундеева** (@AnastassiyaSun, не «Солнышкина» как я изначально написал — галлюцинация). 9 лет практики с 2016, IAABC Member, Ассоциация Гуманных Кинологов, DogScienceClub, KZ+USA. Её действующий персональный сайт: `my-dog.kz` (оттуда вытащил фото и настоящую фамилию). Гуманный подход, современные исследования.
+
+**3 тарифа:**
+- Теория 200 000 ₸ (для зоопомощников Paws — 180 000 ₸)
+- Теория + Практика 400 000 ₸ (350 000 ₸)
+- Индивидуальный 750 000 ₸
+
+**Структура лендинга (9 секций, все согласованы с чатом «Обучение»):**
+1. Hero: «Обучение кинологов — теория онлайн, практика в Алматы»
+2. 3 сегмента аудитории (Понять свою собаку / Освоить профессию / Углубиться)
+3. 6 карточек возражений («А мне подходит?»)
+4. 5 модулей программы (accordion): Знания специалиста / Базовая работа / Методы / Работа с клиентом / Поведение и дрессировка
+5. Тарифы (3 карточки, средняя featured)
+6. Автор (Анастасия + фото + 4 бейджа IAABC/Ассоциация/DogScience/KZ+USA)
+7. FAQ (8 вопросов)
+8. Финальный CTA
+9. Footer
+
+**Источники данных:**
+- `.claude-memory/obuchenie_kinolog.txt` — приватный дамп Telegram-чата «Обучение», gitignored, 610 сообщений, 106 матчей
+- `.claude-memory/kinolog_landing_brief.md` — структурированный бриф (48 блоков сверены с чатом)
+- `.claude-memory/paws_figma_tokens.md` — полный design system из Figma (paints/text/effects/grid)
+- `.claude-memory/kinolog_landing_audit.md` — финальный аудит (визуал/UX/WCAG/галлюцинации/логика)
+
+**Инструменты:**
+- `tools/read_obuchenie.py` — Telethon скрипт, заимствует auth у mama-helper
+- `tools/build_kinolog_standalone.py` — инлайнит assets в base64 для standalone
+
+**FigMCP токены Paws.kz (из файла `dev`):**
+- Primary orange `#FF9500`, gradient `#FF9500→#FFBF66` @196°
+- Full tonal scale, 6 gradients, 3 alerts, gray scale 1-9
+- Inter для всего, Roboto Bold для H2
+- Shadow button: `4px 8px 24px rgba(255,149,0,.25)`
+
+**WCAG фикс:** `#FF9500` vs white = 2.43 (fail). Заменено на `#EB6400→#FF9500` gradient + text-shadow = AA Large. Eyebrow `#FF9500` на peach = 1.87 → заменено на `#B85A00` = AA Normal.
+
+**Assets:**
+- `designs/assets/paws/logo.png` — настоящий логотип с paws.kz
+- `designs/assets/paws/logo-glass.png` — белая версия с ~/Desktop/paws logo glass/
+- `designs/assets/paws/anastasia.webp` — фото Анастасии с my-dog.kz
 
 ### Клиент: Turbo Performance (CRM Glass) — 2026-04-22
 **Active prototype:** `designs/crm-glass.html` (230 KB, 4306 строк, **29 экранов** + 4 модалки)

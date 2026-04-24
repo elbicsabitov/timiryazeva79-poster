@@ -1,6 +1,7 @@
 # Raw Telethon dumps — contain private chat history, never commit
 .claude-memory/arina_*.txt
 .claude-memory/harvid_*.txt
+.claude-memory/obuchenie_*.txt
 .claude-memory/*_raw.txt
 .claude-memory/*_dump.txt
 

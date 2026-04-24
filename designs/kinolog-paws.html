@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Обучение кинологов — Paws.kz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paws Figma tokens */
+    --orange: #FF9500;
+    --orange-hover: #FFAA33;
+    --orange-soft: #FFBF66;
+    --orange-tint: #FFEACC;
+    --gradient: linear-gradient(196deg, #FF9500 0%, #FFBF66 100%);
+    --gradient-soft: linear-gradient(196deg, rgba(255,149,0,.10), rgba(255,191,102,.06));
+
+    --text-1: #212121;
+    --text-2: #424242;
+    --text-3: #616161;
+    --text-muted: #9E9E9E;
+    --divider: #E0E0E0;
+    --surface: #FFFFFF;
+    --surface-soft: #FAFAFA;
+    --surface-tint: #EEEEEE;
+
+    --success: #4ADE80;
+    --warning: #FACC15;
+    --error: #F75555;
+    --info: #007AFF;
+
+    --shadow-card: 0 4px 60px rgba(4, 6, 15, .08);
+    --shadow-card-lg: 0 20px 100px rgba(4, 6, 15, .10);
+    --shadow-btn: 4px 8px 24px rgba(255, 149, 0, .30);
+    --shadow-btn-hover: 4px 16px 32px rgba(255, 149, 0, .25);
+
+    --r-sm: 8px;
+    --r-md: 16px;
+    --r-lg: 24px;
+    --r-xl: 32px;
+    --r-pill: 999px;
+
+    --container: 1200px;
+
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-display: 'Roboto', 'Inter', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text-1);
+    background: var(--surface);
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-bottom: 1px solid var(--divider);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: var(--text-1); text-decoration: none; }
+  .logo-mark { width: 36px; height: 36px; border-radius: 10px; background: var(--gradient); display: grid; place-items: center; box-shadow: var(--shadow-btn); }
+  .logo-mark svg { width: 20px; height: 20px; color: #fff; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { color: var(--text-2); font-size: 15px; font-weight: 500; text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--orange); }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 24px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-body); font-weight: 600; font-size: 15px;
+    cursor: pointer; border: 0; text-decoration: none;
+    transition: transform .2s, box-shadow .2s, background .2s;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(196deg, #EB6400 0%, #FF9500 100%);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(184, 74, 0, .45);
+    box-shadow: var(--shadow-btn);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-btn-hover); }
+  .btn-ghost {
+    background: var(--surface); color: var(--text-1);
+    border: 1.5px solid var(--divider);
+  }
+  .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+  .btn-lg { padding: 18px 32px; font-size: 17px; }
+
+  /* ============ HERO ============ */
+  .hero { padding: 64px 0 96px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ''; position: absolute; top: -200px; right: -200px;
+    width: 700px; height: 700px; border-radius: 50%;
+    background: var(--gradient-soft); filter: blur(40px); z-index: -1;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 72px; align-items: center; }
+  @media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: var(--r-pill);
+    background: var(--orange-tint); color: #B85A00;
+    font-weight: 700; font-size: 13px; letter-spacing: .4px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(1.3); }
+  }
+  h1.hero-title {
+    font-family: var(--font-display);
+    font-weight: 900; font-size: clamp(36px, 5.2vw, 56px); line-height: 1.08;
+    letter-spacing: -.02em; color: var(--text-1);
+    margin-bottom: 20px;
+  }
+  .hero-title .accent {
+    background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { font-size: 19px; color: var(--text-3); line-height: 1.55; margin-bottom: 32px; max-width: 540px; }
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+
+  .hero-stats { display: flex; gap: 40px; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--text-1); line-height: 1; }
+  .stat-num .unit { color: var(--orange); }
+  .stat-label { font-size: 13px; color: var(--text-3); margin-top: 6px; }
+
+  /* hero illustration */
+  .hero-visual {
+    position: relative; aspect-ratio: 1 / 1.05; border-radius: var(--r-xl);
+    background: var(--gradient-soft);
+    padding: 36px; display: grid; place-items: center;
+    overflow: hidden;
+  }
+  .hero-visual::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,149,0,.15), transparent 60%);
+  }
+  .dog-card {
+    position: relative;
+    width: 100%; max-width: 380px;
+    background: var(--surface); border-radius: var(--r-lg);
+    padding: 24px; box-shadow: var(--shadow-card-lg);
+  }
+  .dog-photo {
+    width: 100%; aspect-ratio: 4/3; border-radius: var(--r-md); margin-bottom: 18px;
+    object-fit: cover; object-position: 50% 35%;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+  }
+  .dog-name { font-weight: 800; font-size: 20px; margin-bottom: 4px; margin-top: 4px; }
+  .dog-meta-line { font-size: 13px; color: var(--text-3); }
+  .dog-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .dog-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: var(--r-pill);
+    background: var(--orange-tint); color: #B85A00;
+    font-size: 12px; font-weight: 600;
+  }
+  .dog-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: #EB6400; }
+
+  /* ============ SEGMENTS (3 cards) ============ */
+  .section { padding: 88px 0; }
+  .section-head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .eyebrow { display: inline-block; padding: 6px 14px; border-radius: var(--r-pill); background: var(--orange-tint); color: #B85A00; font-weight: 700; font-size: 12px; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 16px; }
+  .h2 {
+    font-family: var(--font-display);
+    font-weight: 900; font-size: clamp(28px, 4vw, 44px); line-height: 1.1;
+    letter-spacing: -.015em; margin-bottom: 14px;
+  }
+  .lead { font-size: 17px; color: var(--text-3); line-height: 1.55; }
+
+  .seg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) { .seg-grid { grid-template-columns: 1fr; } }
+  .seg-card {
+    position: relative;
+    background: var(--surface); border-radius: var(--r-lg);
+    padding: 32px; border: 1px solid var(--divider);
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+    display: flex; flex-direction: column;
+  }
+  .seg-card:hover { transform: translateY(-6px); border-color: var(--orange-soft); box-shadow: var(--shadow-card); }
+  .seg-icon {
+    width: 56px; height: 56px; border-radius: var(--r-md);
+    background: var(--orange-tint); color: var(--orange);
+    display: grid; place-items: center; margin-bottom: 20px;
+  }
+  .seg-icon svg { width: 28px; height: 28px; }
+  .seg-card h3 { font-size: 22px; font-weight: 800; margin-bottom: 10px; line-height: 1.25; }
+  .seg-card p { font-size: 15px; color: var(--text-3); line-height: 1.5; margin-bottom: 20px; flex: 1; }
+  .seg-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #B85A00; text-decoration: none; transition: gap .2s, color .2s; }
+  .seg-tag:hover { color: #EB6400; gap: 10px; }
+
+  /* ============ OBJECTIONS ============ */
+  .obj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .obj-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 1100px) and (min-width: 901px) { .obj-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .obj-card {
+    background: var(--surface-soft); border-radius: var(--r-lg);
+    padding: 28px; border: 1px solid transparent;
+    transition: all .3s;
+  }
+  .obj-card:hover { background: var(--surface); border-color: var(--orange-tint); box-shadow: var(--shadow-card); }
+  .obj-q {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 17px; font-weight: 800; line-height: 1.3;
+    color: var(--text-1); margin-bottom: 14px;
+  }
+  .obj-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--gradient); color: #fff;
+    font-size: 13px; font-weight: 700;
+    display: grid; place-items: center; margin-top: 2px;
+  }
+  .obj-a { font-size: 15px; color: var(--text-3); line-height: 1.55; padding-left: 40px; }
+
+  /* ============ PROGRAM ============ */
+  .prog-list { display: flex; flex-direction: column; gap: 16px; max-width: 920px; margin: 0 auto; }
+  .prog-row {
+    background: var(--surface); border: 1px solid var(--divider); border-radius: var(--r-lg);
+    overflow: hidden; transition: box-shadow .2s;
+  }
+  .prog-row:hover { box-shadow: var(--shadow-card); }
+  .prog-head {
+    display: flex; align-items: center; gap: 20px;
+    padding: 24px 28px; cursor: pointer; user-select: none;
+  }
+  .prog-num {
+    flex-shrink: 0;
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--gradient); color: #fff;
+    font-weight: 800; font-size: 17px;
+    display: grid; place-items: center;
+    box-shadow: var(--shadow-btn);
+  }
+  .prog-title { flex: 1; font-size: 18px; font-weight: 700; color: var(--text-1); }
+  .prog-chev {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--surface-tint);
+    display: grid; place-items: center; transition: transform .3s, background .3s;
+    color: var(--text-3);
+  }
+  .prog-row[open] .prog-chev { transform: rotate(180deg); background: var(--orange-tint); color: var(--orange); }
+  .prog-body { padding: 0 28px 24px 96px; font-size: 15px; color: var(--text-3); line-height: 1.6; }
+  .prog-body ul { list-style: none; display: grid; gap: 8px; }
+  .prog-body li { position: relative; padding-left: 20px; }
+  .prog-body li::before {
+    content: ''; position: absolute; left: 0; top: 9px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
+  }
+
+  /* ============ TARIFFS ============ */
+  .tar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch; }
+  @media (max-width: 900px) { .tar-grid { grid-template-columns: 1fr; } }
+
+  .tar-card {
+    position: relative;
+    background: var(--surface); border: 1.5px solid var(--divider); border-radius: var(--r-xl);
+    padding: 36px 32px; display: flex; flex-direction: column;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .tar-card.featured {
+    border-color: transparent;
+    background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                var(--gradient) border-box;
+    box-shadow: var(--shadow-card-lg);
+    transform: scale(1.02);
+  }
+  .tar-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-card); }
+  .tar-card.featured:hover { transform: translateY(-6px) scale(1.02); }
+
+  .tar-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--gradient); color: #fff;
+    padding: 6px 16px; border-radius: var(--r-pill);
+    font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    box-shadow: var(--shadow-btn);
+  }
+  .tar-name { font-size: 15px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
+  .tar-price { font-size: 44px; font-weight: 900; font-family: var(--font-display); line-height: 1; margin-bottom: 6px; letter-spacing: -.02em; }
+  .tar-price .cur { font-size: 24px; font-weight: 700; color: var(--text-3); vertical-align: top; margin-left: 4px; }
+  .tar-price-note { font-size: 13px; color: var(--text-3); margin-bottom: 28px; }
+  .tar-price-note b { color: var(--success); font-weight: 700; }
+  .tar-feats { list-style: none; margin: 0 0 28px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .tar-feats li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--text-2); line-height: 1.5; }
+  .tar-feats svg { flex-shrink: 0; width: 18px; height: 18px; color: var(--orange); margin-top: 3px; }
+  .tar-feats li.muted { color: var(--text-muted); }
+  .tar-feats li.muted svg { color: var(--text-muted); }
+
+  /* ============ AUTHOR ============ */
+  .author-block {
+    background: var(--gradient-soft); border-radius: var(--r-xl);
+    padding: 64px; display: grid; grid-template-columns: 240px 1fr; gap: 48px; align-items: center;
+  }
+  @media (max-width: 800px) { .author-block { grid-template-columns: 1fr; padding: 40px 28px; text-align: center; } }
+  .author-photo {
+    width: 100%; aspect-ratio: 1; border-radius: var(--r-lg);
+    object-fit: cover; object-position: 50% 30%;
+    box-shadow: var(--shadow-card-lg);
+    max-width: 240px;
+    display: block; margin: 0 auto;
+  }
+  .author-sig { font-size: 13px; color: var(--text-3); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; margin-bottom: 8px; }
+  .author-name { font-family: var(--font-display); font-weight: 900; font-size: 36px; letter-spacing: -.015em; margin-bottom: 16px; line-height: 1.1; }
+  .author-desc { font-size: 17px; color: var(--text-2); line-height: 1.55; margin-bottom: 20px; }
+  .author-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+  .author-badges span {
+    background: var(--surface); padding: 8px 14px; border-radius: var(--r-pill);
+    font-size: 13px; font-weight: 600; color: var(--text-2);
+    border: 1px solid var(--divider);
+  }
+  @media (max-width: 800px) { .author-badges { justify-content: center; } }
+
+  /* ============ FAQ ============ */
+  .faq { max-width: 820px; margin: 0 auto; }
+  .faq details {
+    background: var(--surface); border: 1px solid var(--divider); border-radius: var(--r-md);
+    margin-bottom: 12px; transition: box-shadow .2s;
+  }
+  .faq details:hover { box-shadow: var(--shadow-card); }
+  .faq summary {
+    cursor: pointer; padding: 20px 24px;
+    font-weight: 700; font-size: 16px;
+    display: flex; align-items: center; gap: 12px;
+    list-style: none;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: '+'; margin-left: auto; font-size: 24px; color: var(--orange); font-weight: 300;
+    transition: transform .3s;
+  }
+  .faq details[open] summary::after { content: '−'; }
+  .faq-body { padding: 0 24px 22px; color: var(--text-3); line-height: 1.55; font-size: 15px; }
+
+  /* ============ CTA ============ */
+  .cta-final {
+    background: var(--gradient);
+    border-radius: var(--r-xl);
+    padding: 72px 48px;
+    text-align: center;
+    color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .cta-final::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(255,255,255,.25), transparent 50%);
+  }
+  .cta-final h2 {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: clamp(28px, 4vw, 42px); line-height: 1.15; letter-spacing: -.015em;
+    margin-bottom: 14px; position: relative;
+  }
+  .cta-final p { font-size: 18px; opacity: .92; max-width: 600px; margin: 0 auto 28px; position: relative; }
+  .cta-final .btn {
+    background: #fff; color: var(--orange);
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+    position: relative;
+  }
+  .cta-final .btn:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 15px 40px rgba(0,0,0,.2); }
+
+  /* ============ FOOTER ============ */
+  .footer { padding: 48px 0 40px; border-top: 1px solid var(--divider); margin-top: 48px; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .footer-copy { font-size: 14px; color: var(--text-3); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { color: var(--text-3); text-decoration: none; font-size: 14px; transition: color .2s; }
+  .footer-links a:hover { color: var(--orange); }
+
+  /* utility */
+  .center { text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="#">
+      <img src="assets/paws/logo.png" alt="Paws.kz" style="height: 34px; width: auto; display: block;">
+    </a>
+    <div class="nav-links">
+      <a href="#segments">Для кого</a>
+      <a href="#program">Программа</a>
+      <a href="#tariffs">Тарифы</a>
+      <a href="#author">Автор</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-primary" href="#enroll">Записаться</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="hero-eyebrow">Набор открыт</span>
+      <h1 class="hero-title">
+        Обучение кинологов — <span class="accent">теория онлайн,</span> практика в Алматы
+      </h1>
+      <p class="hero-sub">Научитесь понимать поведение собак и работать с ним — за 4 месяца, с практикой на реальных собаках. Гуманный подход, современные исследования, связь с выпускниками.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="#enroll">Хочу на курс</a>
+        <a class="btn btn-ghost btn-lg" href="#segments">Подходит ли мне?</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">4<span class="unit">&nbsp;мес</span></div>
+          <div class="stat-label">теория + практика</div>
+        </div>
+        <div>
+          <div class="stat-num">9<span class="unit">&nbsp;лет</span></div>
+          <div class="stat-label">опыт автора</div>
+        </div>
+        <div>
+          <div class="stat-num">5<span class="unit">&nbsp;модулей</span></div>
+          <div class="stat-label">системный подход</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="dog-card">
+        <img class="dog-photo" src="assets/paws/anastasia.webp" alt="Анастасия с ученицей-собакой">
+        <div class="dog-chips">
+          <span class="dog-chip"><span class="dot"></span>Гуманный подход</span>
+          <span class="dog-chip">IAABC Member</span>
+        </div>
+        <div class="dog-name">Анастасия Сундеева</div>
+        <div class="dog-meta-line">Ведущий кинолог Paws.kz · Алматы + США</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEGMENTS -->
+<section class="section" id="segments" style="background: var(--surface-soft);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Для кого курс</span>
+      <h2 class="h2">Три дороги — одна программа</h2>
+      <p class="lead">Разная глубина, разные цели. Выберите точку входа, с которой вам ближе.</p>
+    </div>
+    <div class="seg-grid">
+      <div class="seg-card">
+        <div class="seg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C7 2 3 6 3 11c0 5 4 9 9 9h0c2.2 0 4.2-.8 5.7-2.1L22 22l-1.5-1.5M11 7v4l3 2"/></svg></div>
+        <h3>Понять свою собаку</h3>
+        <p>Разберитесь в своей собаке — не на один случай, а комплексно. Система вместо «пробовать всё подряд».</p>
+        <a class="seg-tag" href="#tariffs">Подходящий тариф — «Теория» →</a>
+      </div>
+      <div class="seg-card">
+        <div class="seg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M12 12v6M9 15h6"/></svg></div>
+        <h3>Освоить новую профессию</h3>
+        <p>Смените рутину на профессию кинолога — за 4 месяца с реальной практикой. Теория в удобное время, практика на выходных.</p>
+        <a class="seg-tag" href="#tariffs">Подходящий тариф — «Теория + Практика» →</a>
+      </div>
+      <div class="seg-card">
+        <div class="seg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12l5-9 5 9-5 9-5-9zm10 0l5-9 5 9-5 9-5-9z"/></svg></div>
+        <h3>Углубиться в профессию</h3>
+        <p>Уже работаете с собаками — добавьте системный метод. Страх, агрессия, сепарационная тревога — с наукой, а не интуицией.</p>
+        <a class="seg-tag" href="#tariffs">Подходящий тариф — «Индивидуальный» →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIONS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">А мне подходит?</span>
+      <h2 class="h2">Если у вас остались сомнения —<br>скорее всего, они ниже</h2>
+    </div>
+    <div class="obj-grid">
+      <div class="obj-card"><div class="obj-q"><span class="obj-num">1</span>Боюсь, что не получится — мне важна поддержка</div><p class="obj-a">Программа от простого к сложному: база → методы → практика. В неделю 2 онлайн-лекции и 2 созвона с разбором вашего кейса. К собакам — только после теста по теории.</p></div>
+      <div class="obj-card"><div class="obj-q"><span class="obj-num">2</span>Боюсь подходить к собакам — страшно, что укусят</div><p class="obj-a">Собака не кусает «ни с того ни с сего» — этому предшествуют сигналы. Учитесь их видеть с первых занятий. На практике — под присмотром Анастасии, от простых случаев к сложным.</p></div>
+      <div class="obj-card"><div class="obj-q"><span class="obj-num">3</span>Хочу понимать, как строить практику после курса</div><p class="obj-a">Отдельный модуль по работе с клиентом и блок о том, как брать заказы, растить насмотренность и своё имя. На выходе знаете не только «как», но и «как строить».</p></div>
+      <div class="obj-card"><div class="obj-q"><span class="obj-num">4</span>Страшно общаться с клиентами</div><p class="obj-a">Модуль 4: как начать разговор, вести консультацию, разруливать конфликты. К первому клиенту подходите со схемой, а не импровизацией.</p></div>
+      <div class="obj-card"><div class="obj-q"><span class="obj-num">5</span>Какой будет сертификат?</div><p class="obj-a">После полного курса — сертификат с подписью Анастасии. Выдаётся только если сдали итоговый тест и прошли практику в Алматы. Подтверждает весь путь: знания + навыки.</p></div>
+      <div class="obj-card"><div class="obj-q"><span class="obj-num">6</span>Хочу доступ к материалам навсегда</div><p class="obj-a">Записи лекций остаются с вами — пересмотреть или вернуться к модулю можно в любой момент. Анастасия на связи с выпускниками: не постоянный куратор, но точечный разбор кейса — можно.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section class="section" id="program" style="background: var(--surface-soft);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Программа</span>
+      <h2 class="h2">5 модулей — от теории<br>до полевой работы</h2>
+      <p class="lead">Система, а не набор приёмов. Современные исследования поведения собак и гуманный подход.</p>
+    </div>
+    <div class="prog-list">
+      <details class="prog-row" open>
+        <summary class="prog-head"><span class="prog-num">1</span><span class="prog-title">Знания специалиста</span><span class="prog-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="prog-body"><ul><li>Основы профессии и этология в кинологии</li><li>Системный подход и что он включает</li><li>Принцип НИМА, квадрант Скиннера</li><li>Принципы оперантного научения, принцип Примака</li><li>Формирование условного рефлекса</li><li>Источники повышения квалификации</li></ul></div>
+      </details>
+      <details class="prog-row">
+        <summary class="prog-head"><span class="prog-num">2</span><span class="prog-title">Базовая работа с собакой</span><span class="prog-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="prog-body"><ul><li>О мотивации: как она работает, какие виды существуют</li><li>О наказании: какое оно бывает и нужно ли в дрессировке</li><li>Об обучении: пищевое, социальное, игровое подкрепление</li></ul></div>
+      </details>
+      <details class="prog-row">
+        <summary class="prog-head"><span class="prog-num">3</span><span class="prog-title">Разбор методов обучения</span><span class="prog-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="prog-body"><ul><li>Вкусопоощрительный метод, шейпинг, механика, контраст</li><li>Игровой метод, подражание, система маркеров</li><li>Уход от наведения, точки подкрепления</li><li>Как начать работать без куска</li></ul></div>
+      </details>
+      <details class="prog-row">
+        <summary class="prog-head"><span class="prog-num">4</span><span class="prog-title">Работа с клиентом</span><span class="prog-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="prog-body"><ul><li>Решение конфликтных ситуаций и вопросов</li><li>Компетенция и компетентность тренера в глазах клиента</li><li>Организация занятий</li></ul></div>
+      </details>
+      <details class="prog-row">
+        <summary class="prog-head"><span class="prog-num">5</span><span class="prog-title">Поведение и дрессировка</span><span class="prog-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="prog-body"><ul><li>Снижение реакции на раздражители</li><li>Прогулка на провисшем поводке, подзыв, выдержка</li><li>Начало работы с апортировкой</li><li>Отказ от еды, неподбор</li><li>Способы работы над успокоением и переключением</li><li>Упражнения на контакт, приучение к гигиеническим процедурам</li></ul></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- TARIFFS -->
+<section class="section" id="tariffs">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Тарифы</span>
+      <h2 class="h2">Выберите глубину</h2>
+      <p class="lead">Можно начать с теории и апгрейднуться до старта практики. Разбивка на 2 платежа по запросу.</p>
+    </div>
+    <div class="tar-grid">
+      <!-- Teoriya -->
+      <div class="tar-card">
+        <div class="tar-name">Теория</div>
+        <div class="tar-price">200 000<span class="cur">₸</span></div>
+        <div class="tar-price-note">Для зоопомощников Paws — <b>180 000 ₸</b></div>
+        <ul class="tar-feats">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>12 лекций по 90–120 мин</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Курсовая работа</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Экзамен по теории (2 пересдачи бесплатно)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Записи лекций навсегда</li>
+          <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>Без практики</li>
+          <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>Без сертификата</li>
+        </ul>
+        <a class="btn btn-ghost" href="#enroll">Выбрать тариф</a>
+      </div>
+
+      <!-- Theory + Practice (featured) -->
+      <div class="tar-card featured">
+        <span class="tar-badge">Популярный</span>
+        <div class="tar-name">Теория + Практика</div>
+        <div class="tar-price">400 000<span class="cur">₸</span></div>
+        <div class="tar-price-note">Для зоопомощников Paws — <b>350 000 ₸</b></div>
+        <ul class="tar-feats">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Всё из «Теории»</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>15 практических занятий по 60–90 мин</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Сдача практического экзамена</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Сертификат с подписью Анастасии</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Группа 5–8 человек</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Практика в Алматы, несколько площадок</li>
+        </ul>
+        <a class="btn btn-primary" href="#enroll">Выбрать тариф</a>
+      </div>
+
+      <!-- Individual -->
+      <div class="tar-card">
+        <div class="tar-name">Индивидуальный</div>
+        <div class="tar-price">750 000<span class="cur">₸</span></div>
+        <div class="tar-price-note">Полностью персональный формат</div>
+        <ul class="tar-feats">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>14 лекций по 90–120 мин</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>20 практических занятий</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Работа 1-на-1 с Анастасией</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Гибкое расписание</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Дополнительные материалы</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Сертификат</li>
+        </ul>
+        <a class="btn btn-ghost" href="#enroll">Выбрать тариф</a>
+      </div>
+    </div>
+    <p class="center" style="margin-top: 28px; color: var(--text-3); font-size: 14px;">
+      Апгрейд с «Теории» — до старта практики. На «Индивидуальный» — до 5-й лекции. Разбивка 50/50 по запросу.
+    </p>
+  </div>
+</section>
+
+<!-- AUTHOR -->
+<section class="section" id="author">
+  <div class="container">
+    <div class="author-block">
+      <img class="author-photo" src="assets/paws/anastasia.webp" alt="Анастасия Сундеева">
+      <div>
+        <div class="author-sig">Автор курса</div>
+        <div class="author-name">Анастасия Сундеева</div>
+        <p class="author-desc">Автор программы и ведущий кинолог Paws.kz. 9 лет практики с 2016 года. Работаю в Казахстане и США, в основе работы — современные исследования и гуманный подход — никакого доминирования и давления, только научно обоснованные методы.</p>
+        <div class="author-badges">
+          <span>IAABC Member</span>
+          <span>Ассоциация Гуманных Кинологов</span>
+          <span>DogScienceClub</span>
+          <span>KZ + USA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq" style="background: var(--surface-soft);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Вопросы</span>
+      <h2 class="h2">Часто спрашивают</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Что если я пропущу лекцию?</summary><div class="faq-body">Запись лекции сохраняется навсегда. Можно посмотреть позже и задать вопросы в чате — дедлайна нет.</div></details>
+      <details><summary>Можно ли перенести практику?</summary><div class="faq-body">Да. Можно прийти с другой группой или отработать в удобное время. До 5 переносов: первые 2 бесплатно, с 3-го — 6 250 ₸ (половина консультации). Общее время практики — не более 3 месяцев.</div></details>
+      <details><summary>Если не сдал теорию?</summary><div class="faq-body">Есть 2 бесплатные пересдачи в течение месяца. Без сданной теории к практике не допускают.</div></details>
+      <details><summary>Где именно проходит практика в Алматы?</summary><div class="faq-body">Несколько площадок в городе + парк. Точные локации сообщим перед стартом потока.</div></details>
+      <details><summary>Сколько человек в группе?</summary><div class="faq-body">Практика — 5–8 человек за раз. Теорию может слушать до 40 человек одновременно.</div></details>
+      <details><summary>Как сдаётся практический экзамен?</summary><div class="faq-body">Разбор реального кейса — берёте запрос клиента и отрабатываете полностью: сбор анамнеза, рекомендации, работа с собакой, обратная связь.</div></details>
+      <details><summary>Можно ли апгрейдить тариф?</summary><div class="faq-body">С «Теории» до «Т+П» — до старта практики. На «Индивидуальный» — до 5-й лекции. Просто доплачиваете разницу.</div></details>
+      <details><summary>Будут ли документы с печатью?</summary><div class="faq-body">Да, по запросу. Мы работаем по самозанятости (E-Salyk), договор можем заключить как с печатью (через партнёрскую организацию), так и без.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="section" id="enroll">
+  <div class="container">
+    <div class="cta-final">
+      <h2>Следующий поток — совсем скоро</h2>
+      <p>Оставьте заявку — расскажем даты, ответим на вопросы и поможем выбрать тариф под ваши цели.</p>
+      <a class="btn btn-lg" href="#">Хочу на курс</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-copy">© 2026 Paws.kz · Обучение кинологов</div>
+    <div class="footer-links">
+      <a href="#">Telegram</a>
+      <a href="#">Instagram</a>
+      <a href="mailto:hi@paws.kz">hi@paws.kz</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

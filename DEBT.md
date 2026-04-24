@@ -143,6 +143,39 @@
 | SW-007 | Ревью Stas/Alexei | pending |
 | SW-008 | Остальные станции по брендбукам (PDF скачаны) | pending |
 
+## Лендинг «Обучение кинологов» (2026-04-24)
+
+Новый клиент под брендом Paws.kz — курс Анастасии Сундеевой. 3 варианта прототипа: paws-основной / Liquid Glass + paws / Material 3 + paws. Контент вытащен из Telegram-чата «Обучение» через Telethon (`tools/read_obuchenie.py`), стиль paws.kz — через FigMCP (файл `dev`, Paint/Text/Effect styles).
+
+**Артефакты:**
+- `designs/kinolog-paws.html` + `-standalone.html` (125 KB)
+- `designs/kinolog-glass.html` + `-standalone.html` (851 KB, с Matterhorn backdrop)
+- `designs/kinolog-material.html` + `-standalone.html` (133 KB)
+- `.claude-memory/kinolog_landing_brief.md` — выжимка ТЗ из чата
+- `.claude-memory/paws_figma_tokens.md` — токены из FigMCP
+- `.claude-memory/kinolog_landing_audit.md` — визуал + UX + WCAG + hallucination audit
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| KIN-001 | Telethon-скрипт чтения чата «Обучение» + фильтр ключевых слов | done |
+| KIN-002 | FigMCP OAuth через chrome MCP + getStyles → токены paws.kz | done |
+| KIN-003 | Бриф: 48 блоков ТЗ выжаты из чата | done |
+| KIN-004 | Paws-вариант: hero/segments/objections/5 модулей/3 тарифа/автор/FAQ/CTA | done |
+| KIN-005 | Glass-вариант с белым лого и Matterhorn backdrop | done |
+| KIN-006 | Material 3-вариант (M3 tokens + paws accent на CTA) | done |
+| KIN-007 | Реальный контент: лого paws.kz, фото Анастасии с my-dog.kz | done |
+| KIN-008 | WCAG-фикс: белый на `#EB6400→#FF9500` (AA Large), eyebrow `#B85A00` | done |
+| KIN-009 | Антигаллюцинация pass: фамилия Сундеева, убран LIFE, «2-3 площадки» → «несколько» | done |
+| KIN-010 | Семантика: убран прогресс-бар без смысла, seg-tag → реальные `<a>` ссылки | done |
+| KIN-011 | Standalone сборка через `tools/build_kinolog_standalone.py` | done |
+| KIN-012 | **Показ заказчику — Серёга/Катя/Настя** | pending |
+| KIN-013 | Дождаться ответов Насти на 7 уточнений (статистика, IAABC, кейсы) | pending |
+| KIN-014 | Подключить реальные CTA — форма заявки / Telegram | pending |
+| KIN-015 | Добавить дату старта потока когда будет известна | pending |
+| KIN-016 | Блок отзывов/кейсов когда получим от Насти | pending |
+| KIN-017 | Mobile-тест на 375/768px | pending |
+| KIN-018 | Реализация в Next.js после выбора финального варианта | pending |
+
 ## CRM Glass — Turbo Performance CMS (2026-04-22)
 
 Редизайн CMS dev.turbo-performance.ru в Liquid Glass стиле — для заказчика «Турбо Перформанс» (отдельный клиент от Twinr, пересобран стилевой язык 1-в-1 с Twinr LG). Single-file HTML + base64 standalone.
