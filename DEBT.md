@@ -229,6 +229,46 @@
 | RUTV-015 | Реальные video player integration (HLS stream RU.TV) | pending |
 | RUTV-016 | Next.js + shadcn/ui реализация после утверждения стиля | pending |
 
+### v4 Production polish (2026-04-29 evening)
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| RUTV-040 | Spacing rhythm: row-section 38→56px, content padding-bottom 96px, hero overlay 44/52, sidebar item min-height 44px | done |
+| RUTV-041 | Mini-player UX fix: убрал always-visible big play, теперь hover-only overlay | done |
+| RUTV-042 | Apple sidebar active: subtle white tint + 3px красный marker bar (НЕ pink pill как Glass) | done |
+| RUTV-043 | Hero card: solid bg + ::before pseudo для consistent overlay, hero title text-shadow | done |
+| RUTV-044 | Apple Dark подтянут: sidebar/cards более solid (rgba 0.55→0.78 / 0.7→0.95) | done |
+| RUTV-045 | Light theme добавлен (3-й variant): Apple Music Light HIG, white sidebar, brand red accent, все text colors переопределены | done |
+| RUTV-046 | Bug fix Light: hero CTA остаётся white-on-dark (не overrid'ить под dark на dark) | done |
+| RUTV-047 | Live badge: brand-coloured glow + tighter padding | done |
+| RUTV-048 | Chart rows: subtle dividers + hover state | done |
+| RUTV-049 | Footer/Partners spacing: 32→48 gap, edge-to-edge cleanup | done |
+
+### v5 Cinematic вариант + media backdrop (2026-04-29 night)
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| RUTV-050 | Создать `showcase-cinematic.html` — Apple TV+ landing вайб (рядом с dashboard) | done |
+| RUTV-051 | Off-canvas drawer sidebar с overlay backdrop blur, выезжает по burger | done |
+| RUTV-052 | Full-screen hero 100dvh с image 1.png + cinematic typography clamp(44-96px) | done |
+| RUTV-053 | Top-nav transparent → solid backdrop при scroll (Apple TV+ pattern) | done |
+| RUTV-054 | Reveal-on-scroll fade-in (IntersectionObserver) для секций | done |
+| RUTV-055 | Bento layout каналов: 1 featured + 5 regular grid | done |
+| RUTV-056 | Chart top-3 portrait cards с 96px цифрами + остальные top-10 в clean list | done |
+| RUTV-057 | Artists horizontal carousel с 280px round avatars (Apple Music style) | done |
+| RUTV-058 | Bento mosaic жанров: wide tiles + regular grid | done |
+| RUTV-059 | Apple-style CTA «Скачать приложение» с radial gradient backdrop + App Store/Google Play badges | done |
+| RUTV-060 | Active nav-tab подсвечивается при scroll (waypoint-style) | done |
+| RUTV-061 | Все 3 темы в cinematic (Apple Dark default / Glass / Light) | done |
+| RUTV-062 | Glass backdrop в обоих файлах: убран Matterhorn → image 1.png концертный кадр (по теме music TV) | done |
+| RUTV-063 | Carousels paddings: scroll-padding-left/right на row-track / chip-row / hero-track / artists-track | done |
+| RUTV-064 | Build script extended VARIANTS = [aggregator, cinematic] | done |
+| RUTV-017 | Mobile responsive deep audit обоих вариантов (375/414/768) | pending |
+| RUTV-018 | Финальная brand check от RU.TV (шрифты, font-faces, real RU.TV brand guidelines) | pending |
+| RUTV-019 | Performance audit (10 MB standalone — на slow connection долго грузится. WebP optimization) | pending |
+| RUTV-020 | Apple HIG fidelity audit на cinematic (apple.com/tv-pr live audit через chrome MCP) | pending |
+| RUTV-021 | Заказчик выбирает: cinematic vs dashboard direction → дальнейший development идёт в выбранном направлении | pending |
+
 ## CRM Glass — Turbo Performance CMS (2026-04-22)
 
 Редизайн CMS dev.turbo-performance.ru в Liquid Glass стиле — для заказчика «Турбо Перформанс» (отдельный клиент от Twinr, пересобран стилевой язык 1-в-1 с Twinr LG). Single-file HTML + base64 standalone.

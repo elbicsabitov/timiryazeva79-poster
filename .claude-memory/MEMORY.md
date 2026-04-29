@@ -17,8 +17,50 @@
 - [session_2026_04_22.md](session_2026_04_22.md) — **CRM Glass**: полный прототип CMS dev.turbo-performance.ru в Liquid Glass стиле (29 экранов, 230 KB + 934 KB standalone)
 - [session_2026_04_24.md](session_2026_04_24.md) — **PST-007 ресёрч**: процедура eOtinish/egov для постера Тимирязева 79, факт-чек 3 законов, штрафы, разбивка на 6 подзадач + скрипт `tools/read_arina.py`
 - [session_2026_04_24_kinolog.md](session_2026_04_24_kinolog.md) — **Лендинг «Обучение кинологов»**: 3 варианта (paws / glass / material) для курса Анастасии Сундеевой под брендом Paws.kz. Контент из Telegram-чата через Telethon, стиль из FigMCP, 48 блоков ТЗ сверены, WCAG AA Large, standalone-файлы собраны
+- [session_2026_04_29_rutv_cinematic.md](session_2026_04_29_rutv_cinematic.md) — **Holy Grail integration + RU.TV showcase v1→v5**: Anthropic Design System Prompt vendored + DESIGN_PROTOCOL.md в 10 частях; RU.TV витрина-агрегатор с 104 реальными ассетами, чарт top-10 русской сцены, расписание week×hours, 3 темы (Glass/Apple Dark/Light) + cinematic второй вариант (Apple TV+ landing с full-screen hero, off-canvas drawer, bento layouts, scroll reveal). 2 файла на руках: dashboard 10MB + cinematic 4.5MB
 
 ## Current Design Iteration
+
+### Клиент: RU.TV (Russian Media Group) — 2026-04-29 ⭐ ACTIVE
+
+**Два production-ready варианта на руках, заказчик выбирает направление:**
+
+**Dashboard (для daily use):**
+- `designs/showcase-aggregator.html` (90 KB, 11 секций)
+- `designs/showcase-aggregator-standalone.html` (10.3 MB, 104 ассета inlined)
+- Sidebar 256px постоянно видим, sticky bottom radio player
+- Sections: Hero / Каналы / Радио / Сейчас слушают / Чарт top-10 / Жанры / Артисты / DJ / Mood / Клипы / Новости / Расписание / Партнёры / Footer
+
+**Cinematic (для marketing/pitch):**
+- `designs/showcase-cinematic.html` (61 KB)
+- `designs/showcase-cinematic-standalone.html` (4.5 MB)
+- Off-canvas drawer sidebar (выезжает по burger), top-nav transparent → solid при scroll
+- Full-screen hero 100dvh с Apple TV+ typography (clamp 44-96px)
+- Bento layouts (channels + genres), portrait chart top-3 с 96px цифрами, artists carousel 280px round
+- Apple-style CTA «Скачать приложение» с radial gradient
+- Scroll-driven reveal-on-view fade-in
+
+**3 темы в обоих файлах** (Holy Grail compliant — Tweaks panel переключатель):
+- **Glass** — concert dark backdrop (image 1.png силуэт, НЕ горы), grey-tinted glass с blur, brand red accent, sunset removed
+- **Apple Dark** — pure black `#000`, dynamic blur от hero artwork, white CTA, max contrast `#f5f5f7`
+- **Light** — Apple Music Light style: `#f5f5f7` bg, `#ffffff` cards, `#1d1d1f` text, brand red accent, subtle shadows
+
+**Бренд:** RU.TV красно-белый oval `#E30033` + 1.5px white inner ring, Onest шрифт (НЕ Inter/Roboto per Holy Grail).
+
+**Контент (real RU.TV):**
+- Каналы: RU.TV приоритет, Русское Радио ТВ, DFM TV, Maximum TV, Monte Carlo TV, Хит FM TV
+- Радио РМГ: Русское Радио, RU.TV Music, DFM, Maximum, Monte Carlo, Хит FM, Русское Ретро, Радио Шансон
+- Чарт RU.TV top-10: SHAMAN #1, JONY #2, MIYAGI&Andy Panda #3, Macan, HammAli&Navai, Полина Гагарина, Артур Пирожков, Слава Марлоу, Светлана Лобода, Дима Билан
+- Жанры: Поп-Хиты, Шансон, Танцы, Рок, Дискотека 80-х, Ретро, Лирика
+- Расписание 7 дней × 7 часов = 49 цветных pill-cells
+- Партнёры РМГ: 5 plates с подписями
+- Footer: реальные адреса/телефоны RU.TV, Russian Media Group bottom
+
+**Real assets** в `designs/assets/rutv/` — 104 файла из `~/Desktop/export rutv/` (image 1.png hero силуэт музыканта, image 2.png сериал «Полевой», Rectangle 4322-{1..35} promo banners + клиповые artwork, App Store/Google Play badges, RUTV 2 logo).
+
+**Build script:** `tools/build_showcase_standalone.py` extended pattern matcher на JS-data ссылки, VARIANTS = [aggregator, cinematic] — одна команда собирает оба standalone.
+
+**Verified через chrome MCP** (real backdrop-filter работает): все 3 темы в обоих файлах, drawer cinematic с overlay backdrop blur, scroll reveal, mobile/TV viewports.
 
 ### Клиент: Twinr (Большой Цифровой)
 **Active prototype:** `designs/twinr-liquid-glass.html` (~267 KB, ~4990 строк, **22 страницы** + 5 модалок + **Liquid Glass Customizer** на #page-guide)
