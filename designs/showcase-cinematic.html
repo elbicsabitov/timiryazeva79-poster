@@ -1,0 +1,1590 @@
+<!doctype html>
+<html lang="ru" data-style="apple">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RU.TV — Главное русское музыкальное телевидение</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================================
+   ROOT TOKENS
+   ========================================================================= */
+:root {
+  --font-sans: 'Onest', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --r-pill: 999px;
+  --r-xl: 32px;
+  --r-lg: 22px;
+  --r-md: 16px;
+  --r-sm: 10px;
+  --t-fast: 220ms cubic-bezier(.2,.8,.2,1);
+  --t-mid: 460ms cubic-bezier(.2,.8,.2,1);
+  --t-slow: 720ms cubic-bezier(.2,.8,.2,1);
+  --player-h: 0px; /* no global player в cinematic mode */
+
+  --brand-red: #E30033;
+  --brand-red-hot: #FF1F4B;
+  --brand-pink: #FF4D8F;
+  --brand-cyan: #21B5FF;
+  --brand-magenta: #C724B1;
+  --brand-yellow: #FFC700;
+}
+
+/* ===== APPLE DARK (default) ===== */
+[data-style="apple"] {
+  --bg-base: #000000;
+  --glass-bg: rgba(28,28,30,0.85);
+  --glass-bg-strong: rgba(44,44,46,1);
+  --glass-bg-weak: rgba(255,255,255,0.05);
+  --glass-border: rgba(255,255,255,0.10);
+  --glass-rim: rgba(255,255,255,0.22);
+  --glass-blur: 40px;
+
+  --accent: var(--brand-red);
+  --accent-hover: var(--brand-red-hot);
+  --on-accent: #ffffff;
+
+  --text-primary: #f5f5f7;
+  --text-secondary: rgba(245,245,247,0.66);
+  --text-tertiary: rgba(245,245,247,0.42);
+
+  --shadow-lg: 0 30px 80px rgba(0,0,0,0.85);
+  --shadow-md: 0 14px 36px rgba(0,0,0,0.7);
+}
+
+/* ===== GLASS ===== */
+[data-style="glass"] {
+  --bg-base: #08070d;
+  --backdrop-image: url('assets/rutv/image 1.png');
+  --glass-bg: rgba(40,40,46,0.36);
+  --glass-bg-strong: rgba(46,44,54,0.55);
+  --glass-bg-weak: rgba(48,46,56,0.18);
+  --glass-border: rgba(255,255,255,0.12);
+  --glass-rim: rgba(255,255,255,0.4);
+  --glass-blur: 28px;
+
+  --accent: var(--brand-red);
+  --accent-hover: var(--brand-red-hot);
+  --on-accent: #ffffff;
+
+  --text-primary: rgba(255,255,255,0.96);
+  --text-secondary: rgba(255,255,255,0.66);
+  --text-tertiary: rgba(255,255,255,0.42);
+
+  --shadow-lg: 0 24px 60px rgba(0,0,0,0.55);
+  --shadow-md: 0 12px 32px rgba(0,0,0,0.45);
+}
+
+/* ===== LIGHT ===== */
+[data-style="light"] {
+  --bg-base: #f5f5f7;
+  --glass-bg: rgba(255,255,255,0.92);
+  --glass-bg-strong: #ffffff;
+  --glass-bg-weak: rgba(0,0,0,0.04);
+  --glass-border: rgba(0,0,0,0.08);
+  --glass-rim: rgba(0,0,0,0.16);
+  --glass-blur: 24px;
+
+  --accent: var(--brand-red);
+  --accent-hover: var(--brand-red-hot);
+  --on-accent: #ffffff;
+
+  --text-primary: #1d1d1f;
+  --text-secondary: #515154;
+  --text-tertiary: #86868b;
+
+  --shadow-lg: 0 20px 50px rgba(0,0,0,0.10);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* =========================================================================
+   RESET
+   ========================================================================= */
+*,*::before,*::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01","cv01";
+}
+button, input { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; padding: 0; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+p { text-wrap: pretty; margin: 0; }
+h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.05; }
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* =========================================================================
+   TOP NAV — minimal cinematic bar (Apple TV-style)
+   ========================================================================= */
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; gap: 32px;
+  padding: 18px 48px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%);
+  transition: background var(--t-mid), backdrop-filter var(--t-mid);
+}
+.top-nav.scrolled {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border-bottom: 1px solid var(--glass-border);
+}
+[data-style="light"] .top-nav.scrolled {
+  background: rgba(255,255,255,0.92);
+}
+.nav-burger {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: var(--r-pill);
+  color: var(--text-primary);
+  transition: background var(--t-fast);
+}
+.top-nav:not(.scrolled) .nav-burger { color: white; }
+.nav-burger:hover { background: var(--glass-bg-weak); }
+.nav-burger svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; }
+
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-brand-mark {
+  width: 56px; height: 36px;
+  border-radius: 999px;
+  background: var(--brand-red);
+  display: grid; place-items: center;
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  position: relative;
+  box-shadow: 0 6px 18px rgba(227,0,51,0.4);
+}
+.nav-brand-mark::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.nav-tabs {
+  display: flex; align-items: center; gap: 4px;
+  margin-left: 16px;
+}
+.nav-tab {
+  padding: 8px 16px;
+  border-radius: var(--r-pill);
+  color: rgba(255,255,255,0.78);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.top-nav.scrolled .nav-tab { color: var(--text-secondary); }
+.nav-tab:hover { background: rgba(255,255,255,0.10); color: white; }
+.top-nav.scrolled .nav-tab:hover { background: var(--glass-bg-weak); color: var(--text-primary); }
+.nav-tab.active { color: white; }
+.top-nav.scrolled .nav-tab.active { color: var(--text-primary); }
+
+.nav-spacer { flex: 1; }
+
+.nav-search {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.78);
+  font-size: 13px;
+  min-width: 220px;
+  transition: background var(--t-fast);
+}
+.top-nav.scrolled .nav-search { background: var(--glass-bg-weak); color: var(--text-secondary); }
+.nav-search:hover { background: rgba(255,255,255,0.16); }
+.nav-search input { background: transparent; border: 0; outline: 0; flex: 1; min-width: 0; color: inherit; font: inherit; }
+.nav-search svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; flex: 0 0 14px; }
+
+.nav-cta {
+  padding: 10px 22px;
+  border-radius: var(--r-pill);
+  background: white;
+  color: black;
+  font-weight: 600;
+  font-size: 13px;
+  transition: transform var(--t-fast), background var(--t-fast);
+  min-height: 40px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.nav-cta:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
+[data-style="light"] .nav-cta { background: black; color: white; }
+[data-style="light"] .nav-cta:hover { background: #1d1d1f; }
+.nav-cta svg { width: 14px; height: 14px; fill: currentColor; }
+
+@media (max-width: 1100px) {
+  .top-nav { padding: 14px 24px; gap: 16px; }
+  .nav-tabs { display: none; }
+  .nav-search { min-width: 180px; }
+}
+@media (max-width: 720px) {
+  .top-nav { padding: 12px 16px; }
+  .nav-search { min-width: 0; padding: 8px; }
+  .nav-search input { display: none; }
+  .nav-cta { padding: 8px 14px; }
+}
+
+/* =========================================================================
+   OFF-CANVAS DRAWER SIDEBAR (выезжает по burger)
+   ========================================================================= */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.62);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-mid);
+}
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+.drawer {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 210;
+  width: 360px;
+  max-width: 88vw;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(50px) saturate(1.6);
+  -webkit-backdrop-filter: blur(50px) saturate(1.6);
+  border-right: 1px solid var(--glass-border);
+  padding: 24px 22px;
+  display: flex; flex-direction: column;
+  gap: 20px;
+  transform: translateX(-100%);
+  transition: transform var(--t-mid);
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.drawer.open { transform: translateX(0); }
+[data-style="light"] .drawer { background: rgba(255,255,255,0.96); }
+
+.drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 4px 0;
+}
+.drawer-close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  color: var(--text-secondary);
+  transition: background var(--t-fast);
+}
+.drawer-close:hover { background: var(--glass-bg-weak); color: var(--text-primary); }
+.drawer-close svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+.drawer-mini {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  aspect-ratio: 1.6 / 1;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  background-size: cover; background-position: center;
+}
+.drawer-mini::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 100%);
+}
+.drawer-mini-meta {
+  position: absolute; left: 16px; right: 16px; bottom: 14px;
+  z-index: 2;
+  color: white;
+}
+.drawer-mini-track { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+.drawer-mini-artist { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.drawer-mini-live {
+  position: absolute; top: 12px; right: 12px;
+  z-index: 2;
+}
+
+.drawer-section { display: flex; flex-direction: column; gap: 4px; }
+.drawer-label {
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding: 0 14px;
+  margin: 14px 0 6px;
+}
+.drawer-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  color: var(--text-secondary);
+  font-size: 14.5px;
+  font-weight: 500;
+  width: 100%; text-align: left;
+  transition: background var(--t-fast), color var(--t-fast);
+  position: relative;
+  min-height: 44px;
+}
+.drawer-item:hover { background: var(--glass-bg-weak); color: var(--text-primary); }
+.drawer-item.active {
+  background: var(--accent);
+  color: white;
+}
+[data-style="apple"] .drawer-item.active,
+[data-style="light"] .drawer-item.active {
+  background: var(--glass-bg-weak);
+  color: var(--text-primary);
+}
+[data-style="apple"] .drawer-item.active::before,
+[data-style="light"] .drawer-item.active::before {
+  content: ''; position: absolute;
+  left: -8px; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 22px; border-radius: 2px;
+  background: var(--accent);
+}
+.drawer-item svg { width: 18px; height: 18px; flex: 0 0 18px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+.drawer-footer { margin-top: auto; }
+
+/* =========================================================================
+   HERO — full-screen cinematic
+   ========================================================================= */
+.hero {
+  position: relative;
+  height: 100dvh;
+  min-height: 720px;
+  overflow: hidden;
+  background-color: #000;
+  background-size: cover;
+  background-position: center;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.0) 25%, rgba(0,0,0,0.0) 60%, rgba(0,0,0,0.85) 100%),
+    linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 60%);
+}
+.hero-content {
+  position: absolute;
+  left: 56px; right: 56px; bottom: 80px;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 60px;
+  color: white;
+}
+.hero-content-left { max-width: 860px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.78);
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.live-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px 6px 12px;
+  background: var(--brand-red);
+  color: white;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  box-shadow: 0 6px 18px rgba(227,0,51,0.45);
+}
+.live-pulse {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: white;
+  animation: pulse 1.6s infinite;
+  box-shadow: 0 0 0 0 rgba(255,255,255,0.7);
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+  100% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+}
+
+.hero-title {
+  font-size: clamp(44px, 6.6vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.96;
+  margin-bottom: 22px;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.55);
+  color: white;
+}
+.hero-sub {
+  font-size: clamp(16px, 1.4vw, 22px);
+  color: rgba(255,255,255,0.85);
+  max-width: 640px;
+  line-height: 1.5;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+.hero-actions {
+  display: flex; gap: 14px;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 28px;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 999px;
+  transition: transform var(--t-fast), background var(--t-fast), color var(--t-fast);
+  min-height: 52px;
+  letter-spacing: -0.005em;
+}
+.btn:active { transform: scale(0.96); }
+.btn:hover { transform: translateY(-2px); }
+.btn-primary {
+  background: white;
+  color: black;
+}
+.btn-primary:hover { background: rgba(255,255,255,0.92); }
+.btn-secondary {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.18); }
+.btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* Hero side mini-meta (program info) */
+.hero-meta {
+  display: flex; flex-direction: column; gap: 16px;
+  align-items: flex-end;
+  text-align: right;
+  padding-bottom: 6px;
+}
+.hero-program {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  color: white;
+  min-width: 280px;
+}
+.hero-program-art {
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  background-size: cover; background-position: center;
+  flex: 0 0 48px;
+}
+.hero-program-meta { text-align: left; min-width: 0; }
+.hero-program-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.hero-program-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.66);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute;
+  bottom: 28px; left: 50%; transform: translateX(-50%);
+  z-index: 5;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: rgba(255,255,255,0.6);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  animation: scrollHint 2.5s infinite;
+}
+@keyframes scrollHint {
+  0%,100% { transform: translate(-50%, 0); opacity: 0.6; }
+  50% { transform: translate(-50%, 6px); opacity: 1; }
+}
+.hero-scroll svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+@media (max-width: 900px) {
+  .hero { min-height: 600px; }
+  .hero-content {
+    left: 24px; right: 24px; bottom: 56px;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .hero-meta { align-items: flex-start; text-align: left; }
+  .hero-program { min-width: 0; }
+}
+
+/* =========================================================================
+   SECTIONS — cinematic full-bleed showcases
+   ========================================================================= */
+.section {
+  padding: 120px 56px;
+  position: relative;
+}
+.section-head {
+  max-width: 1280px;
+  margin: 0 auto 56px;
+}
+.section-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.section-title {
+  font-size: clamp(32px, 4.4vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  max-width: 900px;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: clamp(15px, 1.2vw, 19px);
+  color: var(--text-secondary);
+  max-width: 680px;
+  line-height: 1.55;
+}
+
+/* Section 2: Channels — bento full-bleed */
+.section-channels {
+  background: var(--bg-base);
+}
+.bento-channels {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 320px 280px;
+  gap: 18px;
+}
+@media (max-width: 1100px) { .bento-channels { grid-template-columns: 1fr 1fr; grid-template-rows: 280px 240px 240px; } }
+@media (max-width: 700px) { .bento-channels { grid-template-columns: 1fr; grid-template-rows: repeat(6, 240px); gap: 14px; } }
+
+.bento-tile {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #1a1a1a;
+  background-size: cover; background-position: center;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-mid), box-shadow var(--t-mid);
+}
+.bento-tile:hover { transform: translateY(-6px) scale(1.01); box-shadow: var(--shadow-lg); }
+.bento-tile::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85) 100%);
+}
+.bento-tile.featured { grid-row: 1 / 3; grid-column: 1 / 2; }
+@media (max-width: 1100px) { .bento-tile.featured { grid-row: 1 / 2; grid-column: 1 / 3; } }
+@media (max-width: 700px) { .bento-tile.featured { grid-row: 1 / 2; grid-column: 1; } }
+
+.bento-tile-meta {
+  position: absolute;
+  left: 28px; right: 28px; bottom: 24px;
+  z-index: 2;
+  color: white;
+}
+.bento-tile.featured .bento-tile-meta { left: 36px; right: 36px; bottom: 32px; }
+.bento-tile-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 12px 5px 9px;
+  background: var(--brand-red);
+  color: white;
+  border-radius: 999px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.bento-tile-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 6px;
+}
+.bento-tile.featured .bento-tile-title { font-size: 36px; letter-spacing: -0.025em; line-height: 1.05; }
+.bento-tile-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.78);
+}
+.bento-tile.featured .bento-tile-sub { font-size: 16px; }
+
+/* Section 3: Чарт — focus top-3 + список ниже */
+.section-chart {
+  background: var(--bg-base);
+}
+.chart-wrap { max-width: 1280px; margin: 0 auto; }
+.chart-top3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 56px;
+}
+@media (max-width: 900px) { .chart-top3 { grid-template-columns: 1fr; } }
+
+.chart-card {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background-color: #1a1a1a;
+  background-size: cover; background-position: center;
+  aspect-ratio: 1 / 1.15;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-mid), box-shadow var(--t-mid);
+}
+.chart-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.chart-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.92) 100%);
+}
+.chart-card-rank {
+  position: absolute;
+  top: 24px; left: 28px;
+  z-index: 2;
+  color: white;
+  font-size: 96px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+.chart-card-meta {
+  position: absolute;
+  left: 28px; right: 28px; bottom: 28px;
+  z-index: 2;
+  color: white;
+}
+.chart-card-trend {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 8px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  letter-spacing: 0.04em;
+  color: white;
+}
+.chart-card-trend.up { color: #66ff9a; }
+.chart-card-trend.down { color: #ff6f6f; }
+.chart-card-artist {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+}
+.chart-card-track {
+  font-size: 15px;
+  color: rgba(255,255,255,0.85);
+}
+
+.chart-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 32px;
+}
+@media (max-width: 900px) { .chart-list { grid-template-columns: 1fr; } }
+.chart-row {
+  display: grid;
+  grid-template-columns: 48px 56px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: background var(--t-fast);
+  border-radius: 8px;
+}
+.chart-row:hover { background: var(--glass-bg-weak); }
+.chart-rank { font-size: 22px; font-weight: 700; color: var(--text-tertiary); text-align: right; font-feature-settings: "tnum"; }
+.chart-art { width: 56px; height: 56px; border-radius: 8px; background-size: cover; background-position: center; border: 1px solid var(--glass-border); }
+.chart-meta { min-width: 0; }
+.chart-meta-artist { font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart-meta-track { font-size: 13px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart-row-trend { font-size: 12px; color: var(--text-tertiary); font-feature-settings: "tnum"; }
+.chart-row-trend.up { color: #34d399; }
+.chart-row-trend.down { color: #f87171; }
+
+/* Section 4: Артисты — horizontal carousel */
+.section-artists { background: var(--bg-base); padding-bottom: 80px; }
+.artists-wrap { max-width: 100%; }
+.artists-track {
+  display: flex; gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 56px 32px;
+  scroll-padding-left: 56px;
+  scroll-padding-right: 56px;
+}
+.artist-card {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  text-align: center;
+  cursor: pointer;
+}
+.artist-avatar {
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background-size: cover; background-position: center;
+  margin-bottom: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-mid);
+}
+.artist-card:hover .artist-avatar { transform: scale(1.05); }
+.artist-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+.artist-meta {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+/* Section 5: Жанры — bento mosaic */
+.section-genres { background: var(--bg-base); }
+.bento-genres {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 220px;
+  gap: 18px;
+}
+@media (max-width: 900px) { .bento-genres { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .bento-genres { grid-template-columns: 1fr; } }
+.genre-tile {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--genre-grad);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-mid), box-shadow var(--t-mid);
+}
+.genre-tile:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--shadow-lg); }
+.genre-tile.wide { grid-column: span 2; }
+.genre-tile-name {
+  position: absolute;
+  left: 24px; right: 24px; bottom: 22px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: white;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  z-index: 2;
+}
+.genre-tile.wide .genre-tile-name { font-size: 32px; }
+.genre-tile::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Section 6: Расписание — clean timeline */
+.section-schedule { background: var(--bg-base); }
+.schedule-wrap {
+  max-width: 1280px; margin: 0 auto;
+  border-radius: var(--r-xl);
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  padding: 32px;
+}
+[data-style="light"] .schedule-wrap { background: white; box-shadow: var(--shadow-md); }
+
+.schedule-head, .schedule-row {
+  display: grid;
+  grid-template-columns: 110px repeat(7, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+.schedule-head { margin-bottom: 16px; padding-left: 14px; }
+.schedule-row { margin-bottom: 10px; }
+.schedule-hour {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-align: center;
+  font-feature-settings: "tnum";
+}
+.schedule-day {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding-left: 14px;
+}
+.schedule-cell {
+  padding: 14px 12px;
+  border-radius: var(--r-md);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: transform var(--t-fast), filter var(--t-fast), box-shadow var(--t-fast);
+  letter-spacing: -0.005em;
+  min-height: 48px;
+  display: grid; place-items: center;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+.schedule-cell:hover { transform: scale(1.04); filter: brightness(1.1); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+@media (max-width: 900px) {
+  .section-schedule { padding-left: 16px; padding-right: 16px; }
+  .schedule-wrap { padding: 18px; overflow-x: auto; }
+  .schedule-head, .schedule-row { grid-template-columns: 80px repeat(7, minmax(80px, 1fr)); }
+  .schedule-cell { padding: 10px 8px; font-size: 12px; min-height: 44px; }
+}
+
+/* Section 7: Apps download (Apple-style CTA) */
+.section-app {
+  background: var(--bg-base);
+  padding: 140px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.section-app::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(227,0,51,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(33,181,255,0.14) 0%, transparent 50%);
+  pointer-events: none;
+}
+.app-content { max-width: 720px; margin: 0 auto; position: relative; }
+.app-title {
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+.app-sub {
+  font-size: clamp(16px, 1.4vw, 22px);
+  color: var(--text-secondary);
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+.app-stores { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.app-badge {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 14px 24px;
+  background: var(--text-primary);
+  color: var(--bg-base);
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform var(--t-fast);
+  min-height: 56px;
+}
+.app-badge:hover { transform: translateY(-2px); }
+.app-badge-svg svg { width: 26px; height: 26px; fill: currentColor; }
+.app-badge-meta { text-align: left; line-height: 1.1; }
+.app-badge-small { font-size: 10px; opacity: 0.7; }
+.app-badge-big { font-size: 16px; font-weight: 700; }
+
+/* =========================================================================
+   FOOTER
+   ========================================================================= */
+.app-footer {
+  background: var(--bg-base);
+  padding: 72px 56px 32px;
+  border-top: 1px solid var(--glass-border);
+}
+.footer-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 56px;
+  margin-bottom: 56px;
+}
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; } }
+@media (max-width: 600px) { .footer-grid { grid-template-columns: 1fr; gap: 28px; } }
+.footer-brand-block {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.footer-brand-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 320px;
+}
+.footer-col h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  transition: color var(--t-fast);
+}
+.footer-col a:hover { color: var(--text-primary); }
+
+.footer-partners {
+  max-width: 1280px;
+  margin: 0 auto 32px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  padding: 28px 0;
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+}
+@media (max-width: 900px) { .footer-partners { grid-template-columns: repeat(2, 1fr); } }
+.footer-partner {
+  text-align: center;
+  padding: 12px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background var(--t-fast);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.footer-partner:hover { background: var(--glass-bg-weak); }
+.footer-partner-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.footer-partner-sub { font-size: 11px; color: var(--text-tertiary); }
+
+.footer-bottom {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+.footer-bottom-links { display: flex; gap: 18px; flex-wrap: wrap; }
+
+@media (max-width: 1100px) {
+  .section { padding: 80px 32px; }
+  .section-app { padding: 100px 32px; }
+  .app-footer { padding: 56px 32px 24px; }
+  .artists-track { padding-left: 32px; padding-right: 32px; scroll-padding-left: 32px; }
+}
+@media (max-width: 700px) {
+  .section { padding: 64px 16px; }
+  .section-head { margin-bottom: 32px; }
+  .section-app { padding: 72px 16px; }
+  .app-footer { padding: 48px 16px 20px; }
+  .artists-track { padding-left: 16px; padding-right: 16px; scroll-padding-left: 16px; }
+}
+
+/* =========================================================================
+   TWEAKS PANEL
+   ========================================================================= */
+.tweaks {
+  position: fixed;
+  right: 24px; bottom: 24px;
+  z-index: 80;
+  display: flex;
+  padding: 8px;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border: 1px solid var(--glass-rim);
+  border-radius: 999px;
+  box-shadow: var(--shadow-lg);
+  font-size: 12px;
+  font-weight: 600;
+}
+[data-style="light"] .tweaks { background: rgba(255,255,255,0.95); border-color: var(--glass-border); }
+.tweaks-row { display: flex; gap: 4px; }
+.tweaks-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  transition: background var(--t-fast), color var(--t-fast);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  min-height: 38px;
+}
+.tweaks-btn[aria-pressed="true"] {
+  background: var(--text-primary);
+  color: var(--bg-base);
+}
+.tweaks-btn[aria-pressed="false"]:hover { background: var(--glass-bg-weak); color: var(--text-primary); }
+.tweaks-btn svg { width: 14px; height: 14px; }
+@media (max-width: 600px) {
+  .tweaks { right: 12px; bottom: 12px; }
+  .tweaks-btn { padding: 8px 12px; font-size: 11px; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Section reveal on scroll */
+.section { opacity: 1; }
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 700ms ease-out, transform 700ms ease-out; }
+.reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- =================================================================== -->
+<!-- TOP NAV                                                              -->
+<!-- =================================================================== -->
+<header class="top-nav" id="topNav">
+  <button class="nav-burger" id="burger" aria-label="Меню">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <div class="nav-brand">
+    <div class="nav-brand-mark">RU.TV</div>
+  </div>
+  <nav class="nav-tabs">
+    <a class="nav-tab active" href="#hero">Главная</a>
+    <a class="nav-tab" href="#sec-channels">Каналы</a>
+    <a class="nav-tab" href="#sec-chart">Чарт</a>
+    <a class="nav-tab" href="#sec-artists">Артисты</a>
+    <a class="nav-tab" href="#sec-genres">Жанры</a>
+    <a class="nav-tab" href="#sec-schedule">Эфир</a>
+    <a class="nav-tab" href="#sec-app">Приложение</a>
+  </nav>
+  <div class="nav-spacer"></div>
+  <label class="nav-search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="search" placeholder="Найти канал, исполнителя, клип" aria-label="Поиск">
+  </label>
+  <button class="nav-cta">
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    Смотреть
+  </button>
+</header>
+
+<!-- =================================================================== -->
+<!-- DRAWER OVERLAY + SIDEBAR                                             -->
+<!-- =================================================================== -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="nav-brand">
+      <div class="nav-brand-mark">RU.TV</div>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M6 18L18 6"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-mini" id="drawerMini" style="background-image: url('assets/rutv/image 1.png');">
+    <span class="live-pill drawer-mini-live"><span class="live-pulse"></span>LIVE</span>
+    <div class="drawer-mini-meta">
+      <div class="drawer-mini-track">SHAMAN — Я русский</div>
+      <div class="drawer-mini-artist">Сейчас в эфире RU.TV</div>
+    </div>
+  </div>
+
+  <div class="drawer-section">
+    <a class="drawer-item active" href="#hero">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5.6 5.6a9 9 0 0 0 0 12.7M18.4 5.6a9 9 0 0 1 0 12.7M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+      Прямой эфир
+    </a>
+    <a class="drawer-item" href="#sec-channels">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+      Каналы
+    </a>
+    <a class="drawer-item" href="#sec-chart">
+      <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l3-3 4 4 5-5"/></svg>
+      Чарт RU.TV
+    </a>
+    <a class="drawer-item" href="#sec-artists">
+      <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Артисты
+    </a>
+    <a class="drawer-item" href="#sec-genres">
+      <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 9l12-2"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      Жанры
+    </a>
+    <a class="drawer-item" href="#sec-schedule">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Расписание
+    </a>
+  </div>
+
+  <div class="drawer-label">Моё</div>
+  <div class="drawer-section">
+    <a class="drawer-item" href="#">
+      <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Избранное
+    </a>
+    <a class="drawer-item" href="#">
+      <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+      История
+    </a>
+  </div>
+
+  <div class="drawer-footer">
+    <a class="drawer-item" href="#">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      Настройки
+    </a>
+  </div>
+</aside>
+
+<!-- =================================================================== -->
+<!-- HERO                                                                  -->
+<!-- =================================================================== -->
+<section class="hero" id="hero" style="background-image: url('assets/rutv/image 1.png');">
+  <div class="hero-content">
+    <div class="hero-content-left">
+      <div class="hero-eyebrow">
+        <span class="live-pill"><span class="live-pulse"></span>В ЭФИРЕ</span>
+        <span>СЕЙЧАС НА RU.TV</span>
+      </div>
+      <h1 class="hero-title">Главное русское музыкальное телевидение.</h1>
+      <p class="hero-sub">Лучшие клипы, прямой эфир концертов, чарт хитов и эксклюзивные премьеры — на одном экране, в любом устройстве.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть прямой эфир</button>
+        <button class="btn btn-secondary">Программа передач</button>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-program">
+        <div class="hero-program-art" style="background-image: url('assets/rutv/Rectangle 4322-16.png');"></div>
+        <div class="hero-program-meta">
+          <div class="hero-program-title">SHAMAN — Я русский</div>
+          <div class="hero-program-sub">Премьера · 21:42</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Скролл</span>
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SECTION: CHANNELS (bento)                                             -->
+<!-- =================================================================== -->
+<section class="section section-channels" id="sec-channels">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Прямой эфир</div>
+    <h2 class="section-title">Шесть каналов. Один экран.</h2>
+    <p class="section-sub">RU.TV, Русское Радио ТВ, DFM, Maximum, Monte Carlo и Хит FM — все каналы РМГ в одном приложении, без переключения.</p>
+  </div>
+  <div class="bento-channels reveal" id="bentoChannels"></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SECTION: CHART                                                        -->
+<!-- =================================================================== -->
+<section class="section section-chart" id="sec-chart">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Чарт RU.TV</div>
+    <h2 class="section-title">Топ-10 хитов недели.</h2>
+    <p class="section-sub">Главные русские треки на основе ротации в эфире и голосования зрителей. Обновляется каждое воскресенье.</p>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-top3 reveal" id="chartTop3"></div>
+    <div class="chart-list reveal" id="chartList"></div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SECTION: ARTISTS                                                      -->
+<!-- =================================================================== -->
+<section class="section section-artists" id="sec-artists">
+  <div class="section-head reveal" style="padding: 0 0 0 0;">
+    <div class="section-eyebrow">Артисты</div>
+    <h2 class="section-title">Звёзды русской сцены.</h2>
+    <p class="section-sub">От SHAMAN и JONY до Полины Гагариной — следите за любимыми исполнителями.</p>
+  </div>
+  <div class="artists-wrap">
+    <div class="artists-track reveal" id="artistsTrack"></div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SECTION: GENRES (bento mosaic)                                        -->
+<!-- =================================================================== -->
+<section class="section section-genres" id="sec-genres">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Жанры</div>
+    <h2 class="section-title">Под любое настроение.</h2>
+    <p class="section-sub">Поп-хиты, шансон, ретро, дискотека 80-х, танцы, рок и лирика — выбирайте свой звук.</p>
+  </div>
+  <div class="bento-genres reveal" id="bentoGenres"></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SECTION: SCHEDULE                                                     -->
+<!-- =================================================================== -->
+<section class="section section-schedule" id="sec-schedule">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Расписание</div>
+    <h2 class="section-title">Программа передач RU.TV.</h2>
+    <p class="section-sub">Полная неделя эфира — выбирайте момент и включайте напоминание.</p>
+  </div>
+  <div class="schedule-wrap reveal" id="scheduleWrap"></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SECTION: APP DOWNLOAD                                                 -->
+<!-- =================================================================== -->
+<section class="section-app" id="sec-app">
+  <div class="app-content reveal">
+    <h2 class="app-title">RU.TV всегда с вами.</h2>
+    <p class="app-sub">Бесплатное приложение для iOS, Android, Smart TV и всех современных устройств.</p>
+    <div class="app-stores">
+      <a class="app-badge" href="#">
+        <span class="app-badge-svg"><svg viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.86-3.08.4-1.09-.47-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg></span>
+        <div class="app-badge-meta">
+          <div class="app-badge-small">Скачать в</div>
+          <div class="app-badge-big">App Store</div>
+        </div>
+      </a>
+      <a class="app-badge" href="#">
+        <span class="app-badge-svg"><svg viewBox="0 0 24 24"><path d="M3 3v18l9-9-9-9zm10 8l4-4 5 5-5 5-4-4-9 9V3l9 9z" opacity="0.85"/></svg></span>
+        <div class="app-badge-meta">
+          <div class="app-badge-small">Доступно в</div>
+          <div class="app-badge-big">Google Play</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- FOOTER                                                                -->
+<!-- =================================================================== -->
+<footer class="app-footer">
+  <div class="footer-partners">
+    <div class="footer-partner"><div class="footer-partner-name">RU.TV</div><div class="footer-partner-sub">Русский музыкальный канал</div></div>
+    <div class="footer-partner"><div class="footer-partner-name">Русское Радио</div><div class="footer-partner-sub">Главное радио страны</div></div>
+    <div class="footer-partner"><div class="footer-partner-name">DFM</div><div class="footer-partner-sub">Танцевальная волна</div></div>
+    <div class="footer-partner"><div class="footer-partner-name">MAXIMUM</div><div class="footer-partner-sub">Радио Максимум</div></div>
+    <div class="footer-partner"><div class="footer-partner-name">Monte Carlo</div><div class="footer-partner-sub">Радио Монте Карло</div></div>
+  </div>
+  <div class="footer-grid">
+    <div class="footer-brand-block">
+      <div class="nav-brand"><div class="nav-brand-mark">RU.TV</div></div>
+      <p class="footer-brand-text">Главный русский музыкальный канал страны. Часть медиа-холдинга Russian Media Group.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Платформа</h4>
+      <a href="#">Прямой эфир</a>
+      <a href="#">Чарт RU.TV</a>
+      <a href="#">Расписание</a>
+      <a href="#">Артисты</a>
+      <a href="#">Плей-листы</a>
+    </div>
+    <div class="footer-col">
+      <h4>Связь</h4>
+      <a href="#">123298, Москва, 3-я Хорошёвская, 12</a>
+      <a href="#">+7 499 579-77-09</a>
+      <a href="#">info@ru.tv</a>
+      <a href="#">Реклама: ad@ru.tv</a>
+    </div>
+    <div class="footer-col">
+      <h4>Соцсети</h4>
+      <a href="#">Telegram</a>
+      <a href="#">YouTube</a>
+      <a href="#">VK</a>
+      <a href="#">Одноклассники</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Russian Media Group · RU.TV</span>
+    <div class="footer-bottom-links">
+      <a href="#">Политика безопасности</a>
+      <a href="#">Пользовательское соглашение</a>
+      <a href="#">Cookie</a>
+    </div>
+  </div>
+</footer>
+
+<!-- =================================================================== -->
+<!-- TWEAKS                                                                -->
+<!-- =================================================================== -->
+<div class="tweaks" role="region" aria-label="Стиль">
+  <div class="tweaks-row">
+    <button class="tweaks-btn" data-style-target="apple" aria-pressed="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.86-3.08.4-1.09-.47-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      Apple Dark
+    </button>
+    <button class="tweaks-btn" data-style-target="glass" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8a7 7 0 1 1 14 0v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z"/></svg>
+      Glass
+    </button>
+    <button class="tweaks-btn" data-style-target="light" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      Light
+    </button>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   DATA — RU.TV / RMG real assets
+   ========================================================================= */
+const channels = [
+  { code: 'RU.TV', name: 'RU.TV', tag: 'LIVE', title: 'SHAMAN — Я русский', sub: 'Премьера · сейчас в эфире', img: 'assets/rutv/Rectangle 4322-1.png', featured: true },
+  { code: 'РР', name: 'Русское Радио ТВ', tag: 'LIVE', title: 'Звёздное караоке', sub: '23:00 — Хит-парад', img: 'assets/rutv/Rectangle 4322-2.png' },
+  { code: 'D', name: 'DFM TV', tag: 'LIVE', title: 'Roads Untraveled', sub: 'Linkin Park · 22:00 — Чарт DFM', img: 'assets/rutv/Rectangle 4322-3.png' },
+  { code: 'MX', name: 'Maximum TV', tag: 'LIVE', title: 'Rock-новости недели', sub: '22:30 — Live-концерт', img: 'assets/rutv/Rectangle 4322-4.png' },
+  { code: 'MC', name: 'Monte Carlo', tag: 'LIVE', title: 'Шансон-вечер', sub: '22:00 — Романтика', img: 'assets/rutv/Rectangle 4322-5.png' },
+  { code: 'ХИТ', name: 'Хит FM TV', tag: 'LIVE', title: 'Только лучшее', sub: '22:30 — Чарт хитов', img: 'assets/rutv/Rectangle 4322-6.png' },
+];
+
+const chart = [
+  { rank: 1, artist: 'SHAMAN', track: 'Я русский', trend: '+3', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { rank: 2, artist: 'JONY', track: 'Комета', trend: '+1', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { rank: 3, artist: 'MIYAGI & Andy Panda', track: 'Минимал', trend: '−1', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { rank: 4, artist: 'Macan', track: 'Пополам', trend: '+2', img: 'assets/rutv/Rectangle 4322-23.jpg' },
+  { rank: 5, artist: 'HammAli & Navai', track: 'Птичка', trend: '+1', img: 'assets/rutv/Rectangle 4322-24.jpg' },
+  { rank: 6, artist: 'Полина Гагарина', track: 'Кукушка', trend: '−2', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { rank: 7, artist: 'Артур Пирожков', track: 'Зацепила', trend: '+4', img: 'assets/rutv/Rectangle 4322-5.png' },
+  { rank: 8, artist: 'Слава Марлоу', track: 'Снова я напиваюсь', trend: '+1', img: 'assets/rutv/Rectangle 4322-25.jpg' },
+  { rank: 9, artist: 'Светлана Лобода', track: 'Случайная', trend: '−3', img: 'assets/rutv/Rectangle 4322-26.jpg' },
+  { rank: 10, artist: 'Дима Билан', track: 'Молния', trend: '+2', img: 'assets/rutv/Rectangle 4322-19.jpg' },
+];
+
+const artists = [
+  { name: 'SHAMAN', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { name: 'Полина Гагарина', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { name: 'Григорий Лепс', meta: 'Эстрада', img: 'assets/rutv/Rectangle 4322-17.png' },
+  { name: 'JONY', meta: 'Поп · R&B', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { name: 'MIYAGI & Andy Panda', meta: 'Хип-Хоп', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { name: 'HammAli & Navai', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-24.jpg' },
+  { name: 'Светлана Лобода', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-26.jpg' },
+  { name: 'Дима Билан', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-19.jpg' },
+];
+
+const genres = [
+  { name: 'Поп-Хиты', grad: 'linear-gradient(135deg,#E30033,#3a0d20)', wide: true },
+  { name: 'Шансон', grad: 'linear-gradient(135deg,#5a3d1a,#1a1a0d)' },
+  { name: 'Танцы', grad: 'linear-gradient(135deg,#21B5FF,#0d1525)' },
+  { name: 'Рок', grad: 'linear-gradient(135deg,#1a1a1a,#3d1a1a)' },
+  { name: 'Дискотека 80-х', grad: 'linear-gradient(135deg,#FF4D8F,#3a1f5a)', wide: true },
+  { name: 'Ретро', grad: 'linear-gradient(135deg,#C724B1,#1a0d30)' },
+  { name: 'Лирика', grad: 'linear-gradient(135deg,#0d3a3d,#0d1525)' },
+];
+
+const days = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const hours = ['12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
+const scheduleColors = ['#E30033','#21B5FF','#FF4D8F','#C724B1','#1a8a5a','#FFC700','#3a8ad8'];
+const programs = [
+  ['Топ-20','Звёзды','Караоке','Хит-парад','Live Mix','Чарт RU.TV','Эфир'],
+  ['Премьера','Дискотека','Шансон','Поп Хиты','DJ Hour','Топ-100','Ночь'],
+  ['Утренний','Свежее','Ретро','Live Show','Rock Hour','Чарт','Полночь'],
+  ['Maximum','Рок-Хиты','Vocal Hour','Live Mix','Чарт','Новинки','Smooth'],
+  ['Поп-Лаб','DJ Hour','Hot 100','Танцы','Пятничный','Топ-Звёзды','Party'],
+  ['Суббота','Vibes Mix','Топ-20','Рок-волна','DJ Live','Повтор','Клуб'],
+  ['Утро','Easy Hits','Душа','Акустика','Топ-Повтор','Лучшее','Финал'],
+];
+
+/* =========================================================================
+   RENDER
+   ========================================================================= */
+function bg(item) {
+  if (item.img) return `background-image: url('${encodeURI(item.img)}');`;
+  if (item.grad) return `background: ${item.grad};`;
+  return '';
+}
+
+function renderChannels() {
+  document.getElementById('bentoChannels').innerHTML = channels.map(c => `
+    <article class="bento-tile ${c.featured ? 'featured' : ''}" tabindex="0" style="${bg(c)}">
+      <div class="bento-tile-meta">
+        <span class="bento-tile-tag"><span class="live-pulse"></span>${c.tag}</span>
+        <h3 class="bento-tile-title">${c.title}</h3>
+        <p class="bento-tile-sub">${c.name} · ${c.sub}</p>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderChart() {
+  const top3 = chart.slice(0, 3);
+  const rest = chart.slice(3);
+  document.getElementById('chartTop3').innerHTML = top3.map(c => {
+    const trendUp = c.trend.startsWith('+');
+    return `
+    <article class="chart-card" tabindex="0" style="${bg(c)}">
+      <div class="chart-card-rank">${String(c.rank).padStart(2, '0')}</div>
+      <div class="chart-card-meta">
+        <span class="chart-card-trend ${trendUp ? 'up' : 'down'}">${trendUp ? '▲' : '▼'} ${c.trend.replace(/[+−-]/,'')}</span>
+        <h3 class="chart-card-artist">${c.artist}</h3>
+        <p class="chart-card-track">${c.track}</p>
+      </div>
+    </article>`;
+  }).join('');
+  document.getElementById('chartList').innerHTML = rest.map(c => {
+    const trendUp = c.trend.startsWith('+');
+    return `
+    <article class="chart-row" tabindex="0">
+      <div class="chart-rank">${String(c.rank).padStart(2, '0')}</div>
+      <div class="chart-art" style="${bg(c)}"></div>
+      <div class="chart-meta">
+        <div class="chart-meta-artist">${c.artist}</div>
+        <div class="chart-meta-track">${c.track}</div>
+      </div>
+      <div class="chart-row-trend ${trendUp ? 'up' : 'down'}">${trendUp ? '▲' : '▼'} ${c.trend.replace(/[+−-]/,'')}</div>
+    </article>`;
+  }).join('');
+}
+
+function renderArtists() {
+  document.getElementById('artistsTrack').innerHTML = artists.map(a => `
+    <article class="artist-card" tabindex="0">
+      <div class="artist-avatar" style="${bg(a)}; background-size: cover;"></div>
+      <div class="artist-name">${a.name}</div>
+      <div class="artist-meta">${a.meta}</div>
+    </article>
+  `).join('');
+}
+
+function renderGenres() {
+  document.getElementById('bentoGenres').innerHTML = genres.map(g => `
+    <article class="genre-tile ${g.wide ? 'wide' : ''}" tabindex="0" style="--genre-grad: ${g.grad};">
+      <div class="genre-tile-name">${g.name}</div>
+    </article>
+  `).join('');
+}
+
+function renderSchedule() {
+  const head = ['<div></div>', ...hours.map(h => `<div class="schedule-hour">${h}</div>`)].join('');
+  const rows = days.map((d, i) => {
+    const cells = programs[i].map((p, j) => `
+      <div class="schedule-cell" style="background: ${scheduleColors[(i+j) % scheduleColors.length]};">${p}</div>
+    `).join('');
+    return `<div class="schedule-row"><div class="schedule-day">${d}</div>${cells}</div>`;
+  }).join('');
+  document.getElementById('scheduleWrap').innerHTML = `<div class="schedule-head">${head}</div>${rows}`;
+}
+
+renderChannels();
+renderChart();
+renderArtists();
+renderGenres();
+renderSchedule();
+
+/* =========================================================================
+   DRAWER toggle
+   ========================================================================= */
+const drawer = document.getElementById('drawer');
+const overlay = document.getElementById('drawerOverlay');
+function openDrawer() {
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  drawer.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  drawer.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+document.getElementById('burger').addEventListener('click', openDrawer);
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+overlay.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+document.querySelectorAll('.drawer-item, .drawer-mini').forEach(el => {
+  el.addEventListener('click', e => {
+    if (el.tagName === 'A' && el.getAttribute('href')?.startsWith('#')) closeDrawer();
+  });
+});
+
+/* =========================================================================
+   STYLE SWITCHER
+   ========================================================================= */
+const root = document.documentElement;
+const STYLE_KEY = 'showcase-cinematic.style';
+const savedStyle = localStorage.getItem(STYLE_KEY) || 'apple';
+applyStyle(savedStyle);
+document.querySelectorAll('.tweaks-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyStyle(btn.dataset.styleTarget));
+});
+function applyStyle(s) {
+  root.dataset.style = s;
+  localStorage.setItem(STYLE_KEY, s);
+  document.querySelectorAll('.tweaks-btn').forEach(b => {
+    b.setAttribute('aria-pressed', b.dataset.styleTarget === s ? 'true' : 'false');
+  });
+}
+
+/* =========================================================================
+   TopNav scroll + section reveal + nav active
+   ========================================================================= */
+const nav = document.getElementById('topNav');
+const sections = document.querySelectorAll('.section, .hero, .section-app');
+const navTabs = document.querySelectorAll('.nav-tab');
+const reveals = document.querySelectorAll('.reveal');
+
+function onScroll() {
+  if (window.scrollY > 80) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+
+  // Active nav tab
+  let activeId = 'hero';
+  sections.forEach(s => {
+    const r = s.getBoundingClientRect();
+    if (r.top <= 120 && r.bottom > 120) activeId = s.id || activeId;
+  });
+  navTabs.forEach(t => {
+    if (t.getAttribute('href') === '#' + activeId) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+// Reveal on scroll
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+reveals.forEach(r => io.observe(r));
+</script>
+</body>
+</html>

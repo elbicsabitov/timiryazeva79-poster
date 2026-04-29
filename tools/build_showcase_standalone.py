@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 DESIGNS = ROOT / "designs"
 
-VARIANTS = ["showcase-aggregator.html"]
+VARIANTS = ["showcase-aggregator.html", "showcase-cinematic.html"]
 
 mimetypes.add_type("image/webp", ".webp")
 

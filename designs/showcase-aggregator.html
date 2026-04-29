@@ -41,7 +41,7 @@
 [data-style="glass"] {
   --bg-base: #08070d;
   --bg-overlay: rgba(8,7,13,0.42);
-  --backdrop-image: url('assets/sunset-backdrop.jpg');
+  --backdrop-image: url('assets/rutv/image 1.png');
 
   --glass-bg: rgba(40,40,46,0.36);
   --glass-bg-strong: rgba(46,44,54,0.52);
@@ -349,13 +349,13 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   background-image: var(--backdrop-image);
   background-size: cover;
   background-position: center;
-  filter: saturate(1.05);
+  filter: saturate(1.08) brightness(0.95);
 }
 [data-style="glass"] .app-backdrop::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8,7,13,0.5) 0%, rgba(8,7,13,0.78) 60%, rgba(8,7,13,0.94) 100%);
+  background: linear-gradient(180deg, rgba(8,7,13,0.55) 0%, rgba(8,7,13,0.82) 60%, rgba(8,7,13,0.94) 100%);
 }
 .dynamic-backdrop {
   position: fixed;
@@ -664,6 +664,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   scroll-snap-type: x mandatory;
   padding-bottom: 12px;
   scroll-padding-left: var(--content-pad);
+  scroll-padding-right: var(--content-pad);
   margin: 0 calc(var(--content-pad) * -1);
   padding-left: var(--content-pad);
   padding-right: var(--content-pad);
@@ -802,9 +803,12 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .chip-row {
   display: flex; gap: 8px;
   overflow-x: auto;
-  padding: 4px 0 8px;
-  margin-bottom: 28px;
+  padding: 4px 0 12px;
+  margin: 0 calc(var(--content-pad) * -1) 28px;
+  padding-left: var(--content-pad);
+  padding-right: var(--content-pad);
   scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--content-pad);
 }
 .chip {
   flex: 0 0 auto;
@@ -852,8 +856,10 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .row-track {
   display: flex; gap: 16px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
   scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--content-pad);
+  scroll-padding-right: var(--content-pad);
   margin: 0 calc(var(--content-pad) * -1);
   padding-left: var(--content-pad);
   padding-right: var(--content-pad);
