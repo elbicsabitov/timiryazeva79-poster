@@ -176,6 +176,59 @@
 | KIN-017 | Mobile-тест на 375/768px | pending |
 | KIN-018 | Реализация в Next.js после выбора финального варианта | pending |
 
+## RU.TV — Showcase Aggregator (2026-04-29)
+
+Сайт-витрина для **RU.TV** (Russian Media Group): TV+радио+клипы+чарт+расписание+новости. Один main HTML с переключателем стилей **Liquid Glass ↔ Apple** (Holy Grail Часть 3.2 compliant). Реальные ассеты RU.TV из `~/Desktop/export rutv/` (171 файл, ~9MB stand-alone), русские артисты (SHAMAN, Полина Гагарина, JONY, MIYAGI, Macan и т.д.), партнёры РМГ (Русское Радио, DFM, MAXIMUM, Monte Carlo, Хит FM).
+
+**Артефакты:**
+- `designs/showcase-aggregator.html` — primary
+- `designs/showcase-aggregator-standalone.html` — standalone 9.7 MB с base64 inlined assets
+- `designs/assets/rutv/` — 87 PNG + 17 JPG real assets из export rutv
+- `tools/build_showcase_standalone.py` — extends pattern matcher на JS-data ссылки на assets
+- `designs/screenshots/showcase/v3_*` — final visual verify
+
+**Структура (Главная page):**
+- Sidebar: RU.TV красно-белый oval logo + mini-player (image 1, LIVE) + nav (Прямой эфир / Каналы / Станции / Чарт / Плей-листы / Расписание / Клипы / Новости / Избранное / Настройки)
+- TopBar: search + notifications + avatar
+- Hero carousel (4 cards): «Прямой эфир RU.TV», «Звёзды Хайпа · LIVE Арена», «Полевой — премьера», «Статус: В сети»
+- Chip-row категорий (9): Все · Музыка · Сериалы · Спорт · Новости · Подкасты · Развлечения · Детям · Документальное
+- Row Каналы (6): RU.TV, Русское Радио ТВ, DFM TV, Maximum TV, Monte Carlo TV, Хит FM TV — реальные image overlays
+- Row Радиостанции (8): real artwork
+- Row Сейчас слушают (6): SHAMAN, Григорий Лепс, Полина Гагарина, Дима Билан, Валерий Меладзе, JONY
+- Чарт RU.TV top-10 list-style с большими розовыми цифрами 01-10 + trend indicators
+- Жанры (7): Поп-Хиты, Шансон, Танцы, Рок, Ретро, Дискотека 80-х, Лирика
+- Исполнители (8 round avatars с real artwork)
+- DJ (6): DJ Smash, DJ Грув, Слава Марлоу, Артур Пирожков, Filatov & Karas, Леонид Руденко
+- Музыка по настроению (6): Энергия, Релакс, Романтика, Фокус, Вечеринка, Утро
+- Клипы недели (7): SHAMAN, JONY, Полина Гагарина, MIYAGI, Macan, Артур Пирожков, Слава Марлоу
+- Главные новости (6): real promo banners
+- Расписание RU.TV — 7 дней × 7 часов = 49 cells цветной grid с программами
+- Russian Media Group партнёры (5)
+- Footer: Головной офис RU.TV / Связь + bottom links
+- Sticky bottom radio player (Spotify-pattern)
+- Tweaks panel (Glass / Apple switcher) — bottom-right floating
+
+**Anti-slop pass:** шрифт Onest (НЕ Inter/Roboto), hit-targets ≥44px, AA Normal на текстах, real assets вместо SVG illustration, focus-visible boost для TV (1920+).
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| RUTV-001 | Brief Questions Gate | done (через carte blanche от заказчика) |
+| RUTV-002 | FigMCP подключён, Figma структура изучена (DFM-style витрина РМГ) | done |
+| RUTV-003 | Real assets из export rutv интегрированы (104 PNG/JPG, ~9MB) | done |
+| RUTV-004 | Single-file Glass + Apple через Tweaks (Holy Grail compliant) | done |
+| RUTV-005 | Chrome MCP visual verify (real backdrop-filter) | done |
+| RUTV-006 | Mobile responsive (414×1200) | done |
+| RUTV-007 | TV viewport check (1920×1080) | done |
+| RUTV-008 | Standalone build с extended assets pattern matching | done |
+| RUTV-009 | **Показ заказчику + фидбек на направление** | pending |
+| RUTV-010 | Apple-style fidelity audit live (apple.com/tv-pr) | pending |
+| RUTV-011 | Smart TV app mode (10ft viewing, remote control focus) | pending |
+| RUTV-012 | Замена «РМГ» partner plates на реальные SVG лого | pending |
+| RUTV-013 | Реальные portrait фото артистов вместо клиповых artwork | pending |
+| RUTV-014 | Inner pages: Каналы list / Чарт top-100 / Расписание полное | pending |
+| RUTV-015 | Реальные video player integration (HLS stream RU.TV) | pending |
+| RUTV-016 | Next.js + shadcn/ui реализация после утверждения стиля | pending |
+
 ## CRM Glass — Turbo Performance CMS (2026-04-22)
 
 Редизайн CMS dev.turbo-performance.ru в Liquid Glass стиле — для заказчика «Турбо Перформанс» (отдельный клиент от Twinr, пересобран стилевой язык 1-в-1 с Twinr LG). Single-file HTML + base64 standalone.

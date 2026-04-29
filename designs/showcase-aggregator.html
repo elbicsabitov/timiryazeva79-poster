@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Витрина — TV / Радио агрегатор</title>
+<title>RU.TV — Русское музыкальное телевидение</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 /* =========================================================================
-   ROOT TOKENS — общие для обеих стилей
+   ROOT TOKENS
    ========================================================================= */
 :root {
   --font-sans: 'Onest', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
@@ -19,16 +19,24 @@
   --r-lg: 20px;
   --r-md: 14px;
   --r-sm: 10px;
+  --r-xs: 8px;
   --t-fast: 200ms cubic-bezier(.2,.8,.2,1);
   --t-mid: 380ms cubic-bezier(.2,.8,.2,1);
-  --sidebar-w-collapsed: 72px;
-  --sidebar-w-expanded: 244px;
+  --sidebar-w: 256px;
   --player-h: 88px;
+  --content-pad: 40px;
+
+  /* Brand RU.TV (красно-белый овал, розово-голубые promo) */
+  --brand-red: #E30033;
+  --brand-red-hot: #FF1F4B;
+  --brand-pink: #FF4D8F;
+  --brand-cyan: #21B5FF;
+  --brand-magenta: #C724B1;
+  --brand-yellow: #FFC700;
 }
 
 /* =========================================================================
-   GLASS STYLE — Liquid Glass / Twinr LG continuation
-   sunset Matterhorn backdrop, coral accent, grey-tinted glass
+   GLASS STYLE
    ========================================================================= */
 [data-style="glass"] {
   --bg-base: #08070d;
@@ -36,17 +44,17 @@
   --backdrop-image: url('assets/sunset-backdrop.jpg');
 
   --glass-bg: rgba(40,40,46,0.36);
-  --glass-bg-strong: rgba(46,44,54,0.50);
-  --glass-bg-weak: rgba(48,46,56,0.22);
-  --glass-border: rgba(255,255,255,0.12);
+  --glass-bg-strong: rgba(46,44,54,0.52);
+  --glass-bg-weak: rgba(48,46,56,0.18);
+  --glass-border: rgba(255,255,255,0.10);
   --glass-rim: rgba(255,255,255,0.4);
   --glass-blur: 28px;
   --glass-blur-strong: 44px;
 
-  --accent: #FF8A6E;
-  --accent-hover: #FFA489;
-  --accent-soft: rgba(255,138,110,0.18);
-  --on-accent: #1a0a06;
+  --accent: var(--brand-red);
+  --accent-hover: var(--brand-red-hot);
+  --accent-soft: rgba(227,0,51,0.18);
+  --on-accent: #ffffff;
 
   --text-primary: rgba(255,255,255,0.96);
   --text-secondary: rgba(255,255,255,0.66);
@@ -55,30 +63,28 @@
   --live-dot: #FF5C5C;
   --shadow-lg: 0 24px 60px rgba(0,0,0,0.55), 0 4px 14px rgba(0,0,0,0.35);
   --shadow-md: 0 12px 32px rgba(0,0,0,0.45);
-
-  --content-pad: 40px;
 }
 
 /* =========================================================================
-   APPLE STYLE — Apple TV+ / Music inspired (dark, dynamic blur, full-bleed)
+   APPLE STYLE
    ========================================================================= */
 [data-style="apple"] {
   --bg-base: #000000;
   --bg-overlay: rgba(0,0,0,0.0);
   --backdrop-image: none;
 
-  --glass-bg: rgba(28,28,30,0.92);
+  --glass-bg: rgba(28,28,30,0.85);
   --glass-bg-strong: rgba(44,44,46,1);
-  --glass-bg-weak: rgba(20,20,22,0.78);
+  --glass-bg-weak: rgba(20,20,22,0.6);
   --glass-border: rgba(255,255,255,0.08);
   --glass-rim: rgba(255,255,255,0.22);
   --glass-blur: 40px;
   --glass-blur-strong: 60px;
 
-  --accent: #FFFFFF;
-  --accent-hover: #FFFFFF;
-  --accent-soft: rgba(255,255,255,0.12);
-  --on-accent: #000000;
+  --accent: var(--brand-pink);
+  --accent-hover: var(--brand-pink-hot);
+  --accent-soft: rgba(227,0,51,0.14);
+  --on-accent: #ffffff;
 
   --text-primary: #f5f5f7;
   --text-secondary: rgba(245,245,247,0.66);
@@ -87,12 +93,10 @@
   --live-dot: #ff453a;
   --shadow-lg: 0 30px 80px rgba(0,0,0,0.85), 0 8px 24px rgba(0,0,0,0.6);
   --shadow-md: 0 14px 36px rgba(0,0,0,0.7);
-
-  --content-pad: 48px;
 }
 
 /* =========================================================================
-   RESET + BODY
+   RESET
    ========================================================================= */
 *,*::before,*::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -111,14 +115,12 @@ button, input { font: inherit; color: inherit; }
 button { background: none; border: 0; cursor: pointer; padding: 0; }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
-
 p { text-wrap: pretty; margin: 0; }
 h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
-
 ::-webkit-scrollbar { width: 0; height: 0; }
 
 /* =========================================================================
-   APP BACKDROP (only for glass)
+   APP BACKDROP
    ========================================================================= */
 .app-backdrop {
   position: fixed;
@@ -136,10 +138,8 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8,7,13,0.42) 0%, rgba(8,7,13,0.72) 80%, rgba(8,7,13,0.92) 100%);
+  background: linear-gradient(180deg, rgba(8,7,13,0.5) 0%, rgba(8,7,13,0.78) 60%, rgba(8,7,13,0.94) 100%);
 }
-
-/* For apple — dynamic blur backdrop driven by current hero artwork */
 .dynamic-backdrop {
   position: fixed;
   inset: -10%;
@@ -147,12 +147,12 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   background-image: var(--hero-image, none);
   background-size: cover;
   background-position: center;
-  filter: blur(80px) saturate(1.2);
+  filter: blur(80px) saturate(1.3);
   opacity: 0;
   transition: opacity 800ms ease;
   pointer-events: none;
 }
-[data-style="apple"] .dynamic-backdrop { opacity: 0.55; }
+[data-style="apple"] .dynamic-backdrop { opacity: 0.42; }
 [data-style="apple"] .dynamic-backdrop::after {
   content: '';
   position: absolute;
@@ -161,128 +161,183 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 
 /* =========================================================================
-   APP SHELL — sidebar + content + player
+   APP SHELL
    ========================================================================= */
 .app {
   display: grid;
-  grid-template-columns: var(--sidebar-w-collapsed) 1fr;
+  grid-template-columns: var(--sidebar-w) 1fr;
   min-height: 100dvh;
   padding-bottom: var(--player-h);
 }
 
 /* ---------- SIDEBAR ---------- */
 .sidebar {
-  position: fixed;
-  top: 0; left: 0; bottom: var(--player-h);
-  width: var(--sidebar-w-collapsed);
-  z-index: 50;
-  display: flex;
-  flex-direction: column;
-  padding: 18px 14px;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: calc(100dvh - var(--player-h));
+  padding: 22px 18px 18px;
   background: var(--glass-bg-weak);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
   border-right: 1px solid var(--glass-border);
-  transition: width var(--t-mid);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
 }
 [data-style="apple"] .sidebar {
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
 }
-.sidebar:hover, .sidebar:focus-within {
-  width: var(--sidebar-w-expanded);
-  box-shadow: var(--shadow-lg);
-}
+
+/* Brand mark */
 .sb-brand {
   display: flex; align-items: center; gap: 12px;
-  padding: 8px 10px 24px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+  padding: 0 4px 6px;
 }
 .sb-brand-mark {
-  width: 32px; height: 32px;
-  border-radius: 9px;
-  background: var(--accent);
+  width: 60px; height: 40px;
+  flex: 0 0 60px;
   display: grid; place-items: center;
-  flex: 0 0 32px;
-  color: var(--on-accent);
-  font-weight: 800;
-  font-size: 17px;
-}
-[data-style="apple"] .sb-brand-mark {
-  background: linear-gradient(135deg, #ff453a, #ff9f0a);
+  border-radius: 999px;
+  background: var(--brand-red);
   color: white;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 8px 22px rgba(227,0,51,0.45);
+  font-family: var(--font-sans);
+  position: relative;
+}
+.sb-brand-mark::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 999px;
+  pointer-events: none;
 }
 .sb-brand-text {
-  opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity var(--t-mid), transform var(--t-mid);
+  display: flex; flex-direction: column;
+  line-height: 1.1;
+}
+.sb-brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.sb-brand-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Mini-player в сайдбаре (now-on-air) */
+.sb-mini-player {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  aspect-ratio: 1 / 1.05;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  background-size: cover;
+  background-position: center;
+}
+.sb-mini-player::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.0) 30%, rgba(0,0,0,0.85) 100%);
+}
+.sb-mini-play {
+  position: absolute;
+  inset: 0;
+  display: grid; place-items: center;
+  z-index: 2;
+}
+.sb-mini-play-btn {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: grid; place-items: center;
+  box-shadow: 0 8px 20px rgba(255,31,75,0.5);
+  transition: transform var(--t-fast);
+}
+.sb-mini-player:hover .sb-mini-play-btn { transform: scale(1.08); }
+.sb-mini-play-btn svg { width: 22px; height: 22px; fill: currentColor; margin-left: 3px; }
+.sb-mini-meta {
+  position: absolute; left: 14px; right: 14px; bottom: 14px;
+  z-index: 2;
+}
+.sb-mini-track {
   font-size: 16px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.sidebar:hover .sb-brand-text,
-.sidebar:focus-within .sb-brand-text { opacity: 1; transform: none; }
-
-.sb-section { margin-top: 4px; }
-.sb-label {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  padding: 0 12px;
-  margin: 18px 0 6px;
-  opacity: 0;
-  transition: opacity var(--t-mid);
+.sb-mini-artist {
+  font-size: 12px;
+  color: rgba(255,255,255,0.78);
+  margin-top: 2px;
 }
-.sidebar:hover .sb-label,
-.sidebar:focus-within .sb-label { opacity: 1; }
+.sb-mini-live {
+  position: absolute; top: 12px; right: 12px;
+  padding: 4px 10px 4px 9px;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--r-pill);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  z-index: 2;
+  display: inline-flex; align-items: center; gap: 6px;
+}
 
-.sb-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.sb-recent {
+  display: flex; align-items: center; justify-content: space-between;
   padding: 10px 12px;
   border-radius: var(--r-md);
+  background: var(--glass-bg-weak);
+  font-size: 13px;
   color: var(--text-secondary);
   cursor: pointer;
-  white-space: nowrap;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.sb-recent:hover { background: var(--glass-bg); color: var(--text-primary); }
+.sb-recent svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* Sidebar nav items */
+.sb-nav { display: flex; flex-direction: column; gap: 2px; }
+.sb-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  color: var(--text-secondary);
+  font-size: 14.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
   transition: background var(--t-fast), color var(--t-fast);
   position: relative;
 }
 .sb-item:hover { background: var(--glass-bg-weak); color: var(--text-primary); }
 .sb-item[aria-current="page"] {
-  background: var(--accent-soft);
-  color: var(--text-primary);
-}
-[data-style="apple"] .sb-item[aria-current="page"] {
-  background: rgba(255,255,255,0.10);
-}
-.sb-item[aria-current="page"]::before {
-  content: '';
-  position: absolute;
-  left: -4px; top: 50%;
-  width: 3px; height: 18px;
   background: var(--accent);
-  border-radius: 2px;
-  transform: translateY(-50%);
+  color: white;
+  font-weight: 600;
 }
-.sb-icon {
-  width: 22px; height: 22px;
-  flex: 0 0 22px;
-  display: grid; place-items: center;
+.sb-item svg {
+  width: 18px; height: 18px; flex: 0 0 18px;
+  stroke: currentColor; fill: none; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
 }
-.sb-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.sb-label-item {
-  font-size: 14.5px;
-  font-weight: 500;
-  opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity var(--t-mid), transform var(--t-mid);
-}
-.sidebar:hover .sb-label-item,
-.sidebar:focus-within .sb-label-item { opacity: 1; transform: none; }
-
 .sb-footer { margin-top: auto; }
 
 /* ---------- CONTENT AREA ---------- */
@@ -290,6 +345,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   grid-column: 2;
   padding: 0 var(--content-pad) 60px;
   max-width: 100%;
+  min-width: 0;
 }
 
 /* TopBar */
@@ -310,10 +366,9 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   -webkit-backdrop-filter: blur(30px) saturate(1.4);
 }
 .tb-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  letter-spacing: -0.01em;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 .tb-spacer { flex: 1; }
 .tb-search {
@@ -326,11 +381,16 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   min-width: 320px;
   transition: background var(--t-fast), border-color var(--t-fast);
 }
-.tb-search:hover, .tb-search:focus-within { background: var(--glass-bg); border-color: var(--glass-rim); color: var(--text-primary); }
+.tb-search:hover, .tb-search:focus-within {
+  background: var(--glass-bg);
+  border-color: var(--glass-rim);
+  color: var(--text-primary);
+}
 .tb-search input {
   background: transparent; border: 0; outline: 0;
   flex: 1;
   font-size: 14px;
+  min-width: 0;
 }
 .tb-search input::placeholder { color: var(--text-tertiary); }
 .tb-icon-btn {
@@ -347,7 +407,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .tb-avatar {
   width: 42px; height: 42px;
   border-radius: var(--r-pill);
-  background: linear-gradient(135deg, #6e8cff, #ff8a6e);
+  background: linear-gradient(135deg, var(--brand-pink), var(--brand-orange));
   display: grid; place-items: center;
   font-weight: 700;
   font-size: 14px;
@@ -356,56 +416,96 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 
 /* =========================================================================
-   HERO — прямой эфир приоритетного канала
+   HERO CAROUSEL — promo баннеры (DFM Плейлисты с Apple Music и т.п.)
    ========================================================================= */
-.hero {
+.hero-carousel {
+  margin: 8px 0 28px;
   position: relative;
-  margin: 8px 0 36px;
+}
+.hero-track {
+  display: flex; gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+}
+.hero-card {
+  flex: 0 0 88%;
+  scroll-snap-align: start;
+  position: relative;
   border-radius: var(--r-xl);
   overflow: hidden;
   aspect-ratio: 21 / 8;
-  min-height: 360px;
-  max-height: 560px;
-  background:
-    linear-gradient(135deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.85) 100%),
-    linear-gradient(180deg, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.85) 100%),
-    var(--hero-image, linear-gradient(120deg,#1a1f3a,#3a1a2e,#1a1a2a));
-  background-size: cover;
-  background-position: center;
+  min-height: 320px;
+  max-height: 520px;
+  background: var(--hero-grad, linear-gradient(135deg,#FF1F4B 0%,#FF8A3D 60%,#FFD83D 100%));
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lg);
+  transition: transform var(--t-mid);
 }
-[data-style="glass"] .hero::after {
+.hero-card:hover { transform: scale(1.005); }
+.hero-card-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+}
+.hero-card-bg::after {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(255,138,110,0.05) 100%);
-  pointer-events: none;
+  background: linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.6) 100%);
 }
-.hero-overlay {
+.hero-card-overlay {
   position: absolute; inset: 0;
   display: flex; flex-direction: column; justify-content: flex-end;
   padding: 36px 44px;
+  gap: 14px;
 }
-.hero-meta {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 18px;
+.hero-card-meta {
+  display: flex; align-items: center; gap: 10px;
   font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
+  color: rgba(255,255,255,0.85);
 }
-.live-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 12px 6px 10px;
-  background: var(--live-dot);
-  color: white;
+.hero-card-tag {
+  padding: 5px 11px;
   border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+.hero-card-title {
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: white;
+  max-width: 720px;
+  line-height: 1.05;
+}
+.hero-card-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.85);
+  max-width: 580px;
+}
+.hero-card-actions {
+  display: flex; gap: 10px;
+  margin-top: 6px;
+}
+
+.live-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 11px 5px 9px;
+  background: var(--live-dot);
+  color: white;
+  border-radius: var(--r-pill);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
 .live-pulse {
-  width: 8px; height: 8px;
+  width: 7px; height: 7px;
   border-radius: 50%;
   background: white;
   box-shadow: 0 0 0 0 rgba(255,255,255,0.7);
@@ -415,34 +515,8 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
   100% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
 }
-.hero-channel-logo {
-  width: 36px; height: 36px;
-  border-radius: 9px;
-  background: rgba(255,255,255,0.92);
-  color: #111;
-  display: grid; place-items: center;
-  font-weight: 800;
-  font-size: 14px;
-}
-.hero-title {
-  font-size: clamp(28px, 4vw, 52px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 12px;
-  max-width: 720px;
-}
-.hero-sub {
-  font-size: 15px;
-  color: var(--text-secondary);
-  max-width: 580px;
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-.hero-actions {
-  display: flex; gap: 12px;
-}
 .btn {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; gap: 9px;
   padding: 12px 22px;
   font-weight: 600;
   font-size: 14.5px;
@@ -452,32 +526,28 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 .btn:active { transform: scale(0.97); }
 .btn-primary {
-  background: var(--accent);
-  color: var(--on-accent);
-}
-.btn-primary:hover { background: var(--accent-hover); }
-[data-style="apple"] .btn-primary {
   background: white;
   color: black;
 }
+.btn-primary:hover { background: rgba(255,255,255,0.9); }
 .btn-secondary {
-  background: var(--glass-bg);
-  color: var(--text-primary);
-  border: 1px solid var(--glass-border);
+  background: rgba(0,0,0,0.45);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-.btn-secondary:hover { background: var(--glass-bg-strong); }
+.btn-secondary:hover { background: rgba(0,0,0,0.6); }
 .btn svg { width: 18px; height: 18px; fill: currentColor; }
 
 /* =========================================================================
    CHIP ROW — категории
    ========================================================================= */
 .chip-row {
-  display: flex; gap: 10px;
+  display: flex; gap: 8px;
   overflow-x: auto;
   padding: 4px 0 8px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   scroll-snap-type: x mandatory;
 }
 .chip {
@@ -490,8 +560,9 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
-  transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);
+  transition: background var(--t-fast), color var(--t-fast);
   scroll-snap-align: start;
+  min-height: 44px;
 }
 .chip:hover { background: var(--glass-bg); color: var(--text-primary); }
 .chip[aria-pressed="true"] {
@@ -501,7 +572,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 
 /* =========================================================================
-   ROW SECTIONS — витрина агрегатора
+   ROW SECTIONS
    ========================================================================= */
 .row-section { margin-bottom: 38px; }
 .row-head {
@@ -577,9 +648,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   font-size: 14px;
   z-index: 2;
 }
-.card-tv-body {
-  padding: 14px 16px 18px;
-}
+.card-tv-body { padding: 14px 16px 18px; }
 .card-tv-channel {
   font-size: 12px;
   color: var(--text-tertiary);
@@ -612,27 +681,20 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   border-radius: 2px;
 }
 
-/* CARD: Radio station — circular, music-themed */
-.card-radio {
-  flex: 0 0 200px;
-  scroll-snap-align: start;
-  cursor: pointer;
-  text-align: center;
-}
+/* CARD: Radio station */
+.card-radio { flex: 0 0 200px; scroll-snap-align: start; cursor: pointer; }
 .card-radio-disc {
   position: relative;
   width: 200px; height: 200px;
   margin-bottom: 14px;
-  border-radius: 24px;
+  border-radius: 22px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   overflow: hidden;
   box-shadow: var(--shadow-md);
   transition: transform var(--t-mid);
 }
-[data-style="apple"] .card-radio-disc {
-  border-radius: 14px;
-}
+[data-style="apple"] .card-radio-disc { border-radius: 14px; }
 .card-radio:hover .card-radio-disc { transform: scale(1.04) rotate(-1deg); }
 .card-radio-art {
   position: absolute; inset: 0;
@@ -649,18 +711,8 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   display: flex; align-items: center; justify-content: space-between;
   z-index: 2;
 }
-.card-radio-name {
-  font-weight: 700;
-  font-size: 16px;
-  color: white;
-  text-align: left;
-  letter-spacing: -0.01em;
-}
-.card-radio-tag {
-  font-size: 11px;
-  color: rgba(255,255,255,0.7);
-  text-align: left;
-}
+.card-radio-name { font-weight: 700; font-size: 16px; color: white; letter-spacing: -0.01em; }
+.card-radio-tag { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
 .card-radio-play {
   width: 36px; height: 36px;
   border-radius: 50%;
@@ -669,30 +721,106 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   -webkit-backdrop-filter: blur(10px);
   display: grid; place-items: center;
   color: white;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.25);
   transition: background var(--t-fast), transform var(--t-fast);
   flex: 0 0 36px;
 }
-.card-radio-disc:hover .card-radio-play { background: var(--accent); color: var(--on-accent); transform: scale(1.08); }
+.card-radio-disc:hover .card-radio-play { background: var(--accent); color: white; transform: scale(1.08); }
 .card-radio-play svg { width: 14px; height: 14px; fill: currentColor; }
-.card-radio-track {
-  font-size: 13px;
-  color: var(--text-secondary);
-  text-align: left;
-  padding-left: 4px;
+.card-radio-track { font-size: 13px; color: var(--text-secondary); padding-left: 4px; }
+.card-radio-track-now { color: var(--text-primary); font-weight: 500; margin-bottom: 2px; }
+
+/* CARD: Genre tile (большие плитки) */
+.card-genre {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  aspect-ratio: 1.1 / 1;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background-size: cover; background-position: center;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-fast);
 }
-.card-radio-track-now {
-  color: var(--text-primary);
-  font-weight: 500;
-  margin-bottom: 2px;
+.card-genre:hover { transform: translateY(-3px) scale(1.02); }
+.card-genre::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%);
+}
+.card-genre-name {
+  position: absolute; bottom: 16px; left: 18px; right: 18px;
+  z-index: 2;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
 }
 
-/* CARD: Clip — vertical-leaning */
-.card-clip {
-  flex: 0 0 240px;
-  scroll-snap-align: start;
-  cursor: pointer;
+/* CARD: Artist (round avatar) */
+.card-artist { flex: 0 0 160px; scroll-snap-align: start; cursor: pointer; text-align: center; }
+.card-artist-avatar {
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background-size: cover; background-position: center;
+  margin-bottom: 12px;
+  border: 1px solid var(--glass-border);
+  transition: transform var(--t-fast);
+  box-shadow: var(--shadow-md);
 }
+[data-style="apple"] .card-artist-avatar { border-radius: 50%; }
+.card-artist:hover .card-artist-avatar { transform: scale(1.05); }
+.card-artist-name {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+.card-artist-meta { font-size: 12px; color: var(--text-tertiary); }
+
+/* CARD: DJ (rect) */
+.card-dj { flex: 0 0 200px; scroll-snap-align: start; cursor: pointer; }
+.card-dj-art {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--r-md);
+  background-size: cover; background-position: center;
+  margin-bottom: 12px;
+  border: 1px solid var(--glass-border);
+  transition: transform var(--t-fast);
+  box-shadow: var(--shadow-md);
+}
+.card-dj:hover .card-dj-art { transform: scale(1.04); }
+.card-dj-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.card-dj-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+
+/* CARD: Mood (gradient large tile) */
+.card-mood {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  aspect-ratio: 1.6 / 1;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--mood-grad, linear-gradient(135deg,#3a1f5a,#1a3a5a));
+  position: relative;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-fast);
+}
+.card-mood:hover { transform: scale(1.03); }
+.card-mood-name {
+  position: absolute; left: 20px; bottom: 18px;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* CARD: Clip */
+.card-clip { flex: 0 0 240px; scroll-snap-align: start; cursor: pointer; }
 .card-clip-thumb {
   aspect-ratio: 9 / 12;
   border-radius: var(--r-lg);
@@ -709,24 +837,11 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   position: absolute; inset: 0;
   background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.85) 100%);
 }
-.card-clip-meta {
-  position: absolute;
-  bottom: 12px; left: 14px; right: 14px;
-  z-index: 2;
-}
-.card-clip-artist {
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 2px;
-  letter-spacing: -0.01em;
-}
-.card-clip-track {
-  font-size: 12.5px;
-  color: rgba(255,255,255,0.78);
-}
+.card-clip-meta { position: absolute; bottom: 12px; left: 14px; right: 14px; z-index: 2; }
+.card-clip-artist { font-weight: 700; font-size: 15px; margin-bottom: 2px; letter-spacing: -0.01em; color: white; }
+.card-clip-track { font-size: 12.5px; color: rgba(255,255,255,0.78); }
 .card-clip-duration {
-  position: absolute;
-  top: 10px; right: 10px;
+  position: absolute; top: 10px; right: 10px;
   z-index: 2;
   padding: 4px 8px;
   background: rgba(0,0,0,0.6);
@@ -738,7 +853,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   font-weight: 600;
 }
 
-/* CARD: News — horizontal */
+/* CARD: News */
 .card-news {
   flex: 0 0 380px;
   scroll-snap-align: start;
@@ -769,13 +884,12 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .card-news-body { display: flex; flex-direction: column; }
 .card-news-tag {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   margin-bottom: 6px;
 }
-[data-style="apple"] .card-news-tag { color: #ff9f0a; }
 .card-news-title {
   font-size: 14.5px;
   font-weight: 600;
@@ -795,7 +909,167 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 
 /* =========================================================================
-   STICKY RADIO PLAYER (bottom)
+   CHART (top-N list, как DFM Чарт)
+   ========================================================================= */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 24px;
+}
+@media (max-width: 1100px) { .chart-grid { grid-template-columns: 1fr; } }
+
+.chart-row {
+  display: grid;
+  grid-template-columns: 56px 56px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.chart-row:hover { background: var(--glass-bg-weak); }
+.chart-rank {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  font-feature-settings: "tnum";
+  text-align: right;
+}
+.chart-rank-trend {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-top: 2px;
+  display: flex; align-items: center; gap: 3px; justify-content: flex-end;
+}
+.chart-art {
+  width: 56px; height: 56px;
+  border-radius: 8px;
+  background-size: cover; background-position: center;
+  border: 1px solid var(--glass-border);
+}
+.chart-meta { min-width: 0; }
+.chart-artist { font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart-track { font-size: 13px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart-actions { display: flex; gap: 4px; color: var(--text-tertiary); }
+.chart-actions svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.chart-row:hover .chart-actions { color: var(--text-secondary); }
+
+/* =========================================================================
+   SCHEDULE — день × часы grid (как DFM Расписание)
+   ========================================================================= */
+.schedule {
+  border-radius: var(--r-lg);
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  padding: 22px 22px 22px 14px;
+  overflow-x: auto;
+}
+.schedule-head {
+  display: grid;
+  grid-template-columns: 100px repeat(7, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-left: 10px;
+}
+.schedule-hour {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-align: center;
+  font-feature-settings: "tnum";
+}
+.schedule-row {
+  display: grid;
+  grid-template-columns: 100px repeat(7, 1fr);
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.schedule-day {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding-left: 10px;
+}
+.schedule-cell {
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  color: white;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: transform var(--t-fast), filter var(--t-fast);
+  letter-spacing: -0.005em;
+  min-height: 44px;
+  display: grid; place-items: center;
+}
+.schedule-cell:hover { transform: scale(1.04); filter: brightness(1.1); }
+
+/* =========================================================================
+   FOOTER PARTNERS (RMG)
+   ========================================================================= */
+.partners {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-top: 20px;
+  margin-bottom: 28px;
+}
+.partner {
+  aspect-ratio: 16 / 7;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  text-align: center;
+  padding: 12px;
+  transition: background var(--t-fast);
+  cursor: pointer;
+}
+.partner:hover { background: var(--glass-bg-strong); }
+.partner-mark {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.partner-mark-name { font-weight: 800; }
+.partner-mark-sub { font-size: 10px; color: var(--text-tertiary); font-weight: 500; }
+
+.app-footer {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 24px 0;
+  border-top: 1px solid var(--glass-border);
+}
+.footer-col h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.footer-col p, .footer-col a {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.footer-bottom {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex; gap: 14px; flex-wrap: wrap;
+  padding: 12px 0;
+}
+
+/* =========================================================================
+   STICKY RADIO PLAYER
    ========================================================================= */
 .player {
   position: fixed;
@@ -818,10 +1092,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   backdrop-filter: blur(40px) saturate(1.5);
   -webkit-backdrop-filter: blur(40px) saturate(1.5);
 }
-.player-now {
-  display: flex; align-items: center; gap: 14px;
-  min-width: 0;
-}
+.player-now { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .player-art {
   width: 56px; height: 56px;
   border-radius: 10px;
@@ -829,6 +1100,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   flex: 0 0 56px;
   background-color: var(--accent-soft);
   box-shadow: var(--shadow-md);
+  border: 1px solid var(--glass-border);
 }
 .player-meta { min-width: 0; }
 .player-track {
@@ -846,18 +1118,15 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   margin-top: 2px;
 }
 .player-station-mark {
-  width: 14px; height: 14px;
+  width: 16px; height: 16px;
   border-radius: 4px;
   background: var(--accent);
   display: grid; place-items: center;
-  color: var(--on-accent);
+  color: white;
   font-size: 9px;
   font-weight: 800;
 }
-
-.player-controls {
-  display: flex; align-items: center; gap: 10px;
-}
+.player-controls { display: flex; align-items: center; gap: 10px; }
 .pl-btn {
   width: 40px; height: 40px;
   display: grid; place-items: center;
@@ -872,14 +1141,10 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   background: var(--text-primary);
   color: var(--bg-base);
 }
-.pl-btn-play:hover { background: var(--accent); color: var(--on-accent); transform: scale(1.05); }
+.pl-btn-play:hover { background: var(--accent); color: white; transform: scale(1.05); }
 [data-style="apple"] .pl-btn-play { background: white; color: black; }
 .pl-btn-play svg { width: 22px; height: 22px; }
-
-.player-extras {
-  display: flex; align-items: center; gap: 14px;
-  justify-content: flex-end;
-}
+.player-extras { display: flex; align-items: center; gap: 14px; justify-content: flex-end; }
 .player-volume { display: flex; align-items: center; gap: 10px; min-width: 160px; }
 .player-volume input[type=range] {
   -webkit-appearance: none;
@@ -898,7 +1163,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 
 /* =========================================================================
-   STYLE SWITCHER (Tweaks panel — Holy Grail)
+   TWEAKS PANEL — Style switcher (Holy Grail)
    ========================================================================= */
 .tweaks {
   position: fixed;
@@ -906,7 +1171,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   bottom: calc(var(--player-h) + 24px);
   z-index: 80;
   display: flex; flex-direction: column;
-  gap: 0;
   padding: 8px;
   background: var(--glass-bg-strong);
   backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.5);
@@ -924,7 +1188,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   border-radius: var(--r-pill);
   color: var(--text-secondary);
   transition: background var(--t-fast), color var(--t-fast);
-  letter-spacing: -0.005em;
 }
 .tweaks-btn[aria-pressed="true"] {
   background: var(--text-primary);
@@ -934,55 +1197,55 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .tweaks-btn svg { width: 14px; height: 14px; }
 
 /* =========================================================================
-   PAGE SWITCHING — show only active page section
+   PAGE SWITCHING
    ========================================================================= */
 .page { display: none; }
 .page[data-active="true"] { display: block; }
-
-/* Empty state for non-live pages (placeholders) */
-.placeholder-page {
-  padding: 80px 0;
-  text-align: center;
-  color: var(--text-secondary);
-}
-.placeholder-page h2 {
-  font-size: 36px;
-  margin-bottom: 12px;
-  color: var(--text-primary);
-}
+.placeholder-page { padding: 80px 0; text-align: center; color: var(--text-secondary); }
+.placeholder-page h2 { font-size: 36px; margin-bottom: 12px; color: var(--text-primary); }
 .placeholder-page p { max-width: 420px; margin: 0 auto; font-size: 15px; }
 
 /* =========================================================================
-   RESPONSIVE — TV-friendly + mobile
+   RESPONSIVE
    ========================================================================= */
 @media (min-width: 1800px) {
-  :root { --content-pad: 64px; }
-  .hero { aspect-ratio: 21/7; max-height: 640px; }
+  :root { --content-pad: 60px; --sidebar-w: 288px; }
   .row-title { font-size: 26px; }
 }
+@media (max-width: 1100px) {
+  :root { --sidebar-w: 220px; }
+  .partners { grid-template-columns: repeat(3, 1fr); }
+  .schedule-head, .schedule-row { grid-template-columns: 80px repeat(7, minmax(80px, 1fr)); }
+}
 @media (max-width: 900px) {
-  :root { --sidebar-w-collapsed: 0; --content-pad: 18px; }
+  :root { --sidebar-w: 0; --content-pad: 16px; }
   .sidebar { display: none; }
   .topbar { padding: 12px 0; gap: 10px; }
   .tb-search { min-width: 0; }
-  .tb-title { display: none; }
-  .hero { aspect-ratio: 4/5; min-height: 480px; }
-  .hero-overlay { padding: 22px; }
+  .tb-title { font-size: 16px; }
+  .hero-card { flex: 0 0 92%; aspect-ratio: 4/4.6; min-height: 380px; max-height: 540px; }
+  .hero-card-overlay { padding: 22px; gap: 10px; }
+  .hero-card-title { font-size: 28px; }
   .player { grid-template-columns: 1fr auto; gap: 14px; padding: 0 14px; }
   .player-extras { display: none; }
   .tweaks { right: 12px; bottom: calc(var(--player-h) + 12px); }
+  .partners { grid-template-columns: repeat(2, 1fr); }
+  .app-footer { grid-template-columns: 1fr; gap: 20px; }
+  .schedule { padding: 14px 14px 14px 8px; }
+  .schedule-head, .schedule-row { grid-template-columns: 60px repeat(7, minmax(70px, 1fr)); }
+  .schedule-cell { padding: 10px; font-size: 12px; }
+  .chart-grid { grid-template-columns: 1fr; }
 }
 
-/* TV / 10ft viewing — boost focus state */
 @media (min-width: 1920px) {
-  .card-tv:focus-visible, .card-radio:focus-visible, .card-clip:focus-visible {
+  .card-tv:focus-visible, .card-radio:focus-visible, .card-clip:focus-visible,
+  .card-genre:focus-visible, .card-artist:focus-visible, .card-dj:focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 4px;
     transform: scale(1.06);
   }
 }
 
-/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
@@ -998,67 +1261,73 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   <!-- =================================================================== -->
   <!-- SIDEBAR                                                              -->
   <!-- =================================================================== -->
-  <aside class="sidebar" tabindex="0">
+  <aside class="sidebar">
     <div class="sb-brand">
-      <div class="sb-brand-mark">В</div>
-      <div class="sb-brand-text">Витрина</div>
+      <div class="sb-brand-mark">RU.TV</div>
+      <div class="sb-brand-text">
+        <div class="sb-brand-name">RU.TV</div>
+        <div class="sb-brand-sub">Русское музыкальное ТВ</div>
+      </div>
     </div>
 
-    <nav class="sb-section" aria-label="Главное">
+    <!-- Mini-player (now-on-air) -->
+    <div class="sb-mini-player" id="sbMiniPlayer" style="background-image: url('assets/rutv/image 1.png');">
+      <span class="sb-mini-live"><span class="live-pulse"></span>LIVE</span>
+      <div class="sb-mini-play"><button class="sb-mini-play-btn" aria-label="Смотреть"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+      <div class="sb-mini-meta">
+        <div class="sb-mini-track">SHAMAN — Я русский</div>
+        <div class="sb-mini-artist">Сейчас в эфире RU.TV</div>
+      </div>
+    </div>
+
+    <button class="sb-recent">
+      Только что в эфире
+      <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+
+    <nav class="sb-nav" aria-label="Главное">
       <button class="sb-item" data-route="live" aria-current="page">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5.6 5.6a9 9 0 0 0 0 12.7M18.4 5.6a9 9 0 0 1 0 12.7M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/></svg>
-        </span>
-        <span class="sb-label-item">Прямой эфир</span>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5.6 5.6a9 9 0 0 0 0 12.7M18.4 5.6a9 9 0 0 1 0 12.7M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+        Прямой эфир
       </button>
       <button class="sb-item" data-route="channels">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
-        </span>
-        <span class="sb-label-item">Каналы</span>
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+        Каналы
       </button>
       <button class="sb-item" data-route="radio">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><path d="M3 11V8a2 2 0 0 1 1.3-1.9l13-4.5a1 1 0 0 1 1.3 1V11"/><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="2.5"/><path d="M16 14h2"/></svg>
-        </span>
-        <span class="sb-label-item">Радио</span>
+        <svg viewBox="0 0 24 24"><path d="M3 11V8a2 2 0 0 1 1.3-1.9l13-4.5a1 1 0 0 1 1.3 1V11"/><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="2.5"/><path d="M16 14h2"/></svg>
+        Станции
+      </button>
+      <button class="sb-item" data-route="chart">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l3-3 4 4 5-5"/></svg>
+        Чарт
+      </button>
+      <button class="sb-item" data-route="playlists">
+        <svg viewBox="0 0 24 24"><path d="M21 15V6a2 2 0 0 0-2-2H8M7 4l-4 4 4 4"/><path d="M3 9v9a2 2 0 0 0 2 2h11M17 20l4-4-4-4"/></svg>
+        Плей-листы
+      </button>
+      <button class="sb-item" data-route="schedule">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Расписание
       </button>
       <button class="sb-item" data-route="clips">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
-        </span>
-        <span class="sb-label-item">Клипы</span>
+        <svg viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+        Клипы
       </button>
       <button class="sb-item" data-route="news">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 22h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2Z"/><path d="M18 8h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2"/><path d="M6 6h8M6 10h8M6 14h6"/></svg>
-        </span>
-        <span class="sb-label-item">Новости</span>
+        <svg viewBox="0 0 24 24"><path d="M4 22h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2Z"/><path d="M18 8h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2"/><path d="M6 6h8M6 10h8M6 14h6"/></svg>
+        Новости
+      </button>
+      <button class="sb-item" data-route="library">
+        <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        Избранное
       </button>
     </nav>
 
-    <div class="sb-section">
-      <div class="sb-label">Моё</div>
-      <button class="sb-item" data-route="library">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-        </span>
-        <span class="sb-label-item">Избранное</span>
-      </button>
-      <button class="sb-item" data-route="history">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
-        </span>
-        <span class="sb-label-item">Недавнее</span>
-      </button>
-    </div>
-
     <div class="sb-footer">
       <button class="sb-item" data-route="settings">
-        <span class="sb-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        </span>
-        <span class="sb-label-item">Настройки</span>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        Настройки
       </button>
     </div>
   </aside>
@@ -1068,13 +1337,12 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   <!-- =================================================================== -->
   <main class="content">
 
-    <!-- TopBar -->
     <header class="topbar">
-      <div class="tb-title" id="tbTitle">Прямой эфир</div>
+      <div class="tb-title" id="tbTitle">Главная</div>
       <div class="tb-spacer"></div>
       <label class="tb-search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="search" placeholder="Каналы, станции, клипы…" aria-label="Поиск">
+        <input type="search" placeholder="Каналы, станции, исполнители, треки…" aria-label="Поиск">
       </label>
       <button class="tb-icon-btn" aria-label="Уведомления">
         <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -1083,42 +1351,25 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
     </header>
 
     <!-- ============================================================ -->
-    <!-- PAGE: LIVE (default landing)                                  -->
+    <!-- PAGE: LIVE / Главная                                          -->
     <!-- ============================================================ -->
     <section class="page" data-page-id="live" data-active="true">
 
-      <!-- Hero — приоритетный канал -->
-      <div class="hero" id="hero" style="--hero-image: linear-gradient(120deg,#3a1f5a 0%,#1a3a5a 50%,#5a2a3a 100%);">
-        <div class="hero-overlay">
-          <div class="hero-meta">
-            <span class="live-badge"><span class="live-pulse"></span>В эфире</span>
-            <span class="hero-channel-logo">ХБ</span>
-            <span>Хабар • 21:00 — 22:30</span>
-          </div>
-          <h1 class="hero-title">Большой выпуск новостей и аналитика недели</h1>
-          <p class="hero-sub">Главные события Казахстана и мира. Прямое включение из студии Астаны.</p>
-          <div class="hero-actions">
-            <button class="btn btn-primary">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              Смотреть
-            </button>
-            <button class="btn btn-secondary">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              В избранное
-            </button>
-          </div>
-        </div>
+      <!-- Hero promo carousel -->
+      <div class="hero-carousel">
+        <div class="hero-track" id="heroTrack"></div>
       </div>
 
       <!-- Категории -->
       <nav class="chip-row" aria-label="Категории">
-        <button class="chip" aria-pressed="true">Всё</button>
-        <button class="chip" aria-pressed="false">Новости</button>
-        <button class="chip" aria-pressed="false">Развлечения</button>
-        <button class="chip" aria-pressed="false">Спорт</button>
+        <button class="chip" aria-pressed="true">Все</button>
         <button class="chip" aria-pressed="false">Музыка</button>
-        <button class="chip" aria-pressed="false">Детям</button>
         <button class="chip" aria-pressed="false">Сериалы</button>
+        <button class="chip" aria-pressed="false">Спорт</button>
+        <button class="chip" aria-pressed="false">Новости</button>
+        <button class="chip" aria-pressed="false">Подкасты</button>
+        <button class="chip" aria-pressed="false">Развлечения</button>
+        <button class="chip" aria-pressed="false">Детям</button>
         <button class="chip" aria-pressed="false">Документальное</button>
       </nav>
 
@@ -1131,16 +1382,65 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <div class="row-track" id="trackChannels"></div>
       </section>
 
-      <!-- Row: Радио -->
+      <!-- Row: Радиостанции -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Радио</h2>
+          <h2 class="row-title">Радиостанции РМГ</h2>
           <a href="#radio" class="row-link" data-route="radio">Все станции →</a>
         </div>
         <div class="row-track" id="trackRadio"></div>
       </section>
 
-      <!-- Row: Клипы -->
+      <!-- Row: Сейчас слушают -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Сейчас слушают</h2>
+        </div>
+        <div class="row-track" id="trackNowPlaying"></div>
+      </section>
+
+      <!-- Чарт -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Чарт RU.TV — топ 10</h2>
+          <a href="#chart" class="row-link" data-route="chart">Полный чарт →</a>
+        </div>
+        <div class="chart-grid" id="chartGrid"></div>
+      </section>
+
+      <!-- Жанры -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Жанры</h2>
+        </div>
+        <div class="row-track" id="trackGenres"></div>
+      </section>
+
+      <!-- Исполнители -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Исполнители</h2>
+        </div>
+        <div class="row-track" id="trackArtists"></div>
+      </section>
+
+      <!-- DJ -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">DJ</h2>
+        </div>
+        <div class="row-track" id="trackDjs"></div>
+      </section>
+
+      <!-- Музыка по настроению -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Музыка по настроению</h2>
+        </div>
+        <div class="row-track" id="trackMoods"></div>
+      </section>
+
+      <!-- Клипы -->
       <section class="row-section">
         <div class="row-head">
           <h2 class="row-title">Клипы недели</h2>
@@ -1149,7 +1449,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <div class="row-track" id="trackClips"></div>
       </section>
 
-      <!-- Row: Новости -->
+      <!-- Новости -->
       <section class="row-section">
         <div class="row-head">
           <h2 class="row-title">Главные новости</h2>
@@ -1158,15 +1458,61 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <div class="row-track" id="trackNews"></div>
       </section>
 
+      <!-- Расписание -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Расписание RU.TV</h2>
+          <a href="#schedule" class="row-link" data-route="schedule">Полное расписание →</a>
+        </div>
+        <div class="schedule" id="scheduleGrid"></div>
+      </section>
+
+      <!-- Партнёры РМГ -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Russian Media Group</h2>
+          <a class="row-link" href="#">О холдинге →</a>
+        </div>
+        <div class="partners">
+          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">RU.TV</span><span class="partner-mark-sub">Русский музыкальный канал</span></div></div>
+          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">Русское Радио</span><span class="partner-mark-sub">Главное радио страны</span></div></div>
+          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">DFM</span><span class="partner-mark-sub">Танцевальная волна</span></div></div>
+          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">MAXIMUM</span><span class="partner-mark-sub">Радио Максимум</span></div></div>
+          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">Monte Carlo</span><span class="partner-mark-sub">Радио Монте Карло</span></div></div>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <div class="footer-col">
+          <h4>Головной офис RU.TV</h4>
+          <p>123298, Москва, 3-я Хорошёвская, 12<br>Телефон: +7 499 579-77-09<br>Прямой эфир: +7 (495) 956-10-12<br>info@ru.tv</p>
+        </div>
+        <div class="footer-col">
+          <h4>Связь</h4>
+          <p>WhatsApp: +7 495 956-10-12<br>Техподдержка сайта: support@ru.tv<br>Реклама: ad@ru.tv · +7 499 579-77-99<br>Новости и пресс-релизы: press@ru.tv</p>
+        </div>
+      </footer>
+      <div class="footer-bottom">
+        <span>© Russian Media Group · RU.TV</span>
+        <a href="#">Политика безопасности</a>
+        <a href="#">Пользовательское соглашение</a>
+        <a href="#">Telegram</a>
+        <a href="#">YouTube</a>
+        <a href="#">VK</a>
+        <a href="#">Одноклассники</a>
+      </div>
+
     </section>
 
-    <!-- Other pages — placeholders (для пилот-демо) -->
-    <section class="page" data-page-id="channels"><div class="placeholder-page"><h2>Все каналы</h2><p>Полная сетка ТВ-каналов с фильтрами по категориям и расписанием. Открывается при клике на «Каналы» в меню.</p></div></section>
-    <section class="page" data-page-id="radio"><div class="placeholder-page"><h2>Все радиостанции</h2><p>FM-станции с группировкой по жанрам, обложкой текущего трека и расписанием.</p></div></section>
+    <!-- Other pages -->
+    <section class="page" data-page-id="channels"><div class="placeholder-page"><h2>Все каналы</h2><p>Полная сетка ТВ-каналов с фильтрами по категориям и расписанием.</p></div></section>
+    <section class="page" data-page-id="radio"><div class="placeholder-page"><h2>Радиостанции</h2><p>Все станции РМГ с группировкой по жанрам и текущим треком.</p></div></section>
+    <section class="page" data-page-id="chart"><div class="placeholder-page"><h2>Полный чарт RU.TV</h2><p>Топ-100 треков на основе ротации и голосования зрителей RU.TV.</p></div></section>
+    <section class="page" data-page-id="playlists"><div class="placeholder-page"><h2>Плей-листы</h2><p>Тематические подборки от редакции RU.TV и партнёров РМГ.</p></div></section>
+    <section class="page" data-page-id="schedule"><div class="placeholder-page"><h2>Расписание</h2><p>Программа эфира RU.TV на неделю с напоминаниями.</p></div></section>
     <section class="page" data-page-id="clips"><div class="placeholder-page"><h2>Клипы</h2><p>Витрина музыкальных клипов: тренды, новинки, по жанрам.</p></div></section>
-    <section class="page" data-page-id="news"><div class="placeholder-page"><h2>Новости</h2><p>Лента новостей с тегами по разделам (политика, спорт, культура, технологии).</p></div></section>
-    <section class="page" data-page-id="library"><div class="placeholder-page"><h2>Избранное</h2><p>Сохранённые каналы, станции и клипы в одном месте.</p></div></section>
-    <section class="page" data-page-id="history"><div class="placeholder-page"><h2>Недавнее</h2><p>История просмотров и прослушиваний за последние 30 дней.</p></div></section>
+    <section class="page" data-page-id="news"><div class="placeholder-page"><h2>Новости</h2><p>Лента новостей с тегами по разделам.</p></div></section>
+    <section class="page" data-page-id="library"><div class="placeholder-page"><h2>Избранное</h2><p>Сохранённые каналы, станции, плей-листы и клипы.</p></div></section>
     <section class="page" data-page-id="settings"><div class="placeholder-page"><h2>Настройки</h2><p>Профиль, оформление, качество стрима, родительский контроль.</p></div></section>
 
   </main>
@@ -1175,25 +1521,23 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 <!-- =================================================================== -->
 <!-- STICKY RADIO PLAYER                                                  -->
 <!-- =================================================================== -->
-<div class="player" role="region" aria-label="Плеер радио">
+<div class="player" role="region" aria-label="Плеер">
   <div class="player-now">
-    <div class="player-art" id="playerArt" style="background-image: linear-gradient(135deg,#FF8A6E,#FF5C5C);"></div>
+    <div class="player-art" id="playerArt" style="background-image: url('assets/rutv/Rectangle 4322-16.png'); background-size: cover; background-position: center;"></div>
     <div class="player-meta">
-      <div class="player-track" id="playerTrack">Imagine Dragons — Bones</div>
+      <div class="player-track" id="playerTrack">SHAMAN — Я русский</div>
       <div class="player-station">
-        <span class="player-station-mark">Х</span>
-        <span id="playerStation">Хит FM</span>
-        <span>· 102.5 МГц</span>
+        <span class="player-station-mark">RU</span>
+        <span id="playerStation">RU.TV</span>
+        <span>· Прямой эфир</span>
       </div>
     </div>
   </div>
-
   <div class="player-controls">
     <button class="pl-btn" aria-label="Предыдущая"><svg viewBox="0 0 24 24"><path d="M19 20 9 12l10-8v16zM7 5v14H5V5z"/></svg></button>
     <button class="pl-btn pl-btn-play" id="playBtn" aria-label="Воспроизведение/пауза"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
     <button class="pl-btn" aria-label="Следующая"><svg viewBox="0 0 24 24"><path d="m5 4 10 8-10 8V4zm12 0h2v16h-2z"/></svg></button>
   </div>
-
   <div class="player-extras">
     <button class="pl-btn" aria-label="В избранное"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
     <div class="player-volume">
@@ -1221,71 +1565,218 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 
 <script>
 /* =========================================================================
-   DATA — mock контент (KZ/RU реалистичный)
+   DATA — реальный контент из Figma DFM/RMG + KZ-каналы
    ========================================================================= */
+
+// Hero promo carousel — реальные RU.TV ассеты
+const heroes = [
+  {
+    title: 'Прямой эфир RU.TV',
+    sub: 'Лучшие русские клипы 24/7. Сейчас на экране: SHAMAN — «Я русский»',
+    img: 'assets/rutv/image 1.png',
+    isLive: true,
+    badge: 'СЕЙЧАС В ЭФИРЕ',
+  },
+  {
+    title: 'Звёзды Хайпа · LIVE Арена',
+    sub: '6 декабря — большой концерт топ-артистов российской сцены',
+    img: 'assets/rutv/Rectangle 4322-2.png',
+    isLive: false,
+    badge: 'СПЕЦПРОЕКТ',
+  },
+  {
+    title: 'Полевой — премьера сериала',
+    sub: 'Эксклюзив RU.TV — авторский музыкальный проект уже на канале',
+    img: 'assets/rutv/image 2.png',
+    isLive: false,
+    badge: 'ПРЕМЬЕРА',
+  },
+  {
+    title: 'Статус: В сети',
+    sub: 'Сервис доставки приветов и поздравлений в прямом эфире',
+    img: 'assets/rutv/Rectangle 4322-15.png',
+    isLive: false,
+    badge: 'НОВЫЙ СЕРВИС',
+  },
+];
+
+// TV-каналы — RU.TV приоритет + партнёры РМГ. Реальные images из export rutv
 const channels = [
-  { code: 'ХБ', name: 'Хабар', now: 'Большой выпуск новостей', next: '22:30 — Фильм недели', progress: 64,
-    grad: 'linear-gradient(120deg,#3a1f5a,#1a3a5a,#5a2a3a)' },
-  { code: 'AS', name: 'Astana TV', now: 'Сериал «Аяла» — серия 12', next: '22:00 — Шоу талантов', progress: 28,
-    grad: 'linear-gradient(120deg,#2d4a6f,#1a2540)' },
-  { code: 'КТ', name: 'КТК', now: 'Криминальная Россия — Север', next: '21:50 — Прямой эфир', progress: 42,
-    grad: 'linear-gradient(120deg,#3d1d2a,#2a1620)' },
-  { code: '31', name: '31 канал', now: 'Comedy Club Казахстан', next: '23:00 — Орёл и Решка', progress: 18,
-    grad: 'linear-gradient(120deg,#1a4a3a,#0d2a25)' },
-  { code: 'AM', name: 'Almaty TV', now: 'Городские истории', next: '22:00 — Концерт «Жұлдыздар»', progress: 78,
-    grad: 'linear-gradient(120deg,#5a3d1a,#3a2810)' },
-  { code: 'КЗ', name: 'Qazaqstan', now: 'Документальный — Степь', next: '22:30 — Музыкальный салон', progress: 36,
-    grad: 'linear-gradient(120deg,#1a3d4a,#0d2a30)' },
-  { code: 'EU', name: 'Евразия', now: 'Время покажет', next: '21:30 — Большая игра', progress: 51,
-    grad: 'linear-gradient(120deg,#4a1a3d,#2a0d22)' },
+  { code: 'RU', name: 'RU.TV', now: 'SHAMAN — Я русский', next: '22:00 — Топ-20 RU.TV', progress: 64,
+    img: 'assets/rutv/Rectangle 4322-1.png' },
+  { code: 'РР', name: 'Русское Радио ТВ', now: 'Звёздное караоке', next: '23:00 — Хит-парад', progress: 28,
+    img: 'assets/rutv/Rectangle 4322-2.png' },
+  { code: 'D', name: 'DFM TV', now: 'Linkin Park · Roads Untraveled', next: '22:00 — Чарт DFM', progress: 42,
+    img: 'assets/rutv/Rectangle 4322-3.png' },
+  { code: 'MX', name: 'Maximum TV', now: 'Rock-новости недели', next: '22:30 — Live-концерт', progress: 18,
+    img: 'assets/rutv/Rectangle 4322-4.png' },
+  { code: 'MC', name: 'Monte Carlo TV', now: 'Шансон-вечер', next: '22:00 — Романтика', progress: 78,
+    img: 'assets/rutv/Rectangle 4322-5.png' },
+  { code: 'ХИТ', name: 'Хит FM TV', now: 'Только лучшее', next: '22:30 — Чарт', progress: 36,
+    img: 'assets/rutv/Rectangle 4322-6.png' },
 ];
 
+// Радиостанции РМГ (реальные) — RU.TV ассеты + бренд-цвета
 const radios = [
-  { code: 'Х', name: 'Хит FM', tag: '102.5 FM', now: 'Imagine Dragons', track: 'Bones',
-    grad: 'linear-gradient(135deg,#FF5C5C,#FF8A6E)' },
-  { code: 'А', name: 'Авторадио', tag: '88.4 FM', now: 'Кино', track: 'Группа крови',
-    grad: 'linear-gradient(135deg,#1a3d6f,#3a5a8f)' },
-  { code: 'Е', name: 'Европа Плюс', tag: '105.0 FM', now: 'The Weeknd', track: 'Blinding Lights',
-    grad: 'linear-gradient(135deg,#6f1a3d,#a83a6f)' },
-  { code: 'Г', name: 'Гакку FM', tag: '101.4 FM', now: 'Димаш Кудайберген', track: 'Дайдидау',
-    grad: 'linear-gradient(135deg,#3d6f1a,#6f9f3a)' },
-  { code: 'Т', name: 'Тенгри FM', tag: '107.5 FM', now: 'Қыдырали Болманов', track: 'Аққулы көл',
-    grad: 'linear-gradient(135deg,#6f4a1a,#9f7a3a)' },
-  { code: 'A', name: 'Astana FM', tag: '99.8 FM', now: 'Coldplay', track: 'Yellow',
-    grad: 'linear-gradient(135deg,#1a6f6f,#3a9f9f)' },
-  { code: 'Р', name: 'Радио Ретро', tag: '96.2 FM', now: 'Алла Пугачёва', track: 'Миллион алых роз',
-    grad: 'linear-gradient(135deg,#6f3d1a,#9f6f3a)' },
-  { code: 'J', name: 'Jazz FM', tag: '94.0 FM', now: 'Miles Davis', track: 'So What',
-    grad: 'linear-gradient(135deg,#1a1a3d,#3a3a6f)' },
+  { code: 'РР', name: 'Русское Радио', tag: '105.7 FM', now: 'SHAMAN', track: 'Я русский',
+    img: 'assets/rutv/Rectangle 4322-7.png' },
+  { code: 'RU', name: 'RU.TV Music', tag: 'Online', now: 'JONY', track: 'Аллея',
+    img: 'assets/rutv/Rectangle 4322-8.png' },
+  { code: 'D', name: 'DFM', tag: '101.2 FM', now: 'David Guetta', track: 'Baby Don\'t Hurt Me',
+    img: 'assets/rutv/Rectangle 4322-9.png' },
+  { code: 'M', name: 'Радио Maximum', tag: '103.7 FM', now: 'Imagine Dragons', track: 'Bones',
+    img: 'assets/rutv/Rectangle 4322-10.png' },
+  { code: 'MC', name: 'Monte Carlo', tag: '105.9 FM', now: 'Adele', track: 'Hello',
+    img: 'assets/rutv/Rectangle 4322-11.png' },
+  { code: 'Х', name: 'Хит FM', tag: '107.4 FM', now: 'The Weeknd', track: 'Blinding Lights',
+    img: 'assets/rutv/Rectangle 4322-12.png' },
+  { code: 'Р', name: 'Русское Ретро', tag: '90.4 FM', now: 'Алла Пугачёва', track: 'Миллион роз',
+    img: 'assets/rutv/Rectangle 4322-13.png' },
+  { code: 'РРАШ', name: 'Радио Шансон', tag: '95.5 FM', now: 'Михаил Шуфутинский', track: '3 сентября',
+    img: 'assets/rutv/Rectangle 4322-14.png' },
 ];
 
+// Сейчас слушают / клипы крутятся прямо сейчас
+const nowPlaying = [
+  { artist: 'SHAMAN', track: 'Я русский', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { artist: 'Григорий Лепс', track: 'Рюмка водки на столе', img: 'assets/rutv/Rectangle 4322-17.png' },
+  { artist: 'Полина Гагарина', track: 'Кукушка', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { artist: 'Дима Билан', track: 'Молния', img: 'assets/rutv/Rectangle 4322-19.jpg' },
+  { artist: 'Валерий Меладзе', track: 'Вопреки', img: 'assets/rutv/Rectangle 4322-20.jpg' },
+  { artist: 'JONY', track: 'Комета', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+];
+
+// Чарт RU.TV top-10 — русская сцена
+const chart = [
+  { rank: 1, artist: 'SHAMAN', track: 'Я русский', trend: '+3', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { rank: 2, artist: 'JONY', track: 'Комета', trend: '+1', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { rank: 3, artist: 'MIYAGI & Andy Panda', track: 'Минимал', trend: '−1', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { rank: 4, artist: 'Macan', track: 'Пополам', trend: '+2', img: 'assets/rutv/Rectangle 4322-23.jpg' },
+  { rank: 5, artist: 'HammAli & Navai', track: 'Птичка', trend: '+1', img: 'assets/rutv/Rectangle 4322-24.jpg' },
+  { rank: 6, artist: 'Полина Гагарина', track: 'Кукушка', trend: '−2', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { rank: 7, artist: 'Артур Пирожков', track: 'Зацепила', trend: '+4', img: 'assets/rutv/Rectangle 4322-5.png' },
+  { rank: 8, artist: 'Слава Марлоу', track: 'Снова я напиваюсь', trend: '+1', img: 'assets/rutv/Rectangle 4322-25.jpg' },
+  { rank: 9, artist: 'Светлана Лобода', track: 'Случайная', trend: '−3', img: 'assets/rutv/Rectangle 4322-26.jpg' },
+  { rank: 10, artist: 'Дима Билан', track: 'Молния', trend: '+2', img: 'assets/rutv/Rectangle 4322-19.jpg' },
+];
+
+// Жанры — RU.TV рубрики
+const genres = [
+  { name: 'Поп-Хиты', grad: 'linear-gradient(135deg,#E30033,#3a0d20)' },
+  { name: 'Шансон', grad: 'linear-gradient(135deg,#5a3d1a,#1a1a0d)' },
+  { name: 'Танцы', grad: 'linear-gradient(135deg,#21B5FF,#0d1525)' },
+  { name: 'Рок', grad: 'linear-gradient(135deg,#1a1a1a,#3d1a1a)' },
+  { name: 'Ретро', grad: 'linear-gradient(135deg,#C724B1,#1a0d30)' },
+  { name: 'Дискотека 80-х', grad: 'linear-gradient(135deg,#FF4D8F,#3a1f5a)' },
+  { name: 'Лирика', grad: 'linear-gradient(135deg,#0d3a3d,#0d1525)' },
+];
+
+// Исполнители — русская сцена с реальными RU.TV artwork
+const artists = [
+  { name: 'SHAMAN', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { name: 'Полина Гагарина', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { name: 'Григорий Лепс', meta: 'Эстрада', img: 'assets/rutv/Rectangle 4322-17.png' },
+  { name: 'JONY', meta: 'Поп · R&B', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { name: 'MIYAGI & Andy Panda', meta: 'Хип-Хоп', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { name: 'HammAli & Navai', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-24.jpg' },
+  { name: 'Светлана Лобода', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-26.jpg' },
+  { name: 'Дима Билан', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-19.jpg' },
+];
+
+// DJ
+const djs = [
+  { name: 'DJ Smash', meta: 'Дискотека', img: 'assets/rutv/Rectangle 4322-27.jpg' },
+  { name: 'DJ Грув', meta: 'House', img: 'assets/rutv/Rectangle 4322-28.jpg' },
+  { name: 'Слава Марлоу', meta: 'EDM · Поп', img: 'assets/rutv/Rectangle 4322-25.jpg' },
+  { name: 'Артур Пирожков', meta: 'Поп · Дискотека', img: 'assets/rutv/Rectangle 4322-5.png' },
+  { name: 'Filatov & Karas', meta: 'House', img: 'assets/rutv/Rectangle 4322-29.jpg' },
+  { name: 'Леонид Руденко', meta: 'Dance', img: 'assets/rutv/Rectangle 4322-30.jpg' },
+];
+
+// Музыка по настроению
+const moods = [
+  { name: 'Энергия', grad: 'linear-gradient(135deg,#E30033,#FFC700)' },
+  { name: 'Релакс', grad: 'linear-gradient(135deg,#21B5FF,#3a8a9f)' },
+  { name: 'Романтика', grad: 'linear-gradient(135deg,#C724B1,#FF4D8F)' },
+  { name: 'Фокус', grad: 'linear-gradient(135deg,#1a1a3d,#3a3a6f)' },
+  { name: 'Вечеринка', grad: 'linear-gradient(135deg,#FF4D8F,#E30033,#3a1f5a)' },
+  { name: 'Утро', grad: 'linear-gradient(135deg,#FFC700,#FF4D8F)' },
+];
+
+// Клипы — реальные RU.TV ассеты
 const clips = [
-  { artist: 'Imagine Dragons', track: 'Bones', dur: '3:04', grad: 'linear-gradient(180deg,#5a2a3a,#1a0d15)' },
-  { artist: 'Димаш', track: 'Stranger', dur: '4:15', grad: 'linear-gradient(180deg,#1a3a5a,#0d1525)' },
-  { artist: 'The Weeknd', track: 'Save Your Tears', dur: '3:35', grad: 'linear-gradient(180deg,#6f1a3d,#2a0d18)' },
-  { artist: 'Скриптонит', track: 'VIP', dur: '3:22', grad: 'linear-gradient(180deg,#3d3d3d,#151515)' },
-  { artist: 'Coldplay', track: 'Higher Power', dur: '3:48', grad: 'linear-gradient(180deg,#1a4a6f,#0d2535)' },
-  { artist: 'Ninety One', track: 'Bayau', dur: '3:12', grad: 'linear-gradient(180deg,#4a1a3d,#22091a)' },
-  { artist: 'Dua Lipa', track: 'Levitating', dur: '3:23', grad: 'linear-gradient(180deg,#6f3d6f,#2a182a)' },
+  { artist: 'SHAMAN', track: 'Я русский', dur: '3:24', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { artist: 'JONY', track: 'Комета', dur: '3:06', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { artist: 'Полина Гагарина', track: 'Кукушка', dur: '3:35', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { artist: 'MIYAGI & Andy Panda', track: 'Минимал', dur: '3:04', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { artist: 'Macan', track: 'Пополам', dur: '3:18', img: 'assets/rutv/Rectangle 4322-23.jpg' },
+  { artist: 'Артур Пирожков', track: 'Зацепила', dur: '3:48', img: 'assets/rutv/Rectangle 4322-5.png' },
+  { artist: 'Слава Марлоу', track: 'Снова я напиваюсь', dur: '3:25', img: 'assets/rutv/Rectangle 4322-25.jpg' },
 ];
 
+// Новости RU.TV
 const news = [
-  { tag: 'Политика', title: 'Президент провёл встречу с премьер-министром по итогам визита в Брюссель', time: '15 мин назад', source: 'Tengrinews', grad: 'linear-gradient(120deg,#1a3a5a,#0d1f30)' },
-  { tag: 'Экономика', title: 'Курс тенге укрепился к доллару на фоне роста цен на нефть', time: '32 мин назад', source: 'Forbes Kazakhstan', grad: 'linear-gradient(120deg,#1a5a3a,#0d301f)' },
-  { tag: 'Спорт', title: 'Геннадий Головкин объявил о возможном возвращении на ринг', time: '1 ч назад', source: 'Sports.kz', grad: 'linear-gradient(120deg,#5a3a1a,#30200d)' },
-  { tag: 'Технологии', title: 'Astana Hub представил отчёт о росте IT-сектора в 2026 году', time: '2 ч назад', source: 'Bluescreen', grad: 'linear-gradient(120deg,#3a1a5a,#1f0d30)' },
-  { tag: 'Культура', title: 'Фильм казахстанского режиссёра попал в шорт-лист Венецианского фестиваля', time: '3 ч назад', source: 'Vlast.kz', grad: 'linear-gradient(120deg,#5a1a3a,#300d20)' },
-  { tag: 'Город', title: 'В Алматы открылась новая ветка метро от Сайран до Калкамана', time: '4 ч назад', source: 'Власти Алматы', grad: 'linear-gradient(120deg,#1a4a4a,#0d2a2a)' },
+  { tag: 'Премьера', title: 'SHAMAN представил новый клип «Я русский» — премьера на RU.TV', time: '15 мин назад', source: 'RU.TV News', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { tag: 'Концерт', title: 'Звёзды Хайпа: 6 декабря большой концерт — Лепс, Билан, Лобода, Меладзе', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-2.png' },
+  { tag: 'Чарт', title: 'JONY возглавил топ-чарт RU.TV — четвёртая неделя подряд', time: '1 ч назад', source: 'RU.TV Chart', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { tag: 'Премьера', title: 'Полевой — авторский музыкальный сериал стартовал на RU.TV', time: '2 ч назад', source: 'RU.TV', img: 'assets/rutv/image 2.png' },
+  { tag: 'Сервис', title: 'Запущен «Статус: В сети» — отправляйте приветы прямо в эфир', time: '3 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-15.png' },
+  { tag: 'Спецпроект', title: 'Анна Семенович: мастер-класс по фигурному катанию для детей', time: '4 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-1.png' },
+];
+
+// Расписание RU.TV — реальные программы
+const days = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
+const hours = ['12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
+const scheduleColors = ['#E30033','#21B5FF','#FF4D8F','#C724B1','#1a8a5a','#FFC700','#3a8ad8'];
+const programs = [
+  ['Топ-20','Звёзды','Караоке','Хит-парад','Live Mix','Чарт RU.TV','Вечерний эфир'],
+  ['Премьера','Дискотека','Шансон','Поп Хиты','DJ Hour','Топ-100','Ночь'],
+  ['Утренний','Свежее','Ретро','Live Show','Rock Hour','Чарт','Полночь'],
+  ['Максимум','Рок-Хиты','Vocal Hour','Live Mix','Чарт','Новинки','Smooth Set'],
+  ['Поп-Лаб','DJ Hour','Hot 100','Танцы','Пятничный','Топ-Звёзды','Party Time'],
+  ['Суббота','Vibes Mix','Топ-20','Рок-волна','DJ Live','Повтор Чарта','Ночной Клуб'],
+  ['Утро в RU.TV','Easy Hits','Душа','Акустика','Топ-Повтор','Лучшее','Финал недели'],
 ];
 
 /* =========================================================================
-   RENDER — заполнить track'и
+   RENDER
    ========================================================================= */
+function el(tag, cls, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+
+function bg(item) {
+  if (item.img) return `background-image: url('${encodeURI(item.img)}'); background-size: cover; background-position: center;`;
+  if (item.grad) return `background: ${item.grad};`;
+  return '';
+}
+
+function renderHero() {
+  document.getElementById('heroTrack').innerHTML = heroes.map(h => `
+    <article class="hero-card" style="${bg(h)}">
+      <div class="hero-card-overlay">
+        <div class="hero-card-meta">
+          ${h.isLive ? '<span class="live-badge"><span class="live-pulse"></span>В эфире</span>' : ''}
+          <span class="hero-card-tag">${h.badge}</span>
+        </div>
+        <h1 class="hero-card-title">${h.title}</h1>
+        <p class="hero-card-sub">${h.sub}</p>
+        <div class="hero-card-actions">
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть</button>
+          <button class="btn btn-secondary">Подробнее</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
 function renderChannels() {
-  const t = document.getElementById('trackChannels');
-  t.innerHTML = channels.map(c => `
-    <article class="card-tv" tabindex="0" data-channel="${c.name}">
-      <div class="card-tv-thumb" style="background: ${c.grad};">
+  document.getElementById('trackChannels').innerHTML = channels.map(c => `
+    <article class="card-tv" tabindex="0">
+      <div class="card-tv-thumb" style="${bg(c)}">
         <span class="card-tv-live live-badge"><span class="live-pulse"></span>LIVE</span>
         <span class="card-tv-channel-logo">${c.code}</span>
       </div>
@@ -1300,11 +1791,10 @@ function renderChannels() {
 }
 
 function renderRadio() {
-  const t = document.getElementById('trackRadio');
-  t.innerHTML = radios.map(r => `
+  document.getElementById('trackRadio').innerHTML = radios.map(r => `
     <article class="card-radio" tabindex="0" data-station="${r.name}" data-track="${r.now} — ${r.track}">
       <div class="card-radio-disc">
-        <div class="card-radio-art" style="background: ${r.grad};"></div>
+        <div class="card-radio-art" style="${bg(r)}"></div>
         <div class="card-radio-meta">
           <div>
             <div class="card-radio-name">${r.name}</div>
@@ -1321,11 +1811,86 @@ function renderRadio() {
   `).join('');
 }
 
+function renderNowPlaying() {
+  document.getElementById('trackNowPlaying').innerHTML = nowPlaying.map(n => `
+    <article class="card-radio" tabindex="0" data-station="RU.TV" data-track="${n.artist} — ${n.track}">
+      <div class="card-radio-disc">
+        <div class="card-radio-art" style="${bg(n)}"></div>
+        <div class="card-radio-meta">
+          <div>
+            <div class="card-radio-name">${n.artist}</div>
+            <div class="card-radio-tag">${n.track}</div>
+          </div>
+          <button class="card-radio-play" aria-label="Играть"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderChart() {
+  document.getElementById('chartGrid').innerHTML = chart.map(c => {
+    const rank = String(c.rank).padStart(2, '0');
+    const trendUp = c.trend.startsWith('+');
+    return `
+    <article class="chart-row" tabindex="0">
+      <div>
+        <div class="chart-rank">${rank}</div>
+        <div class="chart-rank-trend">${trendUp ? '▲' : '▼'} ${c.trend.replace(/[+−-]/,'')}</div>
+      </div>
+      <div class="chart-art" style="${bg(c)}"></div>
+      <div class="chart-meta">
+        <div class="chart-artist">${c.artist}</div>
+        <div class="chart-track">${c.track}</div>
+      </div>
+      <div class="chart-actions">
+        <button aria-label="Нравится"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.3a2 2 0 0 0 2-1.7l1.4-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></button>
+        <button aria-label="Не нравится"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.7a2 2 0 0 0-2 1.7l-1.4 9a2 2 0 0 0 2 2.3zM17 2h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></svg></button>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+function renderGenres() {
+  document.getElementById('trackGenres').innerHTML = genres.map(g => `
+    <article class="card-genre" tabindex="0" style="background: ${g.grad};">
+      <div class="card-genre-name">${g.name}</div>
+    </article>
+  `).join('');
+}
+
+function renderArtists() {
+  document.getElementById('trackArtists').innerHTML = artists.map(a => `
+    <article class="card-artist" tabindex="0">
+      <div class="card-artist-avatar" style="${bg(a)}"></div>
+      <div class="card-artist-name">${a.name}</div>
+      <div class="card-artist-meta">${a.meta}</div>
+    </article>
+  `).join('');
+}
+
+function renderDjs() {
+  document.getElementById('trackDjs').innerHTML = djs.map(d => `
+    <article class="card-dj" tabindex="0">
+      <div class="card-dj-art" style="${bg(d)}"></div>
+      <div class="card-dj-name">${d.name}</div>
+      <div class="card-dj-meta">${d.meta}</div>
+    </article>
+  `).join('');
+}
+
+function renderMoods() {
+  document.getElementById('trackMoods').innerHTML = moods.map(m => `
+    <article class="card-mood" tabindex="0" style="background: ${m.grad};">
+      <div class="card-mood-name">${m.name}</div>
+    </article>
+  `).join('');
+}
+
 function renderClips() {
-  const t = document.getElementById('trackClips');
-  t.innerHTML = clips.map(c => `
+  document.getElementById('trackClips').innerHTML = clips.map(c => `
     <article class="card-clip" tabindex="0">
-      <div class="card-clip-thumb" style="background: ${c.grad};">
+      <div class="card-clip-thumb" style="${bg(c)}">
         <span class="card-clip-duration">${c.dur}</span>
         <div class="card-clip-meta">
           <div class="card-clip-artist">${c.artist}</div>
@@ -1337,10 +1902,9 @@ function renderClips() {
 }
 
 function renderNews() {
-  const t = document.getElementById('trackNews');
-  t.innerHTML = news.map(n => `
+  document.getElementById('trackNews').innerHTML = news.map(n => `
     <article class="card-news" tabindex="0">
-      <div class="card-news-thumb" style="background: ${n.grad};"></div>
+      <div class="card-news-thumb" style="${bg(n)}"></div>
       <div class="card-news-body">
         <div class="card-news-tag">${n.tag}</div>
         <div class="card-news-title">${n.title}</div>
@@ -1350,13 +1914,32 @@ function renderNews() {
   `).join('');
 }
 
+function renderSchedule() {
+  const head = ['<div></div>', ...hours.map(h => `<div class="schedule-hour">${h}</div>`)].join('');
+  const rows = days.map((d, i) => {
+    const cells = programs[i].map((p, j) => `
+      <div class="schedule-cell" style="background: ${scheduleColors[(i+j) % scheduleColors.length]};">${p}</div>
+    `).join('');
+    return `<div class="schedule-row"><div class="schedule-day">${d}</div>${cells}</div>`;
+  }).join('');
+  document.getElementById('scheduleGrid').innerHTML = `<div class="schedule-head">${head}</div>${rows}`;
+}
+
+renderHero();
 renderChannels();
 renderRadio();
+renderNowPlaying();
+renderChart();
+renderGenres();
+renderArtists();
+renderDjs();
+renderMoods();
 renderClips();
 renderNews();
+renderSchedule();
 
 /* =========================================================================
-   STYLE SWITCHER — Tweaks panel (Holy Grail compliant)
+   STYLE SWITCHER (Holy Grail Tweaks)
    ========================================================================= */
 const root = document.documentElement;
 const STYLE_KEY = 'showcase.style';
@@ -1366,7 +1949,6 @@ applyStyle(savedStyle);
 document.querySelectorAll('.tweaks-btn').forEach(btn => {
   btn.addEventListener('click', () => applyStyle(btn.dataset.styleTarget));
 });
-
 function applyStyle(s) {
   root.dataset.style = s;
   localStorage.setItem(STYLE_KEY, s);
@@ -1376,13 +1958,13 @@ function applyStyle(s) {
 }
 
 /* =========================================================================
-   ROUTING — sidebar nav
+   ROUTING
    ========================================================================= */
 const ROUTE_KEY = 'showcase.route';
 const titles = {
-  live: 'Прямой эфир', channels: 'Все каналы', radio: 'Радиостанции',
-  clips: 'Клипы', news: 'Новости', library: 'Избранное',
-  history: 'Недавнее', settings: 'Настройки',
+  live: 'Главная', channels: 'Каналы', radio: 'Радиостанции',
+  chart: 'Чарт DFM', playlists: 'Плей-листы', schedule: 'Расписание',
+  clips: 'Клипы', news: 'Новости', library: 'Избранное', settings: 'Настройки',
 };
 
 function setRoute(r) {
@@ -1391,8 +1973,8 @@ function setRoute(r) {
     p.dataset.active = p.dataset.pageId === r ? 'true' : 'false';
   });
   document.querySelectorAll('.sb-item').forEach(i => {
-    i.toggleAttribute('aria-current', i.dataset.route === r);
     if (i.dataset.route === r) i.setAttribute('aria-current', 'page');
+    else i.removeAttribute('aria-current');
   });
   document.getElementById('tbTitle').textContent = titles[r];
   root.dataset.page = r;
@@ -1406,11 +1988,10 @@ document.querySelectorAll('[data-route]').forEach(el => {
     setRoute(el.dataset.route);
   });
 });
-
 setRoute(localStorage.getItem(ROUTE_KEY) || 'live');
 
 /* =========================================================================
-   PLAYER — реакция на клик по радиостанции
+   PLAYER
    ========================================================================= */
 let playing = true;
 const playBtn = document.getElementById('playBtn');
@@ -1426,29 +2007,24 @@ playBtn.addEventListener('click', () => {
 });
 
 document.addEventListener('click', e => {
-  const card = e.target.closest('.card-radio');
+  const card = e.target.closest('[data-station]');
   if (!card) return;
-  const [now, track] = card.dataset.track.split(' — ');
-  playerTrack.textContent = track ? `${now} — ${track}` : now;
+  const trackData = card.dataset.track;
+  if (trackData) {
+    const [now, track] = trackData.split(' — ');
+    playerTrack.textContent = track ? `${now} — ${track}` : now;
+  }
   playerStation.textContent = card.dataset.station;
-  // Brief pulse on art
-  const radioCard = radios.find(r => r.name === card.dataset.station);
-  if (radioCard) playerArt.style.background = radioCard.grad;
+  const r = radios.find(x => x.name === card.dataset.station);
+  if (r && r.img) {
+    playerArt.style.backgroundImage = `url('${encodeURI(r.img)}')`;
+    playerArt.style.backgroundSize = 'cover';
+    playerArt.style.backgroundPosition = 'center';
+  }
 });
 
 /* =========================================================================
-   DYNAMIC BACKDROP (apple style) — driven by current hero
-   ========================================================================= */
-const hero = document.getElementById('hero');
-const dynBackdrop = document.getElementById('dynamicBackdrop');
-function syncDynBackdrop() {
-  const heroBg = getComputedStyle(hero).getPropertyValue('--hero-image') || hero.style.getPropertyValue('--hero-image');
-  if (heroBg) dynBackdrop.style.setProperty('--hero-image', heroBg);
-}
-syncDynBackdrop();
-
-/* =========================================================================
-   CHIP filter (decorative for now — real filter в фазе 2)
+   CHIPS
    ========================================================================= */
 document.querySelectorAll('.chip').forEach(chip => {
   chip.addEventListener('click', () => {
