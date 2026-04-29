@@ -1,5 +1,11 @@
 # Memory — Twinr Design
 
+## 🔑 Holy Grail (всегда читать первым)
+
+- `docs/DESIGN_PROTOCOL.md` — наш операционный протокол по дизайну (10 частей)
+- `docs/references/anthropic_claude_design_prompt.md` — first-source Anthropic Claude Design System Prompt (vendored 2026-04-29)
+- При сомнениях — сверяться с anthropic prompt, брать оттуда если лучше
+
 ## Sessions
 
 - [session_2026_04_15.md](session_2026_04_15.md) — Первая сессия: полный дизайн РК "Большой Цифровой"

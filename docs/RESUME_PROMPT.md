@@ -14,10 +14,14 @@ git log --oneline -5
 ```
 
 ### 3. Load Context
-Параллельно прочитай:
+Параллельно прочитай (ВСЕ обязательны):
 - `CLAUDE.md` — архитектура, экраны, дизайн-токены
+- `docs/DESIGN_PROTOCOL.md` — **HOLY GRAIL операционный протокол** (10 частей: brief questions, anti-slop, variations, starters, verifier, decks, deviations, gates)
+- `docs/references/anthropic_claude_design_prompt.md` — first-source Anthropic Claude Design System Prompt (всегда сверяться при сомнениях)
 - `.claude-memory/MEMORY.md` — история сессий
 - `DEBT.md` — что висит
+
+**Принцип после загрузки контекста:** если в любой задаче возникает дизайн-вопрос которого нет в `DESIGN_PROTOCOL.md` — сверять с anthropic prompt и брать их подход если он лучше. Не спрашивать разрешения.
 
 ### 4. Check Current State
 ```bash

@@ -145,6 +145,17 @@ git push origin master
 git log --oneline -3  # подтвердить что последний коммит ушёл
 ```
 
+## 7.5 Notify mama bot (knowledge ingestion)
+
+Design — local-only на сервере, поэтому копируем knowledge dirs + индексируем:
+```bash
+scp -i ~/.ssh/paws_hetzner -r .claude-memory docs CLAUDE.md DEBT.md \
+  root@89.167.114.175:/opt/design-project/
+ssh -i ~/.ssh/paws_hetzner root@89.167.114.175 \
+  "cd /opt/mama-helper && python3 -m bot.dev_knowledge --project=design"
+```
+Это сделает «что нового в дизайн-проекте» / «open DEBT» доступным для Telegram-бота.
+
 ## 8. Report (для elbics)
 
 **Что ушло:**

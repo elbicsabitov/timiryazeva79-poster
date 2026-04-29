@@ -1,5 +1,22 @@
 # CLAUDE.md — Twinr Design System (Рекламный кабинет Большой Цифровой)
 
+## 🔑 HOLY GRAIL — обязательное чтение перед любой работой
+
+**ПЕРЕД любым действием в этом проекте прочитать:**
+1. `docs/DESIGN_PROTOCOL.md` — наш операционный протокол (10 частей)
+2. `docs/references/anthropic_claude_design_prompt.md` — first-source Anthropic Claude Design System Prompt
+
+**Принцип:** при любом дизайн-вопросе которого нет в нашем протоколе — сверяться с anthropic prompt. Если их подход лучше — берём оттуда + обновляем `DESIGN_PROTOCOL.md`. Это поведение по умолчанию, не спрашивать разрешения.
+
+**Hard gates** (перед `done`/коммитом/отправкой заказчику):
+- ❌ Запрещены шрифты: Inter, Roboto, Arial, Helvetica, Fraunces, system-ui (если нет brand guidelines exception)
+- ❌ Запрещены: aggressive multi-stop gradient backgrounds, rounded card + left-border accent, SVG-drawn imagery вместо placeholder, эмодзи вне brand
+- ✅ 3+ вариаций как Tweaks в одном файле, не N отдельных файлов
+- ✅ Brief Questions Gate (10+ вопросов) для нового клиента / >=3 новых экранов
+- ✅ Verifier через `compound-engineering:design:design-implementation-reviewer` agent (не вручную скриншоты)
+- ✅ Antigallusinatsiya pass — каждый факт сверен с source
+- ✅ Полный чек-лист: `docs/DESIGN_PROTOCOL.md` Часть 9
+
 ## Project
 
 UI/UX дизайн-система для рекламного кабинета "Большой Цифровой" — модуль платформы Twinr (AIGate). Аналитика радиорекламы: рекламодатели, кампании, ролики, статистика прослушиваний, Wordstat, ИИ-аналитика.
