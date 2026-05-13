@@ -269,6 +269,66 @@
 | RUTV-020 | Apple HIG fidelity audit на cinematic (apple.com/tv-pr live audit через chrome MCP) | pending |
 | RUTV-021 | Заказчик выбирает: cinematic vs dashboard direction → дальнейший development идёт в выбранном направлении | pending |
 
+### v6 Landing — Figma 1-в-1 + Karpathy-tier UX/UI best (2026-05-13)
+
+Эльбик попросил «свёрстать pixel-perfect лендинг RU.TV из Figma». FigMCP подключён через Chrome OAuth, найден frame `3373:2073` "Главная" (1440×3975 white-bg). Выкачана структура: top-nav 5 items с SF Pro Symbols glyphs, hero Uma2rman + image1, 5 афиш (Анна Семенович МК / Звёзды Хайпа / Лёгкое знакомство / placeholder / Masters of the Air), RASA Пулевой featured + image2 + white CTA, 6 клипов 236×236 (Артём Качер / Сергей Зверев / MIA BOYKA / INSTASAMKA / Нина Фокина / Авраам Руссо), 5 новостей (Гарик / Влад Топалов ×2 / Виктория Боня), 5 программ (СТАТУС:В СЕТИ / ДЕНЬГИ / СУПЕР 20 / ТЕМА), partners (Русское Радио / RU.TV / MAXIMUM / RADIO MONTE CARLO / ХИТ FM), footer с контактами + App Store/Google Play badges.
+
+Все ассеты mapping подтверждён через Read PNG: Rectangle 4322 series + image1/image2 + unsplash_* партнёрки + RUTV 2 (пустой) → реальный лого собран как inline SVG (currentColor RU + masked TV badge).
+
+Сделаны **2 версии** (Эльбик: «лучший сайт что возможен И версию что 1в1 тоже оставь как 2 вариант»):
+
+**Артефакты:**
+- `designs/rutv-landing.html` (production-best, 120 KB) + `-standalone.html` (11.2 MB)
+- `designs/rutv-landing-figma.html` (Figma 1-в-1, 36 KB) + `-standalone.html` (4.1 MB)
+- `tools/build_rutv_landing_standalone.py` — base64-инлайнер для обеих версий
+
+**Production-best спецификация (Karpathy-tier UX-research applied):**
+- **SPA hash-router** 7 views (home / live / news / poster / video / programs / schedule)
+- **Sticky nav** с frosted backdrop-blur (Apple HIG iOS 26 Liquid Glass), transparent over hero → solid on scroll
+- **Cinematic hero** 100dvh с Ken Burns анимацией bg image, gradient top→bottom (НЕ flat 40%), LIVE pulse pill (Twitch-style) с auto-changing viewer count, eyebrow + giant title clamp(38-84px) + meta row + 2 CTAs (Apple TV+ pattern)
+- **Now-playing chip** Spotify-style fixed bottom-right с rotating album art + dismiss
+- **Category chips row** sticky под navom (Apple Music)
+- **Card hover preview** Netflix-pattern: scale 1.02 + shadow-xl + play overlay fade-in
+- **Featured premiere** RASA Пулевой как floating card с rounded corners + hover scale
+- **Schedule grid** YouTube TV pattern: 7 days × time slots, currently-airing red highlight с LIVE pulse
+- **Subscribe banner** brand red gradient с decorative glow
+- **6 inner views** production-quality (Live player с up-next sidebar, News с featured + 12 cards + filter, Poster с date-cards + венs, Video grid 12 clips + sort, Programs с stats + episodes, Schedule full week × time)
+- **Modal video player** с overlay backdrop-blur, ESC + click-outside close
+- **Mobile bottom nav** с frosted backdrop (5 icons sync with route)
+- **Dark mode** auto via prefers-color-scheme
+- **Accessibility**: skip-link / aria-current / aria-live / focus-visible / role landmarks / keyboard nav
+- **SEO**: title, description, og:* full set, twitter:card, JSON-LD WebSite + Organization
+- **Performance**: preload hero image, lazy load all cards, critical CSS inline
+- **Typography**: Onest 400-900 + SF Pro fallback (HG-compliant, НЕ Inter/Roboto)
+- **Refactoring UI**: 5-tier shadow ladder, brand-glow shadow, concentric corners (radius xl→pill)
+- **Reduced motion**: prefers-reduced-motion respect (kills Ken Burns + reveal animations)
+
+**Real RU.TV logo:** Inline SVG с маской — белый "RU" + circle с "TV" вырезанным (currentColor для адаптации к фону). Original RUTV 2.png в Figma экспорте — пустой; реальный канонический бренд воссоздан из `unsplash_qiMCJHg2vTI.png` партнёрской badge.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| RUTV-100 | FigMCP OAuth через Chrome MCP подключение | done |
+| RUTV-101 | Figma frame 3373:2073 "Главная" mapping (depth 5+) — 8 sections + footer + 19 unique images | done |
+| RUTV-102 | Cross-reference Figma image hashes ↔ designs/assets/rutv/ files via Read PNG (28 unique) | done |
+| RUTV-103 | rutv-landing-figma.html — pixel-perfect 1-в-1 Figma copy (white bg, top-nav, padding 230px, SF Pro fallback) | done |
+| RUTV-104 | Real RU.TV logo SVG (currentColor, masked TV badge) — replaces empty RUTV 2.png | done |
+| RUTV-105 | rutv-landing.html — production-best с Karpathy UX research (Apple TV+/Netflix/Spotify/YT TV patterns) | done |
+| RUTV-106 | SPA hash router (#/home, #/live, #/news, #/poster, #/video, #/programs, #/schedule) | done |
+| RUTV-107 | Live view: player frame + LIVE badge + up-next sidebar (7 items) + actions (like/share/quality) | done |
+| RUTV-108 | News view: filter chips + featured news + 12-card grid + load-more | done |
+| RUTV-109 | Poster view: 5 horizontal event-cards с date column + meta + CTAs | done |
+| RUTV-110 | Video view: filter + sort + 12 квадратных clips grid | done |
+| RUTV-111 | Programs view: 6 program cards с stats (episodes/schedule/rating) | done |
+| RUTV-112 | Schedule view: full week × 7 time slots grid с today highlight + LIVE cell | done |
+| RUTV-113 | Mobile responsive (375/414/768) с bottom nav, hero 100dvh, stacked cards, snap-x carousels | done |
+| RUTV-114 | Standalone build script для обеих версий (rutv-landing-standalone 11MB / figma-standalone 4MB) | done |
+| RUTV-115 | Chrome MCP visual verify: home/live/news/poster/video/programs/schedule × desktop/mobile/iPad | done |
+| RUTV-116 | Real video stream integration (HLS placeholder → реальный) | pending |
+| RUTV-117 | Search функция (search bar в topnav пока inactive) | pending |
+| RUTV-118 | User auth flow (Войти кнопка пока без backend) | pending |
+| RUTV-119 | Заказчик выбирает: Figma 1-в-1 vs production-best → выбранный → Next.js + shadcn/ui | pending |
+| RUTV-120 | Подача RU.TV: deck + walkthrough видео обеих версий | pending |
+
 ## CRM Glass — Turbo Performance CMS (2026-04-22)
 
 Редизайн CMS dev.turbo-performance.ru в Liquid Glass стиле — для заказчика «Турбо Перформанс» (отдельный клиент от Twinr, пересобран стилевой язык 1-в-1 с Twinr LG). Single-file HTML + base64 standalone.

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#000000" />
+<title>RU.TV — Главный музыкальный канал страны</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     RU.TV Landing — pixel-perfect port of Figma frame 3373:2073
+     ============================================================ */
+
+  :root {
+    --c-page: #FFFFFF;
+    --c-text: #1A1919;
+    --c-text-muted: #8E8E93;
+    --c-divider: #E5E5EA;
+    --c-overlay: rgba(0,0,0,.40);
+    --c-yellow: #FFDA1B;
+    --c-link: #007AFF;
+
+    /* Figma frame 1440 wide with 230 padding → 16% pad on canvas */
+    --pad-x: clamp(20px, 16vw, 230px);
+    --canvas: 1440px;
+
+    --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+                  "Onest", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--c-page);
+    color: var(--c-text);
+    font-family: var(--font-stack);
+    font-size: 13px;
+    line-height: 1.4;
+    text-rendering: optimizeLegibility;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ---------- HERO PRIMARY ----------
+     1440×672, image 1 background + 40% black overlay,
+     RUTV logo top-left (230, 37, 48px), nav center (516, 32),
+     title block bottom-left (230, 572). */
+
+  .hero {
+    position: relative;
+    width: 100%;
+    height: clamp(420px, calc(672 / 1440 * 100vw), 672px);
+    background: #000;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero-primary { margin-bottom: 16px; }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: var(--bg) center/cover no-repeat;
+    background-color: #0a0a0a;
+    z-index: 1;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: var(--c-overlay);
+    z-index: 2;
+  }
+
+  /* TOP NAV — floats over hero */
+  .topnav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    height: 122px;
+    display: grid;
+    grid-template-columns: minmax(120px,1fr) auto minmax(120px,1fr);
+    align-items: center;
+    padding: 32px var(--pad-x) 0;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 6px;
+    color: #fff;
+    width: 96px; height: 48px;
+  }
+  .logo svg { width: 96px; height: 48px; display:block; }
+  .topnav nav {
+    display: flex; gap: 32px;
+    align-items: flex-start;
+  }
+  .topnav nav a {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 22px;
+    transition: opacity .2s;
+  }
+  .topnav nav a:hover { opacity: .75; }
+  .topnav nav a .ico { width: 32px; height: 32px; display:block; opacity: .92; }
+  .topnav-actions {
+    display: flex; justify-content: flex-end; align-items: center; gap: 16px;
+  }
+
+  /* HERO BIG PLAY (overlap centre) */
+  .hero-play {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    width: 150px; height: 150px;
+    border: none; background: transparent;
+    color: #fff;
+    opacity: .3;
+    transition: opacity .2s, transform .2s;
+  }
+  .hero-play:hover { opacity: .55; transform: translate(-50%,-50%) scale(1.04); }
+  .hero-play svg { width: 100%; height: 100%; display:block; }
+
+  /* HERO TEXT BLOCK (left, bottom) */
+  .hero-text {
+    position: absolute;
+    left: var(--pad-x);
+    bottom: 24px;
+    right: var(--pad-x);
+    z-index: 4;
+    color: #fff;
+    display: flex; flex-direction: column;
+    gap: 22px;
+  }
+  .hero-text h1 {
+    margin: 0;
+    font-size: clamp(28px, 2.78vw, 40px);
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+  .hero-text .meta {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: .02em;
+  }
+
+  /* HERO SECONDARY (RASA - Пулевой) — same with white CTA right */
+  .hero-secondary { margin: 16px 0; }
+  .hero-text-row {
+    position: absolute;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    bottom: 24px;
+    z-index: 4;
+    display: flex; align-items: flex-end; gap: 16px;
+    color: #fff;
+  }
+  .hero-text-row .hero-text {
+    position: static;
+    flex: 1;
+    left: auto; right: auto; bottom: auto;
+  }
+  .btn-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #fff;
+    color: #000;
+    padding: 16px 24px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 14px;
+    border: none;
+    transition: transform .15s, box-shadow .2s;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .btn-pill:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+
+  /* ---------- ROW SECTION (carousels) ---------- */
+  .row-section {
+    width: 100%;
+    overflow: hidden;
+    padding: 16px 0;
+  }
+  .row-track {
+    display: flex; gap: 16px;
+    padding: 0 var(--pad-x);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad-x);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .row-track::-webkit-scrollbar { display: none; }
+
+  .card {
+    flex: 0 0 auto;
+    width: 419px;
+    display: flex; flex-direction: column; gap: 10px;
+    scroll-snap-align: start;
+    transition: transform .2s;
+  }
+  .card:hover { transform: translateY(-2px); }
+  .card-square { width: 236px; }
+  .card-fade { opacity: .6; }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 419 / 236;
+    background: #D9D9D9 var(--src) center/cover no-repeat;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .card-square .card-img { aspect-ratio: 1 / 1; }
+
+  .card-text {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 0 2px;
+  }
+  .card-title {
+    font-size: 13px; line-height: 18px;
+    font-weight: 600;
+    color: var(--c-text);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+  }
+  .card-sub {
+    font-size: 13px; line-height: 18px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+  }
+
+  /* ---------- CONTENT SECTION (heading + row) ---------- */
+  .content-section {
+    padding: 56px 0 0;
+  }
+  .section-head {
+    padding: 0 var(--pad-x);
+    margin-bottom: 24px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .section-logo {
+    width: 96px; height: 48px;
+    color: var(--c-text);
+  }
+  .section-logo svg { width: 96px; height: 48px; display:block; }
+  .section-head h2 {
+    margin: 0;
+    font-size: clamp(28px, 2.78vw, 40px);
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: var(--c-text);
+    max-width: 980px;
+    text-wrap: balance;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    margin-top: 80px;
+    border-top: 1.4px solid var(--c-divider);
+    border-bottom: 1.4px solid var(--c-divider);
+    padding: 24px 32px;
+  }
+  .footer-inner {
+    display: flex; flex-direction: column;
+    gap: 24px;
+    max-width: 1376px;
+    margin: 0 auto;
+  }
+
+  .partners {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+  .partner-cell {
+    background: #000;
+    border-radius: 8px;
+    aspect-ratio: 262.4 / 115;
+    overflow: hidden;
+  }
+  .partner-cell img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .footer-grid {
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .office-title {
+    margin: 0;
+    font-size: 17px; line-height: 22px;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+  .contact-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .contact-cols div {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .contact-cols p {
+    margin: 0;
+    font-size: 13px; line-height: 18px;
+    font-weight: 400;
+    color: var(--c-text);
+  }
+
+  .footer-links {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    align-items: center;
+    font-size: 11px; line-height: 13px;
+    font-weight: 400;
+    color: var(--c-text);
+  }
+  .footer-links .sep { color: var(--c-text); padding: 0 0; }
+  .footer-links a:hover { text-decoration: underline; }
+  .footer-links .link-blue { color: var(--c-link); }
+
+  .copyright {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    font-size: 11px; line-height: 13px;
+    color: var(--c-text);
+    align-items: center;
+  }
+  .copyright .muted { color: var(--c-text-muted); }
+
+  .badges {
+    display: flex; gap: 16px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .badges img {
+    height: 60px;
+    width: auto;
+    border-radius: 8px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+
+  /* Tablet 768-1024 */
+  @media (max-width: 1024px) {
+    .topnav {
+      grid-template-columns: auto auto;
+      padding: 20px 24px;
+      height: 80px;
+    }
+    .topnav nav {
+      display: none;
+    }
+    .hero-text h1, .section-head h2 {
+      font-size: clamp(24px, 4.5vw, 34px);
+    }
+    .card { width: 320px; }
+    .card-square { width: 200px; }
+    .partners {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .contact-cols { grid-template-columns: 1fr; }
+  }
+
+  /* Mobile <768 */
+  @media (max-width: 767px) {
+    .hero {
+      height: 100dvh;
+      max-height: 720px;
+    }
+    .hero-primary { margin-bottom: 0; }
+    .hero-secondary {
+      height: 75dvh;
+      max-height: 560px;
+      margin: 0;
+    }
+    .topnav {
+      height: 64px;
+      padding: 14px 20px;
+    }
+    .logo, .logo svg { width: 80px; height: 40px; }
+    .hero-play { width: 88px; height: 88px; }
+    .hero-text {
+      left: 20px; right: 20px;
+      bottom: calc(72px + env(safe-area-inset-bottom));
+      gap: 14px;
+    }
+    .hero-text h1 {
+      font-size: 28px;
+      letter-spacing: -.02em;
+    }
+    .hero-text .meta { font-size: 12px; }
+    .hero-text-row {
+      left: 20px; right: 20px;
+      bottom: calc(72px + env(safe-area-inset-bottom));
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+    }
+    .btn-pill {
+      width: 100%;
+      justify-content: center;
+      padding: 14px 22px;
+      font-size: 15px;
+    }
+    .row-section { padding: 12px 0; }
+    .row-track {
+      gap: 12px;
+      padding: 0 20px;
+      scroll-padding-inline: 20px;
+    }
+    .card { width: 78vw; max-width: 320px; }
+    .card-square { width: 156px; }
+    .content-section { padding-top: 36px; }
+    .section-head {
+      padding: 0 20px;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      font-size: 24px;
+      line-height: 1.1;
+    }
+    .section-logo, .section-logo svg { width: 80px; height: 40px; }
+
+    /* Bottom nav for mobile */
+    .botnav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-top: .5px solid rgba(0,0,0,.12);
+      padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+    .botnav a {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      color: #1A1919;
+      font-size: 10px;
+      line-height: 12px;
+      padding: 6px 4px;
+      text-align: center;
+    }
+    .botnav a .ico { width: 24px; height: 24px; }
+    .botnav a.active { color: #FF2D55; }
+
+    /* shift footer above bottom nav */
+    footer { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+    .partners {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .partner-cell:nth-child(5) { grid-column: span 2; aspect-ratio: 5; }
+    .footer-links, .copyright {
+      font-size: 11px;
+      line-height: 18px;
+    }
+    .badges img { height: 48px; }
+  }
+
+  /* hide bottom nav on tablet+ */
+  @media (min-width: 768px) {
+    .botnav { display: none; }
+  }
+
+  /* Print + reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== HERO 1: Uma2rman ============== -->
+<section class="hero hero-primary">
+  <div class="hero-bg" style="--bg: url('assets/rutv/image%201.png');"></div>
+  <div class="hero-overlay"></div>
+
+  <header class="topnav">
+    <a class="logo" href="#" aria-label="RU.TV">
+      <!-- RU.TV logo: red oval with white inner ring + "RU" red and "TV" white-on-red oval -->
+      <svg viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <mask id="rutv-tv-cut-rutv-landing-figma-1">
+            <rect width="96" height="48" fill="#fff"/>
+            <text x="74" y="33" text-anchor="middle" fill="#000" font-family="Onest, system-ui, sans-serif" font-weight="900" font-size="22" letter-spacing="-.04em">TV</text>
+          </mask>
+        </defs>
+        <text x="0" y="38" fill="currentColor" font-family="Onest, system-ui, sans-serif" font-weight="900" font-size="38" letter-spacing="-.05em">RU</text>
+        <circle cx="74" cy="24" r="22" fill="currentColor" mask="url(#rutv-tv-cut-rutv-landing-figma-1)"/>
+      </svg>
+    </a>
+    <nav aria-label="Главное меню">
+      <a href="#live">
+        <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12a14 14 0 0 1 22 0"/><path d="M9 16a8 8 0 0 1 14 0"/><circle cx="16" cy="22" r="2.2" fill="currentColor"/>
+        </svg>
+        Прямой эфир
+      </a>
+      <a href="#news">
+        <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="6" width="22" height="20" rx="2"/><path d="M9 12h14M9 16h14M9 20h9"/>
+        </svg>
+        Новости
+      </a>
+      <a href="#poster">
+        <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="7" width="22" height="20" rx="2"/><path d="M5 13h22M11 4v6M21 4v6"/>
+        </svg>
+        Афиша
+      </a>
+      <a href="#video">
+        <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="16" cy="16" r="11"/><path d="M14 12l6 4-6 4z" fill="currentColor"/>
+        </svg>
+        Видео
+      </a>
+      <a href="#programs">
+        <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="5" width="9" height="9" rx="1.5"/><rect x="18" y="5" width="9" height="9" rx="1.5"/><rect x="5" y="18" width="9" height="9" rx="1.5"/><rect x="18" y="18" width="9" height="9" rx="1.5"/>
+        </svg>
+        Программы
+      </a>
+    </nav>
+    <div class="topnav-actions"></div>
+  </header>
+
+  <button class="hero-play" type="button" aria-label="Смотреть прямой эфир">
+    <svg viewBox="0 0 150 150" fill="currentColor" aria-hidden="true">
+      <circle cx="75" cy="75" r="74" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M58 47 L113 75 L58 103 Z"/>
+    </svg>
+  </button>
+
+  <div class="hero-text">
+    <h1>Uma2rman — Дождись</h1>
+    <p class="meta">ПРЯМОЙ ЭФИР</p>
+  </div>
+</section>
+
+<!-- ============== AFISHA ROW (carousel) ============== -->
+<section class="row-section" aria-label="Афиша">
+  <div class="row-track">
+    <a class="card" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322.png'); background-color: #00ABDB;"></div>
+      <div class="card-text">
+        <span class="card-title">«Первый по счёту» от анкоратор АО «Русское Радио-Евразия»</span>
+        <span class="card-sub">Афиша</span>
+      </div>
+    </a>
+    <a class="card" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-1.png');"></div>
+      <div class="card-text">
+        <span class="card-title">Анна Семенович и RU.TV подарят гостям катка в Лужниках мастер-класс</span>
+        <span class="card-sub">Афиша</span>
+      </div>
+    </a>
+    <a class="card" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-2.png');"></div>
+      <div class="card-text">
+        <span class="card-title">«Русское Радио» и HYPE PRODUCTION представляют</span>
+        <span class="card-sub">Афиша</span>
+      </div>
+    </a>
+    <a class="card" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-3.png');"></div>
+      <div class="card-text">
+        <span class="card-title">Спектакль-откровение «Лёгкое знакомство» поможет зрителям</span>
+        <span class="card-sub">Афиша</span>
+      </div>
+    </a>
+    <a class="card card-fade" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-4.png'); background-color: #FF8A00;"></div>
+      <div class="card-text">
+        <span class="card-title">Masters of the Air</span>
+        <span class="card-sub">Афиша</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============== HERO 2: RASA — Пулевой ============== -->
+<section class="hero hero-secondary">
+  <div class="hero-bg" style="--bg: url('assets/rutv/image%202.png');"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-text-row">
+    <div class="hero-text">
+      <h1>RASA - Пулевой</h1>
+      <p class="meta">НОВИНКИ</p>
+    </div>
+    <a class="btn-pill" href="#">Смотреть</a>
+  </div>
+</section>
+
+<!-- ============== CLIPS ROW (square cards) ============== -->
+<section class="row-section" aria-label="Клипы">
+  <div class="row-track">
+    <a class="card card-square" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-5.png');"></div>
+      <div class="card-text">
+        <span class="card-title">Ко дну</span>
+        <span class="card-sub">Артём Качер</span>
+      </div>
+    </a>
+    <a class="card card-square" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-6.png');"></div>
+      <div class="card-text">
+        <span class="card-title">А я сияю</span>
+        <span class="card-sub">Сергей Зверев</span>
+      </div>
+    </a>
+    <a class="card card-square" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-7.png');"></div>
+      <div class="card-text">
+        <span class="card-title">Навигатор</span>
+        <span class="card-sub">MIA BOYKA</span>
+      </div>
+    </a>
+    <a class="card card-square" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-8.png');"></div>
+      <div class="card-text">
+        <span class="card-title">Среда</span>
+        <span class="card-sub">INSTASAMKA</span>
+      </div>
+    </a>
+    <a class="card card-square" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-9.png');"></div>
+      <div class="card-text">
+        <span class="card-title">Мама</span>
+        <span class="card-sub">Нина Фокина</span>
+      </div>
+    </a>
+    <a class="card card-square" href="#">
+      <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-10.png');"></div>
+      <div class="card-text">
+        <span class="card-title">Возвращаюсь домой</span>
+        <span class="card-sub">Авраам Руссо</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============== NEWS SECTION ============== -->
+<section class="content-section" id="news">
+  <div class="section-head">
+    <span class="section-logo" aria-hidden="true">
+      <svg viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <mask id="rutv-tv-cut-rutv-landing-figma-2">
+            <rect width="96" height="48" fill="#fff"/>
+            <text x="74" y="33" text-anchor="middle" fill="#000" font-family="Onest, system-ui, sans-serif" font-weight="900" font-size="22" letter-spacing="-.04em">TV</text>
+          </mask>
+        </defs>
+        <text x="0" y="38" fill="currentColor" font-family="Onest, system-ui, sans-serif" font-weight="900" font-size="38" letter-spacing="-.05em">RU</text>
+        <circle cx="74" cy="24" r="22" fill="currentColor" mask="url(#rutv-tv-cut-rutv-landing-figma-2)"/>
+      </svg>
+    </span>
+    <h2>Исследуйте лучшие новости дня, последние события в мире шоу-бизнеса и многое другое.</h2>
+  </div>
+  <div class="row-section">
+    <div class="row-track">
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-11.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Гарик продемонстрировал поклонникам идеальный пресс</span>
+          <span class="card-sub">Хиты дня</span>
+        </div>
+      </a>
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-12.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Влад Топалов рассказал, как познакомился с Региной Тодоренко</span>
+          <span class="card-sub">Хиты дня</span>
+        </div>
+      </a>
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-13.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Виктория Боня рассказала о кардинальных переменах в жизни</span>
+          <span class="card-sub">Хиты дня</span>
+        </div>
+      </a>
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-14.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Влад Топалов — концертные снимки</span>
+          <span class="card-sub">Хиты дня</span>
+        </div>
+      </a>
+      <a class="card card-fade" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322.png'); background-color: #00ABDB;"></div>
+        <div class="card-text">
+          <span class="card-title">Все материалы раздела</span>
+          <span class="card-sub">Новости</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PROGRAMS SECTION ============== -->
+<section class="content-section" id="programs">
+  <div class="section-head">
+    <span class="section-logo" aria-hidden="true">
+      <svg viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <mask id="rutv-tv-cut-rutv-landing-figma-3">
+            <rect width="96" height="48" fill="#fff"/>
+            <text x="74" y="33" text-anchor="middle" fill="#000" font-family="Onest, system-ui, sans-serif" font-weight="900" font-size="22" letter-spacing="-.04em">TV</text>
+          </mask>
+        </defs>
+        <text x="0" y="38" fill="currentColor" font-family="Onest, system-ui, sans-serif" font-weight="900" font-size="38" letter-spacing="-.05em">RU</text>
+        <circle cx="74" cy="24" r="22" fill="currentColor" mask="url(#rutv-tv-cut-rutv-landing-figma-3)"/>
+      </svg>
+    </span>
+    <h2>Десятки телепрограмм из разных жанров.<br />Все собрано в одном месте.</h2>
+  </div>
+  <div class="row-section">
+    <div class="row-track">
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-15.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Статус: в сети — сервис доставки приветов и поздравлений</span>
+          <span class="card-sub">Программы</span>
+        </div>
+      </a>
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-16.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Деньги в большом городе</span>
+          <span class="card-sub">Программы</span>
+        </div>
+      </a>
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-17.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Супер 20</span>
+          <span class="card-sub">Программы</span>
+        </div>
+      </a>
+      <a class="card" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-18.png');"></div>
+        <div class="card-text">
+          <span class="card-title">Тема — обсудим вместе</span>
+          <span class="card-sub">Программы</span>
+        </div>
+      </a>
+      <a class="card card-fade" href="#">
+        <div class="card-img" style="--src: url('assets/rutv/Rectangle%204322-4.png'); background-color: #FF8A00;"></div>
+        <div class="card-text">
+          <span class="card-title">Все программы канала</span>
+          <span class="card-sub">Программы</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="footer-inner">
+
+    <!-- Partners row -->
+    <div class="partners" role="list" aria-label="Партнёры РМГ">
+      <a class="partner-cell" href="https://rusradio.ru" role="listitem" aria-label="Русское Радио">
+        <img src="assets/rutv/unsplash_kMJp7620W6U.png" alt="Русское Радио" loading="lazy" />
+      </a>
+      <a class="partner-cell" href="https://ru.tv" role="listitem" aria-label="RU.TV">
+        <img src="assets/rutv/unsplash_qiMCJHg2vTI.png" alt="RU.TV" loading="lazy" />
+      </a>
+      <a class="partner-cell" href="https://maximum.ru" role="listitem" aria-label="MAXIMUM">
+        <img src="assets/rutv/unsplash_PaCzyxEcqiw.png" alt="Maximum" loading="lazy" />
+      </a>
+      <a class="partner-cell" href="https://montecarlo.ru" role="listitem" aria-label="Radio Monte Carlo">
+        <img src="assets/rutv/unsplash_hwc7eIQiTCE.png" alt="Radio Monte Carlo" loading="lazy" />
+      </a>
+      <a class="partner-cell" href="https://hitfm.ru" role="listitem" aria-label="ХИТ FM">
+        <img src="assets/rutv/unsplash_DItYlc26zVI.png" alt="ХИТ FM" loading="lazy" />
+      </a>
+    </div>
+
+    <!-- Office contacts -->
+    <div class="footer-grid">
+      <h3 class="office-title">Головной Офис</h3>
+      <div class="contact-cols">
+        <div>
+          <p>Адрес — 123298, Москва, 3-я Хорошевская улица, д. 12, «DFM»</p>
+          <p>Телефон — +7 499 579-77-09</p>
+          <p>Прямой эфир — +7 (495) 956 10 12</p>
+        </div>
+        <div>
+          <p>WhatsApp — +7 495 956-10-12</p>
+          <p>Техподдержка сайта — rmgsupport@gmail.com</p>
+          <p>Новости и пресс-релизы — dfm@dfm.ru</p>
+          <p>Телефон рекламной службы — +7 499 579-77-99</p>
+        </div>
+      </div>
+
+      <!-- Section links row -->
+      <div class="footer-links">
+        <a href="#">Radio</a><span class="sep">|</span>
+        <a href="#">News</a><span class="sep">|</span>
+        <a href="#">Podcasts</a><span class="sep">|</span>
+        <a href="#">Favorites</a><span class="sep">|</span>
+        <a href="#">Contact Us</a><span class="sep">|</span>
+        <a href="#" class="link-blue">About Us</a><span class="sep">|</span>
+        <a href="#">VK</a><span class="sep">|</span>
+        <a href="#">Одноклассники</a><span class="sep">|</span>
+        <a href="#">WhatsApp</a><span class="sep">|</span>
+        <a href="#">Telegram</a><span class="sep">|</span>
+        <a href="#">Youtube</a>
+      </div>
+
+      <div class="copyright">
+        <span class="muted">Copyright</span>
+        <span>Radio Maximum LLC.</span>
+        <span class="muted">All rights reserved.</span>
+        <span class="sep">|</span>
+        <a href="#">Политика безопасности</a>
+        <span class="sep">|</span>
+        <a href="#">Пользовательское соглашение</a>
+      </div>
+    </div>
+
+    <!-- App badges -->
+    <div class="badges">
+      <a href="https://apps.apple.com" aria-label="Скачать в App Store">
+        <img src="assets/rutv/App Store.png" alt="Download on the App Store" loading="lazy" />
+      </a>
+      <a href="https://play.google.com" aria-label="Скачать в Google Play">
+        <img src="assets/rutv/google-play-badge 1.png" alt="Get it on Google Play" loading="lazy" />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- Mobile bottom nav -->
+<nav class="botnav" aria-label="Главное меню">
+  <a href="#" class="active">
+    <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a14 14 0 0 1 22 0"/><path d="M9 16a8 8 0 0 1 14 0"/><circle cx="16" cy="22" r="2.2" fill="currentColor"/></svg>
+    Эфир
+  </a>
+  <a href="#news">
+    <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="6" width="22" height="20" rx="2"/><path d="M9 12h14M9 16h14M9 20h9"/></svg>
+    Новости
+  </a>
+  <a href="#poster">
+    <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="22" height="20" rx="2"/><path d="M5 13h22M11 4v6M21 4v6"/></svg>
+    Афиша
+  </a>
+  <a href="#video">
+    <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="11"/><path d="M14 12l6 4-6 4z" fill="currentColor"/></svg>
+    Видео
+  </a>
+  <a href="#programs">
+    <svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="9" height="9" rx="1.5"/><rect x="18" y="5" width="9" height="9" rx="1.5"/><rect x="5" y="18" width="9" height="9" rx="1.5"/><rect x="18" y="18" width="9" height="9" rx="1.5"/></svg>
+    Программы
+  </a>
+</nav>
+
+<script>
+  // Smooth-scroll carousels via wheel/horizontal flick
+  document.querySelectorAll('.row-track').forEach(track => {
+    track.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) * 1.5) {
+        track.scrollBy({ left: e.deltaY, behavior: 'auto' });
+        e.preventDefault();
+      }
+    }, { passive: false });
+  });
+
+  // Hero play button — placeholder click
+  document.querySelectorAll('.hero-play, .btn-pill').forEach(btn => {
+    btn.addEventListener('click', e => {
+      // would route to video player in production
+      console.log('[RU.TV] play action', btn.textContent.trim() || 'hero');
+    });
+  });
+</script>
+
+</body>
+</html>

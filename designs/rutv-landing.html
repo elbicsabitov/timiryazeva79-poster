@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<title>RU.TV — Главный музыкальный канал страны · Прямой эфир, клипы, программы</title>
+
+<!-- SEO -->
+<meta name="description" content="RU.TV — Главный музыкальный канал страны. Прямой эфир, клипы, чарт хитов, программы и новости шоу-бизнеса. Слушайте Русское Радио, DFM, Maximum, Monte Carlo, Хит FM в одном приложении." />
+<meta name="keywords" content="RU.TV, Русское Радио, DFM, Maximum, Monte Carlo, Хит FM, музыкальный канал, прямой эфир, клипы, чарт, шоу-бизнес" />
+<link rel="canonical" href="https://ru.tv/" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="RU.TV — Главный музыкальный канал страны" />
+<meta property="og:description" content="Прямой эфир, клипы, чарт хитов, программы и новости шоу-бизнеса в одном приложении." />
+<meta property="og:image" content="assets/rutv/image%201.png" />
+<meta property="og:locale" content="ru_RU" />
+<meta property="og:site_name" content="RU.TV" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="RU.TV — Главный музыкальный канал страны" />
+<meta name="twitter:description" content="Прямой эфир, клипы, чарт хитов, программы и новости шоу-бизнеса." />
+
+<!-- Performance -->
+<link rel="preload" href="assets/rutv/image%201.png" as="image" fetchpriority="high" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ru.tv/#org",
+      "name": "RU.TV",
+      "url": "https://ru.tv/",
+      "logo": "https://ru.tv/assets/rutv/RUTV%202.png",
+      "parentOrganization": { "@type": "Organization", "name": "Русская Медиагруппа" },
+      "sameAs": [
+        "https://vk.com/rutv", "https://t.me/rutv_official", "https://www.youtube.com/@rutv"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "url": "https://ru.tv/",
+      "name": "RU.TV",
+      "publisher": { "@id": "https://ru.tv/#org" },
+      "inLanguage": "ru-RU"
+    }
+  ]
+}
+</script>
+
+<style>
+  /* ==========================================================
+     RU.TV Landing v1 — Production-best version
+     UX: Apple TV+ cinematic hero · Netflix card hover · Spotify
+     now-playing · YouTube TV live indicator · Refactoring UI
+     hierarchy & elevation · Apple HIG iOS 26 Liquid Glass nav
+     ========================================================== */
+
+  :root {
+    --c-bg: #FAFAFA;
+    --c-surface: #FFFFFF;
+    --c-text: #0A0A0A;
+    --c-text-muted: #6B7280;
+    --c-text-subtle: #9CA3AF;
+    --c-divider: #E5E7EB;
+    --c-divider-soft: #F3F4F6;
+    --c-brand: #E30033;
+    --c-brand-strong: #C70029;
+    --c-brand-soft: #FFEEEF;
+    --c-live: #FF2D55;
+    --c-yellow: #FFDA1B;
+    --c-overlay-grad: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.15) 30%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.85) 100%);
+    --c-glass-light: rgba(255,255,255,.78);
+    --c-glass-dark: rgba(10,10,10,.72);
+    --pad-x: clamp(20px, 5.5vw, 80px);
+    --font-stack: "Onest", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    --shadow-xs: 0 1px 2px rgba(10,10,10,.05);
+    --shadow-sm: 0 2px 8px rgba(10,10,10,.06), 0 1px 2px rgba(10,10,10,.04);
+    --shadow-md: 0 4px 16px rgba(10,10,10,.08), 0 2px 4px rgba(10,10,10,.04);
+    --shadow-lg: 0 8px 32px rgba(10,10,10,.10), 0 4px 8px rgba(10,10,10,.05);
+    --shadow-xl: 0 16px 48px rgba(10,10,10,.16), 0 8px 16px rgba(10,10,10,.08);
+    --shadow-glow: 0 12px 40px rgba(227,0,51,.30);
+    --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px; --r-pill: 999px;
+    --t-fast: 120ms cubic-bezier(.2,.8,.2,1);
+    --t-norm: 220ms cubic-bezier(.2,.8,.2,1);
+    --t-slow: 380ms cubic-bezier(.2,.8,.2,1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --c-bg: #0A0A0A;
+      --c-surface: #141414;
+      --c-text: #FAFAFA;
+      --c-text-muted: #9CA3AF;
+      --c-text-subtle: #6B7280;
+      --c-divider: #2A2A2D;
+      --c-divider-soft: #1F1F22;
+    }
+  }
+
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--c-bg); color: var(--c-text);
+    font-family: var(--font-stack);
+    font-size: 15px; line-height: 1.5;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  ::selection { background: var(--c-brand); color: #fff; }
+
+  .skip-link {
+    position: absolute; top: -40px; left: 8px;
+    padding: 8px 14px;
+    background: var(--c-brand); color: #fff;
+    border-radius: var(--r-md);
+    font-weight: 600; z-index: 1000;
+    transition: top var(--t-fast);
+  }
+  .skip-link:focus { top: 8px; }
+
+  /* ============== STICKY TOP NAV ============== */
+  .topnav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    height: 72px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 24px;
+    padding: 0 var(--pad-x);
+    transition: background var(--t-norm), backdrop-filter var(--t-norm), border-color var(--t-norm), box-shadow var(--t-norm);
+    border-bottom: 1px solid transparent;
+  }
+  .topnav.is-stuck {
+    background: var(--c-glass-dark);
+    backdrop-filter: saturate(180%) blur(28px);
+    -webkit-backdrop-filter: saturate(180%) blur(28px);
+    border-bottom-color: rgba(255,255,255,.08);
+    box-shadow: var(--shadow-md);
+  }
+  @media (prefers-color-scheme: light) {
+    .topnav.is-stuck {
+      background: var(--c-glass-light);
+      border-bottom-color: rgba(0,0,0,.06);
+    }
+  }
+  .topnav .logo {
+    width: 96px; height: 40px; color: #fff;
+    display: flex; align-items: center;
+    transition: color var(--t-norm);
+  }
+  .topnav.is-stuck .logo { color: var(--c-text); }
+  .topnav .logo svg { width: 100%; height: 100%; display: block; }
+
+  .topnav nav {
+    display: flex; gap: 4px;
+    justify-content: center; align-items: center;
+  }
+  .topnav nav a {
+    color: rgba(255,255,255,.85);
+    font-size: 14px; font-weight: 500;
+    padding: 10px 16px;
+    border-radius: var(--r-pill);
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background var(--t-fast), color var(--t-fast);
+  }
+  .topnav.is-stuck nav a { color: var(--c-text-muted); }
+  .topnav nav a:hover { background: rgba(255,255,255,.10); color: #fff; }
+  .topnav.is-stuck nav a:hover { background: rgba(0,0,0,.05); color: var(--c-text); }
+  .topnav nav a[aria-current="page"] {
+    color: #fff; background: rgba(255,255,255,.14);
+  }
+  .topnav.is-stuck nav a[aria-current="page"] {
+    color: var(--c-brand); background: var(--c-brand-soft);
+  }
+  @media (prefers-color-scheme: dark) {
+    .topnav.is-stuck nav a[aria-current="page"] { background: rgba(227,0,51,.18); }
+  }
+
+  .topnav-actions { display: flex; align-items: center; gap: 6px; }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--r-pill);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.9);
+    transition: background var(--t-fast), color var(--t-fast);
+  }
+  .topnav.is-stuck .icon-btn { color: var(--c-text); }
+  .icon-btn:hover { background: rgba(255,255,255,.10); }
+  .topnav.is-stuck .icon-btn:hover { background: rgba(0,0,0,.05); }
+  .icon-btn svg { width: 22px; height: 22px; }
+
+  .signin-btn {
+    padding: 9px 18px;
+    border-radius: var(--r-pill);
+    font-size: 14px; font-weight: 600;
+    background: var(--c-brand); color: #fff;
+    transition: transform var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+  }
+  .signin-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-glow);
+    background: var(--c-brand-strong);
+  }
+
+  /* ============== HERO (cinematic) ============== */
+  .hero {
+    position: relative; width: 100%;
+    height: 100dvh;
+    min-height: 640px;
+    max-height: 920px;
+    overflow: hidden; isolation: isolate;
+    background: #000;
+  }
+  .hero-bg {
+    position: absolute; inset: -4%;
+    background: var(--bg) center/cover no-repeat;
+    z-index: 1;
+    will-change: transform, filter;
+    animation: kenburns 22s ease-in-out infinite alternate;
+  }
+  @keyframes kenburns {
+    from { transform: scale(1.04) translate(0,0); filter: brightness(.95); }
+    to   { transform: scale(1.10) translate(-1.5%, 1%); filter: brightness(1); }
+  }
+  .hero-grad {
+    position: absolute; inset: 0;
+    background: var(--c-overlay-grad); z-index: 2;
+  }
+  .hero-grad::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(120% 80% at 30% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,.25) 60%, rgba(0,0,0,.55) 100%);
+  }
+
+  .live-pill {
+    position: absolute;
+    top: calc(72px + 24px); left: var(--pad-x);
+    z-index: 4;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px 6px 9px;
+    border-radius: var(--r-pill);
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    color: #fff; font-size: 12px; font-weight: 700;
+    letter-spacing: .04em;
+    border: 1px solid rgba(255,255,255,.14);
+  }
+  .live-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%; background: var(--c-live);
+    box-shadow: 0 0 0 0 rgba(255,45,85,.7);
+    animation: livepulse 1.6s ease-in-out infinite;
+  }
+  @keyframes livepulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,45,85,.7); }
+    70%  { box-shadow: 0 0 0 10px rgba(255,45,85,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,45,85,0); }
+  }
+
+  .hero-content {
+    position: absolute;
+    left: var(--pad-x); right: var(--pad-x);
+    bottom: clamp(56px, 8vh, 96px);
+    z-index: 4; color: #fff;
+    display: flex; flex-direction: column; gap: 24px;
+    max-width: 880px;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(255,255,255,.85);
+  }
+  .hero-eyebrow .pip {
+    display: inline-block; width: 26px; height: 1px;
+    background: rgba(255,255,255,.6);
+  }
+  .hero-title {
+    margin: 0;
+    font-size: clamp(38px, 6vw, 84px);
+    line-height: .98; font-weight: 800;
+    letter-spacing: -.025em;
+    text-wrap: balance;
+    text-shadow: 0 2px 24px rgba(0,0,0,.4);
+  }
+  .hero-meta {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    color: rgba(255,255,255,.85);
+    font-size: 14px; font-weight: 500;
+  }
+  .hero-meta .dot-sep::before { content: '·'; margin-right: 8px; opacity: .6; }
+
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 24px;
+    border-radius: var(--r-pill);
+    font-size: 15px; font-weight: 700;
+    transition: transform var(--t-fast), box-shadow var(--t-norm), background var(--t-norm);
+    cursor: pointer;
+  }
+  .btn-primary { background: #fff; color: #000; box-shadow: var(--shadow-md); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-xl); }
+  .btn-ghost {
+    background: rgba(255,255,255,.12); color: #fff;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255,255,255,.18);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.20); border-color: rgba(255,255,255,.28); }
+  .btn svg { width: 18px; height: 18px; }
+
+  .scroll-cue {
+    position: absolute; left: 50%; bottom: 24px;
+    transform: translateX(-50%); z-index: 4;
+    color: rgba(255,255,255,.6);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    animation: scrollbob 2.4s ease-in-out infinite;
+  }
+  @keyframes scrollbob {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+  .scroll-cue svg { width: 16px; height: 16px; opacity: .7; }
+
+  /* ============== NOW PLAYING (Spotify-style) ============== */
+  .now-playing {
+    position: fixed; bottom: 24px; right: 24px; z-index: 40;
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px 10px 10px;
+    background: var(--c-glass-dark);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow-lg);
+    color: #fff;
+    transform: translateY(100px); opacity: 0;
+    transition: transform var(--t-slow), opacity var(--t-slow);
+    max-width: calc(100vw - 48px);
+  }
+  .now-playing.is-shown { transform: translateY(0); opacity: 1; }
+  .now-playing .art {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--art) center/cover #333;
+    flex-shrink: 0;
+    animation: rotate-art 8s linear infinite;
+  }
+  @keyframes rotate-art { to { transform: rotate(360deg); } }
+  .now-playing .meta { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+  .now-playing .meta strong { font-size: 13px; font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .now-playing .meta small { font-size: 11px; opacity: .7; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .now-playing button.np-x {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    color: rgba(255,255,255,.7);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background var(--t-fast), color var(--t-fast);
+    margin-left: 6px;
+  }
+  .now-playing button.np-x:hover { background: rgba(255,255,255,.14); color: #fff; }
+
+  /* ============== CHIPS ROW ============== */
+  .chips-row {
+    position: sticky; top: 72px; z-index: 20;
+    background: var(--c-bg);
+    border-bottom: 1px solid var(--c-divider-soft);
+    padding: 16px 0;
+  }
+  .chips-track {
+    display: flex; gap: 8px;
+    padding: 0 var(--pad-x);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-padding-inline: var(--pad-x);
+  }
+  .chips-track::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: var(--r-pill);
+    background: var(--c-divider-soft);
+    color: var(--c-text);
+    font-size: 13px; font-weight: 600;
+    transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);
+  }
+  .chip:hover { background: var(--c-divider); transform: translateY(-1px); }
+  .chip.is-active { background: var(--c-text); color: var(--c-bg); }
+
+  /* ============== SECTION ============== */
+  main { padding-top: 0; }
+  .section { padding: 56px 0 24px; }
+  .section-head {
+    padding: 0 var(--pad-x);
+    margin-bottom: 20px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .section-title-wrap { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .section-eyebrow {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--c-brand);
+  }
+  .section-title {
+    margin: 0;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.15; font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--c-text);
+    text-wrap: balance;
+  }
+  .section-subtitle {
+    margin: 6px 0 0;
+    font-size: 15px;
+    color: var(--c-text-muted);
+    max-width: 720px;
+    text-wrap: pretty;
+  }
+  .see-all {
+    color: var(--c-text-muted);
+    font-size: 14px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: color var(--t-fast), gap var(--t-fast);
+  }
+  .see-all:hover { color: var(--c-brand); gap: 8px; }
+  .see-all svg { width: 16px; height: 16px; }
+
+  /* ============== ROW (carousel) ============== */
+  .row { width: 100%; overflow: hidden; }
+  .row-track {
+    display: flex; gap: 16px;
+    padding: 4px var(--pad-x) 24px;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad-x);
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .row-track::-webkit-scrollbar { display: none; }
+
+  .card {
+    flex: 0 0 auto; width: 320px;
+    display: flex; flex-direction: column;
+    scroll-snap-align: start;
+    transition: transform var(--t-norm);
+    cursor: pointer; text-align: left;
+    border-radius: var(--r-lg);
+  }
+  .card:focus-visible { outline: 2px solid var(--c-brand); outline-offset: 4px; }
+  .card-img-wrap {
+    position: relative; width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--c-divider-soft) var(--src) center/cover no-repeat;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--t-norm), box-shadow var(--t-norm);
+  }
+  .card-square .card-img-wrap { aspect-ratio: 1 / 1; }
+  .card:hover .card-img-wrap { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-xl); }
+  .card-img-wrap::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,.35) 100%);
+    opacity: 0; transition: opacity var(--t-norm);
+  }
+  .card:hover .card-img-wrap::after { opacity: 1; }
+  .card-play {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; opacity: 0;
+    transition: opacity var(--t-norm); z-index: 1;
+  }
+  .card:hover .card-play { opacity: 1; }
+  .card-play span {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1.5px solid rgba(255,255,255,.4);
+  }
+  .card-play svg { width: 22px; height: 22px; }
+  .card-tag {
+    position: absolute; top: 10px; left: 10px;
+    padding: 4px 8px;
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--r-sm);
+    color: #fff; font-size: 11px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    z-index: 2;
+  }
+  .card-tag.is-live {
+    background: var(--c-live);
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .card-tag.is-live::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%; background: #fff;
+    animation: livepulse 1.6s ease-in-out infinite;
+    box-shadow: 0 0 0 0 rgba(255,255,255,.8);
+  }
+
+  .card-text {
+    margin-top: 12px;
+    padding: 0 4px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .card-title {
+    font-size: 15px; line-height: 1.3;
+    font-weight: 600; color: var(--c-text);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+  }
+  .card-sub { font-size: 13px; line-height: 1.4; font-weight: 500; color: var(--c-text-muted); }
+
+  .card-square { width: 200px; }
+
+  /* ============== FEATURED HERO 2 ============== */
+  .featured {
+    position: relative;
+    width: calc(100% - 2 * var(--pad-x));
+    margin: 24px var(--pad-x);
+    height: clamp(320px, 56vh, 560px);
+    border-radius: var(--r-xl);
+    overflow: hidden; isolation: isolate;
+    box-shadow: var(--shadow-lg);
+    background: #000;
+  }
+  .featured-bg {
+    position: absolute; inset: -2%;
+    background: var(--bg) center/cover no-repeat;
+    z-index: 1;
+    transition: transform var(--t-slow);
+  }
+  .featured:hover .featured-bg { transform: scale(1.04); }
+  .featured-grad {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.15) 50%, rgba(0,0,0,.75) 100%);
+    z-index: 2;
+  }
+  .featured-content {
+    position: absolute;
+    left: 40px; right: 40px; bottom: 32px;
+    z-index: 3;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+    color: #fff;
+  }
+  .featured-text { display: flex; flex-direction: column; gap: 14px; max-width: 720px; }
+  .featured-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .featured-eyebrow .pip { display: inline-block; width: 22px; height: 1px; background: rgba(255,255,255,.6); }
+  .featured-title {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 52px);
+    line-height: 1.0; font-weight: 800;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+  }
+  .featured-desc { margin: 0; color: rgba(255,255,255,.8); font-size: 15px; max-width: 540px; }
+  .featured-cta-wrap { flex-shrink: 0; }
+
+  /* ============== SCHEDULE GRID ============== */
+  .schedule {
+    margin: 56px var(--pad-x) 24px;
+    padding: 24px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-divider);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-sm);
+  }
+  .schedule-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .schedule-day {
+    display: flex; flex-direction: column;
+    gap: 6px; min-width: 0;
+  }
+  .schedule-day-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+    padding: 0 4px 4px;
+  }
+  .schedule-day.is-today .schedule-day-label { color: var(--c-brand); }
+  .schedule-cell {
+    padding: 10px 12px;
+    background: var(--c-divider-soft);
+    border-radius: var(--r-md);
+    font-size: 12px; line-height: 1.3;
+    transition: background var(--t-fast), transform var(--t-fast);
+    cursor: pointer; border: none;
+    text-align: left; color: var(--c-text);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .schedule-cell:hover { background: var(--c-divider); transform: translateY(-1px); }
+  .schedule-cell strong { font-weight: 600; font-size: 13px; }
+  .schedule-cell time { font-size: 11px; color: var(--c-text-muted); font-weight: 500; }
+  .schedule-cell.is-live {
+    background: var(--c-brand); color: #fff;
+    box-shadow: var(--shadow-glow);
+    position: relative;
+  }
+  .schedule-cell.is-live time { color: rgba(255,255,255,.85); }
+  .schedule-cell.is-live::after {
+    content: '● LIVE';
+    position: absolute; top: 6px; right: 8px;
+    font-size: 9px; font-weight: 800; letter-spacing: .08em;
+    animation: livepulse 1.6s ease-in-out infinite;
+  }
+
+  /* ============== SUBSCRIBE ============== */
+  .subscribe {
+    margin: 64px var(--pad-x) 24px;
+    padding: clamp(32px, 5vw, 64px);
+    background: linear-gradient(135deg, var(--c-brand) 0%, var(--c-brand-strong) 100%);
+    border-radius: var(--r-xl); color: #fff;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px; align-items: center;
+    position: relative; overflow: hidden;
+    box-shadow: var(--shadow-glow);
+  }
+  .subscribe::before {
+    content: '';
+    position: absolute; right: -10%; top: -50%;
+    width: 60%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,.10) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .subscribe h2 {
+    margin: 0 0 8px;
+    font-size: clamp(22px, 2.6vw, 32px);
+    line-height: 1.15; font-weight: 800;
+    letter-spacing: -.02em;
+  }
+  .subscribe p { margin: 0; font-size: 15px; opacity: .9; }
+  .subscribe-form {
+    display: flex; gap: 8px;
+    background: rgba(255,255,255,.14);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 6px 6px 6px 18px;
+    border-radius: var(--r-pill);
+    border: 1px solid rgba(255,255,255,.20);
+  }
+  .subscribe-form input {
+    flex: 1; background: transparent; border: none;
+    color: #fff; font-family: inherit; font-size: 14px;
+    outline: none; min-width: 0;
+  }
+  .subscribe-form input::placeholder { color: rgba(255,255,255,.6); }
+  .subscribe-form button {
+    padding: 11px 22px;
+    background: #fff; color: var(--c-brand);
+    border-radius: var(--r-pill);
+    font-weight: 700; font-size: 14px;
+    transition: transform var(--t-fast);
+  }
+  .subscribe-form button:hover { transform: scale(1.04); }
+
+  /* ============== PARTNERS ============== */
+  .partners-block {
+    padding: 56px var(--pad-x) 24px;
+    border-top: 1px solid var(--c-divider-soft);
+  }
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .partner-tile {
+    background: #000;
+    border-radius: var(--r-lg);
+    aspect-ratio: 262 / 115;
+    overflow: hidden;
+    transition: transform var(--t-norm), box-shadow var(--t-norm);
+    box-shadow: var(--shadow-sm);
+  }
+  .partner-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .partner-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ============== FOOTER ============== */
+  footer {
+    margin-top: 24px;
+    padding: 56px var(--pad-x) 32px;
+    background: var(--c-divider-soft);
+    border-top: 1px solid var(--c-divider);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 48px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .footer-col h4 {
+    margin: 0 0 16px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+  .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { font-size: 14px; color: var(--c-text); transition: color var(--t-fast); }
+  .footer-col a:hover { color: var(--c-brand); }
+  .footer-brand-col .footer-logo { width: 96px; height: 40px; color: var(--c-text); margin-bottom: 16px; display: block; }
+  .footer-brand-col .footer-logo svg { width: 100%; height: 100%; }
+  .footer-brand-col p {
+    margin: 0 0 16px;
+    font-size: 14px; line-height: 1.55;
+    color: var(--c-text-muted);
+    max-width: 420px;
+  }
+  .footer-badges { display: flex; gap: 12px; }
+  .footer-badges img { height: 44px; width: auto; }
+
+  .footer-bottom {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--c-divider);
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--c-text-muted);
+    max-width: 1440px;
+    margin-left: auto; margin-right: auto;
+  }
+  .footer-bottom .legal { display: flex; gap: 14px; flex-wrap: wrap; }
+  .footer-bottom a:hover { color: var(--c-text); }
+
+  /* ============== MODAL ============== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 100;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--t-norm);
+  }
+  .modal-overlay.is-open { display: flex; opacity: 1; }
+  .modal-video {
+    width: 100%; max-width: 1280px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: var(--r-xl);
+    overflow: hidden; position: relative;
+    box-shadow: var(--shadow-xl);
+    transform: scale(.95);
+    transition: transform var(--t-norm);
+  }
+  .modal-overlay.is-open .modal-video { transform: scale(1); }
+  .modal-video .placeholder {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+    color: #fff;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  }
+  .modal-video .placeholder svg { width: 64px; height: 64px; opacity: .5; }
+  .modal-video .placeholder p { margin: 0; font-size: 14px; opacity: .7; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.6); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 2;
+    transition: background var(--t-fast);
+  }
+  .modal-close:hover { background: rgba(0,0,0,.85); }
+  .modal-close svg { width: 22px; height: 22px; }
+
+  /* ============== VIEW SYSTEM ============== */
+  .view { display: none; }
+  .view.is-active { display: block; }
+
+  .page-hero {
+    padding: calc(72px + 56px) var(--pad-x) 32px;
+    background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-divider-soft) 100%);
+    border-bottom: 1px solid var(--c-divider);
+  }
+  .page-hero-inner { max-width: 880px; }
+  .page-title {
+    margin: 8px 0 12px;
+    font-size: clamp(32px, 4.5vw, 56px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -.025em;
+    color: var(--c-text);
+    text-wrap: balance;
+  }
+  .page-subtitle {
+    margin: 0;
+    font-size: clamp(15px, 1.4vw, 18px);
+    color: var(--c-text-muted);
+    text-wrap: pretty;
+    max-width: 720px;
+  }
+
+  .filter-bar {
+    padding: 24px var(--pad-x) 8px;
+    display: flex; gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .filter-bar .chips-track {
+    padding: 0; flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-bar .chips-track::-webkit-scrollbar { display: none; }
+  .sort-select {
+    padding: 9px 14px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--c-divider);
+    background: var(--c-surface);
+    color: var(--c-text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-light {
+    background: var(--c-divider-soft); color: var(--c-text);
+    border: 1px solid var(--c-divider);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .btn-light:hover { background: var(--c-divider); }
+  .btn-small { padding: 9px 16px; font-size: 13px; }
+
+  .load-more-wrap {
+    display: flex; justify-content: center;
+    padding: 24px var(--pad-x) 56px;
+  }
+
+  /* ============== LIVE PLAYER ============== */
+  .player-shell {
+    padding: 24px var(--pad-x) 56px;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 24px;
+    align-items: start;
+  }
+  .player-main { display: flex; flex-direction: column; gap: 20px; }
+  .player-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    cursor: pointer;
+  }
+  .player-frame img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: .55;
+    transition: opacity var(--t-norm);
+  }
+  .player-frame:hover img { opacity: .7; }
+  .player-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .player-big-play {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.95);
+    color: #000;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 16px 48px rgba(0,0,0,.4);
+    transition: transform var(--t-norm);
+    border: none;
+  }
+  .player-big-play:hover { transform: scale(1.06); }
+  .player-big-play svg { width: 40px; height: 40px; margin-left: 4px; }
+  .player-live-badge {
+    position: absolute; top: 16px; left: 16px;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px 6px 9px;
+    border-radius: var(--r-pill);
+    background: var(--c-live); color: #fff;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .04em;
+    box-shadow: var(--shadow-md);
+  }
+  .player-live-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%; background: #fff;
+    animation: livepulse 1.6s ease-in-out infinite;
+  }
+  .player-info {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding: 0 4px;
+  }
+  .player-title {
+    margin: 6px 0 4px;
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -.015em;
+  }
+  .player-meta {
+    margin: 0;
+    color: var(--c-text-muted);
+    font-size: 14px;
+  }
+  .player-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .icon-btn-lg {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--c-divider-soft);
+    color: var(--c-text);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background var(--t-fast);
+    border: 1px solid var(--c-divider);
+  }
+  .icon-btn-lg:hover { background: var(--c-divider); }
+  .icon-btn-lg svg { width: 20px; height: 20px; }
+
+  .player-aside {
+    background: var(--c-surface);
+    border: 1px solid var(--c-divider);
+    border-radius: var(--r-xl);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    position: sticky; top: 88px;
+  }
+  .aside-title {
+    margin: 0 0 16px;
+    font-size: 14px; font-weight: 800;
+    letter-spacing: -.005em;
+    color: var(--c-text);
+  }
+  .upnext-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+  .upnext-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 12px; align-items: center;
+    padding: 10px;
+    border-radius: var(--r-md);
+    transition: background var(--t-fast);
+    cursor: pointer;
+  }
+  .upnext-item:hover { background: var(--c-divider-soft); }
+  .upnext-time { font-size: 12px; font-weight: 700; color: var(--c-text-muted); }
+  .upnext-meta { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+  .upnext-meta strong { font-size: 13px; line-height: 1.3; font-weight: 600; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .upnext-meta small { font-size: 11px; color: var(--c-text-muted); }
+  .upnext-tag {
+    font-size: 9px; font-weight: 800;
+    background: var(--c-brand); color: #fff;
+    padding: 3px 6px; border-radius: var(--r-sm);
+    letter-spacing: .04em;
+  }
+
+  /* ============== NEWS VIEW ============== */
+  .featured-news {
+    margin: 8px var(--pad-x) 24px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 0;
+    background: var(--c-surface);
+    border: 1px solid var(--c-divider);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: box-shadow var(--t-norm), transform var(--t-norm);
+  }
+  .featured-news:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .featured-news-img {
+    aspect-ratio: 16 / 10;
+    background-size: cover; background-position: center;
+  }
+  .featured-news-body {
+    padding: clamp(20px, 3vw, 36px);
+    display: flex; flex-direction: column; gap: 12px;
+    justify-content: center;
+  }
+  .featured-news-title {
+    margin: 0;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.15;
+    font-weight: 800; letter-spacing: -.018em;
+    text-wrap: balance;
+  }
+  .featured-news-desc {
+    margin: 0;
+    font-size: 15px; line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+  .featured-news-meta {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    font-size: 13px; color: var(--c-text-subtle);
+  }
+
+  .news-grid {
+    padding: 8px var(--pad-x) 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px 16px;
+  }
+  .news-grid .card { width: 100%; }
+
+  /* ============== POSTER VIEW ============== */
+  .poster-grid {
+    padding: 8px var(--pad-x) 32px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .poster-card {
+    display: grid;
+    grid-template-columns: 100px 280px 1fr;
+    gap: 24px; align-items: stretch;
+    background: var(--c-surface);
+    border: 1px solid var(--c-divider);
+    border-radius: var(--r-xl);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--t-norm), transform var(--t-norm);
+  }
+  .poster-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .poster-date {
+    background: var(--c-brand); color: #fff;
+    border-radius: var(--r-lg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 16px;
+  }
+  .poster-date strong { font-size: 36px; line-height: 1; font-weight: 800; }
+  .poster-date small { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; opacity: .85; }
+  .poster-img {
+    width: 280px; height: 100%; min-height: 160px;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+    background: #D9D9D9;
+  }
+  .poster-body {
+    display: flex; flex-direction: column;
+    gap: 10px;
+    padding: 4px 8px 4px 0;
+  }
+  .poster-body h3 {
+    margin: 4px 0;
+    font-size: clamp(18px, 1.8vw, 22px);
+    line-height: 1.25;
+    font-weight: 700;
+  }
+  .poster-body p { margin: 0; color: var(--c-text-muted); font-size: 14px; line-height: 1.5; max-width: 600px; }
+  .poster-meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    color: var(--c-text-subtle);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  /* ============== VIDEO VIEW ============== */
+  .grid-clips {
+    padding: 8px var(--pad-x) 16px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px 16px;
+  }
+  .grid-clips .card { width: 100%; }
+
+  /* ============== PROGRAMS VIEW ============== */
+  .programs-grid {
+    padding: 8px var(--pad-x) 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .program-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-divider);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--t-norm), transform var(--t-norm);
+    display: flex; flex-direction: column;
+    cursor: pointer;
+  }
+  .program-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .program-card img {
+    width: 100%; aspect-ratio: 16 / 9;
+    object-fit: cover; background: #D9D9D9;
+  }
+  .program-card-body {
+    padding: 20px;
+    display: flex; flex-direction: column;
+    gap: 10px; flex: 1;
+  }
+  .program-card-body h3 {
+    margin: 4px 0;
+    font-size: 20px;
+    line-height: 1.2; font-weight: 700;
+  }
+  .program-card-body p { margin: 0; color: var(--c-text-muted); font-size: 14px; line-height: 1.5; flex: 1; }
+  .program-stats {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    color: var(--c-text-subtle);
+    font-size: 12px; font-weight: 500;
+    padding-top: 4px;
+  }
+  .program-card-body .btn { align-self: flex-start; margin-top: 8px; }
+
+  /* ============== SCHEDULE FULL ============== */
+  .schedule-full {
+    padding: 8px var(--pad-x) 56px;
+    overflow-x: auto;
+  }
+  .schedule-full-grid {
+    display: grid;
+    grid-template-columns: 64px repeat(7, minmax(170px, 1fr));
+    gap: 4px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-divider);
+    border-radius: var(--r-xl);
+    padding: 8px;
+    box-shadow: var(--shadow-sm);
+    min-width: 1200px;
+  }
+  .schedule-time-col, .schedule-col {
+    display: flex; flex-direction: column;
+    gap: 4px;
+  }
+  .schedule-day-head {
+    padding: 12px 8px;
+    text-align: center;
+    border-radius: var(--r-md);
+    background: var(--c-divider-soft);
+  }
+  .schedule-day-head strong { display: block; font-size: 13px; font-weight: 800; color: var(--c-text); }
+  .schedule-day-head span { font-size: 11px; color: var(--c-text-muted); }
+  .schedule-col.is-today .schedule-day-head { background: var(--c-brand-soft); }
+  .schedule-col.is-today .schedule-day-head strong { color: var(--c-brand); }
+  .schedule-time {
+    padding: 8px 4px;
+    font-size: 11px; font-weight: 700;
+    color: var(--c-text-subtle);
+    text-align: center;
+  }
+  .schedule-full .schedule-cell {
+    padding: 12px 10px;
+    background: var(--c-divider-soft);
+    border-radius: var(--r-md);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--t-fast), transform var(--t-fast);
+    display: flex; flex-direction: column; gap: 4px;
+    min-height: 56px;
+  }
+  .schedule-full .schedule-cell:hover { background: var(--c-divider); transform: translateY(-1px); }
+  .schedule-full .schedule-cell strong { font-size: 13px; line-height: 1.25; font-weight: 600; color: var(--c-text); }
+  .schedule-full .schedule-cell time { font-size: 11px; color: var(--c-text-muted); font-weight: 600; }
+  .schedule-full .schedule-cell.is-live { background: var(--c-brand); color: #fff; box-shadow: var(--shadow-glow); }
+  .schedule-full .schedule-cell.is-live strong { color: #fff; }
+  .schedule-full .schedule-cell.is-live time { color: rgba(255,255,255,.85); }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 1024px) {
+    .topnav nav a { padding: 9px 10px; font-size: 13px; }
+    .topnav nav { gap: 0; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .partners-grid { grid-template-columns: repeat(3, 1fr); }
+    .subscribe { grid-template-columns: 1fr; }
+    .schedule-grid { grid-template-columns: repeat(7, minmax(120px, 1fr)); overflow-x: auto; }
+    .featured-content { left: 24px; right: 24px; bottom: 20px; }
+    .player-shell { grid-template-columns: 1fr; }
+    .player-aside { position: static; max-height: none; }
+    .news-grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-clips { grid-template-columns: repeat(4, 1fr); }
+    .programs-grid { grid-template-columns: repeat(2, 1fr); }
+    .featured-news { grid-template-columns: 1fr; }
+    .featured-news-img { aspect-ratio: 16 / 8; }
+    .poster-card { grid-template-columns: 80px 220px 1fr; gap: 16px; }
+  }
+
+  @media (max-width: 767px) {
+    body { padding-bottom: 80px; }
+    .topnav { height: 60px; gap: 12px; padding: 0 16px; }
+    .topnav nav { display: none; }
+    .topnav .signin-btn { display: none; }
+    .topnav .icon-btn { width: 36px; height: 36px; }
+    .topnav .logo { width: 72px; height: 32px; }
+
+    .hero { min-height: 560px; }
+    .live-pill { top: calc(60px + 12px); left: 16px; font-size: 11px; padding: 5px 10px 5px 8px; }
+    .hero-content { left: 16px; right: 16px; bottom: calc(40px + env(safe-area-inset-bottom)); gap: 16px; }
+    .hero-title { font-size: 38px; }
+    .hero-eyebrow { font-size: 11px; }
+    .hero-meta { font-size: 13px; gap: 12px; }
+    .hero-ctas { flex-direction: column; align-items: stretch; }
+    .btn { justify-content: center; width: 100%; font-size: 14px; padding: 13px 20px; }
+    .scroll-cue { display: none; }
+
+    .now-playing {
+      bottom: 88px;
+      right: 12px; left: 12px;
+      max-width: none;
+      justify-content: flex-start;
+    }
+
+    .chips-row { top: 60px; padding: 12px 0; }
+    .chips-track { padding: 0 16px; }
+
+    .section { padding: 40px 0 16px; }
+    .section-head { padding: 0 16px; margin-bottom: 16px; }
+    .section-title { font-size: 22px; }
+    .section-subtitle { font-size: 14px; }
+    .row-track { gap: 12px; padding: 4px 16px 16px; scroll-padding-inline: 16px; }
+    .card { width: 78vw; max-width: 320px; }
+    .card-square { width: 60vw; max-width: 200px; }
+
+    .featured {
+      width: calc(100% - 32px);
+      margin: 16px;
+      height: 60vh; min-height: 320px;
+      border-radius: var(--r-lg);
+    }
+    .featured-content {
+      flex-direction: column;
+      align-items: stretch;
+      left: 20px; right: 20px; bottom: 20px;
+      gap: 16px;
+    }
+    .featured-cta-wrap .btn { width: 100%; justify-content: center; }
+    .featured-title { font-size: 28px; }
+
+    .schedule {
+      margin: 32px 16px;
+      padding: 16px;
+    }
+    .schedule-grid {
+      grid-template-columns: repeat(7, 140px);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px;
+    }
+    .schedule-day { scroll-snap-align: start; }
+
+    .subscribe { margin: 40px 16px; padding: 28px 22px; }
+    .subscribe-form { flex-direction: column; padding: 12px; gap: 10px; border-radius: var(--r-lg); }
+    .subscribe-form input { padding: 8px 12px; }
+    .subscribe-form button { width: 100%; }
+
+    .partners-block { padding: 32px 16px 16px; }
+    .partners-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+    footer { padding: 40px 16px 24px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { font-size: 12px; gap: 8px; }
+
+    .page-hero { padding: calc(60px + 32px) 16px 24px; }
+    .filter-bar { padding: 16px 16px 4px; flex-direction: column; align-items: stretch; }
+    .filter-bar .chips-track { padding: 0; gap: 6px; }
+    .filter-bar .sort-select { align-self: flex-end; }
+
+    .player-shell { padding: 16px 16px 32px; gap: 16px; }
+    .player-big-play { width: 72px; height: 72px; }
+    .player-big-play svg { width: 30px; height: 30px; }
+    .player-info { flex-direction: column; gap: 12px; }
+
+    .news-grid { grid-template-columns: 1fr; padding: 8px 16px 16px; gap: 16px; }
+    .featured-news { margin: 8px 16px 16px; }
+
+    .poster-grid { padding: 8px 16px 24px; gap: 12px; }
+    .poster-card { grid-template-columns: 1fr; gap: 12px; padding: 12px; }
+    .poster-img { width: 100%; min-height: 180px; aspect-ratio: 16/9; }
+    .poster-date { flex-direction: row; gap: 6px; padding: 8px 14px; align-self: flex-start; }
+    .poster-date strong { font-size: 22px; }
+
+    .grid-clips { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 8px 16px 16px; }
+
+    .programs-grid { grid-template-columns: 1fr; padding: 8px 16px 24px; gap: 16px; }
+    .program-card-body { padding: 16px; }
+
+    .schedule-full { padding: 8px 16px 32px; }
+    .schedule-full-grid { padding: 6px; }
+
+    .botnav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 60;
+      background: var(--c-glass-light);
+      backdrop-filter: saturate(180%) blur(28px);
+      -webkit-backdrop-filter: saturate(180%) blur(28px);
+      border-top: .5px solid rgba(0,0,0,.08);
+      padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .botnav a {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      color: var(--c-text-muted);
+      font-size: 10px; line-height: 12px;
+      padding: 6px 4px;
+      transition: color var(--t-fast);
+    }
+    .botnav a svg { width: 22px; height: 22px; }
+    .botnav a.is-active { color: var(--c-brand); }
+    @media (prefers-color-scheme: dark) {
+      .botnav { background: var(--c-glass-dark); border-top-color: rgba(255,255,255,.08); }
+    }
+  }
+  @media (min-width: 768px) { .botnav { display: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .hero-bg { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">К основному содержимому</a>
+
+<header class="topnav" id="topnav" role="banner">
+  <a class="logo" href="/" aria-label="RU.TV — главная">
+    <svg viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><mask id="rutv-best-tv"><rect width="96" height="48" fill="#fff"/><text x="74" y="33" text-anchor="middle" fill="#000" font-family="Onest,system-ui,sans-serif" font-weight="900" font-size="22" letter-spacing="-.04em">TV</text></mask></defs>
+      <text x="0" y="38" fill="currentColor" font-family="Onest,system-ui,sans-serif" font-weight="900" font-size="38" letter-spacing="-.05em">RU</text>
+      <circle cx="74" cy="24" r="22" fill="currentColor" mask="url(#rutv-best-tv)"/>
+    </svg>
+  </a>
+
+  <nav aria-label="Главное меню">
+    <a href="#/" data-route="home" aria-current="page">Главная</a>
+    <a href="#/live" data-route="live">Прямой эфир</a>
+    <a href="#/news" data-route="news">Новости</a>
+    <a href="#/poster" data-route="poster">Афиша</a>
+    <a href="#/video" data-route="video">Видео</a>
+    <a href="#/programs" data-route="programs">Программы</a>
+    <a href="#/schedule" data-route="schedule">Расписание</a>
+  </nav>
+
+  <div class="topnav-actions">
+    <button class="icon-btn" type="button" aria-label="Поиск">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    </button>
+    <button class="icon-btn" type="button" aria-label="Профиль">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+    </button>
+    <a class="signin-btn" href="#signin">Войти</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============== VIEW: HOME (default) ============== -->
+<div class="view view-home is-active" id="view-home">
+
+<section class="hero" id="live" aria-label="Прямой эфир RU.TV">
+  <div class="hero-bg" style="--bg: url('assets/rutv/image%201.png');"></div>
+  <div class="hero-grad"></div>
+
+  <span class="live-pill" aria-live="polite">
+    <span class="dot" aria-hidden="true"></span>
+    LIVE · 1 247 зрителей
+  </span>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow"><span class="pip"></span>Сейчас в эфире</span>
+    <h1 class="hero-title">Uma2rman — Дождись</h1>
+    <div class="hero-meta">
+      <span>Премьера клипа</span>
+      <span class="dot-sep">Поп-рок</span>
+      <span class="dot-sep">3:42</span>
+      <span class="dot-sep">RU.TV · HD</span>
+    </div>
+    <div class="hero-ctas">
+      <button class="btn btn-primary" type="button" data-play="hero">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Смотреть прямой эфир
+      </button>
+      <a class="btn btn-ghost" href="#schedule">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+        Программа передач
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Прокрутите</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
+</section>
+
+<div class="chips-row" role="navigation" aria-label="Категории">
+  <div class="chips-track">
+    <button class="chip is-active">Все</button>
+    <button class="chip">Музыка</button>
+    <button class="chip">Сериалы</button>
+    <button class="chip">Спорт</button>
+    <button class="chip">Новости</button>
+    <button class="chip">Подкасты</button>
+    <button class="chip">Развлечения</button>
+    <button class="chip">Детям</button>
+    <button class="chip">Документальное</button>
+  </div>
+</div>
+
+<section class="section" id="poster" aria-labelledby="afisha-title">
+  <div class="section-head">
+    <div class="section-title-wrap">
+      <span class="section-eyebrow">Афиша</span>
+      <h2 class="section-title" id="afisha-title">Скоро на RU.TV</h2>
+      <p class="section-subtitle">Концерты, мастер-классы и события партнёров — лучшее за неделю.</p>
+    </div>
+    <a class="see-all" href="#">Смотреть все
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
+  </div>
+  <div class="row">
+    <div class="row-track">
+      <button class="card" data-play="afisha-1">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-1.png');">
+          <span class="card-tag">14 янв · 13:00</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Анна Семенович и RU.TV — мастер-класс по фигурному катанию</span><span class="card-sub">Лужники · Москва</span></div>
+      </button>
+      <button class="card" data-play="afisha-2">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-2.png');">
+          <span class="card-tag">06 дек · 20:00</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">«Звёзды Хайпа» — большой концерт RUSSIAN MEDIA GROUP</span><span class="card-sub">LIVE Арена</span></div>
+      </button>
+      <button class="card" data-play="afisha-3">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-3.png');">
+          <span class="card-tag">Премьера</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Спектакль-откровение «Лёгкое знакомство»</span><span class="card-sub">Театр · Москва</span></div>
+      </button>
+      <button class="card" data-play="afisha-4">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322.png'); background-color: #00ABDB;">
+          <span class="card-tag">Скоро</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">«Первый по счёту» от анкоратор АО «Русское Радио-Евразия»</span><span class="card-sub">Афиша</span></div>
+      </button>
+      <button class="card" data-play="afisha-5">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-4.png'); background-color: #FF8A00;">
+          <span class="card-tag">Анонс</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Masters of the Air — премьера сериала</span><span class="card-sub">Афиша</span></div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="featured" aria-label="Премьера RASA - Пулевой">
+  <div class="featured-bg" style="--bg: url('assets/rutv/image%202.png');"></div>
+  <div class="featured-grad"></div>
+  <div class="featured-content">
+    <div class="featured-text">
+      <span class="featured-eyebrow"><span class="pip"></span>Новинка · Премьера</span>
+      <h2 class="featured-title">RASA — Пулевой</h2>
+      <p class="featured-desc">Новый клип RASA — кинематографичная история любви и потери. Смотрите эксклюзивно на RU.TV.</p>
+    </div>
+    <div class="featured-cta-wrap">
+      <button class="btn btn-primary" type="button" data-play="featured-rasa">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Смотреть клип
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="video" aria-labelledby="clips-title">
+  <div class="section-head">
+    <div class="section-title-wrap">
+      <span class="section-eyebrow">Клипы недели</span>
+      <h2 class="section-title" id="clips-title">Топ-плейлист RU.TV</h2>
+    </div>
+    <a class="see-all" href="#">Все клипы
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
+  </div>
+  <div class="row">
+    <div class="row-track">
+      <button class="card card-square" data-play="clip-1">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-5.png');">
+          <span class="card-tag is-live">В эфире</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Ко дну</span><span class="card-sub">Артём Качер</span></div>
+      </button>
+      <button class="card card-square" data-play="clip-2">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-6.png');">
+          <span class="card-tag">3:24</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">А я сияю</span><span class="card-sub">Сергей Зверев</span></div>
+      </button>
+      <button class="card card-square" data-play="clip-3">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-7.png');">
+          <span class="card-tag">2:58</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Навигатор</span><span class="card-sub">MIA BOYKA</span></div>
+      </button>
+      <button class="card card-square" data-play="clip-4">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-8.png');">
+          <span class="card-tag">3:11</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Среда</span><span class="card-sub">INSTASAMKA</span></div>
+      </button>
+      <button class="card card-square" data-play="clip-5">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-9.png');">
+          <span class="card-tag">Премьера</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Мама</span><span class="card-sub">Нина Фокина</span></div>
+      </button>
+      <button class="card card-square" data-play="clip-6">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-10.png');">
+          <span class="card-tag">3:48</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Возвращаюсь домой</span><span class="card-sub">Авраам Руссо</span></div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="schedule" id="schedule" aria-labelledby="schedule-title">
+  <div class="schedule-head">
+    <div class="section-title-wrap">
+      <span class="section-eyebrow">Программа передач</span>
+      <h2 class="section-title" id="schedule-title">Эфир на неделю</h2>
+    </div>
+    <a class="see-all" href="#">Полное расписание
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
+  </div>
+  <div class="schedule-grid" role="grid">
+    <div class="schedule-day is-today" role="gridcell">
+      <span class="schedule-day-label">Сегодня · ВТ</span>
+      <button class="schedule-cell is-live"><strong>Uma2rman — Дождись</strong><time>14:00</time></button>
+      <button class="schedule-cell"><strong>Чарт RU.TV</strong><time>15:00</time></button>
+      <button class="schedule-cell"><strong>Звёзды Хайпа</strong><time>17:00</time></button>
+    </div>
+    <div class="schedule-day" role="gridcell">
+      <span class="schedule-day-label">Ср</span>
+      <button class="schedule-cell"><strong>Утро на RU.TV</strong><time>08:00</time></button>
+      <button class="schedule-cell"><strong>Деньги</strong><time>13:00</time></button>
+      <button class="schedule-cell"><strong>Супер 20</strong><time>20:00</time></button>
+    </div>
+    <div class="schedule-day" role="gridcell">
+      <span class="schedule-day-label">Чт</span>
+      <button class="schedule-cell"><strong>Тема</strong><time>10:00</time></button>
+      <button class="schedule-cell"><strong>RASA — Пулевой</strong><time>14:00</time></button>
+      <button class="schedule-cell"><strong>Ночной чарт</strong><time>23:00</time></button>
+    </div>
+    <div class="schedule-day" role="gridcell">
+      <span class="schedule-day-label">Пт</span>
+      <button class="schedule-cell"><strong>Статус: в сети</strong><time>11:00</time></button>
+      <button class="schedule-cell"><strong>Премьера клипа</strong><time>16:00</time></button>
+      <button class="schedule-cell"><strong>Дискотека пятницы</strong><time>22:00</time></button>
+    </div>
+    <div class="schedule-day" role="gridcell">
+      <span class="schedule-day-label">Сб</span>
+      <button class="schedule-cell"><strong>Хит-парад RU.TV</strong><time>14:00</time></button>
+      <button class="schedule-cell"><strong>Концерт RMG</strong><time>20:00</time></button>
+      <button class="schedule-cell"><strong>Late night live</strong><time>00:00</time></button>
+    </div>
+    <div class="schedule-day" role="gridcell">
+      <span class="schedule-day-label">Вс</span>
+      <button class="schedule-cell"><strong>Лучшее за неделю</strong><time>12:00</time></button>
+      <button class="schedule-cell"><strong>Большой воскресный</strong><time>18:00</time></button>
+      <button class="schedule-cell"><strong>Романтика на ночь</strong><time>23:00</time></button>
+    </div>
+    <div class="schedule-day" role="gridcell">
+      <span class="schedule-day-label">Пн</span>
+      <button class="schedule-cell"><strong>Понедельник bright</strong><time>09:00</time></button>
+      <button class="schedule-cell"><strong>Чарт-разогрев</strong><time>15:00</time></button>
+      <button class="schedule-cell"><strong>Премьеры месяца</strong><time>21:00</time></button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="news" aria-labelledby="news-title">
+  <div class="section-head">
+    <div class="section-title-wrap">
+      <span class="section-eyebrow">Хиты дня</span>
+      <h2 class="section-title" id="news-title">Новости шоу-бизнеса</h2>
+      <p class="section-subtitle">Интервью, анонсы, эксклюзивы — самое интересное от редакции RU.TV.</p>
+    </div>
+    <a class="see-all" href="#">Все материалы
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
+  </div>
+  <div class="row">
+    <div class="row-track">
+      <button class="card" data-play="news-1">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-11.png');"><span class="card-tag">Интервью</span></div>
+        <div class="card-text"><span class="card-title">Гарик продемонстрировал поклонникам идеальный пресс</span><span class="card-sub">Хиты дня · 5 мин назад</span></div>
+      </button>
+      <button class="card" data-play="news-2">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-12.png');"><span class="card-tag">Эксклюзив</span></div>
+        <div class="card-text"><span class="card-title">Влад Топалов рассказал, как познакомился с Региной Тодоренко</span><span class="card-sub">Хиты дня · 2 ч назад</span></div>
+      </button>
+      <button class="card" data-play="news-3">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-13.png');"><span class="card-tag">История</span></div>
+        <div class="card-text"><span class="card-title">Виктория Боня рассказала о кардинальных переменах в жизни</span><span class="card-sub">Хиты дня · 4 ч назад</span></div>
+      </button>
+      <button class="card" data-play="news-4">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-14.png');"><span class="card-tag">Концерт</span></div>
+        <div class="card-text"><span class="card-title">Влад Топалов — концертные снимки вечера</span><span class="card-sub">Хиты дня · вчера</span></div>
+      </button>
+      <button class="card" data-play="news-5">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322.png'); background-color: #00ABDB;"><span class="card-tag">Все</span></div>
+        <div class="card-text"><span class="card-title">Все материалы раздела «Новости»</span><span class="card-sub">Архив редакции</span></div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="programs" aria-labelledby="programs-title">
+  <div class="section-head">
+    <div class="section-title-wrap">
+      <span class="section-eyebrow">Программы</span>
+      <h2 class="section-title" id="programs-title">Десятки шоу — все в одном месте</h2>
+      <p class="section-subtitle">Музыкальные, развлекательные и интервью-программы канала RU.TV.</p>
+    </div>
+    <a class="see-all" href="#">Все программы
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
+  </div>
+  <div class="row">
+    <div class="row-track">
+      <button class="card" data-play="prog-1">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-15.png');">
+          <span class="card-tag">Шоу</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Статус: в сети</span><span class="card-sub">Сервис доставки приветов и поздравлений</span></div>
+      </button>
+      <button class="card" data-play="prog-2">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-16.png');">
+          <span class="card-tag">Реалити</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Деньги в большом городе</span><span class="card-sub">Истории больших возможностей</span></div>
+      </button>
+      <button class="card" data-play="prog-3">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-17.png');">
+          <span class="card-tag">Чарт</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Супер 20</span><span class="card-sub">Двадцатка суперхитов телеканала RU.TV</span></div>
+      </button>
+      <button class="card" data-play="prog-4">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-18.png');">
+          <span class="card-tag">Интервью</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Тема — обсудим вместе</span><span class="card-sub">Острые разговоры о главном</span></div>
+      </button>
+      <button class="card" data-play="prog-5">
+        <div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-4.png'); background-color: #FF8A00;">
+          <span class="card-tag">Все</span>
+          <span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+        </div>
+        <div class="card-text"><span class="card-title">Полный каталог программ</span><span class="card-sub">Все шоу канала</span></div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="subscribe" aria-labelledby="subscribe-title">
+  <div>
+    <h2 id="subscribe-title">Будьте первыми в курсе премьер</h2>
+    <p>Раз в неделю — главные новинки клипов, гостей программ и анонсы концертов от RU.TV.</p>
+  </div>
+  <form class="subscribe-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Готово ✓'; setTimeout(()=>this.querySelector('button').textContent='Подписаться', 1800);">
+    <input type="email" name="email" placeholder="ваш e-mail" required aria-label="Email для подписки" />
+    <button type="submit">Подписаться</button>
+  </form>
+</section>
+
+</div><!-- /view-home -->
+
+<!-- ============== VIEW: LIVE PLAYER ============== -->
+<div class="view" id="view-live" hidden>
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">Прямой эфир</span>
+      <h1 class="page-title">RU.TV — Live</h1>
+      <p class="page-subtitle">Главный музыкальный канал страны в прямом эфире 24/7. Чарт хитов, премьеры клипов, концерты звёзд.</p>
+    </div>
+  </div>
+
+  <div class="player-shell">
+    <div class="player-main">
+      <div class="player-frame" data-play="live-stream">
+        <img src="assets/rutv/image%201.png" alt="Прямой эфир RU.TV" loading="lazy" />
+        <div class="player-overlay">
+          <button class="player-big-play" type="button" aria-label="Начать просмотр">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <span class="player-live-badge"><span class="dot" aria-hidden="true"></span>LIVE · 1 247 зрителей</span>
+        </div>
+      </div>
+      <div class="player-info">
+        <div>
+          <span class="section-eyebrow">Сейчас в эфире</span>
+          <h2 class="player-title">Uma2rman — Дождись</h2>
+          <p class="player-meta">Премьера клипа · Поп-рок · 3:42 · HD</p>
+        </div>
+        <div class="player-actions">
+          <button class="icon-btn-lg" aria-label="Лайк"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l8.84 8.84 8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="icon-btn-lg" aria-label="Поделиться"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+          <button class="icon-btn-lg" aria-label="Качество"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="player-aside" aria-label="Далее в эфире">
+      <h3 class="aside-title">Далее в эфире</h3>
+      <ul class="upnext-list">
+        <li class="upnext-item"><span class="upnext-time">14:00</span><span class="upnext-meta"><strong>RASA — Пулевой</strong><small>Премьера клипа</small></span><span class="upnext-tag">Сейчас</span></li>
+        <li class="upnext-item"><span class="upnext-time">14:04</span><span class="upnext-meta"><strong>MIA BOYKA — Навигатор</strong><small>Клип</small></span></li>
+        <li class="upnext-item"><span class="upnext-time">14:07</span><span class="upnext-meta"><strong>INSTASAMKA — Среда</strong><small>Клип</small></span></li>
+        <li class="upnext-item"><span class="upnext-time">14:11</span><span class="upnext-meta"><strong>Чарт RU.TV</strong><small>Хит-парад · 30 мин</small></span></li>
+        <li class="upnext-item"><span class="upnext-time">14:41</span><span class="upnext-meta"><strong>Артём Качер — Ко дну</strong><small>Клип</small></span></li>
+        <li class="upnext-item"><span class="upnext-time">14:45</span><span class="upnext-meta"><strong>Нина Фокина — Мама</strong><small>Премьера</small></span></li>
+        <li class="upnext-item"><span class="upnext-time">14:48</span><span class="upnext-meta"><strong>Звёзды Хайпа</strong><small>Концертный блок · 60 мин</small></span></li>
+      </ul>
+    </aside>
+  </div>
+</div>
+
+<!-- ============== VIEW: NEWS ============== -->
+<div class="view" id="view-news" hidden>
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">Хиты дня</span>
+      <h1 class="page-title">Новости шоу-бизнеса</h1>
+      <p class="page-subtitle">Эксклюзивные интервью, репортажи и истории звёзд от редакции RU.TV.</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="chips-track" role="navigation" aria-label="Фильтр новостей">
+      <button class="chip is-active">Все</button>
+      <button class="chip">Эксклюзив</button>
+      <button class="chip">Интервью</button>
+      <button class="chip">Концерты</button>
+      <button class="chip">Премьеры</button>
+      <button class="chip">Истории</button>
+      <button class="chip">Звёзды</button>
+    </div>
+  </div>
+
+  <article class="featured-news" data-play="news-featured">
+    <div class="featured-news-img" style="background-image: url('assets/rutv/Rectangle%204322-12.png');"></div>
+    <div class="featured-news-body">
+      <span class="card-tag">Эксклюзив · Главное</span>
+      <h2 class="featured-news-title">Влад Топалов рассказал, как познакомился с Региной Тодоренко</h2>
+      <p class="featured-news-desc">Артист поделился неизвестными деталями знакомства, рассказал о первой встрече и поездке к семье. Эксклюзивно для RU.TV.</p>
+      <div class="featured-news-meta">
+        <span>Хиты дня</span><span>·</span><span>2 часа назад</span><span>·</span><span>Анна Соколова</span>
+      </div>
+    </div>
+  </article>
+
+  <div class="news-grid">
+    <button class="card" data-play="news-1"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-11.png');"><span class="card-tag">Интервью</span></div><div class="card-text"><span class="card-title">Гарик продемонстрировал поклонникам идеальный пресс</span><span class="card-sub">Хиты дня · 5 мин назад</span></div></button>
+    <button class="card" data-play="news-3"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-13.png');"><span class="card-tag">История</span></div><div class="card-text"><span class="card-title">Виктория Боня рассказала о кардинальных переменах в жизни</span><span class="card-sub">Хиты дня · 4 ч назад</span></div></button>
+    <button class="card" data-play="news-4"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-14.png');"><span class="card-tag">Концерт</span></div><div class="card-text"><span class="card-title">Влад Топалов — концертные снимки вечера</span><span class="card-sub">Хиты дня · вчера</span></div></button>
+    <button class="card" data-play="news-5"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-1.png');"><span class="card-tag">Премьера</span></div><div class="card-text"><span class="card-title">Анна Семенович и RU.TV — мастер-класс в Лужниках</span><span class="card-sub">Афиша · 2 дня назад</span></div></button>
+    <button class="card" data-play="news-6"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-2.png');"><span class="card-tag">Концерт</span></div><div class="card-text"><span class="card-title">«Звёзды Хайпа» — большой концерт собрал рекорды</span><span class="card-sub">Хиты дня · 3 дня назад</span></div></button>
+    <button class="card" data-play="news-7"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-9.png');"><span class="card-tag">Премьера</span></div><div class="card-text"><span class="card-title">Нина Фокина выпустила новый клип «Мама»</span><span class="card-sub">Премьеры · вчера</span></div></button>
+    <button class="card" data-play="news-8"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-10.png');"><span class="card-tag">Эксклюзив</span></div><div class="card-text"><span class="card-title">Авраам Руссо: «Возвращаюсь домой» — история о любви</span><span class="card-sub">Интервью · 4 дня назад</span></div></button>
+    <button class="card" data-play="news-9"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-7.png');"><span class="card-tag">Клип</span></div><div class="card-text"><span class="card-title">MIA BOYKA — «Навигатор»: новый трек уже в эфире</span><span class="card-sub">Премьеры · сегодня</span></div></button>
+    <button class="card" data-play="news-10"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-5.png');"><span class="card-tag">Чарт</span></div><div class="card-text"><span class="card-title">Артём Качер впервые в топ-3 чарта RU.TV</span><span class="card-sub">Хиты дня · 5 дней назад</span></div></button>
+    <button class="card" data-play="news-11"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-8.png');"><span class="card-tag">Эксклюзив</span></div><div class="card-text"><span class="card-title">INSTASAMKA анонсирует тур «Среда» по 12 городам</span><span class="card-sub">Анонсы · 5 дней назад</span></div></button>
+    <button class="card" data-play="news-12"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-6.png');"><span class="card-tag">Стиль</span></div><div class="card-text"><span class="card-title">Сергей Зверев: «Я сияю в любом возрасте»</span><span class="card-sub">Истории · 6 дней назад</span></div></button>
+    <button class="card" data-play="news-13"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-3.png');"><span class="card-tag">Анонс</span></div><div class="card-text"><span class="card-title">Спектакль «Лёгкое знакомство» — что ждать зрителям</span><span class="card-sub">Афиша · неделю назад</span></div></button>
+  </div>
+
+  <div class="load-more-wrap">
+    <button class="btn btn-ghost btn-light" type="button">Показать ещё новости</button>
+  </div>
+</div>
+
+<!-- ============== VIEW: AFISHA / POSTER ============== -->
+<div class="view" id="view-poster" hidden>
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">Афиша</span>
+      <h1 class="page-title">События и концерты</h1>
+      <p class="page-subtitle">Концерты, мастер-классы, премьеры и фестивали — расписание событий партнёров RU.TV и Русской Медиагруппы.</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="chips-track" role="navigation" aria-label="Фильтр афиши">
+      <button class="chip is-active">Все</button>
+      <button class="chip">Концерты</button>
+      <button class="chip">Мастер-классы</button>
+      <button class="chip">Премьеры</button>
+      <button class="chip">Фестивали</button>
+      <button class="chip">Спектакли</button>
+    </div>
+  </div>
+
+  <div class="poster-grid">
+    <article class="poster-card" data-play="poster-feat">
+      <div class="poster-date">
+        <strong>06</strong><small>дек</small>
+      </div>
+      <img class="poster-img" src="assets/rutv/Rectangle%204322-2.png" alt="Звёзды Хайпа" loading="lazy" />
+      <div class="poster-body">
+        <span class="card-tag">Концерт · 12+</span>
+        <h3>«Звёзды Хайпа» — большой концерт RUSSIAN MEDIA GROUP</h3>
+        <p>Главный концерт сезона. Звёзды Русского Радио, RU.TV и партнёров на одной сцене.</p>
+        <div class="poster-meta"><span>📍 LIVE Арена · Москва</span><span>🕗 20:00</span><span>💰 от 2 500 ₽</span></div>
+        <button class="btn btn-primary btn-small" data-play="afisha-2">Купить билеты</button>
+      </div>
+    </article>
+    <article class="poster-card">
+      <div class="poster-date"><strong>14</strong><small>янв</small></div>
+      <img class="poster-img" src="assets/rutv/Rectangle%204322-1.png" alt="Анна Семенович" loading="lazy" />
+      <div class="poster-body">
+        <span class="card-tag">Мастер-класс · 6+</span>
+        <h3>Анна Семенович — мастер-класс по фигурному катанию</h3>
+        <p>Открытый каток в Лужниках. Гости получат подарки от Анны и RU.TV.</p>
+        <div class="poster-meta"><span>📍 Лужники · Москва</span><span>🕐 13:00</span><span>💰 Бесплатно</span></div>
+        <button class="btn btn-primary btn-small" data-play="afisha-1">Зарегистрироваться</button>
+      </div>
+    </article>
+    <article class="poster-card">
+      <div class="poster-date"><strong>22</strong><small>янв</small></div>
+      <img class="poster-img" src="assets/rutv/Rectangle%204322-3.png" alt="Лёгкое знакомство" loading="lazy" />
+      <div class="poster-body">
+        <span class="card-tag">Спектакль · 16+</span>
+        <h3>«Лёгкое знакомство» — спектакль-откровение</h3>
+        <p>Премьера спектакля о современных отношениях. Только в Москве, 5 показов.</p>
+        <div class="poster-meta"><span>📍 Театр · Москва</span><span>🕖 19:00</span><span>💰 от 1 800 ₽</span></div>
+        <button class="btn btn-primary btn-small" data-play="afisha-3">Купить билеты</button>
+      </div>
+    </article>
+    <article class="poster-card">
+      <div class="poster-date"><strong>28</strong><small>янв</small></div>
+      <img class="poster-img" src="assets/rutv/Rectangle%204322.png" alt="Первый по счёту" loading="lazy" style="background:#00ABDB" />
+      <div class="poster-body">
+        <span class="card-tag">Концерт · 6+</span>
+        <h3>«Первый по счёту» от АО «Русское Радио-Евразия»</h3>
+        <p>Большой юбилейный концерт лучших артистов Русского Радио.</p>
+        <div class="poster-meta"><span>📍 СК «Олимпийский»</span><span>🕗 20:00</span><span>💰 от 1 500 ₽</span></div>
+        <button class="btn btn-primary btn-small" data-play="afisha-4">Купить билеты</button>
+      </div>
+    </article>
+    <article class="poster-card">
+      <div class="poster-date"><strong>05</strong><small>фев</small></div>
+      <img class="poster-img" src="assets/rutv/Rectangle%204322-4.png" alt="Masters of the Air" loading="lazy" style="background:#FF8A00" />
+      <div class="poster-body">
+        <span class="card-tag">Премьера сериала · 16+</span>
+        <h3>«Masters of the Air» — премьера сериала</h3>
+        <p>Эксклюзивный показ премьеры с обсуждением, гостями и автограф-сессией.</p>
+        <div class="poster-meta"><span>📍 Онлайн на RU.TV</span><span>🕗 20:00</span><span>💰 Бесплатно</span></div>
+        <button class="btn btn-primary btn-small" data-play="afisha-5">Установить напоминание</button>
+      </div>
+    </article>
+  </div>
+</div>
+
+<!-- ============== VIEW: VIDEO / CLIPS ============== -->
+<div class="view" id="view-video" hidden>
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">Видео</span>
+      <h1 class="page-title">Все клипы RU.TV</h1>
+      <p class="page-subtitle">Свежие премьеры, классика и эксклюзивные ремиксы лучших исполнителей в HD-качестве.</p>
+    </div>
+  </div>
+
+  <div class="filter-bar with-sort">
+    <div class="chips-track" role="navigation" aria-label="Жанр">
+      <button class="chip is-active">Все</button>
+      <button class="chip">Поп</button>
+      <button class="chip">Поп-рок</button>
+      <button class="chip">Хип-хоп</button>
+      <button class="chip">R&B</button>
+      <button class="chip">Электроника</button>
+      <button class="chip">Шансон</button>
+      <button class="chip">Премьеры</button>
+    </div>
+    <select class="sort-select" aria-label="Сортировка">
+      <option>Сначала новые</option>
+      <option>Самые популярные</option>
+      <option>В тренде</option>
+      <option>По алфавиту</option>
+    </select>
+  </div>
+
+  <div class="grid-clips">
+    <button class="card card-square" data-play="clip-1"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-5.png');"><span class="card-tag is-live">В эфире</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Ко дну</span><span class="card-sub">Артём Качер</span></div></button>
+    <button class="card card-square" data-play="clip-2"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-6.png');"><span class="card-tag">3:24</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">А я сияю</span><span class="card-sub">Сергей Зверев</span></div></button>
+    <button class="card card-square" data-play="clip-3"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-7.png');"><span class="card-tag">2:58</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Навигатор</span><span class="card-sub">MIA BOYKA</span></div></button>
+    <button class="card card-square" data-play="clip-4"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-8.png');"><span class="card-tag">3:11</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Среда</span><span class="card-sub">INSTASAMKA</span></div></button>
+    <button class="card card-square" data-play="clip-5"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-9.png');"><span class="card-tag">Премьера</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Мама</span><span class="card-sub">Нина Фокина</span></div></button>
+    <button class="card card-square" data-play="clip-6"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-10.png');"><span class="card-tag">3:48</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Возвращаюсь домой</span><span class="card-sub">Авраам Руссо</span></div></button>
+    <button class="card card-square" data-play="clip-7"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-11.png');"><span class="card-tag">4:02</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Гарик — На сцене</span><span class="card-sub">Live · Концерт</span></div></button>
+    <button class="card card-square" data-play="clip-8"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-12.png');"><span class="card-tag">3:17</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Влад Топалов — Океан</span><span class="card-sub">Премьера</span></div></button>
+    <button class="card card-square" data-play="clip-9"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-13.png');"><span class="card-tag">3:55</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Виктория Боня — Свобода</span><span class="card-sub">Поп · Премьера</span></div></button>
+    <button class="card card-square" data-play="clip-10"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-14.png');"><span class="card-tag">3:08</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Влад Топалов — Светлый путь</span><span class="card-sub">Live · Концерт</span></div></button>
+    <button class="card card-square" data-play="clip-11"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-1.png');"><span class="card-tag">2:48</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Анна Семенович — Мечтатели</span><span class="card-sub">Поп</span></div></button>
+    <button class="card card-square" data-play="clip-12"><div class="card-img-wrap" style="--src: url('assets/rutv/Rectangle%204322-2.png');"><span class="card-tag">5:24</span><span class="card-play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span></div><div class="card-text"><span class="card-title">Звёзды Хайпа — Дай руку</span><span class="card-sub">Live · Концерт</span></div></button>
+  </div>
+  <div class="load-more-wrap">
+    <button class="btn btn-ghost btn-light" type="button">Показать ещё клипы</button>
+  </div>
+</div>
+
+<!-- ============== VIEW: PROGRAMS ============== -->
+<div class="view" id="view-programs" hidden>
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">Программы</span>
+      <h1 class="page-title">Шоу и программы RU.TV</h1>
+      <p class="page-subtitle">Музыкальные и развлекательные программы канала: чарт-шоу, реалити, интервью, премьерные блоки.</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="chips-track" role="navigation" aria-label="Категория программ">
+      <button class="chip is-active">Все</button>
+      <button class="chip">Чарт-шоу</button>
+      <button class="chip">Реалити</button>
+      <button class="chip">Интервью</button>
+      <button class="chip">Премьеры</button>
+      <button class="chip">Концерты</button>
+    </div>
+  </div>
+
+  <div class="programs-grid">
+    <article class="program-card" data-play="prog-1">
+      <img src="assets/rutv/Rectangle%204322-15.png" alt="Статус: в сети" loading="lazy" />
+      <div class="program-card-body">
+        <span class="card-tag">Шоу</span>
+        <h3>Статус: в сети</h3>
+        <p>Сервис доставки приветов и поздравлений. Зрители выбирают треки и поздравления для близких в прямом эфире.</p>
+        <div class="program-stats"><span>📺 134 эпизода</span><span>📅 По будням 11:00</span><span>⭐ 4.8</span></div>
+        <button class="btn btn-primary btn-small">Смотреть</button>
+      </div>
+    </article>
+    <article class="program-card" data-play="prog-2">
+      <img src="assets/rutv/Rectangle%204322-16.png" alt="Деньги в большом городе" loading="lazy" />
+      <div class="program-card-body">
+        <span class="card-tag">Реалити</span>
+        <h3>Деньги в большом городе</h3>
+        <p>Истории больших возможностей — реальные люди, которые смогли добиться успеха в Москве.</p>
+        <div class="program-stats"><span>📺 89 эпизодов</span><span>📅 Среда 13:00</span><span>⭐ 4.6</span></div>
+        <button class="btn btn-primary btn-small">Смотреть</button>
+      </div>
+    </article>
+    <article class="program-card" data-play="prog-3">
+      <img src="assets/rutv/Rectangle%204322-17.png" alt="Супер 20" loading="lazy" />
+      <div class="program-card-body">
+        <span class="card-tag">Чарт</span>
+        <h3>Супер 20</h3>
+        <p>Двадцатка суперхитов телеканала RU.TV. Ваш голос определяет рейтинг лучших клипов недели.</p>
+        <div class="program-stats"><span>📺 412 эпизодов</span><span>📅 Среда 20:00</span><span>⭐ 4.9</span></div>
+        <button class="btn btn-primary btn-small">Смотреть</button>
+      </div>
+    </article>
+    <article class="program-card" data-play="prog-4">
+      <img src="assets/rutv/Rectangle%204322-18.png" alt="Тема" loading="lazy" />
+      <div class="program-card-body">
+        <span class="card-tag">Интервью</span>
+        <h3>Тема — обсудим вместе</h3>
+        <p>Острые разговоры о главном с известными гостями. Мнения, инсайты, эксклюзивы.</p>
+        <div class="program-stats"><span>📺 67 эпизодов</span><span>📅 Четверг 10:00</span><span>⭐ 4.7</span></div>
+        <button class="btn btn-primary btn-small">Смотреть</button>
+      </div>
+    </article>
+    <article class="program-card">
+      <img src="assets/rutv/Rectangle%204322-2.png" alt="Звёзды Хайпа" loading="lazy" />
+      <div class="program-card-body">
+        <span class="card-tag">Концерт</span>
+        <h3>Звёзды Хайпа</h3>
+        <p>Большие концертные блоки с лучшими артистами Русской Медиагруппы. Эксклюзивные выступления.</p>
+        <div class="program-stats"><span>📺 24 эпизода</span><span>📅 Сб-Вс 20:00</span><span>⭐ 4.9</span></div>
+        <button class="btn btn-primary btn-small">Смотреть</button>
+      </div>
+    </article>
+    <article class="program-card">
+      <img src="assets/rutv/Rectangle%204322.png" alt="Утро на RU.TV" loading="lazy" style="background:#00ABDB" />
+      <div class="program-card-body">
+        <span class="card-tag">Утреннее шоу</span>
+        <h3>Утро на RU.TV</h3>
+        <p>Бодрое начало дня — лучшие хиты, новости звёзд и интервью с гостями студии.</p>
+        <div class="program-stats"><span>📺 1 247 эпизодов</span><span>📅 Каждое утро 08:00</span><span>⭐ 4.5</span></div>
+        <button class="btn btn-primary btn-small">Смотреть</button>
+      </div>
+    </article>
+  </div>
+</div>
+
+<!-- ============== VIEW: SCHEDULE (full week) ============== -->
+<div class="view" id="view-schedule" hidden>
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">Программа передач</span>
+      <h1 class="page-title">Полное расписание</h1>
+      <p class="page-subtitle">Эфир канала RU.TV на неделю вперёд. Кликните на программу — установите напоминание.</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="chips-track">
+      <button class="chip is-active">RU.TV</button>
+      <button class="chip">Русское Радио</button>
+      <button class="chip">DFM</button>
+      <button class="chip">Maximum</button>
+      <button class="chip">Monte Carlo</button>
+      <button class="chip">Хит FM</button>
+    </div>
+    <button class="btn btn-ghost btn-light btn-small" type="button">📅 Сегодня</button>
+  </div>
+
+  <div class="schedule-full">
+    <div class="schedule-full-grid">
+      <div class="schedule-time-col">
+        <div class="schedule-day-head"></div>
+        <div class="schedule-time">06:00</div>
+        <div class="schedule-time">09:00</div>
+        <div class="schedule-time">12:00</div>
+        <div class="schedule-time">15:00</div>
+        <div class="schedule-time">18:00</div>
+        <div class="schedule-time">21:00</div>
+        <div class="schedule-time">00:00</div>
+      </div>
+      <div class="schedule-col is-today">
+        <div class="schedule-day-head"><strong>ВТ</strong><span>Сегодня</span></div>
+        <button class="schedule-cell"><time>06:00</time><strong>Утро на RU.TV</strong></button>
+        <button class="schedule-cell"><time>09:00</time><strong>Премьеры месяца</strong></button>
+        <button class="schedule-cell"><time>12:00</time><strong>Чарт RU.TV</strong></button>
+        <button class="schedule-cell is-live"><time>14:00</time><strong>Uma2rman — Дождись</strong></button>
+        <button class="schedule-cell"><time>17:00</time><strong>Звёзды Хайпа</strong></button>
+        <button class="schedule-cell"><time>20:00</time><strong>Супер 20</strong></button>
+        <button class="schedule-cell"><time>23:00</time><strong>Late night</strong></button>
+      </div>
+      <div class="schedule-col">
+        <div class="schedule-day-head"><strong>СР</strong><span>14 янв</span></div>
+        <button class="schedule-cell"><time>06:00</time><strong>Утро на RU.TV</strong></button>
+        <button class="schedule-cell"><time>09:00</time><strong>Чарт-разогрев</strong></button>
+        <button class="schedule-cell"><time>12:00</time><strong>Деньги</strong></button>
+        <button class="schedule-cell"><time>15:00</time><strong>Тема</strong></button>
+        <button class="schedule-cell"><time>18:00</time><strong>Премьера клипа</strong></button>
+        <button class="schedule-cell"><time>20:00</time><strong>Концерт RMG</strong></button>
+        <button class="schedule-cell"><time>23:00</time><strong>Ночной чарт</strong></button>
+      </div>
+      <div class="schedule-col">
+        <div class="schedule-day-head"><strong>ЧТ</strong><span>15 янв</span></div>
+        <button class="schedule-cell"><time>06:00</time><strong>Утро на RU.TV</strong></button>
+        <button class="schedule-cell"><time>09:00</time><strong>Лучшее за неделю</strong></button>
+        <button class="schedule-cell"><time>12:00</time><strong>Тема — обсудим</strong></button>
+        <button class="schedule-cell"><time>15:00</time><strong>RASA — Пулевой</strong></button>
+        <button class="schedule-cell"><time>18:00</time><strong>Хиты дня</strong></button>
+        <button class="schedule-cell"><time>20:00</time><strong>Чарт-парад</strong></button>
+        <button class="schedule-cell"><time>23:00</time><strong>Ночной чарт</strong></button>
+      </div>
+      <div class="schedule-col">
+        <div class="schedule-day-head"><strong>ПТ</strong><span>16 янв</span></div>
+        <button class="schedule-cell"><time>06:00</time><strong>Утро на RU.TV</strong></button>
+        <button class="schedule-cell"><time>09:00</time><strong>Гости студии</strong></button>
+        <button class="schedule-cell"><time>12:00</time><strong>Статус: в сети</strong></button>
+        <button class="schedule-cell"><time>15:00</time><strong>Премьера клипа</strong></button>
+        <button class="schedule-cell"><time>18:00</time><strong>Чарт RU.TV</strong></button>
+        <button class="schedule-cell"><time>22:00</time><strong>Дискотека пятницы</strong></button>
+        <button class="schedule-cell"><time>00:00</time><strong>Late night live</strong></button>
+      </div>
+      <div class="schedule-col">
+        <div class="schedule-day-head"><strong>СБ</strong><span>17 янв</span></div>
+        <button class="schedule-cell"><time>08:00</time><strong>Subway shows</strong></button>
+        <button class="schedule-cell"><time>10:00</time><strong>Лучшие премьеры</strong></button>
+        <button class="schedule-cell"><time>13:00</time><strong>Концертный блок</strong></button>
+        <button class="schedule-cell"><time>14:00</time><strong>Хит-парад RU.TV</strong></button>
+        <button class="schedule-cell"><time>18:00</time><strong>Звёзды Хайпа</strong></button>
+        <button class="schedule-cell"><time>20:00</time><strong>Концерт RMG</strong></button>
+        <button class="schedule-cell"><time>00:00</time><strong>Late night live</strong></button>
+      </div>
+      <div class="schedule-col">
+        <div class="schedule-day-head"><strong>ВС</strong><span>18 янв</span></div>
+        <button class="schedule-cell"><time>09:00</time><strong>Доброе утро</strong></button>
+        <button class="schedule-cell"><time>12:00</time><strong>Лучшее за неделю</strong></button>
+        <button class="schedule-cell"><time>14:00</time><strong>Премьеры выходных</strong></button>
+        <button class="schedule-cell"><time>18:00</time><strong>Большой воскресный</strong></button>
+        <button class="schedule-cell"><time>20:00</time><strong>Концерт</strong></button>
+        <button class="schedule-cell"><time>22:00</time><strong>Романтика на ночь</strong></button>
+        <button class="schedule-cell"><time>00:00</time><strong>Lounge mix</strong></button>
+      </div>
+      <div class="schedule-col">
+        <div class="schedule-day-head"><strong>ПН</strong><span>19 янв</span></div>
+        <button class="schedule-cell"><time>06:00</time><strong>Утро на RU.TV</strong></button>
+        <button class="schedule-cell"><time>09:00</time><strong>Понедельник bright</strong></button>
+        <button class="schedule-cell"><time>12:00</time><strong>Деньги в б. городе</strong></button>
+        <button class="schedule-cell"><time>15:00</time><strong>Чарт-разогрев</strong></button>
+        <button class="schedule-cell"><time>18:00</time><strong>Хиты дня</strong></button>
+        <button class="schedule-cell"><time>21:00</time><strong>Премьеры месяца</strong></button>
+        <button class="schedule-cell"><time>00:00</time><strong>Ночной чарт</strong></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="partners-block" aria-labelledby="partners-title">
+  <div class="section-title-wrap">
+    <span class="section-eyebrow">Семья каналов</span>
+    <h2 class="section-title" id="partners-title">Русская Медиагруппа</h2>
+  </div>
+  <div class="partners-grid" role="list">
+    <a class="partner-tile" href="https://rusradio.ru" role="listitem" aria-label="Русское Радио"><img src="assets/rutv/unsplash_kMJp7620W6U.png" alt="Русское Радио" loading="lazy" /></a>
+    <a class="partner-tile" href="https://ru.tv" role="listitem" aria-label="RU.TV"><img src="assets/rutv/unsplash_qiMCJHg2vTI.png" alt="RU.TV" loading="lazy" /></a>
+    <a class="partner-tile" href="https://maximum.ru" role="listitem" aria-label="MAXIMUM"><img src="assets/rutv/unsplash_PaCzyxEcqiw.png" alt="Maximum" loading="lazy" /></a>
+    <a class="partner-tile" href="https://montecarlo.ru" role="listitem" aria-label="Radio Monte Carlo"><img src="assets/rutv/unsplash_hwc7eIQiTCE.png" alt="Radio Monte Carlo" loading="lazy" /></a>
+    <a class="partner-tile" href="https://hitfm.ru" role="listitem" aria-label="ХИТ FM"><img src="assets/rutv/unsplash_DItYlc26zVI.png" alt="ХИТ FM" loading="lazy" /></a>
+  </div>
+</section>
+
+</main>
+
+<footer role="contentinfo">
+  <div class="footer-grid">
+    <div class="footer-col footer-brand-col">
+      <span class="footer-logo" aria-hidden="true">
+        <svg viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg">
+          <defs><mask id="rutv-foot-tv"><rect width="96" height="48" fill="#fff"/><text x="74" y="33" text-anchor="middle" fill="#000" font-family="Onest,system-ui,sans-serif" font-weight="900" font-size="22" letter-spacing="-.04em">TV</text></mask></defs>
+          <text x="0" y="38" fill="currentColor" font-family="Onest,system-ui,sans-serif" font-weight="900" font-size="38" letter-spacing="-.05em">RU</text>
+          <circle cx="74" cy="24" r="22" fill="currentColor" mask="url(#rutv-foot-tv)"/>
+        </svg>
+      </span>
+      <p>Главный музыкальный канал страны. Прямой эфир, клипы, чарт хитов, программы и новости шоу-бизнеса.</p>
+      <div class="footer-badges">
+        <a href="https://apps.apple.com" aria-label="Скачать в App Store"><img src="assets/rutv/App Store.png" alt="Download on the App Store" loading="lazy" /></a>
+        <a href="https://play.google.com" aria-label="Скачать в Google Play"><img src="assets/rutv/google-play-badge 1.png" alt="Get it on Google Play" loading="lazy" /></a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Смотреть</h4>
+      <ul>
+        <li><a href="#live">Прямой эфир</a></li>
+        <li><a href="#video">Клипы</a></li>
+        <li><a href="#programs">Программы</a></li>
+        <li><a href="#schedule">Расписание</a></li>
+        <li><a href="#poster">Афиша</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Связаться</h4>
+      <ul>
+        <li>Адрес — Москва, Хорошёвская 12</li>
+        <li>Тел. — +7 499 579-77-09</li>
+        <li>WhatsApp — +7 495 956-10-12</li>
+        <li>Реклама — +7 499 579-77-99</li>
+        <li>support@rutv.ru</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Соцсети</h4>
+      <ul>
+        <li><a href="#">VK</a></li>
+        <li><a href="#">Одноклассники</a></li>
+        <li><a href="#">Telegram</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">Дзен</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Radio Maximum LLC. Все права защищены.</span>
+    <div class="legal">
+      <a href="#">Политика безопасности</a>
+      <a href="#">Пользовательское соглашение</a>
+      <a href="#">Cookie</a>
+      <a href="#">Реклама</a>
+    </div>
+  </div>
+</footer>
+
+<nav class="botnav" aria-label="Мобильное меню">
+  <a href="#/live" data-route="live">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9a14 14 0 0 1 14 0"/><path d="M8 13a8 8 0 0 1 8 0"/><circle cx="12" cy="17" r="1.5" fill="currentColor"/></svg>
+    Эфир
+  </a>
+  <a href="#/news" data-route="news">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h10M7 17h7"/></svg>
+    Новости
+  </a>
+  <a href="#/poster" data-route="poster">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+    Афиша
+  </a>
+  <a href="#/video" data-route="video">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>
+    Видео
+  </a>
+  <a href="#/programs" data-route="programs">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Шоу
+  </a>
+</nav>
+
+<aside class="now-playing" id="nowPlaying" aria-live="polite" aria-label="Сейчас в эфире">
+  <span class="art" style="--art: url('assets/rutv/Rectangle%204322-5.png');" aria-hidden="true"></span>
+  <span class="meta">
+    <strong>Артём Качер — Ко дну</strong>
+    <small>Сейчас в эфире · RU.TV</small>
+  </span>
+  <button class="np-x" aria-label="Скрыть" type="button" onclick="document.getElementById('nowPlaying').classList.remove('is-shown'); sessionStorage.setItem('np-dismissed', '1');">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+</aside>
+
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-label="Видео-плеер">
+  <div class="modal-video">
+    <button class="modal-close" type="button" aria-label="Закрыть" onclick="closeModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="placeholder">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <p id="modalTitle">Видео-плеер RU.TV</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const nav = document.getElementById('topnav');
+  const onScroll = () => {
+    if (window.scrollY > 8) nav.classList.add('is-stuck');
+    else nav.classList.remove('is-stuck');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  setTimeout(() => {
+    const np = document.getElementById('nowPlaying');
+    if (np && !sessionStorage.getItem('np-dismissed')) np.classList.add('is-shown');
+  }, 2400);
+
+  const livePill = document.querySelector('.live-pill');
+  if (livePill) {
+    let n = 1247;
+    setInterval(() => {
+      n += Math.floor(Math.random() * 11) - 5;
+      n = Math.max(800, Math.min(2400, n));
+      livePill.lastChild.textContent = ' LIVE · ' + n.toLocaleString('ru-RU') + ' зрителей';
+    }, 4000);
+  }
+
+  function openModal(title) {
+    const m = document.getElementById('modal');
+    document.getElementById('modalTitle').textContent = title || 'Видео-плеер RU.TV';
+    m.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  window.closeModal = closeModal;
+
+  document.querySelectorAll('[data-play]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const title = btn.querySelector('.card-title')?.textContent || btn.textContent.trim();
+      openModal(title);
+    });
+  });
+
+  document.getElementById('modal').addEventListener('click', e => {
+    if (e.target.id === 'modal') closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  document.querySelectorAll('.row-track, .chips-track, .schedule-grid').forEach(track => {
+    track.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) * 1.5) {
+        track.scrollBy({ left: e.deltaY, behavior: 'auto' });
+        e.preventDefault();
+      }
+    }, { passive: false });
+  });
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+    });
+  });
+
+  // ---------- HASH ROUTER (SPA) ----------
+  const VIEWS = ['home', 'live', 'news', 'poster', 'video', 'programs', 'schedule'];
+  function parseRoute() {
+    const h = location.hash.replace(/^#\/?/, '');
+    return VIEWS.includes(h) ? h : 'home';
+  }
+  function showView(name) {
+    VIEWS.forEach(v => {
+      const el = document.getElementById('view-' + v);
+      if (!el) return;
+      const active = (v === name);
+      el.classList.toggle('is-active', active);
+      if (active) el.removeAttribute('hidden');
+      else el.setAttribute('hidden', '');
+    });
+    // Inner pages: force frosted nav (no dark hero behind)
+    document.body.classList.toggle('is-home', name === 'home');
+    if (name !== 'home') nav.classList.add('is-stuck');
+    else if (window.scrollY <= 8) nav.classList.remove('is-stuck');
+    // sync nav active state
+    document.querySelectorAll('[data-route]').forEach(a => {
+      const isActive = a.dataset.route === name;
+      if (isActive) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+      a.classList.toggle('is-active', isActive);
+    });
+    window.scrollTo({ top: 0, behavior: name === 'home' ? 'auto' : 'instant' });
+    document.title = (
+      name === 'home' ? 'RU.TV — Главный музыкальный канал страны · Прямой эфир, клипы, программы'
+      : name === 'live' ? 'Прямой эфир · RU.TV'
+      : name === 'news' ? 'Новости шоу-бизнеса · RU.TV'
+      : name === 'poster' ? 'Афиша · RU.TV'
+      : name === 'video' ? 'Видео · RU.TV'
+      : name === 'programs' ? 'Программы · RU.TV'
+      : 'Расписание · RU.TV'
+    );
+  }
+  window.addEventListener('hashchange', () => showView(parseRoute()));
+  showView(parseRoute());
+
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.style.transition = 'opacity .6s ease, transform .6s ease';
+        en.target.style.opacity = '1';
+        en.target.style.transform = 'none';
+        revealObs.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -4% 0px' });
+  // Only animate reveal for HOME view content (sections inside .view-home)
+  document.querySelectorAll('#view-home .section, #view-home .featured, #view-home .schedule, #view-home .subscribe').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    revealObs.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
