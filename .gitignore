@@ -10,3 +10,6 @@ __pycache__/
 *.pyc
 .venv/
 .env
+
+# Git worktrees (superpowers isolated workspaces)
+.worktrees/
