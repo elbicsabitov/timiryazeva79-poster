@@ -1,5 +1,16 @@
 # DEBT — Дизайн-долг
 
+## ⚡ Bootstrap-порт (2026-05-19) — АКТИВНАЯ РАБОТА
+
+Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер: `docs/superpowers/HANDOFF-bootstrap-port.md`.**
+
+| Проект | Статус |
+|--------|--------|
+| `crm-bootstrap/` (CRM, 29 экр.) | ✅ ГОТОВ + отдан Эльбику (2026-05-20) |
+| `twinr-bootstrap/` (Twinr, 21 стр. + AI + Customizer) | ⬜ Phase 0-3 done · NEXT = Phase 4 (Customizer) |
+
+Ветка `feat/bootstrap-port` (worktree `.worktrees/feat-bootstrap-port`), не запушена/не смержена. Открытый пункт CRM (решение Эльбика): токен `--ds-ink-4` контраст ~3.5–4.1:1 < WCAG AA — взят из утверждённого прототипа, см. `crm-bootstrap/docs/ACCEPTANCE.md`.
+
 ## Экраны
 
 | ID | Задача | Статус |
