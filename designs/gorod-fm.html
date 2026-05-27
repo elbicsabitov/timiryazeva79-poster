@@ -1646,6 +1646,707 @@
         .map-card-subtitle { font-size: 15px; }
       }
 
+      /* ---- Home page — chip row ------------------------------------------- */
+
+      .home-page {
+        padding: 24px 0 80px;
+        max-width: 960px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      /* Filter chips strip */
+      .home-chip-row {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 4px;
+        padding-right: 24px;
+        margin-bottom: 32px;
+        -webkit-overflow-scrolling: touch;
+        /* hide scrollbar */
+        scrollbar-width: none;
+      }
+
+      .home-chip-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .home-chip {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        padding: 10px 18px;
+        min-height: 40px;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-20);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: rgba(255, 255, 255, 0.80);
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+        white-space: nowrap;
+      }
+
+      .home-chip:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #ffffff;
+      }
+
+      .home-chip[aria-pressed="true"] {
+        background: rgba(255, 255, 255, 0.32);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.35);
+      }
+
+      .home-chip:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      /* ---- Home page — hero band ------------------------------------------- */
+
+      .home-hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .home-hero-overline {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--brand-cyan);
+        text-align: center;
+      }
+
+      .home-cover {
+        width: 480px;
+        height: 480px;
+        border-radius: 24px;
+        flex-shrink: 0;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1a3a6e 0%, #2d6db5 35%, #56afd7 70%, #1a6bde 100%);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.10);
+        transition: box-shadow var(--t-mid);
+      }
+
+      .home-cover:hover {
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(86, 175, 215, 0.35);
+      }
+
+      /* Abstract album art SVG inside cover */
+      .home-cover-art {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .home-cover-label {
+        position: relative;
+        z-index: 1;
+        font-size: 18px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.60);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .home-hero-meta {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-width: 600px;
+      }
+
+      .home-track-title {
+        font-size: 32px;
+        font-weight: 500;
+        color: #EAF0FF;
+        text-wrap: balance;
+        line-height: 1.15;
+        transition: opacity var(--t-fast);
+      }
+
+      .home-track-artist {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.70);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-wrap: balance;
+        transition: opacity var(--t-fast);
+      }
+
+      /* ---- Home page — stations grid --------------------------------------- */
+
+      .home-stations-heading {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-quat);
+        margin-bottom: 16px;
+      }
+
+      .home-stations-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 80px; /* space for FAB */
+      }
+
+      .home-station {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 14px 16px;
+        min-height: 64px;
+        border-radius: 14px;
+        background: var(--surf-glass-12);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+        text-align: left;
+        font: inherit;
+        color: inherit;
+        transition: background var(--t-fast), border-color var(--t-fast), filter var(--t-fast);
+        position: relative;
+      }
+
+      .home-station:hover {
+        background: var(--surf-glass-20);
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+
+      .home-station[data-active="true"] {
+        outline: 2px solid var(--brand-cyan);
+        outline-offset: -1px;
+        background: rgba(86, 175, 215, 0.12);
+        border-color: transparent;
+      }
+
+      .home-station:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .home-station-icon {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        opacity: 0.45;
+      }
+
+      .home-station-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: var(--brand-cyan);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .home-station-name {
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--text-pri);
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 24px; /* avoid icon overlap */
+      }
+
+      .home-station-freq {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+      }
+
+      /* ---- Home page — corner FAB ----------------------------------------- */
+
+      .home-fab {
+        position: fixed;
+        /* anchor above mini player bar */
+        bottom: calc(var(--player-mini-h) + 20px);
+        right: 328px; /* tweaks panel is 280px wide + 20px gap + 28px clearance */
+        z-index: 55;
+        width: 56px;
+        height: 56px;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-20);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        color: #ffffff;
+        display: none; /* shown when home page is active */
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(20px) saturate(1.3);
+        -webkit-backdrop-filter: blur(20px) saturate(1.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        transition: background var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+      }
+
+      .home-fab:hover {
+        background: rgba(255, 255, 255, 0.30);
+        transform: scale(1.06);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      }
+
+      .home-fab:active {
+        transform: scale(0.96);
+      }
+
+      .home-fab:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .home-fab svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+
+      /* Each icon inside FAB — shown/hidden by variant */
+      .home-fab-icon-fab    { display: block; }
+      .home-fab-icon-drawer { display: none; }
+
+      [data-home-variant="drawer"] .home-fab-icon-fab    { display: none; }
+      [data-home-variant="drawer"] .home-fab-icon-drawer { display: block; }
+
+      /* ---- Home page — track-file shared content -------------------------- */
+
+      .home-trackfile-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: 100%;
+        overflow-y: auto;
+        padding-bottom: 8px;
+      }
+
+      .home-trackfile-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      .home-tf-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .home-tf-cover {
+        width: 96px;
+        height: 96px;
+        border-radius: 14px;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #1a4fa0 0%, #2d6db5 50%, #56afd7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.55);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        text-align: center;
+        padding: 4px;
+        text-wrap: balance;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .home-tf-cover svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .home-tf-meta {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 4px;
+        padding-right: 36px; /* close btn space */
+      }
+
+      .home-tf-title {
+        font-size: 22px;
+        font-weight: 500;
+        color: #EAF0FF;
+        text-wrap: balance;
+        line-height: 1.15;
+      }
+
+      .home-tf-artist {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--text-sec);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .home-tf-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.10);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-pri);
+        cursor: pointer;
+        transition: background var(--t-fast);
+      }
+
+      .home-tf-close:hover {
+        background: rgba(255, 255, 255, 0.20);
+      }
+
+      .home-tf-close svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* Scrubber */
+      .home-tf-scrubber {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .home-tf-time {
+        font-size: 12px;
+        color: var(--text-sec);
+        font-variant-numeric: tabular-nums;
+        min-width: 28px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .home-tf-bar {
+        flex: 1;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: var(--r-pill);
+        overflow: hidden;
+      }
+
+      .home-tf-bar-fill {
+        height: 100%;
+        width: 30%;
+        background: linear-gradient(90deg, var(--brand-cyan), var(--brand-blue));
+        border-radius: var(--r-pill);
+      }
+
+      /* Queue section */
+      .home-tf-section-label {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-sec);
+        margin-bottom: -4px;
+        flex-shrink: 0;
+      }
+
+      .home-tf-queue {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .home-tf-queue-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        min-height: 56px;
+        cursor: pointer;
+        border-radius: 0;
+        transition: background var(--t-fast);
+      }
+
+      .home-tf-queue-item:last-child {
+        border-bottom: none;
+      }
+
+      .home-tf-queue-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+        margin: 0 -8px;
+        padding-left: 8px;
+        padding-right: 8px;
+        border-radius: 8px;
+      }
+
+      .home-tf-queue-item[data-active="true"] {
+        background: rgba(86, 175, 215, 0.08);
+        margin: 0 -8px;
+        padding-left: 8px;
+        padding-right: 8px;
+        border-radius: 8px;
+      }
+
+      .home-tf-queue-cover {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 7px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.55);
+        text-align: center;
+        padding: 2px;
+        text-wrap: balance;
+      }
+
+      .home-tf-queue-meta {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .home-tf-queue-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .home-tf-queue-artist {
+        font-size: 13px;
+        color: var(--text-quat);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .home-tf-queue-dur {
+        font-size: 12px;
+        color: var(--text-quat);
+        flex-shrink: 0;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Actions row */
+      .home-tf-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .home-tf-action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        width: 44px;
+        height: 44px;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-12);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        color: var(--text-sec);
+        cursor: pointer;
+        transition: background var(--t-fast), color var(--t-fast);
+        justify-content: center;
+        font: inherit;
+      }
+
+      .home-tf-action-btn:hover {
+        background: var(--surf-glass-20);
+        color: var(--text-pri);
+      }
+
+      .home-tf-action-btn:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .home-tf-action-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .home-tf-open-player {
+        width: auto;
+        border-radius: var(--r-pill);
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--brand-cyan);
+        border-color: rgba(86, 175, 215, 0.30);
+        background: rgba(86, 175, 215, 0.10);
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+        height: 44px;
+        flex-direction: row;
+        gap: 8px;
+      }
+
+      .home-tf-open-player:hover {
+        background: rgba(86, 175, 215, 0.20);
+        color: var(--brand-cyan);
+      }
+
+      /* ---- Home page — bottom sheet (Variant A) --------------------------- */
+
+      .home-bottom-sheet {
+        position: fixed;
+        bottom: var(--player-mini-h);
+        left: 0;
+        right: 0;
+        height: 480px;
+        z-index: 65;
+        background: rgba(14, 12, 18, 0.92);
+        backdrop-filter: blur(40px) saturate(1.5);
+        -webkit-backdrop-filter: blur(40px) saturate(1.5);
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 24px 24px 0 0;
+        padding: 20px 24px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        transform: translateY(100%);
+        transition: transform var(--t-mid);
+        /* hidden by default via transform; we also need display logic */
+      }
+
+      /* The sheet's drag handle strip */
+      .home-bottom-sheet-handle {
+        width: 40px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: var(--r-pill);
+        margin: 0 auto 20px;
+        flex-shrink: 0;
+      }
+
+      /* Variant A: only show bottom-sheet elements */
+      [data-home-variant="fab"] .home-bottom-sheet {
+        display: flex;
+      }
+
+      [data-home-variant="fab"] .home-bottom-sheet[data-open] {
+        transform: translateY(0);
+      }
+
+      [data-home-variant="drawer"] .home-bottom-sheet {
+        display: none;
+      }
+
+      /* Reduced-motion: skip sheet slide */
+      @media (prefers-reduced-motion: reduce) {
+        .home-bottom-sheet {
+          transition: none;
+        }
+      }
+
+      /* ---- Home page — backdrop (both variants) --------------------------- */
+
+      .home-panel-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 64;
+        background: rgba(0, 0, 0, 0.45);
+        display: none;
+        cursor: default;
+      }
+
+      .home-panel-backdrop[data-open] {
+        display: block;
+      }
+
+      /* ---- Home page — side drawer (Variant B) ---------------------------- */
+
+      .home-side-drawer {
+        position: fixed;
+        /* align to main content area start (after sidebar) */
+        left: var(--sidebar-w);
+        top: var(--topbar-h);
+        bottom: var(--player-mini-h);
+        width: 360px;
+        z-index: 65;
+        background: rgba(14, 12, 18, 0.92);
+        backdrop-filter: blur(40px) saturate(1.5);
+        -webkit-backdrop-filter: blur(40px) saturate(1.5);
+        border-right: 1px solid rgba(255, 255, 255, 0.14);
+        padding: 24px 20px 24px;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(-110%);
+        transition: transform var(--t-mid);
+        overflow-y: auto;
+      }
+
+      /* Variant B: only show side-drawer */
+      [data-home-variant="drawer"] .home-side-drawer {
+        display: flex;
+      }
+
+      [data-home-variant="drawer"] .home-side-drawer[data-open] {
+        transform: translateX(0);
+      }
+
+      [data-home-variant="fab"] .home-side-drawer {
+        display: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .home-side-drawer {
+          transition: none;
+        }
+      }
+
       /* ---- hide-flow-map CSS rules ---------------------------------------- */
 
       html[data-hide-flow-map="true"] [data-page="map"] {
@@ -1898,6 +2599,74 @@
         transition-duration: 0.05ms !important;
       }
 
+      /* ---- Home page surface adapters ------------------------------------ */
+
+      /* Mobile surface */
+      [data-surface="mobile"] .home-fab {
+        right: 20px;
+        bottom: calc(var(--tabbar-h) + var(--player-mini-h) + 16px);
+      }
+
+      [data-surface="mobile"] .home-cover {
+        width: 280px;
+        height: 280px;
+      }
+
+      [data-surface="mobile"] .home-track-title {
+        font-size: 24px;
+      }
+
+      [data-surface="mobile"] .home-stations-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      [data-surface="mobile"] .home-bottom-sheet {
+        left: 0;
+        right: 0;
+      }
+
+      [data-surface="mobile"] .home-side-drawer {
+        left: 0;
+        top: calc(var(--player-mini-h));
+        bottom: var(--tabbar-h);
+      }
+
+      /* TV surface */
+      [data-surface="tv"] .home-cover {
+        width: 400px;
+        height: 400px;
+      }
+
+      [data-surface="tv"] .home-track-title {
+        font-size: 40px;
+      }
+
+      [data-surface="tv"] .home-station {
+        min-height: 80px;
+        padding: 18px 20px;
+      }
+
+      [data-surface="tv"] .home-station-name {
+        font-size: 20px;
+      }
+
+      [data-surface="tv"] .home-fab {
+        width: 72px;
+        height: 72px;
+      }
+
+      /* CarPlay surface */
+      [data-surface="carplay"] .home-fab {
+        width: 80px;
+        height: 80px;
+        right: 48px;
+        bottom: calc(var(--player-mini-h) + 20px);
+      }
+
+      [data-surface="carplay"] .home-station {
+        min-height: 80px;
+      }
+
       /* ---- Responsive fallback: coerce to mobile-like at ≤768px ---------- */
 
       @media (max-width: 768px) {
@@ -1974,6 +2743,51 @@
 
         .player-transport {
           gap: 48px !important;
+        }
+      }
+
+      /* ---- Home page responsive at ≤768px -------------------------------- */
+      @media (max-width: 768px) {
+        .home-cover {
+          width: 280px !important;
+          height: 280px !important;
+        }
+
+        .home-track-title {
+          font-size: 24px !important;
+        }
+
+        .home-stations-grid {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        .home-fab {
+          right: 20px !important;
+          bottom: calc(var(--tabbar-h) + var(--player-mini-h) + 16px) !important;
+        }
+
+        .home-bottom-sheet {
+          left: 0 !important;
+          right: 0 !important;
+        }
+
+        .home-side-drawer {
+          left: 0 !important;
+          width: 100% !important;
+          top: 0 !important;
+          bottom: calc(var(--tabbar-h)) !important;
+        }
+      }
+
+      /* ---- Home page at tablet 769px-1024px ------------------------------ */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .home-stations-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .home-cover {
+          width: 360px;
+          height: 360px;
         }
       }
     }
@@ -2413,9 +3227,314 @@
 
       <!-- Page: Главная -->
       <section data-page="home" aria-labelledby="page-home-heading">
-        <h1 id="page-home-heading" class="page-stub-heading">Главная</h1>
-        <p class="page-stub-hint">Радиостанции, фильтр-чипы, текущий трек. Task #6 заполнит этот экран.</p>
-        <div class="page-content"></div>
+        <h1 id="page-home-heading" class="visually-hidden">Главная</h1>
+
+        <div class="home-page">
+
+          <!-- Filter chips row -->
+          <div
+            class="home-chip-row"
+            role="group"
+            aria-label="Жанр"
+            id="home-chip-row"
+          >
+            <button
+              class="home-chip"
+              type="button"
+              aria-pressed="true"
+              data-genre="rok"
+              aria-label="РОК"
+            >РОК</button>
+            <button
+              class="home-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="disko"
+              aria-label="ДИСКО"
+            >ДИСКО</button>
+            <button
+              class="home-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="pop"
+              aria-label="ПОП"
+            >ПОП</button>
+            <button
+              class="home-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="hip-hop"
+              aria-label="ХИП-ХОП"
+            >ХИП-ХОП</button>
+            <button
+              class="home-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="eshche"
+              aria-label="Показать ещё жанры"
+            >ЕЩЁ</button>
+          </div>
+
+          <!-- Hero band: overline + cover + meta -->
+          <div class="home-hero" aria-label="Сейчас в эфире">
+            <div class="home-hero-overline" aria-hidden="true">СЕЙЧАС В ЭФИРЕ · РОК</div>
+
+            <!-- Large cover with abstract SVG art -->
+            <div
+              class="home-cover"
+              id="home-cover"
+              aria-hidden="true"
+            >
+              <!-- Abstract album art: concentric arcs + wave lines -->
+              <svg class="home-cover-art" viewBox="0 0 480 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <!-- Outer glow rings -->
+                <circle cx="240" cy="240" r="200" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+                <circle cx="240" cy="240" r="160" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+                <circle cx="240" cy="240" r="120" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1.5"/>
+                <circle cx="240" cy="240" r="80"  fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+                <!-- Center disc -->
+                <circle cx="240" cy="240" r="44"  fill="rgba(255,255,255,0.12)"/>
+                <circle cx="240" cy="240" r="16"  fill="rgba(255,255,255,0.20)"/>
+                <!-- Highlight arc top-left -->
+                <path d="M 80 180 Q 150 60 280 100" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="2"/>
+                <!-- Wave lines bottom -->
+                <path d="M 60 340 Q 120 310 180 340 Q 240 370 300 340 Q 360 310 420 340" fill="none" stroke="rgba(86,175,215,0.25)" stroke-width="1.5"/>
+                <path d="M 40 360 Q 120 330 200 360 Q 280 390 360 360 Q 400 345 440 360" fill="none" stroke="rgba(86,175,215,0.15)" stroke-width="1"/>
+              </svg>
+            </div>
+
+            <!-- Track meta -->
+            <div class="home-hero-meta">
+              <div
+                class="home-track-title"
+                id="home-track-title"
+              >Believer</div>
+              <div
+                class="home-track-artist"
+                id="home-track-artist"
+              >IMAGINE DRAGON · Z. CITY SHOW</div>
+            </div>
+          </div>
+
+          <!-- Stations grid -->
+          <div class="home-stations-heading" aria-hidden="true">СТАНЦИИ</div>
+          <div
+            class="home-stations-grid"
+            role="list"
+            aria-label="Радиостанции"
+            id="home-stations-grid"
+          >
+
+            <!-- Station 1: ГОРОД РОК (active default) -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="rock"
+              data-active="true"
+              aria-label="ГОРОД РОК, 103.5 FM — сейчас активна"
+              aria-pressed="true"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД РОК</span>
+              <span class="home-station-freq">103.5 FM</span>
+            </button>
+
+            <!-- Station 2 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="pop"
+              data-active="false"
+              aria-label="ГОРОД ПОП, 104.0 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД ПОП</span>
+              <span class="home-station-freq">104.0 FM</span>
+            </button>
+
+            <!-- Station 3 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="disko"
+              data-active="false"
+              aria-label="ГОРОД ДИСКО, 104.5 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД ДИСКО</span>
+              <span class="home-station-freq">104.5 FM</span>
+            </button>
+
+            <!-- Station 4 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="hiphop"
+              data-active="false"
+              aria-label="ГОРОД ХИП-ХОП, 105.0 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД ХИП-ХОП</span>
+              <span class="home-station-freq">105.0 FM</span>
+            </button>
+
+            <!-- Station 5 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="chill"
+              data-active="false"
+              aria-label="ГОРОД CHILL, 105.5 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД CHILL</span>
+              <span class="home-station-freq">105.5 FM</span>
+            </button>
+
+            <!-- Station 6 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="lirika"
+              data-active="false"
+              aria-label="ГОРОД ЛИРИКА, 106.0 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД ЛИРИКА</span>
+              <span class="home-station-freq">106.0 FM</span>
+            </button>
+
+            <!-- Station 7 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="80s"
+              data-active="false"
+              aria-label="ГОРОД 80-х, 106.5 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД 80-х</span>
+              <span class="home-station-freq">106.5 FM</span>
+            </button>
+
+            <!-- Station 8 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="90s"
+              data-active="false"
+              aria-label="ГОРОД 90-х, 107.0 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД 90-х</span>
+              <span class="home-station-freq">107.0 FM</span>
+            </button>
+
+            <!-- Station 9 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="00s"
+              data-active="false"
+              aria-label="ГОРОД 00-х, 107.5 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД 00-х</span>
+              <span class="home-station-freq">107.5 FM</span>
+            </button>
+
+            <!-- Station 10 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="jazz"
+              data-active="false"
+              aria-label="ГОРОД ДЖАЗ, 108.0 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД ДЖАЗ</span>
+              <span class="home-station-freq">108.0 FM</span>
+            </button>
+
+            <!-- Station 11 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="indie"
+              data-active="false"
+              aria-label="ГОРОД ИНДИ, 88.5 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД ИНДИ</span>
+              <span class="home-station-freq">88.5 FM</span>
+            </button>
+
+            <!-- Station 12 -->
+            <button
+              class="home-station"
+              type="button"
+              role="listitem"
+              data-station="hit"
+              data-active="false"
+              aria-label="ГОРОД ХИТ, 89.0 FM"
+              aria-pressed="false"
+            >
+              <span class="home-station-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
+              </span>
+              <span class="home-station-name">ГОРОД ХИТ</span>
+              <span class="home-station-freq">89.0 FM</span>
+            </button>
+
+          </div>
+          <!-- /.home-stations-grid -->
+
+        </div>
+        <!-- /.home-page -->
+
       </section>
 
       <!-- Page: Подборки -->
@@ -2456,6 +3575,246 @@
     </main>
   </div>
   <!-- /.app-shell -->
+
+  <!-- ======================================================================
+       HOME PAGE — corner FAB + panels (outside app-shell to use fixed pos)
+       ====================================================================== -->
+
+  <!-- Corner expand FAB — visible only on #/home -->
+  <button
+    class="home-fab"
+    id="home-fab"
+    type="button"
+    aria-label="Открыть файл трека"
+    aria-expanded="false"
+  >
+    <!-- Icon for variant A (bottom-sheet) -->
+    <svg class="home-fab-icon-fab" viewBox="0 0 24 24" aria-hidden="true">
+      <polyline points="17 11 12 6 7 11"/>
+      <line x1="12" y1="6" x2="12" y2="18"/>
+    </svg>
+    <!-- Icon for variant B (side drawer) -->
+    <svg class="home-fab-icon-drawer" viewBox="0 0 24 24" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  </button>
+
+  <!-- Backdrop for both variants -->
+  <div
+    class="home-panel-backdrop"
+    id="home-panel-backdrop"
+    aria-hidden="true"
+    tabindex="-1"
+  ></div>
+
+  <!-- Track-file panel — shared content template fragment -->
+  <!-- Rendered inside BOTH the bottom-sheet and side-drawer -->
+
+  <!-- Variant A: Bottom sheet -->
+  <div
+    class="home-bottom-sheet"
+    id="home-bottom-sheet"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Файл трека"
+    aria-hidden="true"
+  >
+    <div class="home-bottom-sheet-handle" aria-hidden="true"></div>
+    <div class="home-trackfile-content" style="position: relative;">
+      <button
+        class="home-tf-close"
+        id="home-bs-close"
+        type="button"
+        aria-label="Закрыть файл трека"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="home-tf-header">
+        <div class="home-tf-cover" id="home-bs-cover">
+          <!-- Abstract mini cover art -->
+          <svg viewBox="0 0 96 96" aria-hidden="true">
+            <circle cx="48" cy="48" r="38" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+            <circle cx="48" cy="48" r="24" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+            <circle cx="48" cy="48" r="10" fill="rgba(255,255,255,0.18)"/>
+          </svg>
+          <span style="position:relative;z-index:1;">BELIEVER</span>
+        </div>
+        <div class="home-tf-meta">
+          <div class="home-tf-title" id="home-bs-title">Believer</div>
+          <div class="home-tf-artist" id="home-bs-artist">IMAGINE DRAGON</div>
+        </div>
+      </div>
+
+      <div class="home-tf-scrubber" aria-label="Прогресс трека">
+        <span class="home-tf-time" aria-label="Текущее время">1:24</span>
+        <div class="home-tf-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс воспроизведения">
+          <div class="home-tf-bar-fill"></div>
+        </div>
+        <span class="home-tf-time" aria-label="Длительность">4:37</span>
+      </div>
+
+      <div class="home-tf-section-label">Следующие в эфире</div>
+      <div class="home-tf-queue" role="list" aria-label="Очередь треков" id="home-bs-queue">
+        <!-- Queue items injected by JS -->
+      </div>
+
+      <div class="home-tf-actions" aria-label="Действия с треком">
+        <button
+          class="home-tf-action-btn"
+          type="button"
+          aria-label="Поделиться треком"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+        </button>
+        <button
+          class="home-tf-action-btn"
+          type="button"
+          aria-label="Добавить в избранное"
+          aria-pressed="false"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+        </button>
+        <button
+          class="home-tf-action-btn"
+          type="button"
+          aria-label="Текст песни"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </button>
+        <button
+          class="home-tf-action-btn home-tf-open-player"
+          type="button"
+          id="home-bs-open-player"
+          aria-label="Открыть полный плеер"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10 8 16 12 10 16 10 8"/>
+          </svg>
+          Открыть плеер
+        </button>
+      </div>
+    </div>
+    <!-- /.home-trackfile-content -->
+  </div>
+  <!-- /.home-bottom-sheet -->
+
+  <!-- Variant B: Side drawer -->
+  <div
+    class="home-side-drawer"
+    id="home-side-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Файл трека"
+    aria-hidden="true"
+  >
+    <div class="home-trackfile-content" style="position: relative;">
+      <button
+        class="home-tf-close"
+        id="home-sd-close"
+        type="button"
+        aria-label="Закрыть файл трека"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="home-tf-header">
+        <div class="home-tf-cover" id="home-sd-cover">
+          <svg viewBox="0 0 96 96" aria-hidden="true">
+            <circle cx="48" cy="48" r="38" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+            <circle cx="48" cy="48" r="24" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+            <circle cx="48" cy="48" r="10" fill="rgba(255,255,255,0.18)"/>
+          </svg>
+          <span style="position:relative;z-index:1;">BELIEVER</span>
+        </div>
+        <div class="home-tf-meta">
+          <div class="home-tf-title" id="home-sd-title">Believer</div>
+          <div class="home-tf-artist" id="home-sd-artist">IMAGINE DRAGON</div>
+        </div>
+      </div>
+
+      <div class="home-tf-scrubber" aria-label="Прогресс трека">
+        <span class="home-tf-time" aria-label="Текущее время">1:24</span>
+        <div class="home-tf-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс воспроизведения">
+          <div class="home-tf-bar-fill"></div>
+        </div>
+        <span class="home-tf-time" aria-label="Длительность">4:37</span>
+      </div>
+
+      <div class="home-tf-section-label">Следующие в эфире</div>
+      <div class="home-tf-queue" role="list" aria-label="Очередь треков" id="home-sd-queue">
+        <!-- Queue items injected by JS -->
+      </div>
+
+      <div class="home-tf-actions" aria-label="Действия с треком">
+        <button
+          class="home-tf-action-btn"
+          type="button"
+          aria-label="Поделиться треком"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+        </button>
+        <button
+          class="home-tf-action-btn"
+          type="button"
+          aria-label="Добавить в избранное"
+          aria-pressed="false"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+        </button>
+        <button
+          class="home-tf-action-btn"
+          type="button"
+          aria-label="Текст песни"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </button>
+        <button
+          class="home-tf-action-btn home-tf-open-player"
+          type="button"
+          id="home-sd-open-player"
+          aria-label="Открыть полный плеер"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10 8 16 12 10 16 10 8"/>
+          </svg>
+          Открыть плеер
+        </button>
+      </div>
+    </div>
+    <!-- /.home-trackfile-content -->
+  </div>
+  <!-- /.home-side-drawer -->
 
   <!-- ======================================================================
        PLAYER MINI BAR — sticky bottom transport
@@ -3143,15 +4502,15 @@
             data-value="fab"
             aria-pressed="true"
             aria-label="Вариант A: угловая FAB кнопка → нижний sheet"
-          >A: Corner FAB</button>
+          >FAB → нижняя шторка</button>
           <button
             class="tweak-btn"
             type="button"
             data-tweak="home-variant"
             data-value="drawer"
             aria-pressed="false"
-            aria-label="Вариант B: sidebar slide-out drawer"
-          >B: Drawer</button>
+            aria-label="Вариант B: боковая шторка слева"
+          >Боковая шторка слева</button>
         </div>
       </div>
 
@@ -3571,6 +4930,255 @@
         });
       });
 
+      /* ---- Home page — data ---------------------------------------------- */
+
+      var STATION_TRACKS = {
+        rock:    { track: 'Believer',           artist: 'IMAGINE DRAGON · Z. CITY SHOW',  overline: 'СЕЙЧАС В ЭФИРЕ · РОК',    coverClass: 'home-tf-cover-rock'    },
+        pop:     { track: 'Blinding Lights',    artist: 'THE WEEKND · РАДИО ПОП',          overline: 'СЕЙЧАС В ЭФИРЕ · ПОП',    coverClass: 'home-tf-cover-pop'     },
+        disko:   { track: 'Stayin\' Alive',     artist: 'BEE GEES · DISCO GOLD',           overline: 'СЕЙЧАС В ЭФИРЕ · ДИСКО',  coverClass: 'home-tf-cover-disko'   },
+        hiphop:  { track: 'HUMBLE.',            artist: 'KENDRICK LAMAR · HIP CITY',       overline: 'СЕЙЧАС В ЭФИРЕ · ХИП-ХОП', coverClass: 'home-tf-cover-hiphop' },
+        chill:   { track: 'Weightless',         artist: 'MARCONI UNION · CHILL FM',        overline: 'СЕЙЧАС В ЭФИРЕ · CHILL',  coverClass: 'home-tf-cover-chill'   },
+        lirika:  { track: 'My Heart Will Go On','artist': 'CÉLINE DION · ЛИРИКА',          overline: 'СЕЙЧАС В ЭФИРЕ · ЛИРИКА', coverClass: 'home-tf-cover-lirika'  },
+        '80s':   { track: 'Take On Me',         artist: 'A-HA · ГОРОД 80-х',               overline: 'СЕЙЧАС В ЭФИРЕ · 80-е',   coverClass: 'home-tf-cover-80s'     },
+        '90s':   { track: 'Smells Like Teen Spirit', artist: 'NIRVANA · ГОРОД 90-х',       overline: 'СЕЙЧАС В ЭФИРЕ · 90-е',   coverClass: 'home-tf-cover-90s'     },
+        '00s':   { track: 'Numb',               artist: 'LINKIN PARK · ГОРОД 00-х',        overline: 'СЕЙЧАС В ЭФИРЕ · 2000-е', coverClass: 'home-tf-cover-00s'     },
+        jazz:    { track: 'What a Wonderful World', artist: 'LOUIS ARMSTRONG · JAZZ FM',   overline: 'СЕЙЧАС В ЭФИРЕ · ДЖАЗ',  coverClass: 'home-tf-cover-jazz'    },
+        indie:   { track: 'Do I Wanna Know?',   artist: 'ARCTIC MONKEYS · INDIE',          overline: 'СЕЙЧАС В ЭФИРЕ · ИНДИ',   coverClass: 'home-tf-cover-indie'   },
+        hit:     { track: 'Shape of You',       artist: 'ED SHEERAN · ГОРОД ХИТ',          overline: 'СЕЙЧАС В ЭФИРЕ · ХИТ',   coverClass: 'home-tf-cover-hit'     },
+      };
+
+      var QUEUE_TRACKS = [
+        { title: 'Thunder',        artist: 'Imagine Dragons', dur: '3:07', grad: 'linear-gradient(135deg, #1a3a6e, #56afd7)' },
+        { title: 'Enemy',          artist: 'Imagine Dragons', dur: '2:54', grad: 'linear-gradient(135deg, #2d1547, #c43a6e)' },
+        { title: 'Radioactive',    artist: 'Imagine Dragons', dur: '3:06', grad: 'linear-gradient(135deg, #1a5c30, #2ecc71)' },
+        { title: 'Demons',         artist: 'Imagine Dragons', dur: '2:57', grad: 'linear-gradient(135deg, #4a1a00, #d4662d)' },
+      ];
+
+      function buildQueueHtml() {
+        return QUEUE_TRACKS.map(function (t, i) {
+          return '<div class="home-tf-queue-item" role="listitem" tabindex="0" aria-label="' + t.title + ', ' + t.artist + ', длительность ' + t.dur + '"' + (i === 0 ? ' data-active="true"' : '') + '>' +
+            '<div class="home-tf-queue-cover" style="background:' + t.grad + '">' + t.title.slice(0,5).toUpperCase() + '</div>' +
+            '<div class="home-tf-queue-meta"><div class="home-tf-queue-title">' + t.title + '</div><div class="home-tf-queue-artist">' + t.artist + '</div></div>' +
+            '<div class="home-tf-queue-dur">' + t.dur + '</div>' +
+            '</div>';
+        }).join('');
+      }
+
+      /* ---- Home page — chip row ------------------------------------------ */
+
+      var homeChipRow = document.getElementById('home-chip-row');
+
+      if (homeChipRow) {
+        homeChipRow.addEventListener('click', function (e) {
+          var chip = e.target.closest('.home-chip');
+          if (!chip) return;
+          homeChipRow.querySelectorAll('.home-chip').forEach(function (c) {
+            c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+          });
+          console.log('[Город ФМ] genre filter:', chip.getAttribute('data-genre'));
+        });
+      }
+
+      /* ---- Home page — station grid --------------------------------------- */
+
+      var activeStation = 'rock';
+
+      function setActiveStation(stationId) {
+        activeStation = stationId;
+        // Update station buttons
+        document.querySelectorAll('.home-station').forEach(function (btn) {
+          var isActive = btn.getAttribute('data-station') === stationId;
+          btn.setAttribute('data-active', isActive ? 'true' : 'false');
+          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+        // Update hero band
+        var info = STATION_TRACKS[stationId] || STATION_TRACKS.rock;
+        var titleEl  = document.getElementById('home-track-title');
+        var artistEl = document.getElementById('home-track-artist');
+        var overlineEl = document.querySelector('.home-hero-overline');
+        if (titleEl)  titleEl.textContent  = info.track;
+        if (artistEl) artistEl.textContent = info.artist;
+        if (overlineEl) overlineEl.textContent = info.overline;
+        // Sync track-file panel titles
+        ['home-bs-title', 'home-sd-title'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.textContent = info.track;
+        });
+        ['home-bs-artist', 'home-sd-artist'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.textContent = info.artist.split(' · ')[0];
+        });
+        ['home-bs-cover', 'home-sd-cover'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) {
+            var span = el.querySelector('span');
+            if (span) span.textContent = info.track.toUpperCase().slice(0, 7);
+          }
+        });
+      }
+
+      var stationsGrid = document.getElementById('home-stations-grid');
+      if (stationsGrid) {
+        stationsGrid.addEventListener('click', function (e) {
+          var btn = e.target.closest('.home-station');
+          if (!btn) return;
+          setActiveStation(btn.getAttribute('data-station'));
+        });
+        // Keyboard: Enter/Space already trigger click via native button
+      }
+
+      /* ---- Home page — FAB + panels --------------------------------------- */
+
+      var homeFab          = document.getElementById('home-fab');
+      var homeBackdrop     = document.getElementById('home-panel-backdrop');
+      var homeBottomSheet  = document.getElementById('home-bottom-sheet');
+      var homeSideDrawer   = document.getElementById('home-side-drawer');
+      var homeBsClose      = document.getElementById('home-bs-close');
+      var homeSdClose      = document.getElementById('home-sd-close');
+      var homeBsOpenPlayer = document.getElementById('home-bs-open-player');
+      var homeSdOpenPlayer = document.getElementById('home-sd-open-player');
+
+      // Populate queues on DOM ready
+      var bsQueue = document.getElementById('home-bs-queue');
+      var sdQueue = document.getElementById('home-sd-queue');
+      if (bsQueue) bsQueue.innerHTML = buildQueueHtml();
+      if (sdQueue) sdQueue.innerHTML = buildQueueHtml();
+
+      // Queue item click — highlight selected
+      [bsQueue, sdQueue].forEach(function (queue) {
+        if (!queue) return;
+        queue.addEventListener('click', function (e) {
+          var item = e.target.closest('.home-tf-queue-item');
+          if (!item) return;
+          queue.querySelectorAll('.home-tf-queue-item').forEach(function (i) {
+            i.removeAttribute('data-active');
+          });
+          item.setAttribute('data-active', 'true');
+        });
+        // Keyboard activation
+        queue.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            var item = e.target.closest('.home-tf-queue-item');
+            if (item) {
+              e.preventDefault();
+              queue.querySelectorAll('.home-tf-queue-item').forEach(function (i) {
+                i.removeAttribute('data-active');
+              });
+              item.setAttribute('data-active', 'true');
+            }
+          }
+        });
+      });
+
+      function isHomePanelOpen() {
+        return (homeBottomSheet && homeBottomSheet.hasAttribute('data-open')) ||
+               (homeSideDrawer  && homeSideDrawer.hasAttribute('data-open'));
+      }
+
+      function openHomePanel() {
+        var variant = document.documentElement.getAttribute('data-home-variant') || 'fab';
+        if (variant === 'fab') {
+          if (homeBottomSheet) {
+            homeBottomSheet.setAttribute('data-open', '');
+            homeBottomSheet.removeAttribute('aria-hidden');
+          }
+        } else {
+          if (homeSideDrawer) {
+            homeSideDrawer.setAttribute('data-open', '');
+            homeSideDrawer.removeAttribute('aria-hidden');
+          }
+        }
+        if (homeBackdrop)  homeBackdrop.setAttribute('data-open', '');
+        if (homeFab) {
+          homeFab.setAttribute('aria-expanded', 'true');
+        }
+      }
+
+      function closeHomePanel() {
+        if (homeBottomSheet) {
+          homeBottomSheet.removeAttribute('data-open');
+          homeBottomSheet.setAttribute('aria-hidden', 'true');
+        }
+        if (homeSideDrawer) {
+          homeSideDrawer.removeAttribute('data-open');
+          homeSideDrawer.setAttribute('aria-hidden', 'true');
+        }
+        if (homeBackdrop)  homeBackdrop.removeAttribute('data-open');
+        if (homeFab) {
+          homeFab.setAttribute('aria-expanded', 'false');
+          homeFab.focus();
+        }
+      }
+
+      if (homeFab) {
+        homeFab.addEventListener('click', function () {
+          if (isHomePanelOpen()) {
+            closeHomePanel();
+          } else {
+            openHomePanel();
+          }
+        });
+      }
+
+      if (homeBackdrop) {
+        homeBackdrop.addEventListener('click', closeHomePanel);
+      }
+
+      if (homeBsClose) {
+        homeBsClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeHomePanel();
+        });
+      }
+
+      if (homeSdClose) {
+        homeSdClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeHomePanel();
+        });
+      }
+
+      // "Открыть полный плеер" in track-file panel
+      if (homeBsOpenPlayer) {
+        homeBsOpenPlayer.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeHomePanel();
+          openPlayer();
+        });
+      }
+
+      if (homeSdOpenPlayer) {
+        homeSdOpenPlayer.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeHomePanel();
+          openPlayer();
+        });
+      }
+
+      // Escape key closes home panel too
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isHomePanelOpen()) {
+          closeHomePanel();
+        }
+      });
+
+      // Show/hide the FAB based on active page
+      function updateHomeFabVisibility(route) {
+        if (!homeFab) return;
+        if (route === '#/home') {
+          homeFab.style.display = 'flex';
+        } else {
+          homeFab.style.display = 'none';
+          // Also close panels if we navigated away
+          closeHomePanel();
+        }
+      }
+
+      // Hook into hash router events
+      window.addEventListener('hashchange', function () {
+        updateHomeFabVisibility(window.location.hash);
+      });
+
       /* ---- Boot ------------------------------------------------------------ */
 
       function boot() {
@@ -3616,6 +5224,10 @@
         //    Just initialise tab states so if player opens it shows correct tab
         var savedPlayerView = lsGet(LS_KEYS.playerView, 'cover');
         setPlayerView(savedPlayerView);
+
+        // 7. Init home page state
+        setActiveStation('rock');
+        updateHomeFabVisibility(initialRoute);
       }
 
       boot();
