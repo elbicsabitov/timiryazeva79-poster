@@ -3672,6 +3672,534 @@
         stroke: none;
       }
 
+      /* =====================================================================
+         TRACK PAGE — #/track
+         ===================================================================== */
+
+      /* Page wrapper — scrollable inner column */
+      .track-page {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding-bottom: 40px;
+        box-sizing: border-box;
+      }
+
+      /* ---- A. Hero band ------------------------------------------------------ */
+
+      .track-hero {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 24px 0;
+        box-sizing: border-box;
+        gap: 0;
+      }
+
+      .track-eyebrow {
+        font-family: 'Onest', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--brand-cyan);
+        margin: 0 0 24px;
+        text-align: center;
+      }
+
+      .track-cover {
+        width: 480px;
+        height: 480px;
+        border-radius: 24px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a4fa0 0%, #7b2d8b 60%, #c43a6e 100%);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55), 0 0 80px rgba(86, 175, 215, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .track-cover svg {
+        width: 96px;
+        height: 96px;
+        stroke: rgba(255, 255, 255, 0.45);
+        fill: none;
+        stroke-width: 1.5;
+      }
+
+      /* Subtle radial shimmer on cover — not backdrop-filter (page rule) */
+      .track-cover::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 30% 25%, rgba(86,175,215,0.18) 0%, transparent 65%);
+        pointer-events: none;
+      }
+
+      .track-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 40px;
+        font-weight: 500;
+        color: #EAF0FF;
+        text-wrap: balance;
+        text-align: center;
+        line-height: 1.15;
+        margin: 28px 0 0;
+      }
+
+      .track-artist {
+        font-family: 'Onest', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.70);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-align: center;
+        margin: 10px 0 0;
+        text-wrap: balance;
+      }
+
+      .track-album-line {
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--text-quat);
+        text-align: center;
+        margin: 8px 0 0;
+      }
+
+      /* ---- B. Action tabs row ------------------------------------------------ */
+
+      .track-action-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 44px;
+        width: 100%;
+        padding: 24px 24px 4px;
+        box-sizing: border-box;
+        flex-shrink: 0;
+      }
+
+      /* Reuse .player-action-tab — add .is-track modifier if needed */
+      .track-action-row .player-action-tab {
+        min-width: 52px;
+      }
+
+      /* ---- C. Scrubber + transport ------------------------------------------ */
+
+      .track-scrubber-wrap {
+        width: 100%;
+        max-width: 720px;
+        padding: 8px 24px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* Reuse .player-scrubber and .player-transport from player overlay */
+
+      /* ---- D. View-state region ---------------------------------------------- */
+
+      .track-view-region {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 8px;
+      }
+
+      .track-stage-cover,
+      .track-stage-lyrics,
+      .track-stage-history {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      [data-track-view="cover"] .track-stage-cover   { display: flex; }
+      [data-track-view="lyrics"] .track-stage-lyrics  { display: flex; }
+      [data-track-view="история"] .track-stage-history { display: flex; }
+
+      /* ---- Up-next carousel (cover view) ------------------------------------- */
+
+      .track-up-next-label {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-quat);
+        margin: 0 0 12px;
+        text-align: center;
+      }
+
+      .track-up-next-row {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        padding: 0 24px 4px;
+        box-sizing: border-box;
+      }
+
+      .track-up-next-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        width: 140px;
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+        border-radius: 12px;
+        transition: background var(--t-fast);
+        text-align: center;
+      }
+
+      .track-up-next-card:hover {
+        background: var(--surf-glass-12);
+      }
+
+      .track-up-next-card:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+        border-radius: 12px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .track-up-next-card:hover {
+          background: none;
+        }
+      }
+
+      .track-up-next-cover {
+        width: 140px;
+        height: 140px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        text-align: center;
+        padding: 8px;
+        text-wrap: balance;
+        transition: transform var(--t-mid), filter var(--t-mid);
+        box-sizing: border-box;
+      }
+
+      .track-up-next-card--current .track-up-next-cover {
+        box-shadow: 0 12px 40px rgba(86, 175, 215, 0.35);
+        outline: 2px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .track-up-next-card--side .track-up-next-cover {
+        filter: saturate(0.55);
+        opacity: 0.65;
+      }
+
+      .track-up-next-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 136px;
+      }
+
+      .track-up-next-artist {
+        font-family: 'Onest', sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--text-quat);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 136px;
+        margin-top: -4px;
+      }
+
+      /* ---- Lyrics view ------------------------------------------------------- */
+
+      .track-lyrics-wrap {
+        width: 100%;
+        max-width: 720px;
+        padding: 32px 40px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        /* Elegant vertical fade */
+        mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+        max-height: 540px;
+        overflow-y: auto;
+        scrollbar-width: none;
+      }
+
+      .track-lyrics-wrap::-webkit-scrollbar {
+        display: none;
+      }
+
+      .track-lyric-line {
+        font-family: 'Onest', sans-serif;
+        font-size: 36px;
+        font-weight: 700;
+        color: #545454;
+        line-height: 1.4;
+        padding: 4px 0;
+        text-align: center;
+        transition: color var(--t-fast);
+        cursor: default;
+      }
+
+      .track-lyric-line[data-active] {
+        color: #ffffff;
+      }
+
+      /* ---- History view ------------------------------------------------------ */
+
+      .track-history-wrap {
+        width: 100%;
+        max-width: 880px;
+        padding: 0 24px;
+        box-sizing: border-box;
+      }
+
+      .track-history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+      }
+
+      .track-history-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        min-height: 72px;
+        box-sizing: border-box;
+      }
+
+      .track-history-row:last-child {
+        border-bottom: none;
+        opacity: 0.6;
+      }
+
+      .track-history-cover {
+        width: 64px;
+        height: 64px;
+        border-radius: var(--r-base);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.7);
+        text-align: center;
+        padding: 4px;
+        text-wrap: balance;
+        line-height: 1.2;
+        box-sizing: border-box;
+      }
+
+      .track-history-meta {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .track-history-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .track-history-subtitle {
+        font-family: 'Onest', sans-serif;
+        font-size: 15px;
+        color: var(--text-quat);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .track-history-plus {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: var(--r-pill);
+        background: rgba(86, 175, 215, 0.12);
+        color: var(--player-accent);
+        flex-shrink: 0;
+        border: none;
+        cursor: pointer;
+        transition: background var(--t-fast);
+      }
+
+      .track-history-plus:hover {
+        background: rgba(86, 175, 215, 0.22);
+      }
+
+      .track-history-plus:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .track-history-plus svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+
+      .track-history-duration {
+        font-family: 'Onest', sans-serif;
+        font-size: 15px;
+        color: var(--text-quat);
+        flex-shrink: 0;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---- E. Footer — "Также любят слушать" --------------------------------- */
+
+      .track-also-band {
+        width: 100%;
+        padding: 40px 24px 0;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .track-also-heading {
+        font-family: 'Onest', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-pri);
+        text-wrap: balance;
+      }
+
+      .track-also-row {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-right: 24px;
+        padding-bottom: 4px;
+      }
+
+      .track-also-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .track-also-card {
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+        border-radius: var(--r-base);
+        transition: transform var(--t-fast);
+      }
+
+      .track-also-card:hover {
+        transform: scale(1.03);
+      }
+
+      .track-also-card:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 3px;
+        border-radius: var(--r-base);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .track-also-card:hover {
+          transform: none;
+        }
+      }
+
+      .track-also-cover {
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .track-also-meta {
+        padding: 10px 4px 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .track-also-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .track-also-artist {
+        font-family: 'Onest', sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text-quat);
+      }
+
     }
 
     /* =========================================================================
@@ -4608,6 +5136,104 @@
       [data-surface="tv"] .favorites-heart-btn {
         width: 56px;
         height: 56px;
+      }
+
+      /* ---- Track page responsive / surface overrides ----------------------- */
+
+      @media (max-width: 768px) {
+        .track-cover {
+          width: 280px;
+          height: 280px;
+        }
+        .track-title {
+          font-size: 28px;
+        }
+        .track-artist {
+          font-size: 15px;
+        }
+        .track-action-row {
+          gap: 24px;
+          padding: 20px 16px 4px;
+        }
+        /* Hide favorite + watch tabs on small screens */
+        .track-action-row .player-action-tab[data-tab="favorite"],
+        .track-action-row .player-action-tab[data-tab="watch"] {
+          display: none;
+        }
+        .track-scrubber-wrap {
+          padding: 8px 16px;
+        }
+        .track-lyric-line {
+          font-size: 24px;
+        }
+        .track-lyrics-wrap {
+          padding: 24px 20px;
+          max-height: 420px;
+        }
+        .track-history-wrap {
+          padding: 0 12px;
+        }
+        .track-also-band {
+          padding: 32px 16px 0;
+        }
+        .track-up-next-row {
+          padding: 0 16px 4px;
+        }
+      }
+
+      [data-surface="mobile"] .track-cover {
+        width: 280px;
+        height: 280px;
+      }
+      [data-surface="mobile"] .track-title {
+        font-size: 28px;
+      }
+      [data-surface="mobile"] .track-artist {
+        font-size: 15px;
+      }
+      [data-surface="mobile"] .track-action-row {
+        gap: 24px;
+        padding: 20px 16px 4px;
+      }
+      [data-surface="mobile"] .track-action-row .player-action-tab[data-tab="favorite"],
+      [data-surface="mobile"] .track-action-row .player-action-tab[data-tab="watch"] {
+        display: none;
+      }
+      [data-surface="mobile"] .track-scrubber-wrap {
+        padding: 8px 16px;
+      }
+      [data-surface="mobile"] .track-lyric-line {
+        font-size: 24px;
+      }
+      [data-surface="mobile"] .track-lyrics-wrap {
+        padding: 24px 20px;
+        max-height: 420px;
+      }
+      [data-surface="mobile"] .track-history-wrap {
+        padding: 0 12px;
+      }
+      [data-surface="mobile"] .track-also-band {
+        padding: 32px 16px 0;
+      }
+
+      [data-surface="tv"] .track-cover {
+        width: 600px;
+        height: 600px;
+      }
+      [data-surface="tv"] .track-title {
+        font-size: 56px;
+      }
+      [data-surface="tv"] .track-artist {
+        font-size: 24px;
+      }
+      [data-surface="tv"] .track-action-row {
+        gap: 60px;
+      }
+      [data-surface="tv"] .track-lyric-line {
+        font-size: 48px;
+      }
+      [data-surface="tv"] .track-lyrics-wrap {
+        max-height: 640px;
       }
     }
 
@@ -6336,10 +6962,542 @@
       <!-- /#/artist -->
 
       <!-- Page: Страница трека -->
-      <section data-page="track" aria-labelledby="page-track-heading">
-        <h1 id="page-track-heading" class="page-stub-heading">Страница трека</h1>
-        <p class="page-stub-hint">Monte Carlo desktop карточка трека. Task #10 заполнит этот экран.</p>
-        <div class="page-content"></div>
+      <section data-page="track" data-track-view="cover" aria-labelledby="page-track-heading">
+        <h1 id="page-track-heading" class="visually-hidden">Страница трека</h1>
+
+        <div class="track-page">
+
+          <!-- ---- A. Hero band ------------------------------------------------- -->
+          <div class="track-hero">
+            <p class="track-eyebrow" aria-hidden="true">Сейчас играет · ГОРОД РОК · 103.5 FM</p>
+
+            <!-- Large album cover -->
+            <div class="track-cover" aria-hidden="true">
+              <!-- Abstract art: 3 concentric arcs -->
+              <svg viewBox="0 0 96 96" aria-hidden="true">
+                <circle cx="48" cy="48" r="38" stroke-width="1.5" stroke-dasharray="6 5"/>
+                <circle cx="48" cy="48" r="26" stroke-width="1.5" stroke-dasharray="8 4"/>
+                <circle cx="48" cy="48" r="12" stroke-width="1.5"/>
+                <circle cx="48" cy="48" r="4" fill="rgba(255,255,255,0.5)" stroke="none"/>
+              </svg>
+            </div>
+
+            <!-- Track title -->
+            <h2 class="track-title" id="track-page-title">Believer</h2>
+            <!-- Artist -->
+            <p class="track-artist" id="track-page-artist">IMAGINE DRAGONS</p>
+            <!-- Album -->
+            <p class="track-album-line" id="track-page-album">альбом · Night Visions · 2012</p>
+          </div>
+          <!-- /hero -->
+
+          <!-- ---- B. Action tabs row ------------------------------------------- -->
+          <div
+            class="track-action-row"
+            id="track-action-row"
+            role="group"
+            aria-label="Действия с треком"
+          >
+
+            <!-- Tab: поделиться -->
+            <button
+              class="player-action-tab"
+              type="button"
+              data-tab="share"
+              aria-pressed="false"
+              aria-label="Поделиться треком"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              </svg>
+              <span>поделиться</span>
+            </button>
+
+            <!-- Tab: текст песни -->
+            <button
+              class="player-action-tab"
+              type="button"
+              data-tab="lyrics"
+              aria-pressed="false"
+              aria-label="Текст песни"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="4" y1="6" x2="20" y2="6"/>
+                <line x1="4" y1="12" x2="14" y2="12"/>
+                <line x1="4" y1="18" x2="18" y2="18"/>
+              </svg>
+              <span>текст песни</span>
+            </button>
+
+            <!-- Tab: история -->
+            <button
+              class="player-action-tab"
+              type="button"
+              data-tab="история"
+              aria-pressed="false"
+              aria-label="История воспроизведения"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span>история</span>
+            </button>
+
+            <!-- Tab: в избранное — desktop only (hidden mobile via CSS) -->
+            <button
+              class="player-action-tab"
+              type="button"
+              data-tab="favorite"
+              aria-pressed="false"
+              aria-label="В избранное"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
+              </svg>
+              <span>в избранное</span>
+            </button>
+
+            <!-- Tab: смотреть — desktop only (hidden mobile via CSS) -->
+            <button
+              class="player-action-tab"
+              type="button"
+              data-tab="watch"
+              aria-pressed="false"
+              aria-label="Смотреть видеоклип"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2" y="7" width="20" height="13" rx="2"/>
+                <polyline points="7 7 7 4"/>
+                <polyline points="17 7 17 4"/>
+                <line x1="2" y1="11" x2="22" y2="11"/>
+              </svg>
+              <span>смотреть</span>
+            </button>
+
+          </div>
+          <!-- /action tabs -->
+
+          <!-- ---- C. Scrubber + transport --------------------------------------- -->
+          <div class="track-scrubber-wrap" aria-label="Управление воспроизведением">
+
+            <!-- Scrubber -->
+            <div class="player-scrubber" aria-label="Прогресс воспроизведения">
+              <span class="player-time" aria-label="Текущее время">00:50</span>
+              <div
+                class="player-progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="21"
+                aria-label="Прогресс трека"
+              >
+                <div class="player-progress-fill"></div>
+              </div>
+              <span class="player-time" aria-label="Общая длительность">04:00</span>
+            </div>
+
+            <!-- Transport -->
+            <div class="player-transport" aria-label="Кнопки управления треком">
+              <button
+                class="player-transport-btn"
+                type="button"
+                id="track-page-prev"
+                aria-label="Предыдущий трек"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polygon points="19 20 9 12 19 4 19 20"/>
+                  <line x1="5" y1="19" x2="5" y2="5"/>
+                </svg>
+              </button>
+
+              <button
+                class="player-transport-btn player-transport-btn--play"
+                type="button"
+                id="track-page-play"
+                aria-label="Воспроизвести / Пауза"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="6" y="4" width="4" height="16"/>
+                  <rect x="14" y="4" width="4" height="16"/>
+                </svg>
+              </button>
+
+              <button
+                class="player-transport-btn"
+                type="button"
+                id="track-page-next"
+                aria-label="Следующий трек"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polygon points="5 4 15 12 5 20 5 4"/>
+                  <line x1="19" y1="5" x2="19" y2="19"/>
+                </svg>
+              </button>
+            </div>
+
+          </div>
+          <!-- /scrubber + transport -->
+
+          <!-- ---- D. View-state region ------------------------------------------ -->
+          <div class="track-view-region">
+
+            <!-- VIEW: cover — up-next carousel -->
+            <div class="track-stage-cover" aria-label="Рекомендуемые треки">
+              <p class="track-up-next-label" aria-hidden="true">ДАЛЕЕ В ЭФИРЕ</p>
+              <div class="track-up-next-row" role="list" aria-label="Следующие треки">
+
+                <button
+                  class="track-up-next-card track-up-next-card--side"
+                  type="button"
+                  role="listitem"
+                  aria-label="Перейти к треку: Moment Apart — ODESZA"
+                  data-track-title="Moment Apart"
+                  data-track-artist="ODESZA"
+                  data-track-album="In Return · 2014"
+                >
+                  <div class="track-up-next-cover" style="background: linear-gradient(135deg, #1a4fa0, #56afd7);" aria-hidden="true">Moment Apart</div>
+                  <div class="track-up-next-title">Moment Apart</div>
+                  <div class="track-up-next-artist">ODESZA</div>
+                </button>
+
+                <button
+                  class="track-up-next-card track-up-next-card--current"
+                  type="button"
+                  role="listitem"
+                  aria-label="Текущий трек: Believer — IMAGINE DRAGONS"
+                  data-track-title="Believer"
+                  data-track-artist="IMAGINE DRAGONS"
+                  data-track-album="Night Visions · 2012"
+                >
+                  <div class="track-up-next-cover" style="background: linear-gradient(135deg, #1a4fa0, #7b2d8b, #c43a6e);" aria-hidden="true">Believer</div>
+                  <div class="track-up-next-title">Believer</div>
+                  <div class="track-up-next-artist">IMAGINE DRAGONS</div>
+                </button>
+
+                <button
+                  class="track-up-next-card track-up-next-card--side"
+                  type="button"
+                  role="listitem"
+                  aria-label="Перейти к треку: Shortwave — RYAN GRIGDRY"
+                  data-track-title="Shortwave"
+                  data-track-artist="RYAN GRIGDRY"
+                  data-track-album="Shortwave · 2019"
+                >
+                  <div class="track-up-next-cover" style="background: linear-gradient(135deg, #1a6b3a, #2ecc71);" aria-hidden="true">Shortwave</div>
+                  <div class="track-up-next-title">Shortwave</div>
+                  <div class="track-up-next-artist">RYAN GRIGDRY</div>
+                </button>
+
+              </div>
+            </div>
+            <!-- /cover view -->
+
+            <!-- VIEW: lyrics -->
+            <div class="track-stage-lyrics" aria-label="Текст песни">
+              <div class="track-lyrics-wrap" id="track-lyrics-scroll">
+                <!-- Verse 1 -->
+                <div class="track-lyric-line" aria-hidden="true">First things first</div>
+                <div class="track-lyric-line" aria-hidden="true">I'mma say all the words inside my head</div>
+                <div class="track-lyric-line" data-active aria-current="true">I'm fired up and tired of the way that things have been</div>
+                <div class="track-lyric-line" aria-hidden="true">Oh, ooh</div>
+                <div class="track-lyric-line" aria-hidden="true">The way that things have been</div>
+                <div class="track-lyric-line" aria-hidden="true">Oh, ooh</div>
+                <!-- Verse 2 -->
+                <div class="track-lyric-line" aria-hidden="true">Second things second</div>
+                <div class="track-lyric-line" aria-hidden="true">Don't you tell me what you think that I could be</div>
+                <div class="track-lyric-line" aria-hidden="true">I'm the one at the sail, I'm the master of my sea</div>
+                <div class="track-lyric-line" aria-hidden="true">Oh, ooh</div>
+                <div class="track-lyric-line" aria-hidden="true">The master of my sea</div>
+                <div class="track-lyric-line" aria-hidden="true">Oh, ooh</div>
+                <!-- Chorus -->
+                <div class="track-lyric-line" aria-hidden="true">I was broken from a young age</div>
+                <div class="track-lyric-line" aria-hidden="true">Taking my sulking to the masses</div>
+                <div class="track-lyric-line" aria-hidden="true">Writing my poems for the few</div>
+                <div class="track-lyric-line" aria-hidden="true">That looked at me, took to me, shook to me, feeling me</div>
+                <div class="track-lyric-line" aria-hidden="true">Singing from heartache from the pain</div>
+                <div class="track-lyric-line" aria-hidden="true">Taking my message from the veins</div>
+                <!-- Bridge -->
+                <div class="track-lyric-line" aria-hidden="true">You made me a, you made me a believer</div>
+                <div class="track-lyric-line" aria-hidden="true">Believer</div>
+                <div class="track-lyric-line" aria-hidden="true">Pain! You made me a, you made me a believer</div>
+                <div class="track-lyric-line" aria-hidden="true">Believer</div>
+              </div>
+            </div>
+            <!-- /lyrics view -->
+
+            <!-- VIEW: история -->
+            <div class="track-stage-history" aria-label="История воспроизведения">
+              <div class="track-history-wrap">
+                <div class="track-history-list" id="track-history-list">
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #2c3e50, #4a6fa5);" aria-hidden="true">LP</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Roads Untraveled</div>
+                      <div class="track-history-subtitle">
+                        <span>Linkin Park</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Roads Untraveled в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #e91e63, #ff5722);" aria-hidden="true">DG</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Baby Don't Hurt Me</div>
+                      <div class="track-history-subtitle">
+                        <span>David Guetta, Anne-Marie</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Baby Don't Hurt Me в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #bf360c, #e64a19);" aria-hidden="true">DG</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Stay (Don't Go Away)</div>
+                      <div class="track-history-subtitle">
+                        <span>David Guetta, An-marie</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Stay в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #ff4081, #9c27b0);" aria-hidden="true">DL</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Dance The Night (Ayur Tyre…)</div>
+                      <div class="track-history-subtitle">
+                        <span>Dua Lipa</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Dance The Night в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #1565c0, #00bcd4);" aria-hidden="true">DL</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Jana Schaefer</div>
+                      <div class="track-history-subtitle">
+                        <span>Dua Lipa</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Jana Schaefer в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #37474f, #78909c);" aria-hidden="true">DL</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Pat Hauck MD</div>
+                      <div class="track-history-subtitle">
+                        <span>Dua Lipa</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Pat Hauck MD в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #4a148c, #7b1fa2);" aria-hidden="true">DL</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Lynda Kuhn</div>
+                      <div class="track-history-subtitle">
+                        <span>Dua Lipa</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Lynda Kuhn в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <!-- Dimmed via CSS :last-child → opacity 0.6 on 10th item, so add explicit class -->
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #006064, #00897b);" aria-hidden="true">CH</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Metro</div>
+                      <div class="track-history-subtitle">
+                        <span>Calvin Harris &amp; Ellie Goulding</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Metro в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">06:45</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #1a4fa0, #7b2d8b, #c43a6e);" aria-hidden="true">ID</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Demons</div>
+                      <div class="track-history-subtitle">
+                        <span>Imagine Dragons</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Demons в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">03:00</div>
+                  </div>
+
+                  <div class="track-history-row">
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #56afd7, #1a6b3a);" aria-hidden="true">MG</div>
+                    <div class="track-history-meta">
+                      <div class="track-history-title">Glitch</div>
+                      <div class="track-history-subtitle">
+                        <span>Martin Garrix × Julian Jordan</span>
+                      </div>
+                    </div>
+                    <button class="track-history-plus" type="button" aria-label="Добавить Glitch в плейлист">
+                      <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                    </button>
+                    <div class="track-history-duration">04:00</div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /история view -->
+
+          </div>
+          <!-- /view-state region -->
+
+          <!-- ---- E. Footer — "Также любят слушать" ------------------------------ -->
+          <div class="track-also-band">
+            <h2 class="track-also-heading">Также любят слушать</h2>
+
+            <div
+              class="track-also-row"
+              id="track-also-row"
+              role="list"
+              aria-label="Похожие треки"
+            >
+
+              <button
+                class="track-also-card"
+                type="button"
+                role="listitem"
+                aria-label="Перейти к треку: Enemy — IMAGINE DRAGONS × JID"
+                data-track-title="Enemy"
+                data-track-artist="IMAGINE DRAGONS × JID"
+                data-track-album="Arcane: Season 1 · 2021"
+              >
+                <div class="track-also-cover" style="background: linear-gradient(135deg, #0d0d0d, #c43a6e);" aria-hidden="true"></div>
+                <div class="track-also-meta">
+                  <div class="track-also-title">Enemy</div>
+                  <div class="track-also-artist">IMAGINE DRAGONS × JID</div>
+                </div>
+              </button>
+
+              <button
+                class="track-also-card"
+                type="button"
+                role="listitem"
+                aria-label="Перейти к треку: Thunder — IMAGINE DRAGONS"
+                data-track-title="Thunder"
+                data-track-artist="IMAGINE DRAGONS"
+                data-track-album="Evolve · 2017"
+              >
+                <div class="track-also-cover" style="background: linear-gradient(135deg, #1a4fa0, #56afd7);" aria-hidden="true"></div>
+                <div class="track-also-meta">
+                  <div class="track-also-title">Thunder</div>
+                  <div class="track-also-artist">IMAGINE DRAGONS</div>
+                </div>
+              </button>
+
+              <button
+                class="track-also-card"
+                type="button"
+                role="listitem"
+                aria-label="Перейти к треку: Whatever It Takes — IMAGINE DRAGONS"
+                data-track-title="Whatever It Takes"
+                data-track-artist="IMAGINE DRAGONS"
+                data-track-album="Evolve · 2017"
+              >
+                <div class="track-also-cover" style="background: linear-gradient(135deg, #7b2d8b, #c43a6e);" aria-hidden="true"></div>
+                <div class="track-also-meta">
+                  <div class="track-also-title">Whatever It Takes</div>
+                  <div class="track-also-artist">IMAGINE DRAGONS</div>
+                </div>
+              </button>
+
+              <button
+                class="track-also-card"
+                type="button"
+                role="listitem"
+                aria-label="Перейти к треку: Demons — IMAGINE DRAGONS"
+                data-track-title="Demons"
+                data-track-artist="IMAGINE DRAGONS"
+                data-track-album="Night Visions · 2012"
+              >
+                <div class="track-also-cover" style="background: linear-gradient(135deg, #2c3e50, #7b2d8b);" aria-hidden="true"></div>
+                <div class="track-also-meta">
+                  <div class="track-also-title">Demons</div>
+                  <div class="track-also-artist">IMAGINE DRAGONS</div>
+                </div>
+              </button>
+
+              <button
+                class="track-also-card"
+                type="button"
+                role="listitem"
+                aria-label="Перейти к треку: Radioactive — IMAGINE DRAGONS"
+                data-track-title="Radioactive"
+                data-track-artist="IMAGINE DRAGONS"
+                data-track-album="Night Visions · 2012"
+              >
+                <div class="track-also-cover" style="background: linear-gradient(135deg, #1a6b3a, #56afd7);" aria-hidden="true"></div>
+                <div class="track-also-meta">
+                  <div class="track-also-title">Radioactive</div>
+                  <div class="track-also-artist">IMAGINE DRAGONS</div>
+                </div>
+              </button>
+
+              <button
+                class="track-also-card"
+                type="button"
+                role="listitem"
+                aria-label="Перейти к треку: Bones — IMAGINE DRAGONS"
+                data-track-title="Bones"
+                data-track-artist="IMAGINE DRAGONS"
+                data-track-album="Mercury — Acts 1 &amp; 2 · 2022"
+              >
+                <div class="track-also-cover" style="background: linear-gradient(135deg, #e64a19, #1a4fa0);" aria-hidden="true"></div>
+                <div class="track-also-meta">
+                  <div class="track-also-title">Bones</div>
+                  <div class="track-also-artist">IMAGINE DRAGONS</div>
+                </div>
+              </button>
+
+            </div>
+          </div>
+          <!-- /also-band -->
+
+        </div>
+        <!-- /.track-page -->
+
       </section>
 
       <!-- Page: Раздел Избранное — #/favorites -->
@@ -7648,6 +8806,7 @@
         lastRoute:    'gorod-fm.last-route',
         playerView:   'gorod-fm.player-view',
         hideFlowMap:  'gorod-fm.hide-flow-map',
+        trackView:    'gorod-fm.track-view',
       };
 
       const VALID_ROUTES = ['#/map', '#/home', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites'];
@@ -7847,6 +9006,134 @@
           }
           // 'watch' and 'share' are no-ops for prototype
         });
+      });
+
+      /* ---- Track page (#/track) --------------------------------------------- */
+
+      var trackSection = document.querySelector('[data-page="track"]');
+      var trackActionRow = document.getElementById('track-action-row');
+
+      /**
+       * setTrackView(view)
+       * Sets data-track-view on the <section data-page="track"> element,
+       * updates aria-pressed on the track action tabs,
+       * and persists to localStorage.
+       */
+      function setTrackView(view) {
+        var viewStates = ['cover', 'lyrics', 'история'];
+        if (!trackSection) return;
+
+        if (viewStates.indexOf(view) !== -1) {
+          trackSection.setAttribute('data-track-view', view);
+          lsSet(LS_KEYS.trackView, view);
+        }
+
+        // Update aria-pressed on track action tabs
+        if (trackActionRow) {
+          trackActionRow.querySelectorAll('.player-action-tab[data-tab]').forEach(function (t) {
+            var tabView = t.getAttribute('data-tab');
+            if (viewStates.indexOf(tabView) !== -1) {
+              t.setAttribute('aria-pressed', tabView === view ? 'true' : 'false');
+            }
+          });
+        }
+      }
+
+      // Wire track action tab clicks
+      if (trackActionRow) {
+        trackActionRow.querySelectorAll('.player-action-tab[data-tab]').forEach(function (tab) {
+          tab.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var view = tab.getAttribute('data-tab');
+            if (view === 'cover' || view === 'lyrics' || view === 'история') {
+              setTrackView(view);
+            } else if (view === 'favorite') {
+              var pressed = tab.getAttribute('aria-pressed') === 'true';
+              tab.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+            } else if (view === 'watch') {
+              // Open full overlay player for prototype
+              openPlayer();
+            }
+            // 'share' is no-op for prototype
+          });
+        });
+      }
+
+      /**
+       * swapTrackMeta(title, artist, album)
+       * Swaps the displayed track title/artist/album in the hero band
+       * and resets view to cover + scrolls to top.
+       */
+      function swapTrackMeta(title, artist, album) {
+        var titleEl  = document.getElementById('track-page-title');
+        var artistEl = document.getElementById('track-page-artist');
+        var albumEl  = document.getElementById('track-page-album');
+        if (titleEl)  titleEl.textContent  = title  || 'Believer';
+        if (artistEl) artistEl.textContent = artist || 'IMAGINE DRAGONS';
+        if (albumEl)  albumEl.textContent  = album  || 'альбом · Night Visions · 2012';
+
+        setTrackView('cover');
+
+        // Scroll to top of track section
+        if (trackSection) {
+          trackSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      // Wire up-next carousel card clicks
+      if (trackSection) {
+        trackSection.querySelectorAll('.track-up-next-card[data-track-title]').forEach(function (card) {
+          card.addEventListener('click', function () {
+            var title  = card.getAttribute('data-track-title');
+            var artist = card.getAttribute('data-track-artist');
+            var album  = card.getAttribute('data-track-album') || '';
+            swapTrackMeta(title, artist, 'альбом · ' + album);
+          });
+        });
+      }
+
+      // Wire "Также любят слушать" carousel card clicks
+      var trackAlsoRow = document.getElementById('track-also-row');
+      if (trackAlsoRow) {
+        trackAlsoRow.querySelectorAll('.track-also-card[data-track-title]').forEach(function (card) {
+          card.addEventListener('click', function () {
+            var title  = card.getAttribute('data-track-title');
+            var artist = card.getAttribute('data-track-artist');
+            var album  = card.getAttribute('data-track-album') || '';
+            swapTrackMeta(title, artist, 'альбом · ' + album);
+          });
+        });
+      }
+
+      // Wire track transport buttons (prev/play/next) — prototype no-op console log
+      var trackPrevBtn = document.getElementById('track-page-prev');
+      var trackPlayBtn = document.getElementById('track-page-play');
+      var trackNextBtn = document.getElementById('track-page-next');
+
+      if (trackPrevBtn) {
+        trackPrevBtn.addEventListener('click', function () {
+          console.log('[track-page] prev clicked');
+        });
+      }
+      if (trackPlayBtn) {
+        trackPlayBtn.addEventListener('click', function () {
+          console.log('[track-page] play/pause clicked');
+        });
+      }
+      if (trackNextBtn) {
+        trackNextBtn.addEventListener('click', function () {
+          console.log('[track-page] next clicked');
+        });
+      }
+
+      // Restore track-view from localStorage when route changes to #/track
+      window.addEventListener('hashchange', function () {
+        if (window.location.hash === '#/track') {
+          var saved = lsGet(LS_KEYS.trackView, 'cover');
+          setTrackView(saved);
+        }
       });
 
       /* ---- Tweaks panel ---------------------------------------------------- */
@@ -8708,6 +9995,10 @@
         //    Just initialise tab states so if player opens it shows correct tab
         var savedPlayerView = lsGet(LS_KEYS.playerView, 'cover');
         setPlayerView(savedPlayerView);
+
+        // 6b. Restore track page view state
+        var savedTrackView = lsGet(LS_KEYS.trackView, 'cover');
+        setTrackView(savedTrackView);
 
         // 7. Init home page state
         setActiveStation('rock');
