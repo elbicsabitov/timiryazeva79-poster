@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="ru" data-surface="web" data-theme="cinema" data-home-variant="fab">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Город ФМ — онлайн-радио платформа. Прототип интерфейса.">
+  <meta name="color-scheme" content="dark">
+  <title>Город ФМ — прототип</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================================
+       CSS layers declaration — order is load order for specificity cascade.
+       reset < tokens < base < layout < components < surfaces < utilities
+       ========================================================================= */
+    @layer reset, tokens, base, layout, components, surfaces, utilities;
+
+    /* =========================================================================
+       RESET — minimal modern reset, box-model + font smoothing
+       ========================================================================= */
+    @layer reset {
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        accent-color: var(--brand-cyan);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      input, select, textarea {
+        font: inherit;
+        color: inherit;
+      }
+
+      img, video, svg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+    }
+
+    /* =========================================================================
+       TOKENS — brand CSS custom properties extracted from Figma Город ФМ
+       ========================================================================= */
+    @layer tokens {
+      :root {
+        /* — Cinema palette (Город ФМ primary) — */
+        --brand-cyan:      rgb(86, 175, 215);
+        --brand-blue:      rgb(26, 107, 222);
+        --brand-deep:      rgb(21, 82, 172);
+        --brand-ink:       rgb(30, 27, 46);      /* overlay tint */
+        --brand-black:     #0C0B0B;
+
+        /* — Glass surfaces — */
+        --surf-glass-20:   rgba(255, 255, 255, 0.20);
+        --surf-glass-12:   rgba(255, 255, 255, 0.12);
+
+        /* — Text — */
+        --text-pri:        #FFFFFF;
+        --text-sec:        rgba(255, 255, 255, 0.70);
+        --text-quat:       rgba(235, 235, 245, 0.60);  /* Apple secondary-dark */
+
+        /* — Radii — */
+        --r-base:          10px;
+        --r-tile-tr:       60px;     /* top-right corner only */
+        --r-pill:          999px;
+
+        /* — Backgrounds — */
+        --bg-base:     linear-gradient(-90deg, var(--brand-cyan) 0%, var(--brand-blue) 49.519%, var(--brand-deep) 100%);
+        --bg-overlay:  linear-gradient(-88.75deg, rgba(30,27,46,0) 72.913%, rgba(30,27,46,0.3) 86.553%, rgba(30,27,46,0.5) 99.397%);
+        --tile-shade:  linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
+
+        /* — Warm palette tokens (Monte Carlo player overlay) — */
+        --warm-bg:     linear-gradient(120deg, #2a1547 0%, #b14e2c 50%, #d6883f 100%);
+        --warm-text:   #EAF0FF;
+        --warm-text-sec: rgba(255, 255, 255, 0.70);
+
+        /* — Layout geometry — */
+        --sidebar-w:    240px;
+        --topbar-h:     64px;
+        --player-mini-h: 72px;
+        --tabbar-h:     64px;
+
+        /* — Transitions — */
+        --t-fast:      180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        --t-mid:       340ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        --t-slow:      600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+    }
+
+    /* =========================================================================
+       BASE — typography, body, focus, link/button defaults
+       ========================================================================= */
+    @layer base {
+      html {
+        font-family: 'Onest', sans-serif;
+        color: var(--text-pri);
+        background: var(--brand-black);
+      }
+
+      body {
+        min-height: 100dvh;
+        overflow-x: hidden;
+      }
+
+      p {
+        text-wrap: pretty;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        text-wrap: balance;
+        font-weight: 700;
+        line-height: 1.15;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Focus ring — accessible, visible on keyboard nav */
+      :focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+        border-radius: var(--r-base);
+      }
+
+      /* Tabular numbers for time/scrubber */
+      .tabular {
+        font-variant-numeric: tabular-nums;
+      }
+    }
+
+    /* =========================================================================
+       LAYOUT — app shell grid, sidebar + main + mini-player
+       ========================================================================= */
+    @layer layout {
+
+      /* App shell: sidebar | main area, with player-mini pinned at bottom */
+      .app-shell {
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        grid-template-rows: 1fr;
+        min-height: 100dvh;
+        padding-bottom: var(--player-mini-h);
+      }
+
+      /* Main content area fills remaining column */
+      #app {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: 0;
+        overflow-y: auto;
+        padding: var(--topbar-h) 40px 40px;
+        position: relative;
+      }
+
+      /* Each page section — hidden by default */
+      [data-page] {
+        display: none;
+      }
+
+      /* Only the active page is visible */
+      [data-page][data-page-current] {
+        display: block;
+      }
+
+      /* Page content inner wrapper */
+      .page-content {
+        padding-top: 24px;
+      }
+    }
+
+    /* =========================================================================
+       COMPONENTS — topbar, sidebar, player-mini/full, mobile-tabbar, tweaks
+       ========================================================================= */
+    @layer components {
+
+      /* ---- Background layers -------------------------------------------- */
+
+      .bg-layer {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+      }
+
+      .bg-cinema {
+        background: var(--bg-base);
+        transition: opacity var(--t-slow);
+      }
+
+      .bg-warm {
+        background: var(--warm-bg);
+        opacity: 0;
+        transition: opacity var(--t-slow);
+      }
+
+      /* Warm bg rises when player overlay is open */
+      body[data-player-expanded] .bg-warm {
+        opacity: 1;
+      }
+
+      /* Explicit warm theme override */
+      [data-theme="warm"] .bg-warm {
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bg-cinema,
+        .bg-warm {
+          transition: none;
+        }
+      }
+
+      /* ---- Topbar --------------------------------------------------------- */
+
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: var(--sidebar-w);
+        right: 0;
+        height: var(--topbar-h);
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 40px;
+        background: linear-gradient(
+          180deg,
+          rgba(12, 11, 11, 0.72) 0%,
+          rgba(12, 11, 11, 0.0) 100%
+        );
+        backdrop-filter: blur(24px) saturate(1.3);
+        -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      }
+
+      /* Logo — Onest 900 + scaleX(1.05) + letter-spacing to approximate Actay Wide */
+      .logo {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        display: inline-block;
+        color: var(--text-pri);
+        white-space: nowrap;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .logo:hover {
+        color: var(--brand-cyan);
+      }
+
+      .topbar-spacer {
+        flex: 1;
+      }
+
+      /* Search icon-pill */
+      .topbar-search {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 44px;
+        min-width: 44px;
+        padding: 0 16px;
+        background: var(--surf-glass-20);
+        border: none;
+        border-radius: var(--r-base);
+        color: var(--text-sec);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background var(--t-fast), color var(--t-fast);
+      }
+
+      .topbar-search:hover {
+        background: var(--surf-glass-20);
+        color: var(--text-pri);
+        filter: brightness(1.15);
+      }
+
+      .topbar-search svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+
+      /* "Личный кабинет" pill */
+      .topbar-account {
+        display: inline-flex;
+        align-items: center;
+        height: 44px;
+        padding: 0 20px;
+        background: var(--surf-glass-20);
+        border: none;
+        border-radius: var(--r-base);
+        color: var(--text-sec);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background var(--t-fast), color var(--t-fast);
+      }
+
+      .topbar-account:hover {
+        color: var(--text-pri);
+        filter: brightness(1.15);
+      }
+
+      /* ---- Sidebar ------------------------------------------------------- */
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--sidebar-w);
+        height: calc(100dvh - var(--player-mini-h));
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 16px 16px;
+        background: rgba(12, 11, 11, 0.60);
+        backdrop-filter: blur(32px) saturate(1.4);
+        -webkit-backdrop-filter: blur(32px) saturate(1.4);
+        border-right: 1px solid var(--surf-glass-12);
+        overflow-y: auto;
+        gap: 4px;
+      }
+
+      /* Sidebar logo at top */
+      .sidebar-logo {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        display: inline-block;
+        color: var(--text-pri);
+        padding: 8px 8px 20px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Sidebar nav list */
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+      }
+
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 14px;
+        border-radius: var(--r-base);
+        color: var(--text-sec);
+        font-size: 17px;
+        font-weight: 500;
+        cursor: pointer;
+        min-height: 44px;
+        transition: background var(--t-fast), color var(--t-fast);
+        text-decoration: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+      }
+
+      .sidebar-item:hover {
+        background: var(--surf-glass-12);
+        color: var(--text-pri);
+      }
+
+      .sidebar-item[aria-current="page"] {
+        background: var(--surf-glass-20);
+        color: var(--text-pri);
+        font-weight: 600;
+      }
+
+      .sidebar-item svg {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* Sidebar footer — internal items + theme toggle */
+      .sidebar-footer {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding-top: 16px;
+        border-top: 1px solid var(--surf-glass-12);
+      }
+
+      .sidebar-item-internal {
+        font-size: 13px;
+        opacity: 0.6;
+      }
+
+      .sidebar-theme-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: var(--r-base);
+        color: var(--text-quat);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        min-height: 44px;
+        transition: background var(--t-fast), color var(--t-fast);
+        border: none;
+        width: 100%;
+        text-align: left;
+      }
+
+      .sidebar-theme-toggle:hover {
+        background: var(--surf-glass-12);
+        color: var(--text-sec);
+      }
+
+      .sidebar-theme-toggle svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ---- Player mini bar ----------------------------------------------- */
+
+      .player-mini {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: var(--player-mini-h);
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 24px;
+        background: rgba(12, 11, 11, 0.85);
+        backdrop-filter: blur(40px) saturate(1.5);
+        -webkit-backdrop-filter: blur(40px) saturate(1.5);
+        border-top: 1px solid var(--surf-glass-12);
+        cursor: pointer;
+        transition: background var(--t-fast);
+      }
+
+      .player-mini:hover {
+        background: rgba(12, 11, 11, 0.92);
+      }
+
+      /* Album art thumbnail */
+      .player-mini-art {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--r-base);
+        background: var(--surf-glass-20);
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .player-mini-art-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--brand-blue), var(--brand-deep));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .player-mini-art-placeholder svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--surf-glass-20);
+        fill: none;
+        stroke-width: 1.5;
+      }
+
+      /* Track meta */
+      .player-mini-meta {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .player-mini-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .player-mini-artist {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-sec);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Transport controls row */
+      .player-mini-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .player-ctrl-btn {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--r-pill);
+        color: var(--text-sec);
+        transition: background var(--t-fast), color var(--t-fast);
+        flex-shrink: 0;
+      }
+
+      .player-ctrl-btn:hover {
+        background: var(--surf-glass-12);
+        color: var(--text-pri);
+      }
+
+      .player-ctrl-btn svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .player-ctrl-btn--play svg {
+        fill: currentColor;
+      }
+
+      /* Volume + Share area */
+      .player-mini-extras {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+
+      /* ---- Player full overlay ------------------------------------------- */
+
+      .player-full {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(12, 11, 11, 0.40);
+        backdrop-filter: blur(30px) saturate(1.2);
+        -webkit-backdrop-filter: blur(30px) saturate(1.2);
+        padding: 40px 24px 32px;
+      }
+
+      /* Player full visible when body has data-player-expanded */
+      body[data-player-expanded] .player-full {
+        display: flex;
+      }
+
+      .player-full-close {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-20);
+        color: var(--text-pri);
+        transition: background var(--t-fast);
+        flex-shrink: 0;
+      }
+
+      .player-full-close:hover {
+        background: var(--surf-glass-20);
+        filter: brightness(1.2);
+      }
+
+      .player-full-close svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* Content card centering */
+      .player-full-card {
+        max-width: 600px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+
+      /* Stub album art 261×261 */
+      .player-full-art {
+        width: 261px;
+        height: 261px;
+        border-radius: var(--r-tile-tr) var(--r-base) var(--r-base) var(--r-base);
+        background: linear-gradient(135deg, var(--brand-blue), var(--brand-deep));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .player-full-art svg {
+        width: 64px;
+        height: 64px;
+        stroke: rgba(255, 255, 255, 0.4);
+        fill: none;
+        stroke-width: 1.5;
+      }
+
+      .player-full-meta {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .player-full-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--warm-text);
+      }
+
+      .player-full-artist {
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--warm-text-sec);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .player-full-stub-note {
+        font-size: 13px;
+        color: var(--text-quat);
+        text-align: center;
+        margin-top: 8px;
+      }
+
+      /* ---- Mobile tabbar ------------------------------------------------- */
+
+      .mobile-tabbar {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: var(--tabbar-h);
+        z-index: 70;
+        align-items: stretch;
+        background: rgba(12, 11, 11, 0.90);
+        backdrop-filter: blur(32px) saturate(1.4);
+        -webkit-backdrop-filter: blur(32px) saturate(1.4);
+        border-top: 1px solid var(--surf-glass-12);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+      }
+
+      .tabbar-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        color: var(--text-quat);
+        font-size: 10px;
+        font-weight: 500;
+        cursor: pointer;
+        min-height: 44px;
+        border: none;
+        transition: color var(--t-fast);
+        border-radius: 0;
+        padding: 6px 4px;
+      }
+
+      .tabbar-item:hover,
+      .tabbar-item[aria-current="page"] {
+        color: var(--brand-cyan);
+      }
+
+      .tabbar-item svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+
+      /* ---- Tweaks panel -------------------------------------------------- */
+
+      .tweaks {
+        position: fixed;
+        bottom: calc(var(--player-mini-h) + 16px);
+        right: 20px;
+        z-index: 90;
+        background: rgba(20, 18, 18, 0.92);
+        backdrop-filter: blur(40px) saturate(1.5);
+        -webkit-backdrop-filter: blur(40px) saturate(1.5);
+        border: 1px solid var(--surf-glass-12);
+        border-radius: var(--r-tile-tr) var(--r-base) var(--r-base) var(--r-base);
+        width: 280px;
+        overflow: hidden;
+        transition: opacity var(--t-fast), transform var(--t-fast);
+      }
+
+      .tweaks[hidden] {
+        display: none;
+      }
+
+      .tweaks-collapsed .tweaks-body {
+        display: none;
+      }
+
+      .tweaks-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--surf-glass-12);
+        cursor: pointer;
+        min-height: 44px;
+      }
+
+      .tweaks-header-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--text-quat);
+        text-transform: uppercase;
+      }
+
+      .tweaks-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .tweaks-header-btn {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        color: var(--text-sec);
+        min-height: 28px;
+        transition: background var(--t-fast);
+      }
+
+      .tweaks-header-btn:hover {
+        background: var(--surf-glass-12);
+      }
+
+      .tweaks-header-btn svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .tweaks-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .tweaks-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .tweaks-group-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-quat);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .tweaks-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .tweak-btn {
+        height: 34px;
+        padding: 0 12px;
+        border-radius: var(--r-pill);
+        font-size: 12px;
+        font-weight: 600;
+        background: var(--surf-glass-12);
+        color: var(--text-sec);
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+        white-space: nowrap;
+        min-height: 34px;
+      }
+
+      .tweak-btn:hover {
+        background: var(--surf-glass-20);
+        color: var(--text-pri);
+      }
+
+      .tweak-btn[aria-pressed="true"],
+      .tweak-btn[data-active="true"] {
+        background: var(--brand-cyan);
+        color: #000;
+        border-color: var(--brand-cyan);
+      }
+
+      .tweak-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .tweak-btn:disabled:hover {
+        background: var(--surf-glass-12);
+        color: var(--text-sec);
+      }
+
+      .tweaks-fab {
+        position: fixed;
+        bottom: calc(var(--player-mini-h) + 16px);
+        right: 20px;
+        z-index: 89;
+        width: 44px;
+        height: 44px;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-20);
+        border: 1px solid var(--surf-glass-12);
+        color: var(--text-sec);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        transition: background var(--t-fast);
+      }
+
+      .tweaks-fab:hover {
+        background: var(--surf-glass-20);
+        filter: brightness(1.2);
+      }
+
+      .tweaks-fab svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* Page heading stubs — shown in each empty section placeholder */
+      .page-stub-heading {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        color: var(--text-pri);
+        margin-bottom: 8px;
+      }
+
+      .page-stub-hint {
+        font-size: 14px;
+        color: var(--text-quat);
+      }
+    }
+
+    /* =========================================================================
+       SURFACES — web / mobile / tv / carplay layout adapters
+       ========================================================================= */
+    @layer surfaces {
+
+      /* ---- WEB (default) -------------------------------------------------- */
+
+      [data-surface="web"] .sidebar {
+        display: flex;
+      }
+
+      [data-surface="web"] .topbar {
+        display: flex;
+      }
+
+      [data-surface="web"] .mobile-tabbar {
+        display: none;
+      }
+
+      [data-surface="web"] .app-shell {
+        grid-template-columns: var(--sidebar-w) 1fr;
+      }
+
+      [data-surface="web"] #app {
+        grid-column: 2;
+      }
+
+      [data-surface="web"] .player-mini {
+        display: flex;
+      }
+
+      /* ---- MOBILE --------------------------------------------------------- */
+
+      [data-surface="mobile"] .sidebar {
+        display: none;
+      }
+
+      [data-surface="mobile"] .topbar {
+        display: none;
+      }
+
+      [data-surface="mobile"] .mobile-tabbar {
+        display: flex;
+      }
+
+      [data-surface="mobile"] .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      [data-surface="mobile"] #app {
+        grid-column: 1;
+        padding: 16px 16px calc(var(--tabbar-h) + 16px);
+      }
+
+      /* On mobile surfaces the player-mini compresses above the tabbar */
+      [data-surface="mobile"] .player-mini {
+        display: flex;
+        bottom: var(--tabbar-h);
+        padding: 0 16px;
+      }
+
+      /* Mobile: player full overlay goes full-screen */
+      [data-surface="mobile"] .player-full {
+        padding: 60px 16px 24px;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      [data-surface="mobile"] .player-full-art {
+        width: 220px;
+        height: 220px;
+      }
+
+      /* Mobile button / hit target enforcement */
+      [data-surface="mobile"] .sidebar-item,
+      [data-surface="mobile"] .tabbar-item,
+      [data-surface="mobile"] .player-ctrl-btn {
+        min-height: 44px;
+      }
+
+      /* ---- TV (10-foot layout) ------------------------------------------- */
+
+      [data-surface="tv"] .sidebar {
+        display: flex;
+        width: 300px;
+      }
+
+      [data-surface="tv"] .topbar {
+        display: flex;
+        height: 80px;
+        left: 300px;
+      }
+
+      [data-surface="tv"] .app-shell {
+        grid-template-columns: 300px 1fr;
+      }
+
+      [data-surface="tv"] #app {
+        padding: 80px 60px 60px;
+        grid-column: 2;
+      }
+
+      [data-surface="tv"] .mobile-tabbar {
+        display: none;
+      }
+
+      /* TV: larger hit targets ≥56px, larger text */
+      [data-surface="tv"] .sidebar-item {
+        min-height: 56px;
+        font-size: 20px;
+        padding: 14px 18px;
+      }
+
+      [data-surface="tv"] .sidebar-item svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      [data-surface="tv"] .topbar-search,
+      [data-surface="tv"] .topbar-account {
+        min-height: 56px;
+        font-size: 18px;
+        height: 56px;
+      }
+
+      [data-surface="tv"] .player-ctrl-btn {
+        width: 56px;
+        height: 56px;
+      }
+
+      [data-surface="tv"] .player-mini {
+        height: 88px;
+        padding-bottom: var(--player-mini-h);
+      }
+
+      /* TV: wider focus ring */
+      [data-surface="tv"] :focus-visible {
+        outline-width: 4px;
+        outline-offset: 3px;
+      }
+
+      /* ---- CARPLAY -------------------------------------------------------- */
+
+      [data-surface="carplay"] .sidebar {
+        display: none;
+      }
+
+      [data-surface="carplay"] .topbar {
+        display: flex;
+        height: 80px;
+        left: 0;
+        padding: 0 48px;
+      }
+
+      [data-surface="carplay"] .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      [data-surface="carplay"] #app {
+        grid-column: 1;
+        padding: 80px 48px 40px;
+      }
+
+      [data-surface="carplay"] .mobile-tabbar {
+        display: none;
+      }
+
+      /* CarPlay: large tap targets ≥80px, high contrast, minimal motion */
+      [data-surface="carplay"] .player-ctrl-btn {
+        width: 80px;
+        height: 80px;
+      }
+
+      [data-surface="carplay"] .topbar-search,
+      [data-surface="carplay"] .topbar-account {
+        min-height: 64px;
+        height: 64px;
+        font-size: 20px;
+      }
+
+      [data-surface="carplay"] .player-mini {
+        height: 88px;
+      }
+
+      [data-surface="carplay"] * {
+        transition-duration: 0.05ms !important;
+      }
+
+      /* ---- Responsive fallback: coerce to mobile-like at ≤768px ---------- */
+
+      @media (max-width: 768px) {
+        :root {
+          --sidebar-w: 0px;
+        }
+
+        .sidebar {
+          display: none !important;
+        }
+
+        .topbar {
+          display: none !important;
+        }
+
+        .mobile-tabbar {
+          display: flex !important;
+        }
+
+        .app-shell {
+          grid-template-columns: 1fr !important;
+        }
+
+        #app {
+          grid-column: 1 !important;
+          padding: 16px 16px calc(var(--tabbar-h) + 16px) !important;
+        }
+
+        .player-mini {
+          bottom: var(--tabbar-h) !important;
+          padding: 0 16px !important;
+        }
+      }
+    }
+
+    /* =========================================================================
+       UTILITIES — single-purpose helper classes
+       ========================================================================= */
+    @layer utilities {
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .glass-20 {
+        background: var(--surf-glass-20);
+        backdrop-filter: blur(20px) saturate(1.3);
+        -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      }
+
+      .glass-12 {
+        background: var(--surf-glass-12);
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+      }
+
+      .pill {
+        border-radius: var(--r-pill);
+      }
+
+      .r-base {
+        border-radius: var(--r-base);
+      }
+
+      /* Concentric tile corner: top-right 60px, others 10px */
+      .r-tile-tr {
+        border-radius: var(--r-base) var(--r-tile-tr) var(--r-base) var(--r-base);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ======================================================================
+       BACKGROUND LAYERS
+       Cinema gradient (primary) + warm sunset (player overlay)
+       ====================================================================== -->
+  <div class="bg-layer bg-cinema" aria-hidden="true"></div>
+  <div class="bg-layer bg-warm" aria-hidden="true"></div>
+
+  <!-- ======================================================================
+       APP SHELL GRID
+       ====================================================================== -->
+  <div class="app-shell">
+
+    <!-- ==================================================================
+         TOPBAR — web surface only
+         ================================================================== -->
+    <header class="topbar" role="banner">
+      <a href="#/home" class="logo" aria-label="Город ФМ — на главную">Город.fm</a>
+      <div class="topbar-spacer"></div>
+
+      <!-- Search icon-pill -->
+      <button
+        class="topbar-search"
+        type="button"
+        aria-label="Открыть поиск"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <span>Поиск</span>
+      </button>
+
+      <!-- "Личный кабинет" pill -->
+      <button
+        class="topbar-account"
+        type="button"
+        aria-label="Открыть личный кабинет"
+      >
+        Личный кабинет
+      </button>
+    </header>
+
+    <!-- ==================================================================
+         SIDEBAR — web surface only
+         ================================================================== -->
+    <aside class="sidebar" role="navigation" aria-label="Основная навигация">
+      <a href="#/home" class="sidebar-logo" aria-label="Город ФМ — на главную">Город.fm</a>
+
+      <nav class="sidebar-nav">
+        <!-- Главная -->
+        <a
+          href="#/home"
+          class="sidebar-item"
+          data-route="#/home"
+          aria-label="Главная"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Главная
+        </a>
+
+        <!-- Подборки -->
+        <a
+          href="#/podborki"
+          class="sidebar-item"
+          data-route="#/podborki"
+          aria-label="Подборки"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Подборки
+        </a>
+
+        <!-- Медиатека -->
+        <a
+          href="#/library"
+          class="sidebar-item"
+          data-route="#/library"
+          aria-label="Медиатека"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+          </svg>
+          Медиатека
+        </a>
+
+        <!-- Избранное -->
+        <a
+          href="#/favorites"
+          class="sidebar-item"
+          data-route="#/favorites"
+          aria-label="Избранное"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+          Избранное
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <!-- Карта флоу — internal review only -->
+        <a
+          href="#/map"
+          class="sidebar-item sidebar-item-internal"
+          data-route="#/map"
+          aria-label="Карта флоу (внутренний обзор)"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+            <line x1="9" y1="3" x2="9" y2="18"/>
+            <line x1="15" y1="6" x2="15" y2="21"/>
+          </svg>
+          Карта флоу
+        </a>
+
+        <!-- Theme toggle — sun/moon -->
+        <button
+          class="sidebar-theme-toggle"
+          type="button"
+          id="sb-theme-toggle"
+          aria-label="Переключить тему"
+        >
+          <svg id="sb-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg id="sb-icon-moon" aria-hidden="true" viewBox="0 0 24 24" style="display:none">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+          </svg>
+          <span>Cinema / Warm</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ==================================================================
+         MAIN — 7 page sections, only one visible at a time
+         ================================================================== -->
+    <main id="app" role="main" aria-label="Основной контент">
+
+      <!-- Page: Карта флоу (internal hub / flow map) -->
+      <section data-page="map" aria-labelledby="page-map-heading">
+        <h1 id="page-map-heading" class="page-stub-heading">Карта флоу</h1>
+        <p class="page-stub-hint">Обзор всех экранов — внутренний режим просмотра. Task #5 заполнит этот экран.</p>
+        <div class="page-content"></div>
+      </section>
+
+      <!-- Page: Главная -->
+      <section data-page="home" aria-labelledby="page-home-heading">
+        <h1 id="page-home-heading" class="page-stub-heading">Главная</h1>
+        <p class="page-stub-hint">Радиостанции, фильтр-чипы, текущий трек. Task #6 заполнит этот экран.</p>
+        <div class="page-content"></div>
+      </section>
+
+      <!-- Page: Подборки -->
+      <section data-page="podborki" aria-labelledby="page-podborki-heading">
+        <h1 id="page-podborki-heading" class="page-stub-heading">Подборки</h1>
+        <p class="page-stub-hint">Галерея тайлов с кривыми радиусами. Task #7 заполнит этот экран.</p>
+        <div class="page-content"></div>
+      </section>
+
+      <!-- Page: Медиатека -->
+      <section data-page="library" aria-labelledby="page-library-heading">
+        <h1 id="page-library-heading" class="page-stub-heading">Медиатека</h1>
+        <p class="page-stub-hint">2-рядная сетка + рекламный слот. Task #8 заполнит этот экран.</p>
+        <div class="page-content"></div>
+      </section>
+
+      <!-- Page: Артист (профайл) -->
+      <section data-page="artist" aria-labelledby="page-artist-heading">
+        <h1 id="page-artist-heading" class="page-stub-heading">Избранное — Артист</h1>
+        <p class="page-stub-hint">Профайл артиста: hero фото, bio, треки, станции. Task #9 заполнит этот экран.</p>
+        <div class="page-content"></div>
+      </section>
+
+      <!-- Page: Страница трека -->
+      <section data-page="track" aria-labelledby="page-track-heading">
+        <h1 id="page-track-heading" class="page-stub-heading">Страница трека</h1>
+        <p class="page-stub-hint">Monte Carlo desktop карточка трека. Task #10 заполнит этот экран.</p>
+        <div class="page-content"></div>
+      </section>
+
+      <!-- Page: Раздел Избранное -->
+      <section data-page="favorites" aria-labelledby="page-favorites-heading">
+        <h1 id="page-favorites-heading" class="page-stub-heading">Раздел Избранное</h1>
+        <p class="page-stub-hint">Список треков, артистов, плейлистов, станций + фильтры. Task #9 заполнит этот экран.</p>
+        <div class="page-content"></div>
+      </section>
+
+    </main>
+  </div>
+  <!-- /.app-shell -->
+
+  <!-- ======================================================================
+       PLAYER MINI BAR — sticky bottom transport
+       ====================================================================== -->
+  <div
+    class="player-mini"
+    id="player-mini"
+    role="region"
+    aria-label="Мини-плеер"
+  >
+    <!-- Album art -->
+    <div class="player-mini-art" aria-hidden="true">
+      <div class="player-mini-art-placeholder">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Track meta -->
+    <div class="player-mini-meta">
+      <div class="player-mini-title" id="player-track-title">Название трека</div>
+      <div class="player-mini-artist" id="player-track-artist">Исполнитель</div>
+    </div>
+
+    <!-- Transport controls — stop propagation so they don't trigger full overlay -->
+    <div class="player-mini-controls" onclick="event.stopPropagation()">
+      <button
+        class="player-ctrl-btn"
+        type="button"
+        aria-label="Предыдущий трек"
+        id="btn-prev"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="19 20 9 12 19 4 19 20"/>
+          <line x1="5" y1="19" x2="5" y2="5"/>
+        </svg>
+      </button>
+
+      <button
+        class="player-ctrl-btn player-ctrl-btn--play"
+        type="button"
+        aria-label="Воспроизвести"
+        id="btn-play"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </button>
+
+      <button
+        class="player-ctrl-btn"
+        type="button"
+        aria-label="Следующий трек"
+        id="btn-next"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="5 4 15 12 5 20 5 4"/>
+          <line x1="19" y1="5" x2="19" y2="19"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Volume + Share extras -->
+    <div class="player-mini-extras" onclick="event.stopPropagation()">
+      <button
+        class="player-ctrl-btn"
+        type="button"
+        aria-label="Поделиться треком"
+        id="btn-share"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="18" cy="5" r="3"/>
+          <circle cx="6" cy="12" r="3"/>
+          <circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+      </button>
+
+      <button
+        class="player-ctrl-btn"
+        type="button"
+        aria-label="Громкость"
+        id="btn-volume"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 010 14.14"/>
+          <path d="M15.54 8.46a5 5 0 010 7.07"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       PLAYER FULL OVERLAY — Monte Carlo style modal
+       Task #2 fills real content; this is the skeleton.
+       ====================================================================== -->
+  <div
+    class="player-full"
+    id="player-full"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Полный плеер"
+    aria-hidden="true"
+  >
+    <!-- Close button -->
+    <button
+      class="player-full-close"
+      type="button"
+      id="btn-player-close"
+      aria-label="Закрыть плеер"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- Player card content -->
+    <div class="player-full-card">
+      <!-- Album art stub 261×261, concentric corners -->
+      <div class="player-full-art" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </div>
+
+      <!-- Track meta -->
+      <div class="player-full-meta">
+        <div class="player-full-title" id="player-full-title">Название трека</div>
+        <div class="player-full-artist" id="player-full-artist">Исполнитель</div>
+      </div>
+
+      <p class="player-full-stub-note">
+        Task #2 — реальный контент Monte Carlo + скрабер + тексты
+      </p>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MOBILE TABBAR — 5 icons
+       ====================================================================== -->
+  <nav
+    class="mobile-tabbar"
+    role="navigation"
+    aria-label="Мобильная навигация"
+  >
+    <button
+      class="tabbar-item"
+      type="button"
+      data-route="#/home"
+      aria-label="Главная"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Главная
+    </button>
+
+    <button
+      class="tabbar-item"
+      type="button"
+      data-route="#/podborki"
+      aria-label="Подборки"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7"/>
+        <rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/>
+      </svg>
+      Подборки
+    </button>
+
+    <button
+      class="tabbar-item"
+      type="button"
+      data-route="#/library"
+      aria-label="Медиатека"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+      </svg>
+      Медиа
+    </button>
+
+    <button
+      class="tabbar-item"
+      type="button"
+      data-route="#/favorites"
+      aria-label="Избранное"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+      </svg>
+      Избранное
+    </button>
+
+    <button
+      class="tabbar-item"
+      type="button"
+      id="tabbar-player-btn"
+      aria-label="Открыть плеер"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <polygon points="10 8 16 12 10 16 10 8"/>
+      </svg>
+      Плеер
+    </button>
+  </nav>
+
+  <!-- ======================================================================
+       TWEAKS PANEL — internal review, bottom-right floating
+       ====================================================================== -->
+  <aside
+    class="tweaks"
+    id="tweaks-panel"
+    role="complementary"
+    aria-label="Настройки прототипа"
+  >
+    <!-- Header: title + collapse + close -->
+    <div
+      class="tweaks-header"
+      id="tweaks-header"
+      role="button"
+      tabindex="0"
+      aria-expanded="true"
+      aria-controls="tweaks-body"
+      aria-label="Свернуть/развернуть панель настроек"
+    >
+      <span class="tweaks-header-label">Tweaks</span>
+      <div class="tweaks-header-actions">
+        <button
+          class="tweaks-header-btn"
+          type="button"
+          id="tweaks-collapse-btn"
+          aria-label="Свернуть панель"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="18 15 12 9 6 15"/>
+          </svg>
+        </button>
+        <button
+          class="tweaks-header-btn"
+          type="button"
+          id="tweaks-close-btn"
+          aria-label="Закрыть панель настроек"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Body: groups of controls -->
+    <div class="tweaks-body" id="tweaks-body">
+
+      <!-- Theme group -->
+      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-theme">
+        <div class="tweaks-group-label" id="tweak-label-theme">Тема</div>
+        <div class="tweaks-row" role="group" aria-label="Выбор темы">
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="theme"
+            data-value="cinema"
+            aria-pressed="true"
+            aria-label="Тема Cinema (по умолчанию)"
+          >Cinema</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="theme"
+            data-value="warm"
+            aria-pressed="false"
+            aria-label="Тема Warm sunset"
+          >Warm</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="theme"
+            data-value="light"
+            aria-pressed="false"
+            aria-label="Светлая тема — Phase 2 (недоступно)"
+            disabled
+            title="Phase 2 — будет в следующей итерации"
+          >Light · Phase 2</button>
+        </div>
+      </div>
+
+      <!-- Surface group -->
+      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-surface">
+        <div class="tweaks-group-label" id="tweak-label-surface">Поверхность</div>
+        <div class="tweaks-row" role="group" aria-label="Выбор поверхности">
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="surface"
+            data-value="web"
+            aria-pressed="true"
+            aria-label="Поверхность Web"
+          >Web</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="surface"
+            data-value="mobile"
+            aria-pressed="false"
+            aria-label="Поверхность Mobile"
+          >Mobile</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="surface"
+            data-value="tv"
+            aria-pressed="false"
+            aria-label="Поверхность TV"
+          >TV</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="surface"
+            data-value="carplay"
+            aria-pressed="false"
+            aria-label="Поверхность CarPlay"
+          >CarPlay</button>
+        </div>
+      </div>
+
+      <!-- Home variant group -->
+      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-home">
+        <div class="tweaks-group-label" id="tweak-label-home">Главная — вариант</div>
+        <div class="tweaks-row" role="group" aria-label="Вариант экрана Главная">
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="home-variant"
+            data-value="fab"
+            aria-pressed="true"
+            aria-label="Вариант A: угловая FAB кнопка → нижний sheet"
+          >A: Corner FAB</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="home-variant"
+            data-value="drawer"
+            aria-pressed="false"
+            aria-label="Вариант B: sidebar slide-out drawer"
+          >B: Drawer</button>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.tweaks-body -->
+  </aside>
+
+  <!-- FAB to reopen tweaks after close -->
+  <button
+    class="tweaks-fab"
+    id="tweaks-fab"
+    type="button"
+    aria-label="Открыть панель настроек прототипа"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+    </svg>
+  </button>
+
+  <!-- ======================================================================
+       SCRIPT — hash router + tweaks + player toggle
+       ====================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---- Constants ------------------------------------------------------- */
+      const LS_KEYS = {
+        theme:       'gorod-fm.theme',
+        surface:     'gorod-fm.surface',
+        homeVariant: 'gorod-fm.home-variant',
+        lastRoute:   'gorod-fm.last-route',
+      };
+
+      const VALID_ROUTES = ['#/map', '#/home', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites'];
+      const DEFAULT_ROUTE = '#/map';
+
+      /* ---- localStorage helpers -------------------------------------------- */
+
+      function lsGet(key, fallback) {
+        try {
+          const val = localStorage.getItem(key);
+          return val !== null ? val : fallback;
+        } catch (_) {
+          return fallback;
+        }
+      }
+
+      function lsSet(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (_) {}
+      }
+
+      /* ---- Hash router ------------------------------------------------------ */
+
+      function routeFromHash(hash) {
+        return VALID_ROUTES.includes(hash) ? hash : null;
+      }
+
+      function pageKeyFromRoute(route) {
+        // '#/map' → 'map', '#/podborki' → 'podborki'
+        return route.replace('#/', '');
+      }
+
+      function activatePage(route) {
+        if (!route) return;
+        const key = pageKeyFromRoute(route);
+
+        // Deactivate all sections
+        document.querySelectorAll('[data-page]').forEach(function (sec) {
+          sec.removeAttribute('data-page-current');
+          sec.setAttribute('aria-hidden', 'true');
+        });
+
+        // Activate matching section
+        const target = document.querySelector('[data-page="' + key + '"]');
+        if (target) {
+          target.setAttribute('data-page-current', '');
+          target.removeAttribute('aria-hidden');
+        }
+
+        // Update sidebar nav aria-current
+        document.querySelectorAll('.sidebar-item[data-route]').forEach(function (el) {
+          if (el.getAttribute('data-route') === route) {
+            el.setAttribute('aria-current', 'page');
+          } else {
+            el.removeAttribute('aria-current');
+          }
+        });
+
+        // Update mobile tabbar aria-current
+        document.querySelectorAll('.tabbar-item[data-route]').forEach(function (el) {
+          if (el.getAttribute('data-route') === route) {
+            el.setAttribute('aria-current', 'page');
+          } else {
+            el.removeAttribute('aria-current');
+          }
+        });
+
+        // Persist last route
+        lsSet(LS_KEYS.lastRoute, route);
+      }
+
+      function navigate(route) {
+        const resolved = routeFromHash(route) || DEFAULT_ROUTE;
+        if (window.location.hash !== resolved) {
+          window.location.hash = resolved;
+        } else {
+          activatePage(resolved);
+        }
+      }
+
+      window.addEventListener('hashchange', function () {
+        const route = routeFromHash(window.location.hash) || DEFAULT_ROUTE;
+        activatePage(route);
+      });
+
+      /* ---- Player toggle ---------------------------------------------------- */
+
+      const playerMini = document.getElementById('player-mini');
+      const playerFull = document.getElementById('player-full');
+      const btnPlayerClose = document.getElementById('btn-player-close');
+      const tabbarPlayerBtn = document.getElementById('tabbar-player-btn');
+
+      function openPlayer() {
+        document.body.setAttribute('data-player-expanded', '');
+        playerFull.removeAttribute('aria-hidden');
+        playerFull.setAttribute('aria-modal', 'true');
+        if (btnPlayerClose) btnPlayerClose.focus();
+      }
+
+      function closePlayer() {
+        document.body.removeAttribute('data-player-expanded');
+        playerFull.setAttribute('aria-hidden', 'true');
+        if (playerMini) playerMini.focus();
+      }
+
+      if (playerMini) {
+        playerMini.addEventListener('click', function () {
+          openPlayer();
+        });
+      }
+
+      if (btnPlayerClose) {
+        btnPlayerClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closePlayer();
+        });
+      }
+
+      if (tabbarPlayerBtn) {
+        tabbarPlayerBtn.addEventListener('click', function () {
+          openPlayer();
+        });
+      }
+
+      // Escape key closes full player
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && document.body.hasAttribute('data-player-expanded')) {
+          closePlayer();
+        }
+      });
+
+      /* ---- Tweaks panel ---------------------------------------------------- */
+
+      const tweaksPanel = document.getElementById('tweaks-panel');
+      const tweaksFab   = document.getElementById('tweaks-fab');
+      const tweaksCollapseBtn = document.getElementById('tweaks-collapse-btn');
+      const tweaksCloseBtn    = document.getElementById('tweaks-close-btn');
+      const tweaksHeader      = document.getElementById('tweaks-header');
+      const tweaksBody        = document.getElementById('tweaks-body');
+
+      let tweaksCollapsed = false;
+
+      function updateTweakButtonStates(group, activeValue) {
+        document.querySelectorAll('.tweak-btn[data-tweak="' + group + '"]').forEach(function (btn) {
+          const isActive = btn.getAttribute('data-value') === activeValue;
+          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        updateTweakButtonStates('theme', theme);
+        lsSet(LS_KEYS.theme, theme);
+
+        // Sidebar theme toggle icon
+        const iconSun  = document.getElementById('sb-icon-sun');
+        const iconMoon = document.getElementById('sb-icon-moon');
+        if (iconSun && iconMoon) {
+          if (theme === 'warm') {
+            iconSun.style.display = 'none';
+            iconMoon.style.display = '';
+          } else {
+            iconSun.style.display = '';
+            iconMoon.style.display = 'none';
+          }
+        }
+      }
+
+      function applySurface(surface) {
+        document.documentElement.setAttribute('data-surface', surface);
+        updateTweakButtonStates('surface', surface);
+        lsSet(LS_KEYS.surface, surface);
+      }
+
+      function applyHomeVariant(variant) {
+        document.documentElement.setAttribute('data-home-variant', variant);
+        updateTweakButtonStates('home-variant', variant);
+        lsSet(LS_KEYS.homeVariant, variant);
+      }
+
+      // Delegate click on all tweak buttons
+      document.querySelectorAll('.tweak-btn[data-tweak]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const group = btn.getAttribute('data-tweak');
+          const value = btn.getAttribute('data-value');
+          if (group === 'theme')        applyTheme(value);
+          else if (group === 'surface')      applySurface(value);
+          else if (group === 'home-variant') applyHomeVariant(value);
+        });
+      });
+
+      // Sidebar theme toggle (cinema ↔ warm)
+      const sbThemeToggle = document.getElementById('sb-theme-toggle');
+      if (sbThemeToggle) {
+        sbThemeToggle.addEventListener('click', function () {
+          const current = document.documentElement.getAttribute('data-theme') || 'cinema';
+          applyTheme(current === 'cinema' ? 'warm' : 'cinema');
+        });
+      }
+
+      // Collapse/expand tweaks body
+      function setTweaksCollapsed(collapsed) {
+        tweaksCollapsed = collapsed;
+        if (collapsed) {
+          tweaksPanel.classList.add('tweaks-collapsed');
+          tweaksHeader.setAttribute('aria-expanded', 'false');
+          if (tweaksCollapseBtn) {
+            tweaksCollapseBtn.setAttribute('aria-label', 'Развернуть панель');
+            tweaksCollapseBtn.querySelector('svg polyline').setAttribute('points', '6 9 12 15 18 9');
+          }
+        } else {
+          tweaksPanel.classList.remove('tweaks-collapsed');
+          tweaksHeader.setAttribute('aria-expanded', 'true');
+          if (tweaksCollapseBtn) {
+            tweaksCollapseBtn.setAttribute('aria-label', 'Свернуть панель');
+            tweaksCollapseBtn.querySelector('svg polyline').setAttribute('points', '18 15 12 9 6 15');
+          }
+        }
+      }
+
+      if (tweaksCollapseBtn) {
+        tweaksCollapseBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          setTweaksCollapsed(!tweaksCollapsed);
+        });
+      }
+
+      // Header click also toggles
+      if (tweaksHeader) {
+        tweaksHeader.addEventListener('click', function (e) {
+          if (e.target === tweaksCloseBtn || tweaksCloseBtn.contains(e.target)) return;
+          if (e.target === tweaksCollapseBtn || tweaksCollapseBtn.contains(e.target)) return;
+          setTweaksCollapsed(!tweaksCollapsed);
+        });
+
+        tweaksHeader.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setTweaksCollapsed(!tweaksCollapsed);
+          }
+        });
+      }
+
+      // Close (hide) tweaks panel — show FAB instead
+      if (tweaksCloseBtn) {
+        tweaksCloseBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          tweaksPanel.hidden = true;
+          tweaksFab.style.display = 'flex';
+        });
+      }
+
+      // FAB reopens tweaks
+      if (tweaksFab) {
+        tweaksFab.addEventListener('click', function () {
+          tweaksPanel.hidden = false;
+          tweaksFab.style.display = 'none';
+        });
+      }
+
+      // Sidebar nav clicks
+      document.querySelectorAll('.sidebar-item[data-route], .mobile-tabbar .tabbar-item[data-route]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          const route = el.getAttribute('data-route');
+          if (route) navigate(route);
+        });
+      });
+
+      /* ---- Boot ------------------------------------------------------------ */
+
+      function boot() {
+        // 1. Restore theme
+        const savedTheme = lsGet(LS_KEYS.theme, 'cinema');
+        applyTheme(savedTheme);
+
+        // 2. Restore surface
+        const savedSurface = lsGet(LS_KEYS.surface, 'web');
+        applySurface(savedSurface);
+
+        // 3. Restore home variant
+        const savedVariant = lsGet(LS_KEYS.homeVariant, 'fab');
+        applyHomeVariant(savedVariant);
+
+        // 4. Resolve initial route:
+        //    current hash → saved last route → default #/map
+        const hashRoute    = routeFromHash(window.location.hash);
+        const savedRoute   = lsGet(LS_KEYS.lastRoute, null);
+        const initialRoute = hashRoute || (routeFromHash(savedRoute) ? savedRoute : DEFAULT_ROUTE);
+
+        // Ensure the URL hash matches
+        if (window.location.hash !== initialRoute) {
+          window.location.hash = initialRoute;
+        }
+        activatePage(initialRoute);
+
+        // 5. Mark all pages without data-page-current as aria-hidden
+        document.querySelectorAll('[data-page]:not([data-page-current])').forEach(function (sec) {
+          sec.setAttribute('aria-hidden', 'true');
+        });
+      }
+
+      boot();
+
+    })();
+  </script>
+
+</body>
+</html>
