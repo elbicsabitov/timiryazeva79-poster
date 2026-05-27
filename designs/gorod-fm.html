@@ -1716,8 +1716,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
-        margin-bottom: 40px;
+        gap: 12px;
+        margin-bottom: 28px;
         position: relative;
       }
 
@@ -1731,8 +1731,8 @@
       }
 
       .home-cover {
-        width: 480px;
-        height: 480px;
+        width: 320px;
+        height: 320px;
         border-radius: 24px;
         flex-shrink: 0;
         position: relative;
@@ -1883,9 +1883,9 @@
 
       .home-fab {
         position: fixed;
-        /* anchor above mini player bar */
+        /* anchor above mini player bar, left of tweaks panel */
         bottom: calc(var(--player-mini-h) + 20px);
-        right: 328px; /* tweaks panel is 280px wide + 20px gap + 28px clearance */
+        right: 24px;
         z-index: 55;
         width: 56px;
         height: 56px;
@@ -4236,32 +4236,32 @@
       /* ---- MOBILE --------------------------------------------------------- */
 
       [data-surface="mobile"] .sidebar {
-        display: none;
+        display: none !important;
       }
 
       [data-surface="mobile"] .topbar {
-        display: none;
+        display: none !important;
       }
 
       [data-surface="mobile"] .mobile-tabbar {
-        display: flex;
+        display: flex !important;
       }
 
       [data-surface="mobile"] .app-shell {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
       }
 
       [data-surface="mobile"] #app {
-        grid-column: 1;
+        grid-column: 1 !important;
         /* bottom: tabbar (64px) + player-mini (72px) + safe gap (16px) */
-        padding: 16px 16px calc(var(--tabbar-h) + var(--player-mini-h) + 16px);
+        padding: 16px 16px calc(var(--tabbar-h) + var(--player-mini-h) + 16px) !important;
       }
 
       /* On mobile surfaces the player-mini compresses above the tabbar */
       [data-surface="mobile"] .player-mini {
-        display: flex;
-        bottom: var(--tabbar-h);
-        padding: 0 16px;
+        display: flex !important;
+        bottom: var(--tabbar-h) !important;
+        padding: 0 16px !important;
       }
 
       /* Mobile: player full overlay goes full-screen */
@@ -4339,27 +4339,27 @@
       /* ---- TV (10-foot layout) ------------------------------------------- */
 
       [data-surface="tv"] .sidebar {
-        display: flex;
-        width: 320px;    /* wider than web 240px for D-pad legibility */
+        display: flex !important;
+        width: 320px !important;    /* wider than web 240px for D-pad legibility */
       }
 
       [data-surface="tv"] .topbar {
-        display: flex;
-        height: 80px;
-        left: 320px;
+        display: flex !important;
+        height: 80px !important;
+        left: 320px !important;
       }
 
       [data-surface="tv"] .app-shell {
-        grid-template-columns: 320px 1fr;
+        grid-template-columns: 320px 1fr !important;
       }
 
       [data-surface="tv"] #app {
-        padding: 80px 60px 60px;
-        grid-column: 2;
+        padding: 80px 60px 60px !important;
+        grid-column: 2 !important;
       }
 
       [data-surface="tv"] .mobile-tabbar {
-        display: none;
+        display: none !important;
       }
 
       /* TV: larger sidebar items ≥56px */
@@ -4468,27 +4468,27 @@
       /* ---- CARPLAY -------------------------------------------------------- */
 
       [data-surface="carplay"] .sidebar {
-        display: none;
+        display: none !important;
       }
 
       [data-surface="carplay"] .topbar {
-        display: flex;
-        height: 80px;
-        left: 0;
-        padding: 0 48px;
+        display: flex !important;
+        height: 80px !important;
+        left: 0 !important;
+        padding: 0 48px !important;
       }
 
       [data-surface="carplay"] .app-shell {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
       }
 
       [data-surface="carplay"] #app {
-        grid-column: 1;
-        padding: 80px 48px 40px;
+        grid-column: 1 !important;
+        padding: 80px 48px 40px !important;
       }
 
       [data-surface="carplay"] .mobile-tabbar {
-        display: none;
+        display: none !important;
       }
 
       /* CarPlay: high-contrast text override */
@@ -5403,6 +5403,41 @@
         border-radius: var(--r-base) var(--r-tile-tr) var(--r-base) var(--r-base);
       }
     }
+  </style>
+
+  <!-- Surface overrides: outside @layer to guarantee cascade win at desktop viewports.
+       @layer !important rules have reversed priority (lower layer wins for !important),
+       so these rules must live outside any layer entirely. -->
+  <style>
+    /* ---- MOBILE surface -------------------------------------------------- */
+    html[data-surface="mobile"] .sidebar        { display: none !important; }
+    html[data-surface="mobile"] .topbar         { display: none !important; }
+    html[data-surface="mobile"] .mobile-tabbar  { display: flex !important; }
+    html[data-surface="mobile"] .app-shell      { grid-template-columns: 1fr !important; }
+    html[data-surface="mobile"] #app            { grid-column: 1 !important; padding: 16px 16px calc(var(--tabbar-h) + var(--player-mini-h) + 16px) !important; }
+    html[data-surface="mobile"] .player-mini    { display: flex !important; bottom: var(--tabbar-h) !important; padding: 0 16px !important; }
+
+    /* ---- TV surface ------------------------------------------------------ */
+    html[data-surface="tv"] .sidebar            { display: flex !important; width: 320px !important; }
+    html[data-surface="tv"] .topbar             { display: flex !important; height: 80px !important; left: 320px !important; }
+    html[data-surface="tv"] .app-shell          { grid-template-columns: 320px 1fr !important; }
+    html[data-surface="tv"] #app                { padding: 80px 60px 60px !important; grid-column: 2 !important; }
+    html[data-surface="tv"] .mobile-tabbar      { display: none !important; }
+
+    /* ---- CARPLAY surface ------------------------------------------------- */
+    html[data-surface="carplay"] .sidebar       { display: none !important; }
+    html[data-surface="carplay"] .topbar        { display: flex !important; height: 80px !important; left: 0 !important; padding: 0 48px !important; }
+    html[data-surface="carplay"] .app-shell     { grid-template-columns: 1fr !important; }
+    html[data-surface="carplay"] #app           { grid-column: 1 !important; padding: 80px 48px 40px !important; }
+    html[data-surface="carplay"] .mobile-tabbar { display: none !important; }
+
+    /* ---- WEB surface (restore defaults when switching back from mobile) -- */
+    html[data-surface="web"] .sidebar           { display: flex !important; }
+    html[data-surface="web"] .topbar            { display: flex !important; }
+    html[data-surface="web"] .mobile-tabbar     { display: none !important; }
+    html[data-surface="web"] .app-shell         { grid-template-columns: var(--sidebar-w) 1fr !important; }
+    html[data-surface="web"] #app               { grid-column: 2 !important; }
+    html[data-surface="web"] .player-mini       { display: flex !important; bottom: 0 !important; padding: 0 24px !important; }
   </style>
 </head>
 
