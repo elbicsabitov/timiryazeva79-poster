@@ -2356,6 +2356,183 @@
       html[data-hide-flow-map="true"] [data-route="#/map"] {
         display: none;
       }
+
+      /* =========================================================================
+         ПОДБОРКИ PAGE — chip row + tile gallery
+         ========================================================================= */
+
+      /* Page wrapper */
+      .podborki-page {
+        padding: 0 0 80px;
+        overflow: hidden;
+      }
+
+      /* ---- Chip row ---------------------------------------------------------- */
+
+      .podborki-chip-row {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0 24px 4px;
+        margin-bottom: 80px;
+      }
+
+      .podborki-chip-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .podborki-chip {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        padding: 10px 30px;
+        height: 52px;
+        border-radius: var(--r-base);
+        background: var(--surf-glass-20);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: rgba(255, 255, 255, 0.80);
+        font-family: 'Onest', sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
+        white-space: nowrap;
+      }
+
+      .podborki-chip:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #ffffff;
+      }
+
+      .podborki-chip[aria-pressed="true"] {
+        background: rgba(255, 255, 255, 0.32);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.45);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+      }
+
+      .podborki-chip:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      /* Mobile 2-row gallery container */
+      .podborki-gallery-mobile {
+        display: none;
+        flex-direction: column;
+        gap: 16px;
+        padding: 0 16px;
+      }
+
+      /* ---- Tile gallery ----------------------------------------------------- */
+
+      .podborki-gallery {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-left: 45px;
+        padding-right: 45px;
+        /* No wrap — single row on desktop */
+        flex-wrap: nowrap;
+        align-items: stretch;
+      }
+
+      .podborki-gallery::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Individual tile */
+      .podborki-tile {
+        position: relative;
+        flex-shrink: 0;
+        height: 628px;
+        border-radius: 0;
+        border-top-right-radius: var(--r-tile-tr);
+        overflow: hidden;
+        cursor: pointer;
+        scroll-snap-align: start;
+        /* Hover lift */
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .podborki-tile:hover {
+          transform: scale(1.02);
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+        }
+      }
+
+      .podborki-tile:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 3px;
+      }
+
+      /* Background layers inside tile */
+      .podborki-tile-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      /* --tile-shade overlay for legibility */
+      .podborki-tile-shade {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: var(--tile-shade);
+      }
+
+      /* Radial top-right glow — genre hue via inline style */
+      .podborki-tile-glow {
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        z-index: 2;
+        opacity: 0.35;
+        /* color set inline per tile */
+        filter: blur(40px);
+      }
+
+      /* Label container: flex to position rotated text at bottom-right */
+      .podborki-tile-label-wrap {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: 3;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+      }
+
+      /* Rotated label — Onest 900 fake-wide display */
+      .podborki-tile-label {
+        font-family: 'Onest', sans-serif;
+        font-weight: 900;
+        font-size: 44px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #ffffff;
+        white-space: nowrap;
+        line-height: 1;
+        transform: rotate(-90deg) scaleX(1.05);
+        transform-origin: bottom right;
+        display: block;
+        pointer-events: none;
+      }
     }
 
     /* =========================================================================
@@ -2789,6 +2966,150 @@
           width: 360px;
           height: 360px;
         }
+      }
+
+      /* ---- Подборки: mobile (≤768px) 2-row snap carousel ------------------ */
+      @media (max-width: 768px) {
+
+        .podborki-chip-row {
+          justify-content: flex-start;
+          gap: 10px;
+          padding: 0 16px 4px;
+          margin-bottom: 32px;
+        }
+
+        .podborki-chip {
+          height: 44px;
+          padding: 8px 18px;
+          font-size: 14px;
+        }
+
+        .podborki-gallery {
+          flex-direction: column;
+          gap: 16px;
+          overflow-x: hidden;
+          overflow-y: visible;
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        /* Each row is a horizontal snap-scroll strip */
+        .podborki-row {
+          display: flex;
+          flex-direction: row;
+          gap: 12px;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          padding-bottom: 2px;
+        }
+
+        .podborki-row::-webkit-scrollbar {
+          display: none;
+        }
+
+        .podborki-tile {
+          width: 168px !important;
+          height: 280px !important;
+          border-top-right-radius: 30px;
+        }
+
+        .podborki-tile-label {
+          font-size: 20px;
+        }
+
+        .podborki-tile-label-wrap {
+          bottom: 12px;
+          right: 12px;
+        }
+
+        .podborki-tile-glow {
+          width: 120px;
+          height: 120px;
+        }
+      }
+
+      /* ---- Подборки: tablet (769-1024px) single row smaller tiles --------- */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .podborki-tile {
+          height: 440px !important;
+        }
+
+        /* Scale widths proportionally ~0.70× */
+        .podborki-tile[data-tile="1"] { width: 172px !important; }
+        .podborki-tile[data-tile="2"] { width: 210px !important; }
+        .podborki-tile[data-tile="3"] { width: 217px !important; }
+        .podborki-tile[data-tile="4"] { width: 216px !important; }
+        .podborki-tile[data-tile="5"] { width: 261px !important; }
+        .podborki-tile[data-tile="6"] { width: 261px !important; }
+        .podborki-tile[data-tile="7"] { width: 261px !important; }
+        .podborki-tile[data-tile="8"] { width: 261px !important; }
+        .podborki-tile[data-tile="9"] { width: 261px !important; }
+
+        .podborki-tile-label {
+          font-size: 32px;
+        }
+      }
+
+      /* ---- Подборки: surface overrides ------------------------------------ */
+
+      [data-surface="mobile"] .podborki-gallery {
+        flex-direction: column;
+        gap: 16px;
+        overflow-x: hidden;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      [data-surface="mobile"] .podborki-row {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      [data-surface="mobile"] .podborki-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      [data-surface="mobile"] .podborki-tile {
+        width: 168px !important;
+        height: 280px !important;
+        border-top-right-radius: 30px;
+      }
+
+      [data-surface="mobile"] .podborki-tile-label {
+        font-size: 20px;
+      }
+
+      [data-surface="mobile"] .podborki-chip-row {
+        justify-content: flex-start;
+        padding: 0 16px 4px;
+        margin-bottom: 32px;
+      }
+
+      [data-surface="mobile"] .podborki-chip {
+        height: 44px;
+        padding: 8px 18px;
+        font-size: 14px;
+      }
+
+      [data-surface="tv"] .podborki-tile {
+        height: 700px;
+      }
+
+      [data-surface="tv"] .podborki-tile-label {
+        font-size: 56px;
+      }
+
+      [data-surface="tv"] .podborki-chip {
+        height: 64px;
+        font-size: 20px;
+        padding: 14px 36px;
       }
     }
 
@@ -3539,9 +3860,243 @@
 
       <!-- Page: Подборки -->
       <section data-page="podborki" aria-labelledby="page-podborki-heading">
-        <h1 id="page-podborki-heading" class="page-stub-heading">Подборки</h1>
-        <p class="page-stub-hint">Галерея тайлов с кривыми радиусами. Task #7 заполнит этот экран.</p>
-        <div class="page-content"></div>
+        <h1 id="page-podborki-heading" class="visually-hidden">Подборки</h1>
+
+        <div class="podborki-page">
+
+          <!-- Chip row -->
+          <div
+            class="podborki-chip-row"
+            role="group"
+            aria-label="Жанр подборки"
+            id="podborki-chip-row"
+          >
+            <button
+              class="podborki-chip"
+              type="button"
+              aria-pressed="true"
+              data-genre="rok"
+              aria-label="Фильтр: РОК"
+            >РОК</button>
+            <button
+              class="podborki-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="disko"
+              aria-label="Фильтр: ДИСКО"
+            >ДИСКО</button>
+            <button
+              class="podborki-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="pop"
+              aria-label="Фильтр: ПОП"
+            >ПОП</button>
+            <button
+              class="podborki-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="hip-hop"
+              aria-label="Фильтр: ХИП-ХОП"
+            >ХИП-ХОП</button>
+            <button
+              class="podborki-chip"
+              type="button"
+              aria-pressed="false"
+              data-genre="eshche"
+              aria-label="Фильтр: ЕЩЁ"
+            >ЕЩЁ</button>
+          </div>
+
+          <!-- Desktop / tablet: single flat row (all 9 tiles in .podborki-gallery) -->
+          <!-- Mobile: restructured to 2 rows via JS — see script below          -->
+          <div
+            class="podborki-gallery"
+            id="podborki-gallery-desktop"
+            role="list"
+            aria-label="Подборки станций"
+          >
+
+            <!-- Tile 1: POP GOLD 2010s — width 245, violet→pink -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="1"
+              data-label="POP GOLD 2010s"
+              style="width:245px"
+              role="listitem"
+              aria-label="Открыть подборку POP GOLD 2010s"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #5b2d8e 0%, #c0348a 55%, #e8609a 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #c0348a;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">POP GOLD 2010s</span>
+              </div>
+            </button>
+
+            <!-- Tile 2: K-POP — width 299, hot-pink→magenta -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="2"
+              data-label="K-POP"
+              style="width:299px"
+              role="listitem"
+              aria-label="Открыть подборку K-POP"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #8b005d 0%, #e0007a 50%, #ff4dbc 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #ff4dbc;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">K-POP</span>
+              </div>
+            </button>
+
+            <!-- Tile 3: CHILL — width 310, cyan→teal -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="3"
+              data-label="CHILL"
+              style="width:310px"
+              role="listitem"
+              aria-label="Открыть подборку CHILL"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #004f6d 0%, #0a8f8a 50%, #00d4c8 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #00d4c8;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">CHILL</span>
+              </div>
+            </button>
+
+            <!-- Tile 4: ДИСКАЧ 90-Х — width 309, yellow→orange -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="4"
+              data-label="ДИСКАЧ 90-Х"
+              style="width:309px"
+              role="listitem"
+              aria-label="Открыть подборку ДИСКАЧ 90-Х"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #7a4600 0%, #d4780a 50%, #f5c518 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #f5c518;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">ДИСКАЧ 90-Х</span>
+              </div>
+            </button>
+
+            <!-- Tile 5: Z. CITY SHOW — width 373, brand-cyan→brand-blue (Город ФМ feature) -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="5"
+              data-label="Z. CITY SHOW"
+              style="width:373px"
+              role="listitem"
+              aria-label="Открыть подборку Z. CITY SHOW"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #1a6bde 0%, #56afd7 50%, #0ea8e8 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #56afd7;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">Z. CITY SHOW</span>
+              </div>
+            </button>
+
+            <!-- Tile 6: VADIM ADAMOV — width 373, deep-purple→indigo -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="6"
+              data-label="VADIM ADAMOV"
+              style="width:373px"
+              role="listitem"
+              aria-label="Открыть подборку VADIM ADAMOV"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #1a0840 0%, #3d1e8c 50%, #6b35c8 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #6b35c8;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">VADIM ADAMOV</span>
+              </div>
+            </button>
+
+            <!-- Tile 7: DJ PITKIN — width 373, green→teal -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="7"
+              data-label="DJ PITKIN"
+              style="width:373px"
+              role="listitem"
+              aria-label="Открыть подборку DJ PITKIN"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #004d2e 0%, #0d8c5a 50%, #00cc7a 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #00cc7a;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">DJ PITKIN</span>
+              </div>
+            </button>
+
+            <!-- Tile 8: RADIO CITY — width 373, deep-red→orange (replaces duplicate DFM CHILL) -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="8"
+              data-label="RADIO CITY"
+              style="width:373px"
+              role="listitem"
+              aria-label="Открыть подборку RADIO CITY"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #6a0a00 0%, #c42000 50%, #e84d00 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #e84d00;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">RADIO CITY</span>
+              </div>
+            </button>
+
+            <!-- Tile 9: DFM CHILL — width 373, cyan→deep-blue -->
+            <button
+              class="podborki-tile"
+              type="button"
+              data-tile="9"
+              data-label="DFM CHILL"
+              style="width:373px"
+              role="listitem"
+              aria-label="Открыть подборку DFM CHILL"
+            >
+              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #001a45 0%, #0a3a8c 50%, #0d5fcf 100%);"></div>
+              <div class="podborki-tile-shade"></div>
+              <div class="podborki-tile-glow" style="background: #0d5fcf;"></div>
+              <div class="podborki-tile-label-wrap">
+                <span class="podborki-tile-label">DFM CHILL</span>
+              </div>
+            </button>
+
+          </div><!-- /.podborki-gallery -->
+
+          <!-- Mobile 2-row gallery (hidden on desktop, populated by JS) -->
+          <div
+            class="podborki-gallery-mobile"
+            id="podborki-gallery-mobile"
+            aria-label="Подборки станций"
+            aria-hidden="true"
+            style="display:none"
+          >
+            <!-- Row 1: tiles 1-5 -->
+            <div class="podborki-row" role="list" aria-label="Подборки, ряд 1" id="podborki-row-1"></div>
+            <!-- Row 2: tiles 6-9 -->
+            <div class="podborki-row" role="list" aria-label="Подборки, ряд 2" id="podborki-row-2"></div>
+          </div>
+
+        </div><!-- /.podborki-page -->
+
       </section>
 
       <!-- Page: Медиатека -->
@@ -5178,6 +5733,141 @@
       window.addEventListener('hashchange', function () {
         updateHomeFabVisibility(window.location.hash);
       });
+
+      /* ---- Подборки page — chip row + tile gallery ----------------------- */
+
+      (function initPodborki() {
+
+        /* 1. Chip single-select toggle */
+        var podChipRow = document.getElementById('podborki-chip-row');
+        if (podChipRow) {
+          podChipRow.addEventListener('click', function (e) {
+            var chip = e.target.closest('.podborki-chip');
+            if (!chip) return;
+            podChipRow.querySelectorAll('.podborki-chip').forEach(function (c) {
+              c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+            });
+            console.log('[Город ФМ] Подборки genre filter:', chip.getAttribute('data-genre'));
+          });
+        }
+
+        /* 2. Tile click — open player overlay + swap track meta */
+        function openPodborkaPlayer(label) {
+          var artistText = 'Город ФМ · Подборки';
+
+          // Mini player (has id="player-track-title" / "player-track-artist")
+          var miniTitle  = document.getElementById('player-track-title');
+          var miniArtist = document.getElementById('player-track-artist');
+          if (miniTitle)  miniTitle.textContent  = label;
+          if (miniArtist) miniArtist.textContent = artistText;
+
+          // Full player overlay (id="player-full-title" / "player-full-artist")
+          var fullTitle  = document.getElementById('player-full-title');
+          var fullArtist = document.getElementById('player-full-artist');
+          if (fullTitle)  fullTitle.textContent  = label;
+          if (fullArtist) fullArtist.textContent = artistText;
+
+          // Open the player overlay
+          openPlayer();
+
+          console.log('[Город ФМ] Подборки tile clicked:', label);
+        }
+
+        var desktopGallery = document.getElementById('podborki-gallery-desktop');
+        if (desktopGallery) {
+          desktopGallery.addEventListener('click', function (e) {
+            var tile = e.target.closest('.podborki-tile');
+            if (!tile) return;
+            openPodborkaPlayer(tile.getAttribute('data-label') || 'Подборка');
+          });
+          desktopGallery.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              var tile = e.target.closest('.podborki-tile');
+              if (tile) {
+                e.preventDefault();
+                openPodborkaPlayer(tile.getAttribute('data-label') || 'Подборка');
+              }
+            }
+          });
+        }
+
+        /* 3. Mobile 2-row layout: clone tiles into 2 rows for mobile surface */
+
+        // Tile config: [label, width-desktop, gradient-bg, glow-color]
+        var TILES = [
+          { label: 'POP GOLD 2010s', w: 245, bg: 'linear-gradient(160deg,#5b2d8e 0%,#c0348a 55%,#e8609a 100%)', glow: '#c0348a' },
+          { label: 'K-POP',          w: 299, bg: 'linear-gradient(160deg,#8b005d 0%,#e0007a 50%,#ff4dbc 100%)', glow: '#ff4dbc' },
+          { label: 'CHILL',          w: 310, bg: 'linear-gradient(160deg,#004f6d 0%,#0a8f8a 50%,#00d4c8 100%)', glow: '#00d4c8' },
+          { label: 'ДИСКАЧ 90-Х',    w: 309, bg: 'linear-gradient(160deg,#7a4600 0%,#d4780a 50%,#f5c518 100%)', glow: '#f5c518' },
+          { label: 'Z. CITY SHOW',   w: 373, bg: 'linear-gradient(160deg,#1a6bde 0%,#56afd7 50%,#0ea8e8 100%)', glow: '#56afd7' },
+          { label: 'VADIM ADAMOV',   w: 373, bg: 'linear-gradient(160deg,#1a0840 0%,#3d1e8c 50%,#6b35c8 100%)', glow: '#6b35c8' },
+          { label: 'DJ PITKIN',      w: 373, bg: 'linear-gradient(160deg,#004d2e 0%,#0d8c5a 50%,#00cc7a 100%)', glow: '#00cc7a' },
+          { label: 'RADIO CITY',     w: 373, bg: 'linear-gradient(160deg,#6a0a00 0%,#c42000 50%,#e84d00 100%)', glow: '#e84d00' },
+          { label: 'DFM CHILL',      w: 373, bg: 'linear-gradient(160deg,#001a45 0%,#0a3a8c 50%,#0d5fcf 100%)', glow: '#0d5fcf' },
+        ];
+
+        function makeMobileTile(t, idx) {
+          var btn = document.createElement('button');
+          btn.className = 'podborki-tile';
+          btn.type = 'button';
+          btn.setAttribute('data-tile', String(idx + 1));
+          btn.setAttribute('data-label', t.label);
+          btn.setAttribute('role', 'listitem');
+          btn.setAttribute('aria-label', 'Открыть подборку ' + t.label);
+          btn.style.width = '168px';
+          btn.innerHTML = '<div class="podborki-tile-bg" style="background:' + t.bg + ';"></div>' +
+            '<div class="podborki-tile-shade"></div>' +
+            '<div class="podborki-tile-glow" style="background:' + t.glow + ';"></div>' +
+            '<div class="podborki-tile-label-wrap"><span class="podborki-tile-label">' + t.label + '</span></div>';
+          btn.addEventListener('click', function () {
+            openPodborkaPlayer(t.label);
+          });
+          return btn;
+        }
+
+        var mobileGallery = document.getElementById('podborki-gallery-mobile');
+        var row1 = document.getElementById('podborki-row-1');
+        var row2 = document.getElementById('podborki-row-2');
+
+        if (mobileGallery && row1 && row2) {
+          // Row 1: tiles 0-4 (POP GOLD … Z. CITY SHOW)
+          TILES.slice(0, 5).forEach(function (t, i) {
+            row1.appendChild(makeMobileTile(t, i));
+          });
+          // Row 2: tiles 5-8 (VADIM ADAMOV … DFM CHILL)
+          TILES.slice(5).forEach(function (t, i) {
+            row2.appendChild(makeMobileTile(t, i + 5));
+          });
+        }
+
+        /* 4. Switch between desktop/mobile gallery depending on viewport + surface */
+        function syncPodborkaLayout() {
+          var isMobile = window.matchMedia('(max-width: 768px)').matches ||
+            document.documentElement.getAttribute('data-surface') === 'mobile';
+          if (desktopGallery) desktopGallery.style.display = isMobile ? 'none' : '';
+          if (mobileGallery) {
+            mobileGallery.style.display = isMobile ? '' : 'none';
+            mobileGallery.setAttribute('aria-hidden', isMobile ? 'false' : 'true');
+          }
+        }
+
+        syncPodborkaLayout();
+        window.addEventListener('resize', syncPodborkaLayout);
+
+        // Also re-sync when surface changes (tweaks panel)
+        document.documentElement.addEventListener('change', syncPodborkaLayout);
+        document.addEventListener('surfacechange', syncPodborkaLayout);
+
+        // Mobile gallery click delegation
+        if (mobileGallery) {
+          mobileGallery.addEventListener('click', function (e) {
+            var tile = e.target.closest('.podborki-tile');
+            if (!tile) return;
+            openPodborkaPlayer(tile.getAttribute('data-label') || 'Подборка');
+          });
+        }
+
+      })(); /* end initPodborki */
 
       /* ---- Boot ------------------------------------------------------------ */
 
