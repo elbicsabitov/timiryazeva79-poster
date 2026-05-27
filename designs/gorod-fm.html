@@ -4253,7 +4253,8 @@
 
       [data-surface="mobile"] #app {
         grid-column: 1;
-        padding: 16px 16px calc(var(--tabbar-h) + 16px);
+        /* bottom: tabbar (64px) + player-mini (72px) + safe gap (16px) */
+        padding: 16px 16px calc(var(--tabbar-h) + var(--player-mini-h) + 16px);
       }
 
       /* On mobile surfaces the player-mini compresses above the tabbar */
@@ -4339,17 +4340,17 @@
 
       [data-surface="tv"] .sidebar {
         display: flex;
-        width: 300px;
+        width: 320px;    /* wider than web 240px for D-pad legibility */
       }
 
       [data-surface="tv"] .topbar {
         display: flex;
         height: 80px;
-        left: 300px;
+        left: 320px;
       }
 
       [data-surface="tv"] .app-shell {
-        grid-template-columns: 300px 1fr;
+        grid-template-columns: 320px 1fr;
       }
 
       [data-surface="tv"] #app {
@@ -4361,7 +4362,7 @@
         display: none;
       }
 
-      /* TV: larger hit targets ≥56px, larger text */
+      /* TV: larger sidebar items ≥56px */
       [data-surface="tv"] .sidebar-item {
         min-height: 56px;
         font-size: 20px;
@@ -4390,10 +4391,78 @@
         padding-bottom: var(--player-mini-h);
       }
 
-      /* TV: wider focus ring */
+      /* TV: wider focus ring + forced cyan color */
       [data-surface="tv"] :focus-visible {
         outline-width: 4px;
         outline-offset: 3px;
+        outline-color: var(--brand-cyan);
+      }
+
+      /* TV: body text ≥18px */
+      [data-surface="tv"] body {
+        font-size: 18px;
+      }
+
+      /* TV: heading scale ~1.2× — apply to common heading classes */
+      [data-surface="tv"] h1,
+      [data-surface="tv"] h2,
+      [data-surface="tv"] h3,
+      [data-surface="tv"] .display {
+        font-size: calc(1em * 1.2);
+      }
+
+      /* TV: hit targets ≥56px — broad coverage of interactive elements */
+      [data-surface="tv"] button,
+      [data-surface="tv"] [role="button"],
+      [data-surface="tv"] a.sidebar-item,
+      [data-surface="tv"] a.map-card,
+      [data-surface="tv"] .tabbar-item,
+      [data-surface="tv"] .home-station,
+      [data-surface="tv"] .podborki-chip,
+      [data-surface="tv"] .library-chip,
+      [data-surface="tv"] .favorites-chip,
+      [data-surface="tv"] .favorites-heart-btn,
+      [data-surface="tv"] .tweak-btn {
+        min-height: 56px;
+      }
+
+      /* TV: kill hover transforms (D-pad nav, no mouse) */
+      [data-surface="tv"] *:hover {
+        transform: none !important;
+      }
+
+      /* TV: keep hover color cue (visibility) but remove motion */
+      [data-surface="tv"] .podborki-tile:hover,
+      [data-surface="tv"] .library-tile:hover,
+      [data-surface="tv"] .map-card:hover {
+        opacity: 0.9;
+      }
+
+      /* TV: larger tweaks panel controls */
+      [data-surface="tv"] .tweaks-header {
+        min-height: 56px;
+      }
+
+      [data-surface="tv"] .tweaks-header-btn {
+        width: 44px;
+        height: 44px;
+        min-height: 44px;
+      }
+
+      [data-surface="tv"] .tweak-btn {
+        height: 56px;
+        min-height: 56px;
+        font-size: 14px;
+        padding: 0 20px;
+      }
+
+      /* TV: larger player-mini bar */
+      [data-surface="tv"] .player-mini-title {
+        font-size: 20px;
+      }
+
+      [data-surface="tv"] .player-mini-artist {
+        font-size: 16px;
       }
 
       /* ---- CARPLAY -------------------------------------------------------- */
@@ -4422,25 +4491,79 @@
         display: none;
       }
 
-      /* CarPlay: large tap targets ≥80px, high contrast, minimal motion */
+      /* CarPlay: high-contrast text override */
+      [data-surface="carplay"] {
+        --text-pri:  #ffffff;
+        --text-sec:  rgba(255, 255, 255, 0.92);
+        --text-quat: rgba(255, 255, 255, 0.85);
+        --player-accent: var(--brand-cyan);
+      }
+
+      /* CarPlay: large tap targets ≥80px — broad coverage */
       [data-surface="carplay"] .player-ctrl-btn {
         width: 80px;
         height: 80px;
       }
 
+      [data-surface="carplay"] button,
+      [data-surface="carplay"] [role="button"],
+      [data-surface="carplay"] .home-station,
+      [data-surface="carplay"] .tabbar-item,
+      [data-surface="carplay"] .tweak-btn {
+        min-height: 80px;
+      }
+
       [data-surface="carplay"] .topbar-search,
       [data-surface="carplay"] .topbar-account {
-        min-height: 64px;
-        height: 64px;
+        min-height: 80px;
+        height: 80px;
         font-size: 20px;
       }
 
       [data-surface="carplay"] .player-mini {
-        height: 88px;
+        height: 100px;
       }
 
+      /* CarPlay: body text ≥24px, headings ≥32px */
+      [data-surface="carplay"] body {
+        font-size: 24px;
+      }
+
+      [data-surface="carplay"] h1,
+      [data-surface="carplay"] h2,
+      [data-surface="carplay"] h3,
+      [data-surface="carplay"] .display {
+        font-size: 32px;
+      }
+
+      /* CarPlay: minimal motion — all transitions ≤0.1s */
       [data-surface="carplay"] * {
-        transition-duration: 0.05ms !important;
+        transition-duration: 0.1s !important;
+        animation-duration: 0.1s !important;
+      }
+
+      /* CarPlay: no hover states (driving context) */
+      [data-surface="carplay"] *:hover {
+        transform: none !important;
+        opacity: 1 !important;
+      }
+
+      /* CarPlay: hide Карта флоу + Раздел Избранное — too complex for driving */
+      [data-surface="carplay"] [data-page="map"],
+      [data-surface="carplay"] [data-page="favorites"] {
+        display: none !important;
+      }
+
+      /* CarPlay: hide sidebar Карта флоу link and Избранное nav */
+      [data-surface="carplay"] [data-route="#/map"],
+      [data-surface="carplay"] [data-route="#/favorites"] {
+        display: none !important;
+      }
+
+      /* CarPlay: hide tweaks panel entirely */
+      [data-surface="carplay"] .tweaks,
+      [data-surface="carplay"] .tweaks-fab {
+        display: none !important;
       }
 
       /* ---- Home page surface adapters ------------------------------------ */
@@ -4536,7 +4659,8 @@
 
         #app {
           grid-column: 1 !important;
-          padding: 16px 16px calc(var(--tabbar-h) + 16px) !important;
+          /* bottom: tabbar (64px) + player-mini (72px) + safe gap (16px) */
+          padding: 16px 16px calc(var(--tabbar-h) + var(--player-mini-h) + 16px) !important;
         }
 
         .player-mini {
@@ -8895,6 +9019,12 @@
           window.location.hash = '#/home';
           return;
         }
+        // CarPlay route guard: #/map and #/favorites are too complex for driving
+        var currentSurface = document.documentElement.getAttribute('data-surface') || 'web';
+        if (currentSurface === 'carplay' && (route === '#/map' || route === '#/favorites')) {
+          window.location.hash = '#/home';
+          return;
+        }
         activatePage(route);
       });
 
@@ -9173,10 +9303,45 @@
         }
       }
 
+      // Track theme before entering carplay so we can restore on exit
+      var _preSurfaceTheme = null;
+
       function applySurface(surface) {
+        var prevSurface = document.documentElement.getAttribute('data-surface') || 'web';
+
         document.documentElement.setAttribute('data-surface', surface);
         updateTweakButtonStates('surface', surface);
         lsSet(LS_KEYS.surface, surface);
+
+        // ---- CarPlay: force cinema theme + disable theme buttons ----
+        if (surface === 'carplay') {
+          // Save current theme for restore when leaving carplay
+          _preSurfaceTheme = document.documentElement.getAttribute('data-theme') || 'cinema';
+          applyTheme('cinema');
+          // Disable theme tweak buttons while in carplay
+          document.querySelectorAll('.tweak-btn[data-tweak="theme"]').forEach(function (btn) {
+            btn.disabled = true;
+            btn.title = 'Смена темы недоступна в режиме CarPlay';
+          });
+          // If current route is blocked in carplay, redirect to home
+          var curRoute = window.location.hash;
+          if (curRoute === '#/map' || curRoute === '#/favorites') {
+            navigate('#/home');
+          }
+        } else if (prevSurface === 'carplay') {
+          // Leaving carplay: re-enable theme buttons, restore previous theme
+          document.querySelectorAll('.tweak-btn[data-tweak="theme"]').forEach(function (btn) {
+            btn.disabled = false;
+            btn.title = '';
+          });
+          if (_preSurfaceTheme) {
+            applyTheme(_preSurfaceTheme);
+            _preSurfaceTheme = null;
+          }
+        }
+
+        // ---- Sync podborki layout when surface changes ----
+        document.dispatchEvent(new CustomEvent('surfacechange', { detail: { surface: surface } }));
       }
 
       function applyHomeVariant(variant) {
@@ -9294,6 +9459,33 @@
           const route = el.getAttribute('data-route');
           if (route) navigate(route);
         });
+      });
+
+      /* ---- TV: ArrowDown/ArrowUp cycles focus through sidebar nav items ---- */
+      document.addEventListener('keydown', function (e) {
+        if (document.documentElement.getAttribute('data-surface') !== 'tv') return;
+        if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+        // Only cycle if focus is currently in the sidebar
+        var sidebarItems = Array.from(document.querySelectorAll('.sidebar-item[data-route]'));
+        if (sidebarItems.length === 0) return;
+        var focused = document.activeElement;
+        var idx = sidebarItems.indexOf(focused);
+        if (idx === -1) {
+          // Focus not in sidebar — bring focus to sidebar on ArrowDown
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            sidebarItems[0].focus();
+          }
+          return;
+        }
+        e.preventDefault();
+        if (e.key === 'ArrowDown') {
+          var next = sidebarItems[(idx + 1) % sidebarItems.length];
+          next.focus();
+        } else {
+          var prev = sidebarItems[(idx - 1 + sidebarItems.length) % sidebarItems.length];
+          prev.focus();
+        }
       });
 
       /* ---- Home page — data ---------------------------------------------- */
@@ -9957,8 +10149,13 @@
         var savedTheme = lsGet(LS_KEYS.theme, 'cinema');
         applyTheme(savedTheme);
 
-        // 2. Restore surface
+        // 2. Restore surface — applySurface() will force cinema + disable theme btns
+        //    if surface === 'carplay'; save pre-carplay theme for restore later.
         var savedSurface = lsGet(LS_KEYS.surface, 'web');
+        if (savedSurface === 'carplay') {
+          // Store the non-carplay theme so switching away from carplay restores it
+          _preSurfaceTheme = savedTheme;
+        }
         applySurface(savedSurface);
 
         // 3. Restore home variant
@@ -9977,6 +10174,11 @@
 
         // If hide-flow-map is active and route would land on #/map, redirect to #/home
         if (savedHideFlowMap === 'true' && initialRoute === '#/map') {
+          initialRoute = '#/home';
+        }
+
+        // CarPlay: also block #/map and #/favorites on initial boot
+        if (savedSurface === 'carplay' && (initialRoute === '#/map' || initialRoute === '#/favorites')) {
           initialRoute = '#/home';
         }
 
