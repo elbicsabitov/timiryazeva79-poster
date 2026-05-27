@@ -84,8 +84,9 @@
     @layer tokens {
       :root {
         /* — Cinema palette (Город ФМ primary) — */
-        --brand-cyan:      rgb(86, 175, 215);
-        --brand-blue:      rgb(26, 107, 222);
+        /* Slightly darkened vs original for WCAG AA compliance on white text */
+        --brand-cyan:      rgb(56, 140, 180);
+        --brand-blue:      rgb(20, 80, 170);
         --brand-deep:      rgb(21, 82, 172);
         --brand-ink:       rgb(30, 27, 46);      /* overlay tint */
         --brand-black:     #0C0B0B;
@@ -458,8 +459,8 @@
       }
 
       .sidebar-item-internal {
-        font-size: 13px;
-        opacity: 0.6;
+        font-size: 14px;
+        opacity: 0.75;
       }
 
       .sidebar-theme-toggle {
@@ -1306,14 +1307,15 @@
       }
 
       .tweaks-header-btn {
-        width: 28px;
-        height: 28px;
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 6px;
         color: var(--text-sec);
-        min-height: 28px;
+        min-height: 44px;
+        min-width: 44px;
         transition: background var(--t-fast);
       }
 
@@ -1359,7 +1361,7 @@
       }
 
       .tweak-btn {
-        height: 34px;
+        height: 44px;
         padding: 0 12px;
         border-radius: var(--r-pill);
         font-size: 12px;
@@ -1370,7 +1372,7 @@
         border: 1px solid transparent;
         transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
         white-space: nowrap;
-        min-height: 34px;
+        min-height: 44px;
       }
 
       .tweak-btn:hover {
@@ -1679,7 +1681,7 @@
         flex-shrink: 0;
         scroll-snap-align: start;
         padding: 10px 18px;
-        min-height: 40px;
+        min-height: 44px;
         border-radius: var(--r-pill);
         background: var(--surf-glass-20);
         border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1728,6 +1730,7 @@
         text-transform: uppercase;
         color: var(--brand-cyan);
         text-align: center;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
       }
 
       .home-cover {
@@ -1780,6 +1783,7 @@
         color: #EAF0FF;
         text-wrap: balance;
         line-height: 1.15;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
         transition: opacity var(--t-fast);
       }
 
@@ -1790,6 +1794,7 @@
         letter-spacing: 0.06em;
         text-transform: uppercase;
         text-wrap: balance;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.50);
         transition: opacity var(--t-fast);
       }
 
@@ -2014,10 +2019,12 @@
 
       .home-tf-close {
         position: absolute;
-        top: 16px;
-        right: 16px;
-        width: 32px;
-        height: 32px;
+        top: 10px;
+        right: 10px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
         border-radius: var(--r-pill);
         background: rgba(255, 255, 255, 0.10);
         border: 1px solid rgba(255, 255, 255, 0.14);
