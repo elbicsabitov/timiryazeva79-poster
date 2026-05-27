@@ -1443,6 +1443,218 @@
         font-size: 14px;
         color: var(--text-quat);
       }
+
+      /* ---- Flow Map page (#/map) ------------------------------------------ */
+
+      .map-page {
+        padding: 32px 0 60px;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .map-internal-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        background: var(--surf-glass-12);
+        border-radius: var(--r-pill);
+        color: var(--brand-cyan);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        border: 1px solid rgba(86, 175, 215, 0.25);
+      }
+
+      .map-heading {
+        font-size: 56px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        display: inline-block;
+        color: var(--text-pri);
+        line-height: 1.1;
+        text-wrap: balance;
+        margin-bottom: 16px;
+      }
+
+      @media (max-width: 768px) {
+        .map-heading { font-size: 36px; }
+      }
+
+      .map-subhead {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--text-sec);
+        max-width: 720px;
+        text-wrap: balance;
+        line-height: 1.55;
+        margin-bottom: 24px;
+      }
+
+      .map-quick-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 40px;
+      }
+
+      .map-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        background: var(--surf-glass-12);
+        border-radius: var(--r-pill);
+        color: var(--text-sec);
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid rgba(255,255,255,0.10);
+      }
+
+      /* Card grid */
+      .map-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      @media (max-width: 1024px) {
+        .map-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      @media (max-width: 640px) {
+        .map-grid { grid-template-columns: 1fr; gap: 16px; }
+      }
+
+      /* Individual card */
+      .map-card {
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 220px;
+        text-decoration: none;
+        color: var(--text-pri);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(0,0,0,0.15);
+        transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    border-color 0.2s;
+        cursor: pointer;
+        /* reset button defaults when used as button */
+        font: inherit;
+        width: 100%;
+        text-align: left;
+      }
+
+      .map-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.30);
+        border-color: var(--brand-cyan);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .map-card:hover {
+          transform: none;
+        }
+      }
+
+      .map-card:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      /* Player card has always-visible accent ring */
+      .map-card--player {
+        border: 1.5px solid rgba(255,255,255,0.35);
+        position: relative;
+      }
+
+      .map-card--player:hover {
+        border-color: var(--brand-cyan);
+      }
+
+      /* Thumbnail — top 60% */
+      .map-card-thumb {
+        position: relative;
+        height: 144px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      @media (max-width: 640px) {
+        .map-card-thumb { height: 120px; }
+      }
+
+      .map-card-thumb svg {
+        pointer-events: none;
+      }
+
+      /* Play badge on player card */
+      .map-card-play-badge {
+        position: absolute;
+        bottom: 10px;
+        right: 12px;
+        background: rgba(255,255,255,0.20);
+        border: 1px solid rgba(255,255,255,0.35);
+        border-radius: var(--r-pill);
+        color: var(--text-pri);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 4px 10px;
+        line-height: 1.4;
+        pointer-events: none;
+      }
+
+      /* Content area — bottom 40% */
+      .map-card-body {
+        flex: 1;
+        padding: 16px 20px;
+        background: var(--surf-glass-12);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .map-card-title {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--text-pri);
+        line-height: 1.2;
+        text-wrap: balance;
+      }
+
+      @media (min-width: 1024px) {
+        .map-card-title { font-size: 24px; }
+      }
+
+      .map-card-subtitle {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--text-sec);
+        line-height: 1.4;
+        text-wrap: pretty;
+      }
+
+      @media (min-width: 1024px) {
+        .map-card-subtitle { font-size: 15px; }
+      }
+
+      /* ---- hide-flow-map CSS rules ---------------------------------------- */
+
+      html[data-hide-flow-map="true"] [data-page="map"] {
+        display: none !important;
+      }
+
+      html[data-hide-flow-map="true"] [data-route="#/map"] {
+        display: none;
+      }
     }
 
     /* =========================================================================
@@ -1969,9 +2181,234 @@
 
       <!-- Page: Карта флоу (internal hub / flow map) -->
       <section data-page="map" aria-labelledby="page-map-heading">
-        <h1 id="page-map-heading" class="page-stub-heading">Карта флоу</h1>
-        <p class="page-stub-hint">Обзор всех экранов — внутренний режим просмотра. Task #5 заполнит этот экран.</p>
-        <div class="page-content"></div>
+        <div class="map-page">
+
+          <!-- Internal review badge -->
+          <div class="map-internal-badge" aria-label="Только для внутреннего обзора">INTERNAL — обзор макетов</div>
+
+          <!-- Heading -->
+          <h1 id="page-map-heading" class="map-heading">Карта флоу — Город ФМ</h1>
+
+          <!-- Subhead -->
+          <p class="map-subhead">Прототип навигации. 7 экранов · кликни любой, чтобы открыть. Внутренний обзор — скрыть в проде через панель Tweaks.</p>
+
+          <!-- Quick-stats chips -->
+          <div class="map-quick-chips" aria-label="Сводка прототипа">
+            <span class="map-chip">7 экранов</span>
+            <span class="map-chip">Cinema + Warm</span>
+            <span class="map-chip">Web · Mobile · TV · CarPlay-ready</span>
+          </div>
+
+          <!-- 7-card grid -->
+          <div class="map-grid" role="list">
+
+            <!-- Card 1: Главная (#/home) -->
+            <a
+              class="map-card"
+              href="#/home"
+              role="listitem"
+              aria-label="Открыть Главная"
+            >
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+                <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
+                  <!-- 5 filter chips -->
+                  <rect x="8" y="8" width="24" height="10" rx="5" fill="rgba(255,255,255,0.25)"/>
+                  <rect x="36" y="8" width="30" height="10" rx="5" fill="rgba(255,255,255,0.18)"/>
+                  <rect x="70" y="8" width="20" height="10" rx="5" fill="rgba(255,255,255,0.18)"/>
+                  <rect x="94" y="8" width="28" height="10" rx="5" fill="rgba(255,255,255,0.18)"/>
+                  <rect x="126" y="8" width="26" height="10" rx="5" fill="rgba(255,255,255,0.18)"/>
+                  <!-- 3×3 station tile grid -->
+                  <rect x="8"   y="26" width="38" height="20" rx="4" fill="rgba(255,255,255,0.20)"/>
+                  <rect x="51"  y="26" width="38" height="20" rx="4" fill="rgba(255,255,255,0.20)"/>
+                  <rect x="94"  y="26" width="38" height="20" rx="4" fill="rgba(255,255,255,0.20)"/>
+                  <rect x="8"   y="50" width="38" height="20" rx="4" fill="rgba(255,255,255,0.16)"/>
+                  <rect x="51"  y="50" width="38" height="20" rx="4" fill="rgba(86,175,215,0.5)"/>
+                  <rect x="94"  y="50" width="38" height="20" rx="4" fill="rgba(255,255,255,0.16)"/>
+                  <rect x="8"   y="74" width="38" height="20" rx="4" fill="rgba(255,255,255,0.12)"/>
+                  <rect x="51"  y="74" width="38" height="20" rx="4" fill="rgba(255,255,255,0.12)"/>
+                  <rect x="94"  y="74" width="38" height="20" rx="4" fill="rgba(255,255,255,0.12)"/>
+                </svg>
+              </div>
+              <div class="map-card-body">
+                <div class="map-card-title">Главная</div>
+                <div class="map-card-subtitle">Подборки станций + центр-обложка + filter chips</div>
+              </div>
+            </a>
+
+            <!-- Card 2: Подборки (#/podborki) -->
+            <a
+              class="map-card"
+              href="#/podborki"
+              role="listitem"
+              aria-label="Открыть Подборки"
+            >
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+                <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
+                  <!-- 5 tall vertical stripes with rotated labels -->
+                  <rect x="4"   y="8" width="24" height="84" rx="6" fill="rgba(255,255,255,0.30)"/>
+                  <rect x="33"  y="8" width="28" height="84" rx="6" fill="rgba(255,255,255,0.22)"/>
+                  <rect x="66"  y="8" width="30" height="84" rx="6" fill="rgba(86,175,215,0.55)"/>
+                  <rect x="101" y="8" width="26" height="84" rx="6" fill="rgba(255,255,255,0.22)"/>
+                  <rect x="132" y="8" width="24" height="84" rx="6" fill="rgba(255,255,255,0.18)"/>
+                  <!-- Rotated labels -->
+                  <text x="16"  y="60" font-family="Onest,sans-serif" font-size="7" font-weight="700" fill="rgba(255,255,255,0.9)" transform="rotate(-90,16,60)" text-anchor="middle">POP</text>
+                  <text x="47"  y="64" font-family="Onest,sans-serif" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" transform="rotate(-90,47,64)" text-anchor="middle">K-POP</text>
+                  <text x="81"  y="64" font-family="Onest,sans-serif" font-size="7" font-weight="700" fill="rgba(255,255,255,0.95)" transform="rotate(-90,81,64)" text-anchor="middle">CHILL</text>
+                  <text x="114" y="68" font-family="Onest,sans-serif" font-size="5.5" font-weight="700" fill="rgba(255,255,255,0.85)" transform="rotate(-90,114,68)" text-anchor="middle">ДИСКАЧ 90х</text>
+                  <text x="144" y="64" font-family="Onest,sans-serif" font-size="5.5" font-weight="700" fill="rgba(255,255,255,0.75)" transform="rotate(-90,144,64)" text-anchor="middle">CITY SHOW</text>
+                </svg>
+              </div>
+              <div class="map-card-body">
+                <div class="map-card-title">Подборки</div>
+                <div class="map-card-subtitle">Gallery tiles по Figma · POP / K-POP / CHILL / ДИСКАЧ 90-х</div>
+              </div>
+            </a>
+
+            <!-- Card 3: Медиатека (#/library) -->
+            <a
+              class="map-card"
+              href="#/library"
+              role="listitem"
+              aria-label="Открыть Медиатека"
+            >
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+                <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
+                  <!-- 2×2 album covers + ad slot right -->
+                  <rect x="8"  y="12" width="44" height="32" rx="5" fill="rgba(255,255,255,0.28)"/>
+                  <rect x="57" y="12" width="44" height="32" rx="5" fill="rgba(86,175,215,0.45)"/>
+                  <rect x="8"  y="50" width="44" height="32" rx="5" fill="rgba(255,255,255,0.22)"/>
+                  <rect x="57" y="50" width="44" height="32" rx="5" fill="rgba(255,255,255,0.22)"/>
+                  <!-- Ad slot right -->
+                  <rect x="107" y="12" width="44" height="70" rx="5" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="3 3"/>
+                  <text x="129" y="51" font-family="Onest,sans-serif" font-size="7" fill="rgba(255,255,255,0.45)" text-anchor="middle">AD</text>
+                </svg>
+              </div>
+              <div class="map-card-body">
+                <div class="map-card-title">Медиатека</div>
+                <div class="map-card-subtitle">2-row grid + ad slot · треки и плейлисты</div>
+              </div>
+            </a>
+
+            <!-- Card 4: Артист (#/artist) -->
+            <a
+              class="map-card"
+              href="#/artist"
+              role="listitem"
+              aria-label="Открыть Избранное — Артист"
+            >
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+                <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
+                  <!-- Circle avatar -->
+                  <circle cx="80" cy="36" r="24" fill="rgba(255,255,255,0.28)"/>
+                  <circle cx="80" cy="36" r="12" fill="rgba(86,175,215,0.5)"/>
+                  <!-- 3 track rows below -->
+                  <rect x="24" y="68" width="112" height="8" rx="4" fill="rgba(255,255,255,0.25)"/>
+                  <rect x="24" y="80" width="88"  height="8" rx="4" fill="rgba(255,255,255,0.18)"/>
+                  <rect x="24" y="92" width="96"  height="8" rx="4" fill="rgba(255,255,255,0.14)"/>
+                </svg>
+              </div>
+              <div class="map-card-body">
+                <div class="map-card-title">Избранное — Артист</div>
+                <div class="map-card-subtitle">Профиль артиста · фото + треки + станции</div>
+              </div>
+            </a>
+
+            <!-- Card 5: Страница трека (#/track) — warm gradient -->
+            <a
+              class="map-card"
+              href="#/track"
+              role="listitem"
+              aria-label="Открыть Страница трека"
+            >
+              <div class="map-card-thumb" style="background: linear-gradient(120deg, #2a1547 0%, #b14e2c 50%, #d6883f 100%);">
+                <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
+                  <!-- Large square cover -->
+                  <rect x="44" y="8" width="72" height="72" rx="10" fill="rgba(255,255,255,0.25)"/>
+                  <rect x="56" y="20" width="48" height="48" rx="7" fill="rgba(255,255,255,0.18)"/>
+                  <!-- 4 action dots below -->
+                  <circle cx="52"  cy="90" r="5" fill="rgba(255,255,255,0.40)"/>
+                  <circle cx="72"  cy="90" r="5" fill="rgba(255,255,255,0.28)"/>
+                  <circle cx="92"  cy="90" r="5" fill="rgba(255,255,255,0.28)"/>
+                  <circle cx="112" cy="90" r="5" fill="rgba(255,255,255,0.28)"/>
+                </svg>
+              </div>
+              <div class="map-card-body">
+                <div class="map-card-title">Страница трека</div>
+                <div class="map-card-subtitle">Monte Carlo adapted · cover + lyrics + история</div>
+              </div>
+            </a>
+
+            <!-- Card 6: Избранное (#/favorites) -->
+            <a
+              class="map-card"
+              href="#/favorites"
+              role="listitem"
+              aria-label="Открыть Раздел Избранное"
+            >
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+                <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
+                  <!-- 4 horizontal list rows with mini-cover + line -->
+                  <rect x="8"  y="12" width="16" height="16" rx="3" fill="rgba(255,255,255,0.30)"/>
+                  <rect x="30" y="14" width="80" height="6"  rx="3" fill="rgba(255,255,255,0.25)"/>
+                  <rect x="30" y="24" width="52" height="4"  rx="2" fill="rgba(255,255,255,0.15)"/>
+
+                  <rect x="8"  y="36" width="16" height="16" rx="3" fill="rgba(86,175,215,0.45)"/>
+                  <rect x="30" y="38" width="88" height="6"  rx="3" fill="rgba(255,255,255,0.25)"/>
+                  <rect x="30" y="48" width="60" height="4"  rx="2" fill="rgba(255,255,255,0.15)"/>
+
+                  <rect x="8"  y="60" width="16" height="16" rx="3" fill="rgba(255,255,255,0.22)"/>
+                  <rect x="30" y="62" width="72" height="6"  rx="3" fill="rgba(255,255,255,0.22)"/>
+                  <rect x="30" y="72" width="48" height="4"  rx="2" fill="rgba(255,255,255,0.12)"/>
+
+                  <rect x="8"  y="84" width="16" height="16" rx="3" fill="rgba(255,255,255,0.16)"/>
+                  <rect x="30" y="86" width="64" height="6"  rx="3" fill="rgba(255,255,255,0.16)"/>
+                  <rect x="30" y="96" width="40" height="4"  rx="2" fill="rgba(255,255,255,0.10)"/>
+                </svg>
+              </div>
+              <div class="map-card-body">
+                <div class="map-card-title">Раздел Избранное</div>
+                <div class="map-card-subtitle">Список треков, артистов, плейлистов, станций</div>
+              </div>
+            </a>
+
+            <!-- Card 7: Плеер (opens overlay, warm gradient) -->
+            <button
+              class="map-card map-card--player"
+              type="button"
+              role="listitem"
+              data-card-route="player"
+              aria-label="Открыть Плеер"
+            >
+              <div class="map-card-thumb" style="background: linear-gradient(120deg, #2a1547 0%, #b14e2c 50%, #d6883f 100%);">
+                <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
+                  <!-- Blurred backdrop layers -->
+                  <rect x="0" y="0" width="160" height="100" fill="rgba(0,0,0,0.15)"/>
+                  <rect x="12" y="12" width="136" height="76" rx="8" fill="rgba(255,255,255,0.08)"/>
+                  <!-- Center cover -->
+                  <rect x="44" y="16" width="72" height="50" rx="8" fill="rgba(255,255,255,0.22)"/>
+                  <!-- Transport: prev / pause / next -->
+                  <polygon points="58,74 58,86 66,80" fill="rgba(255,255,255,0.55)"/>
+                  <rect x="72"  y="74" width="4" height="12" rx="2" fill="rgba(255,255,255,0.80)"/>
+                  <rect x="79"  y="74" width="4" height="12" rx="2" fill="rgba(255,255,255,0.80)"/>
+                  <polygon points="94,80 86,74 86,86" fill="rgba(255,255,255,0.55)"/>
+                  <!-- Mini progress bar -->
+                  <rect x="20" y="70" width="120" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+                  <rect x="20" y="70" width="40"  height="3" rx="1.5" fill="rgba(86,175,215,0.85)"/>
+                </svg>
+                <!-- Play badge -->
+                <div class="map-card-play-badge" aria-hidden="true">▶ Открыть</div>
+              </div>
+              <div class="map-card-body">
+                <div class="map-card-title">Плеер</div>
+                <div class="map-card-subtitle">Mini bar + full Monte Carlo overlay (открыть из любого экрана)</div>
+              </div>
+            </button>
+
+          </div>
+          <!-- /.map-grid -->
+
+        </div>
+        <!-- /.map-page -->
       </section>
 
       <!-- Page: Главная -->
@@ -2718,6 +3155,29 @@
         </div>
       </div>
 
+      <!-- Карта флоу group -->
+      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-flow-map">
+        <div class="tweaks-group-label" id="tweak-label-flow-map">Карта флоу</div>
+        <div class="tweaks-row" role="group" aria-label="Видимость карты флоу">
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="hide-flow-map"
+            data-value="false"
+            aria-pressed="true"
+            aria-label="Показать карту флоу (по умолчанию)"
+          >Показать</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="hide-flow-map"
+            data-value="true"
+            aria-pressed="false"
+            aria-label="Скрыть карту флоу в проде"
+          >Скрыть</button>
+        </div>
+      </div>
+
     </div>
     <!-- /.tweaks-body -->
   </aside>
@@ -2749,6 +3209,7 @@
         homeVariant:  'gorod-fm.home-variant',
         lastRoute:    'gorod-fm.last-route',
         playerView:   'gorod-fm.player-view',
+        hideFlowMap:  'gorod-fm.hide-flow-map',
       };
 
       const VALID_ROUTES = ['#/map', '#/home', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites'];
@@ -2831,7 +3292,12 @@
       }
 
       window.addEventListener('hashchange', function () {
-        const route = routeFromHash(window.location.hash) || DEFAULT_ROUTE;
+        var route = routeFromHash(window.location.hash) || DEFAULT_ROUTE;
+        // If hide-flow-map is active and user somehow lands on #/map, redirect to #/home
+        if (route === '#/map' && document.documentElement.getAttribute('data-hide-flow-map') === 'true') {
+          window.location.hash = '#/home';
+          return;
+        }
         activatePage(route);
       });
 
@@ -2994,14 +3460,36 @@
         lsSet(LS_KEYS.homeVariant, variant);
       }
 
+      function applyHideFlowMap(hidden) {
+        // hidden is a boolean-ish string: 'true' or 'false'
+        var boolVal = (hidden === true || hidden === 'true');
+        if (boolVal) {
+          document.documentElement.setAttribute('data-hide-flow-map', 'true');
+        } else {
+          document.documentElement.removeAttribute('data-hide-flow-map');
+        }
+        updateTweakButtonStates('hide-flow-map', boolVal ? 'true' : 'false');
+        lsSet(LS_KEYS.hideFlowMap, boolVal ? 'true' : 'false');
+      }
+
       // Delegate click on all tweak buttons
       document.querySelectorAll('.tweak-btn[data-tweak]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           const group = btn.getAttribute('data-tweak');
           const value = btn.getAttribute('data-value');
-          if (group === 'theme')        applyTheme(value);
+          if (group === 'theme')             applyTheme(value);
           else if (group === 'surface')      applySurface(value);
           else if (group === 'home-variant') applyHomeVariant(value);
+          else if (group === 'hide-flow-map') applyHideFlowMap(value);
+        });
+      });
+
+      // Wire player card button on #/map — clicks open the player overlay
+      document.querySelectorAll('[data-card-route="player"]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          openPlayer();
         });
       });
 
@@ -3098,11 +3586,20 @@
         var savedVariant = lsGet(LS_KEYS.homeVariant, 'fab');
         applyHomeVariant(savedVariant);
 
+        // 3b. Restore hide-flow-map
+        var savedHideFlowMap = lsGet(LS_KEYS.hideFlowMap, 'false');
+        applyHideFlowMap(savedHideFlowMap);
+
         // 4. Resolve initial route:
         //    current hash → saved last route → default #/map
         var hashRoute    = routeFromHash(window.location.hash);
         var savedRoute   = lsGet(LS_KEYS.lastRoute, null);
         var initialRoute = hashRoute || (routeFromHash(savedRoute) ? savedRoute : DEFAULT_ROUTE);
+
+        // If hide-flow-map is active and route would land on #/map, redirect to #/home
+        if (savedHideFlowMap === 'true' && initialRoute === '#/map') {
+          initialRoute = '#/home';
+        }
 
         // Ensure the URL hash matches
         if (window.location.hash !== initialRoute) {
