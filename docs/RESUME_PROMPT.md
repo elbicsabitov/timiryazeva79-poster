@@ -1,18 +1,17 @@
 # Resume Design — Активация сессии
 
-## ⚡ ACTIVE WORK (2026-05-27): Город ФМ HTML SPA — kickoff
+## ⚡ ACTIVE WORK (2026-05-27): Город ФМ HTML SPA — v1 built, ждём заказчика
 
-Новый клиент — **онлайн-радио «Город ФМ»**. Hi-fi clickable single-file HTML SPA, 7 экранов + Monte Carlo-style player overlay + flow map, адаптивный к web/mobile/TV/CarPlay. По образцу design-project's `twinr-liquid-glass.html` / `showcase-aggregator.html` (НЕ paws — только pattern). При `resume design` выполни:
+`designs/gorod-fm.html` (10258 lines) + `designs/gorod-fm-standalone.html` shipped via 13 atomic commits on master. 7 routes, full Player overlay, Tweaks panel (theme/surface/A-B home variant/hide-flow-map). Holy Grail compliant.
 
-1. `cd ~/Desktop/design-project` · `git fetch && git pull` · `git log --oneline -5` (kickoff commit должен быть на топе)
-2. **Прочитай ПЕРВЫМ:** `docs/superpowers/HANDOFF-gorod-fm.md` — единый источник истины: figma URLs/node IDs, tokens, screen list, persistent components, adaptable surface architecture, NEXT, carry-forward.
-3. **Прочитай:** `.claude-memory/session_2026_05_27_gorod_fm_kickoff.md` — что было в kickoff-сессии, что НЕ написано.
-4. **Скриншоты Figma** preserved в `.scratch/gorod-fm-research/` (3 PNG: gorod-home + MC-desktop + MC-mobile). Photo reference: `~/Desktop/photo_2026-05-27_17-27-05.jpg`.
-5. **Master direct** convention (НЕ feature branch). Atomic commits per screen.
-6. Invoke `superpowers:subagent-driven-development`. **One implementer at a time** (shared git index — не параллелить). TaskList state в HANDOFF — entry point task #4 (tokens write в файл) → #5 Flow Map → #6 Главная → ... → #15 standalone.
-7. **Carry-forward (полностью в HANDOFF):** NO paws data; Onest substitute for SF Pro/Gilroy/Actay Wide (Holy Grail compliant, fake-wide через `scaleX(1.05)`); asset placeholder V1 (Figma URLs expire 7d); Tweaks single-file (не N тематических); themes dual (cinema/warm) + light Phase 2; `data-surface="web|mobile|tv|carplay"`; round-button-UX «не додумали» → 2 Tweak варианта.
+Pending: client feedback (GOROD-017), real assets when client provides (GOROD-016), Next.js handoff after approval (GOROD-018). Optional: final WCAG verification pass (GOROD-019).
 
-Продолжай автономно — не жди подтверждения. Holy Grail Часть 9 чек-лист перед `done`/коммитом/отправкой заказчику.
+При `resume design`:
+1. `cd ~/Desktop/design-project` · `git fetch && git pull` · `git log --oneline -10` (verify Город ФМ commits on top)
+2. Read `docs/superpowers/HANDOFF-gorod-fm.md` + `docs/superpowers/REVIEW-gorod-fm-2026-05-27.md` (review findings)
+3. Read `.claude-memory/session_2026_05_27_gorod_fm_v1.md` (build session log)
+4. If client has provided feedback or assets → apply via new fix wave on master, atomic commits per change
+5. If no feedback yet → check DEBT.md other client items (Twinr Phase 4, bootstrap-port resume, etc)
 
 ---
 

@@ -1,29 +1,30 @@
 # DEBT — Дизайн-долг
 
-## ⚡ Город ФМ (2026-05-27) — АКТИВНАЯ РАБОТА (kickoff)
+## ⚡ Город ФМ (2026-05-27) — v1 SHIPPED, ждём заказчика
 
-Новый клиент — онлайн-радио платформа. Single-file HTML SPA по образцу `twinr-liquid-glass.html` / `showcase-aggregator.html`. 7 экранов + Monte Carlo-style player + flow map. Адаптивный для web/mobile/TVs/CarPlay future. Figma `ODcQ2ERWYi3w504Z86TOy3` (Город ФМ) + `l38kZVrZXzdNlBIIOLFX4g` (Monte Carlo player reference). **Полный handoff: `docs/superpowers/HANDOFF-gorod-fm.md`.** NO paws data.
+Новый клиент — онлайн-радио платформа. `designs/gorod-fm.html` (10258 lines) + `designs/gorod-fm-standalone.html` shipped via 13 atomic commits on master. 7 маршрутов, Player overlay, Tweaks (cinema/warm/light + surface + A-B home + hide-flow-map). Holy Grail compliant. Figma `ODcQ2ERWYi3w504Z86TOy3` (Город ФМ) + `l38kZVrZXzdNlBIIOLFX4g` (Monte Carlo player reference). **Полный handoff: `docs/superpowers/HANDOFF-gorod-fm.md`.** NO paws data.
 
 | ID | Задача | Статус |
 |----|--------|--------|
 | GOROD-001 | Figma context acquired (gorod-fm 2384:6054 + Monte Carlo 3314:13423 + 3407:2224) | done |
 | GOROD-002 | Brand tokens extracted (cinema gradient + glass-20 + tile-tr-60 + Monte Carlo backdrop-blur 30px + Onest substitute) | done |
 | GOROD-003 | Handoff `docs/superpowers/HANDOFF-gorod-fm.md` + session log + memory entry + RESUME swap | done |
-| GOROD-004 | Write `designs/gorod-fm.html` skeleton — `<head>` (meta + Onest fonts + inline CSS @layer reset/tokens/base/layout/components/surfaces/utilities) + `<body>` scaffold (bg-layers ×2 + topbar + sidebar + main + player-mini + player-full + mobile-tabbar + tweaks) | pending |
-| GOROD-005 | Build Flow Map (`#/map` index hub — карточки всех экранов) | pending |
-| GOROD-006 | Build Главная (`#/home` — stations grid + filter chips + center cover + 2 варианта corner-FAB/sidebar-drawer Tweak) | pending |
-| GOROD-007 | Build Подборки (`#/podborki` — gallery tiles по Figma 2384:6054, 245/299/310/309/373 widths, tile-tr-60 + label rotated -90°) | pending |
-| GOROD-008 | Build Медиатека (`#/library` — 2-row grid + ad slot, mobile single col) | pending |
-| GOROD-009 | Build Избранное (артист profile + раздел list) | pending |
-| GOROD-010 | Build Страница трека (Monte Carlo desktop + mobile carousel + lyrics + история, adapt warm → cinema tokens) | pending |
-| GOROD-011 | Build Player overlay (mini bar bottom + full-screen Monte-Carlo-style overlay) | pending |
-| GOROD-012 | Mobile responsive 375/414/768 — fix gallery (заказчик: «стремно») + Monte Carlo mobile player | pending |
-| GOROD-013 | Adaptable surface architecture (`data-surface="web/mobile/tv/carplay"`) | pending |
-| GOROD-014 | Anti-slop + WCAG AA pass via `compound-engineering:design:design-implementation-reviewer` (Holy Grail Часть 9) | pending |
-| GOROD-015 | Standalone build script `tools/build_gorod_fm_standalone.py` | pending |
+| GOROD-004 | Write `designs/gorod-fm.html` skeleton — `<head>` (meta + Onest fonts + inline CSS @layer reset/tokens/base/layout/components/surfaces/utilities) + `<body>` scaffold (bg-layers ×2 + topbar + sidebar + main + player-mini + player-full + mobile-tabbar + tweaks) | done |
+| GOROD-005 | Build Flow Map (`#/map` index hub — карточки всех экранов) | done |
+| GOROD-006 | Build Главная (`#/home` — stations grid + filter chips + center cover + 2 варианта corner-FAB/sidebar-drawer Tweak) | done |
+| GOROD-007 | Build Подборки (`#/podborki` — gallery tiles по Figma 2384:6054, 245/299/310/309/373 widths, tile-tr-60 + label rotated -90°) | done |
+| GOROD-008 | Build Медиатека (`#/library` — 2-row grid + ad slot, mobile single col) | done |
+| GOROD-009 | Build Избранное (артист profile + раздел list) | done |
+| GOROD-010 | Build Страница трека (Monte Carlo desktop + mobile carousel + lyrics + история, adapt warm → cinema tokens) | done |
+| GOROD-011 | Build Player overlay (mini bar bottom + full-screen Monte-Carlo-style overlay) | done |
+| GOROD-012 | Mobile responsive 375/414/768 — fix gallery (заказчик: «стремно») + Monte Carlo mobile player | done |
+| GOROD-013 | Adaptable surface architecture (`data-surface="web/mobile/tv/carplay"`) | done |
+| GOROD-014 | Anti-slop + WCAG AA pass via `compound-engineering:design:design-implementation-reviewer` (Holy Grail Часть 9) | done (review.md committed; fix wave applied 2 commits) |
+| GOROD-015 | Standalone build script `tools/build_gorod_fm_standalone.py` | done |
 | GOROD-016 | Real assets Город ФМ (album covers + station artwork + artist photos) когда клиент пришлёт | pending |
 | GOROD-017 | Показ заказчику + фидбек по варианту (cinema / warm / light Tweaks) | pending |
 | GOROD-018 | После утверждения: Next.js + shadcn/ui dev-handoff | pending |
+| GOROD-019 | WCAG: improve `--text-quat` contrast (current is 1.95:1 on cinema bg; fix wave bumped via gradient darkening + text-shadow but consider explicit dark overlay behind text blocks if заказчик flags it) — verify with final-show contrast pass | pending |
 
 ---
 

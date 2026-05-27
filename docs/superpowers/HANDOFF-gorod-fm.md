@@ -1,8 +1,14 @@
-# HANDOFF — Город ФМ HTML SPA (kickoff)
+# HANDOFF — Город ФМ HTML SPA
 
-**Updated:** 2026-05-27 17:36
-**Resume command:** `resume design` → RESUME_PROMPT.md routes here → continue from `## NEXT`
+**Updated:** 2026-05-27 (v1 shipped)
+**Resume command:** `resume design` → RESUME_PROMPT.md routes here → next = client feedback loop
 **Branch:** `master` (direct push convention — НЕ feature branch; bootstrap-port worktree остаётся как было, не трогать)
+
+## What shipped 2026-05-27
+
+13 commits on master. `designs/gorod-fm.html` (10258 lines) built from scratch — 7 routes, Player overlay, Tweaks panel (cinema/warm/light themes + web/mobile/tv/carplay surfaces + A-B home variant + hide-flow-map). Holy Grail compliant. Standalone: `designs/gorod-fm-standalone.html`.
+
+HEAD at `5d58e43`. Full session log: `.claude-memory/session_2026_05_27_gorod_fm_v1.md`.
 
 ## What this is
 
@@ -130,44 +136,33 @@ CSS Custom Properties + container queries для responsive primitives. CSS laye
 
 ## NEXT (resume here)
 
-1. `cd ~/Desktop/design-project` · `git fetch && git pull` · `git log --oneline -5` (kickoff commit `gorod-fm: kickoff…` должен быть на топе).
-2. **Read this file** + `.claude-memory/session_2026_05_27_gorod_fm_kickoff.md` + `.scratch/gorod-fm-research/*.png`.
-3. Invoke `superpowers:subagent-driven-development`. **One implementer at a time** (shared git index — не параллелить).
-4. **Build `designs/gorod-fm.html`** — single-file SPA. Skeleton:
-   - `<head>`: meta + Onest Google Fonts link + inline CSS (`@layer reset/tokens/base/layout/components/surfaces/utilities`)
-   - `<body>`:
-     - 2× `.bg-layer` (cinema + warm — animated swap by `[data-theme]`)
-     - `<header class="topbar">` (`[data-surface=web]:block; mobile:hidden`)
-     - `<aside class="sidebar">` (web only)
-     - `<main>` containing 7 `<section data-page="X">`, only `[data-page-current]` visible
-     - `.player-mini` + `.player-full` (data-expanded toggle)
-     - `<nav class="mobile-tabbar">` (mobile only)
-     - `.tweaks` (internal review panel)
-   - `<script>`: hash router + player toggle + tweak handler + localStorage persist
-5. Build screens 1→7 per build order. Atomic commits per screen.
-6. Mobile responsive 375/414/768/1024 — fix gallery (user complaint), mobile player = Monte Carlo overlay.
-7. Standalone build `tools/build_gorod_fm_standalone.py` (base64 inline backdrop + any local PNGs).
-8. Anti-slop pass via `compound-engineering:design:design-implementation-reviewer` (Holy Grail Часть 9 чек-лист).
-9. Update `DEBT.md` GOROD-004..018 as you progress.
-10. Session log в `.claude-memory/session_2026_05_27_gorod_fm_v1.md`.
+1. `cd ~/Desktop/design-project` · `git fetch && git pull` · `git log --oneline -10` (verify v1 commits on top)
+2. **Read this file** + `.claude-memory/session_2026_05_27_gorod_fm_v1.md` + `docs/superpowers/REVIEW-gorod-fm-2026-05-27.md` (review findings)
+3. **If client has provided feedback or assets** → apply via new fix wave on master, atomic commits per change
+4. **If no feedback yet** → check DEBT.md other client items (Twinr Phase 4 via HANDOFF-bootstrap-port.md, etc.)
+5. Pending gates: GOROD-016 (real assets), GOROD-017 (show + feedback), GOROD-018 (Next.js handoff after approval), GOROD-019 (optional WCAG final pass)
 
-## TaskList state (at kickoff handoff)
+## TaskList state (v1 shipped)
 
 - ✅ #1 Acquire Figma context (gorod-fm + Monte Carlo metadata/screenshots/design_context)
 - ✅ #2 Probe other Город ФМ screens (none exist beyond 2384:6054 — design rest ourselves)
 - ✅ #3 Brief Questions Gate (брифа достаточно — Figma + photo + screen list + future surfaces)
-- ⬜ #4 Design tokens — **entry point next session**: переписать tokens из этого doc в CSS блок файла
-- ⬜ #5 Build Flow Map / Index page
-- ⬜ #6 Build Главная
-- ⬜ #7 Build Подборки
-- ⬜ #8 Build Медиатека
-- ⬜ #9 Build Избранное (артист + раздел)
-- ⬜ #10 Build Страница трека
-- ⬜ #11 Build Player overlay (mini bar + full Monte Carlo)
-- ⬜ #12 Mobile responsive pass
-- ⬜ #13 Adaptable surface architecture
-- ⬜ #14 Anti-slop + WCAG via reviewer agent
-- ⬜ #15 Standalone build + commit + DEBT update
+- ✅ #4 Design tokens — written to CSS @layer tokens block in gorod-fm.html
+- ✅ #5 Build Flow Map / Index page (`#/map` — 7-card hub)
+- ✅ #6 Build Главная (`#/home` — chips + hero + 12 stations + FAB→sheet/drawer A/B tweak)
+- ✅ #7 Build Подборки (`#/podborki` — 9 tiles per Figma 2384:6054 + mobile 2-row carousel)
+- ✅ #8 Build Медиатека (`#/library` — 2-row grid + ad slot variant)
+- ✅ #9 Build Избранное (артист профиль `#/artist` + раздел список `#/favorites`)
+- ✅ #10 Build Страница трека (`#/track` — Monte Carlo adapted, 3 views + 2 carousels)
+- ✅ #11 Build Player overlay (mini bar bottom + full Monte Carlo overlay, 3 view states + theme swap)
+- ✅ #12 Mobile responsive pass (375/414/768 — gallery fix + Monte Carlo mobile player)
+- ✅ #13 Adaptable surface architecture (`data-surface="web|mobile|tv|carplay"`)
+- ✅ #14 Anti-slop + WCAG via reviewer agent (REVIEW-gorod-fm-2026-05-27.md + 2 fix waves)
+- ✅ #15 Standalone build + commit + DEBT update
+- ⬜ #16 Real assets когда клиент пришлёт (GOROD-016)
+- ⬜ #17 Показ заказчику + фидбек (GOROD-017)
+- ⬜ #18 Next.js + shadcn/ui dev-handoff после утверждения (GOROD-018)
+- ⬜ #19 Optional: final WCAG contrast pass `--text-quat` (GOROD-019)
 
 ## Carry-forward decisions
 
