@@ -118,6 +118,14 @@
         /* — Player accent — cinema default (cyan); warm override below — */
         --player-accent: var(--brand-cyan);
 
+        /* — Figma 2174:422 Главная palette (dark variant) — */
+        --brand-blue-light:    #5168FC;                  /* Figma "blue light" */
+        --tint-blue-light-20:  rgba(81, 104, 252, 0.2);  /* active chip + home player bar */
+        --featured-cta-bg:     #2d2d5d;                  /* purple bar under featured card */
+        --home-bg-base:        #0C0B0B;                  /* dark home background */
+        --tile-shade-strong:   linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
+        --tile-darkening:      rgba(3, 3, 3, 0.35);      /* whole-row darken on home */
+
         /* — Layout geometry — */
         --sidebar-w:    240px;
         --topbar-h:     64px;
@@ -2494,33 +2502,27 @@
         outline-offset: 3px;
       }
 
-      /* Background layers inside tile */
+      /* Background layers inside tile — real photo from Figma 2384:6054 */
       .podborki-tile-bg {
         position: absolute;
         inset: 0;
         z-index: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
       }
 
-      /* --tile-shade overlay for legibility */
+      /* Overlay layer for tiles with two stacked photos (e.g. DFM CHILL tile 9) */
+      .podborki-tile-bg--layer {
+        z-index: 1;
+      }
+
+      /* --tile-shade overlay for legibility (linear gradient over photo) */
       .podborki-tile-shade {
         position: absolute;
         inset: 0;
-        z-index: 1;
-        background: var(--tile-shade);
-      }
-
-      /* Radial top-right glow — genre hue via inline style */
-      .podborki-tile-glow {
-        position: absolute;
-        top: -60px;
-        right: -60px;
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
         z-index: 2;
-        opacity: 0.35;
-        /* color set inline per tile */
-        filter: blur(40px);
+        background: var(--tile-shade);
       }
 
       /* Label container: flex to position rotated text at bottom-right */
@@ -3422,6 +3424,156 @@
         font-weight: 400;
         color: var(--text-quat);
         flex-shrink: 0;
+      }
+
+      /* =========================================================================
+         LIVES PAGE (#/lives) — Figma sidebar item placeholder; live radio grid
+         ========================================================================= */
+
+      .lives-page {
+        padding: 40px 40px 80px;
+        min-height: 100%;
+      }
+
+      .lives-eyebrow {
+        font-family: 'Onest', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--brand-blue-light);
+        margin: 0 0 12px;
+        line-height: 1;
+      }
+
+      .lives-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 56px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        color: var(--text-pri);
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        display: inline-block;
+        text-wrap: balance;
+        margin: 0 0 12px;
+        line-height: 1.0;
+        text-transform: uppercase;
+      }
+
+      .lives-subtitle {
+        font-family: 'Onest', sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        color: var(--text-sec);
+        margin: 0;
+      }
+
+      .lives-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 36px;
+      }
+
+      .lives-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 24px;
+        min-height: 200px;
+        background: var(--surf-glass-12);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        cursor: pointer;
+        transition: transform var(--t-fast), background var(--t-fast), border-color var(--t-fast);
+        text-align: left;
+        color: var(--text-pri);
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .lives-card:hover {
+          transform: translateY(-2px);
+          background: var(--surf-glass-20);
+          border-color: var(--brand-blue-light);
+        }
+      }
+
+      .lives-card:focus-visible {
+        outline: 3px solid var(--brand-blue-light);
+        outline-offset: 3px;
+      }
+
+      .lives-live-pill {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: #ff3b30;
+        color: #ffffff;
+        font-family: 'Onest', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        line-height: 1;
+      }
+
+      .lives-live-dot {
+        width: 8px;
+        height: 8px;
+        background: #ffffff;
+        border-radius: 50%;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .lives-live-dot {
+          animation: lives-live-pulse 1.6s ease-in-out infinite;
+        }
+      }
+
+      @keyframes lives-live-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+
+      .lives-card-name {
+        font-family: 'Onest', sans-serif;
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        color: var(--text-pri);
+        text-transform: uppercase;
+        line-height: 1.1;
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        margin-top: 32px;
+      }
+
+      .lives-card-meta {
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-sec);
+      }
+
+      .lives-now-playing {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+        margin-top: auto;
+        padding-top: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
       }
 
       /* =========================================================================
@@ -5515,21 +5667,23 @@
       <a href="#/home" class="sidebar-logo" aria-label="Город ФМ — на главную">Город.fm</a>
 
       <nav class="sidebar-nav">
-        <!-- Главная -->
+        <!-- Лайвы — Figma item 1 (Player/Music Artist mic icon) -->
         <a
-          href="#/home"
+          href="#/lives"
           class="sidebar-item"
-          data-route="#/home"
-          aria-label="Главная"
+          data-route="#/lives"
+          aria-label="Лайвы"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-            <polyline points="9 22 9 12 15 12 15 22"/>
+            <path d="M12 14a3 3 0 003-3V6a3 3 0 00-6 0v5a3 3 0 003 3z"/>
+            <path d="M19 11a7 7 0 01-14 0"/>
+            <line x1="12" y1="18" x2="12" y2="22"/>
+            <line x1="8" y1="22" x2="16" y2="22"/>
           </svg>
-          Главная
+          Лайвы
         </a>
 
-        <!-- Подборки -->
+        <!-- Подборки — Figma item 2 (Podcast/mic-lines, active on Подборки screen) -->
         <a
           href="#/podborki"
           class="sidebar-item"
@@ -5537,15 +5691,16 @@
           aria-label="Подборки"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="7" height="7"/>
-            <rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/>
+            <rect x="9" y="3" width="6" height="11" rx="3"/>
+            <line x1="11" y1="6" x2="13" y2="6"/>
+            <line x1="11" y1="9" x2="13" y2="9"/>
+            <path d="M5 11a7 7 0 0014 0"/>
+            <line x1="12" y1="18" x2="12" y2="22"/>
           </svg>
           Подборки
         </a>
 
-        <!-- Медиатека -->
+        <!-- Медиатека — Figma item 3 -->
         <a
           href="#/library"
           class="sidebar-item"
@@ -5559,15 +5714,15 @@
           Медиатека
         </a>
 
-        <!-- Избранное -->
+        <!-- Избранное — Figma item 4 (star, routes to Раздел Избранное list) -->
         <a
-          href="#/artist"
+          href="#/favorites"
           class="sidebar-item"
-          data-route="#/artist"
+          data-route="#/favorites"
           aria-label="Избранное"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/>
           </svg>
           Избранное
         </a>
@@ -6223,7 +6378,7 @@
             aria-label="Подборки станций"
           >
 
-            <!-- Tile 1: POP GOLD 2010s — width 245, violet→pink -->
+            <!-- Tile 1: POP GOLD 2010s — width 245 (Figma 2385:1026) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6233,15 +6388,14 @@
               role="listitem"
               aria-label="Открыть подборку POP GOLD 2010s"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #5b2d8e 0%, #c0348a 55%, #e8609a 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-pop-gold-2010s.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #c0348a;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">POP GOLD 2010s</span>
               </div>
             </button>
 
-            <!-- Tile 2: K-POP — width 299, hot-pink→magenta -->
+            <!-- Tile 2: K-POP — width 299 (Figma 2385:1024) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6251,15 +6405,14 @@
               role="listitem"
               aria-label="Открыть подборку K-POP"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #8b005d 0%, #e0007a 50%, #ff4dbc 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-k-pop.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #ff4dbc;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">K-POP</span>
               </div>
             </button>
 
-            <!-- Tile 3: CHILL — width 310, cyan→teal -->
+            <!-- Tile 3: CHILL — width 310 (Figma 2385:1022) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6269,15 +6422,14 @@
               role="listitem"
               aria-label="Открыть подборку CHILL"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #004f6d 0%, #0a8f8a 50%, #00d4c8 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-chill.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #00d4c8;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">CHILL</span>
               </div>
             </button>
 
-            <!-- Tile 4: ДИСКАЧ 90-Х — width 309, yellow→orange -->
+            <!-- Tile 4: ДИСКАЧ 90-Х — width 309 (Figma 2385:1020) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6287,15 +6439,14 @@
               role="listitem"
               aria-label="Открыть подборку ДИСКАЧ 90-Х"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #7a4600 0%, #d4780a 50%, #f5c518 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-discach-90.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #f5c518;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">ДИСКАЧ 90-Х</span>
               </div>
             </button>
 
-            <!-- Tile 5: Z. CITY SHOW — width 373, brand-cyan→brand-blue (Город ФМ feature) -->
+            <!-- Tile 5: Z. CITY SHOW — width 373 (Figma 2385:1018) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6305,15 +6456,14 @@
               role="listitem"
               aria-label="Открыть подборку Z. CITY SHOW"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #1a6bde 0%, #56afd7 50%, #0ea8e8 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-z-city-show.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #56afd7;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">Z. CITY SHOW</span>
               </div>
             </button>
 
-            <!-- Tile 6: VADIM ADAMOV — width 373, deep-purple→indigo -->
+            <!-- Tile 6: VADIM ADAMOV — width 373 (Figma 2385:1016) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6323,15 +6473,14 @@
               role="listitem"
               aria-label="Открыть подборку VADIM ADAMOV"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #1a0840 0%, #3d1e8c 50%, #6b35c8 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-vadim-adamov.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #6b35c8;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">VADIM ADAMOV</span>
               </div>
             </button>
 
-            <!-- Tile 7: DJ PITKIN — width 373, green→teal -->
+            <!-- Tile 7: DJ PITKIN — width 373 (Figma 2385:1014) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6341,33 +6490,31 @@
               role="listitem"
               aria-label="Открыть подборку DJ PITKIN"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #004d2e 0%, #0d8c5a 50%, #00cc7a 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-dj-pitkin.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #00cc7a;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">DJ PITKIN</span>
               </div>
             </button>
 
-            <!-- Tile 8: RADIO CITY — width 373, deep-red→orange (replaces duplicate DFM CHILL) -->
+            <!-- Tile 8: DFM CHILL (base only) — width 373 (Figma 2385:1012) -->
             <button
               class="podborki-tile"
               type="button"
               data-tile="8"
-              data-label="RADIO CITY"
+              data-label="DFM CHILL"
               style="width:373px"
               role="listitem"
-              aria-label="Открыть подборку RADIO CITY"
+              aria-label="Открыть подборку DFM CHILL"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #6a0a00 0%, #c42000 50%, #e84d00 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-dfm-chill-base.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #e84d00;"></div>
               <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">RADIO CITY</span>
+                <span class="podborki-tile-label">DFM CHILL</span>
               </div>
             </button>
 
-            <!-- Tile 9: DFM CHILL — width 373, cyan→deep-blue -->
+            <!-- Tile 9: DFM CHILL (base + overlay) — width 373 (Figma 2385:1033) -->
             <button
               class="podborki-tile"
               type="button"
@@ -6377,9 +6524,9 @@
               role="listitem"
               aria-label="Открыть подборку DFM CHILL"
             >
-              <div class="podborki-tile-bg" style="background: linear-gradient(160deg, #001a45 0%, #0a3a8c 50%, #0d5fcf 100%);"></div>
+              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-dfm-chill-base.png);"></div>
+              <div class="podborki-tile-bg podborki-tile-bg--layer" style="background-image:url(assets/gorod-fm/podborki-tile-dfm-chill-overlay.png);"></div>
               <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-glow" style="background: #0d5fcf;"></div>
               <div class="podborki-tile-label-wrap">
                 <span class="podborki-tile-label">DFM CHILL</span>
               </div>
@@ -7680,6 +7827,62 @@
         </div>
         <!-- /.track-page -->
 
+      </section>
+
+      <!-- Page: Лайвы (#/lives) — Figma sidebar item, prototype placeholder
+           shows live radio stations grid; full design not in Figma file yet -->
+      <section data-page="lives" aria-labelledby="page-lives-heading">
+        <h1 id="page-lives-heading" class="visually-hidden">Лайвы</h1>
+        <div class="lives-page">
+          <p class="lives-eyebrow" aria-hidden="true">В ПРЯМОМ ЭФИРЕ · LIVE</p>
+          <h2 class="lives-title">Лайвы</h2>
+          <p class="lives-subtitle">Слушай станции Город ФМ в прямом эфире</p>
+
+          <div class="lives-grid" role="list" aria-label="Радиостанции в прямом эфире">
+            <button class="lives-card" role="listitem" type="button" data-station="rock"
+                    aria-label="ГОРОД РОК — слушать в прямом эфире">
+              <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
+              <span class="lives-card-name">ГОРОД РОК</span>
+              <span class="lives-card-meta">103.5 FM · 4 832 слушателя</span>
+              <span class="lives-now-playing" aria-hidden="true">Believer · IMAGINE DRAGONS</span>
+            </button>
+            <button class="lives-card" role="listitem" type="button" data-station="pop"
+                    aria-label="ГОРОД ПОП — слушать в прямом эфире">
+              <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
+              <span class="lives-card-name">ГОРОД ПОП</span>
+              <span class="lives-card-meta">104.0 FM · 6 102 слушателя</span>
+              <span class="lives-now-playing" aria-hidden="true">Зацепила · АРТУР ПИРОЖКОВ</span>
+            </button>
+            <button class="lives-card" role="listitem" type="button" data-station="disko"
+                    aria-label="ГОРОД ДИСКО — слушать в прямом эфире">
+              <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
+              <span class="lives-card-name">ГОРОД ДИСКО</span>
+              <span class="lives-card-meta">104.5 FM · 2 188 слушателей</span>
+              <span class="lives-now-playing" aria-hidden="true">Glitch · MARTIN GARRIX</span>
+            </button>
+            <button class="lives-card" role="listitem" type="button" data-station="hiphop"
+                    aria-label="ГОРОД ХИП-ХОП — слушать в прямом эфире">
+              <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
+              <span class="lives-card-name">ГОРОД ХИП-ХОП</span>
+              <span class="lives-card-meta">105.0 FM · 3 540 слушателей</span>
+              <span class="lives-now-playing" aria-hidden="true">Потрачу · ЕГОР КРИД</span>
+            </button>
+            <button class="lives-card" role="listitem" type="button" data-station="chill"
+                    aria-label="ГОРОД CHILL — слушать в прямом эфире">
+              <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
+              <span class="lives-card-name">ГОРОД CHILL</span>
+              <span class="lives-card-meta">105.5 FM · 1 922 слушателя</span>
+              <span class="lives-now-playing" aria-hidden="true">Roads Untraveled · LINKIN PARK</span>
+            </button>
+            <button class="lives-card" role="listitem" type="button" data-station="lirika"
+                    aria-label="ГОРОД ЛИРИКА — слушать в прямом эфире">
+              <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
+              <span class="lives-card-name">ГОРОД ЛИРИКА</span>
+              <span class="lives-card-meta">106.0 FM · 1 124 слушателя</span>
+              <span class="lives-now-playing" aria-hidden="true">Слеза · ЕГОР КРИД</span>
+            </button>
+          </div>
+        </div>
       </section>
 
       <!-- Page: Раздел Избранное — #/favorites -->
@@ -8991,7 +9194,7 @@
         trackView:    'gorod-fm.track-view',
       };
 
-      const VALID_ROUTES = ['#/map', '#/home', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites'];
+      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites'];
       const DEFAULT_ROUTE = '#/map';
 
       /* ---- localStorage helpers -------------------------------------------- */
@@ -9854,17 +10057,17 @@
 
         /* 3. Mobile 2-row layout: clone tiles into 2 rows for mobile surface */
 
-        // Tile config: [label, width-desktop, gradient-bg, glow-color]
+        // Tile config: real photos from Figma 2384:6054
         var TILES = [
-          { label: 'POP GOLD 2010s', w: 245, bg: 'linear-gradient(160deg,#5b2d8e 0%,#c0348a 55%,#e8609a 100%)', glow: '#c0348a' },
-          { label: 'K-POP',          w: 299, bg: 'linear-gradient(160deg,#8b005d 0%,#e0007a 50%,#ff4dbc 100%)', glow: '#ff4dbc' },
-          { label: 'CHILL',          w: 310, bg: 'linear-gradient(160deg,#004f6d 0%,#0a8f8a 50%,#00d4c8 100%)', glow: '#00d4c8' },
-          { label: 'ДИСКАЧ 90-Х',    w: 309, bg: 'linear-gradient(160deg,#7a4600 0%,#d4780a 50%,#f5c518 100%)', glow: '#f5c518' },
-          { label: 'Z. CITY SHOW',   w: 373, bg: 'linear-gradient(160deg,#1a6bde 0%,#56afd7 50%,#0ea8e8 100%)', glow: '#56afd7' },
-          { label: 'VADIM ADAMOV',   w: 373, bg: 'linear-gradient(160deg,#1a0840 0%,#3d1e8c 50%,#6b35c8 100%)', glow: '#6b35c8' },
-          { label: 'DJ PITKIN',      w: 373, bg: 'linear-gradient(160deg,#004d2e 0%,#0d8c5a 50%,#00cc7a 100%)', glow: '#00cc7a' },
-          { label: 'RADIO CITY',     w: 373, bg: 'linear-gradient(160deg,#6a0a00 0%,#c42000 50%,#e84d00 100%)', glow: '#e84d00' },
-          { label: 'DFM CHILL',      w: 373, bg: 'linear-gradient(160deg,#001a45 0%,#0a3a8c 50%,#0d5fcf 100%)', glow: '#0d5fcf' },
+          { label: 'POP GOLD 2010s', img: 'assets/gorod-fm/podborki-tile-pop-gold-2010s.png' },
+          { label: 'K-POP',          img: 'assets/gorod-fm/podborki-tile-k-pop.png' },
+          { label: 'CHILL',          img: 'assets/gorod-fm/podborki-tile-chill.png' },
+          { label: 'ДИСКАЧ 90-Х',    img: 'assets/gorod-fm/podborki-tile-discach-90.png' },
+          { label: 'Z. CITY SHOW',   img: 'assets/gorod-fm/podborki-tile-z-city-show.png' },
+          { label: 'VADIM ADAMOV',   img: 'assets/gorod-fm/podborki-tile-vadim-adamov.png' },
+          { label: 'DJ PITKIN',      img: 'assets/gorod-fm/podborki-tile-dj-pitkin.png' },
+          { label: 'DFM CHILL',      img: 'assets/gorod-fm/podborki-tile-dfm-chill-base.png' },
+          { label: 'DFM CHILL',      img: 'assets/gorod-fm/podborki-tile-dfm-chill-base.png', overlay: 'assets/gorod-fm/podborki-tile-dfm-chill-overlay.png' },
         ];
 
         function makeMobileTile(t, idx) {
@@ -9876,9 +10079,12 @@
           btn.setAttribute('role', 'listitem');
           btn.setAttribute('aria-label', 'Открыть подборку ' + t.label);
           btn.style.width = '168px';
-          btn.innerHTML = '<div class="podborki-tile-bg" style="background:' + t.bg + ';"></div>' +
+          var bgHtml = '<div class="podborki-tile-bg" style="background-image:url(' + t.img + ');"></div>';
+          if (t.overlay) {
+            bgHtml += '<div class="podborki-tile-bg podborki-tile-bg--layer" style="background-image:url(' + t.overlay + ');"></div>';
+          }
+          btn.innerHTML = bgHtml +
             '<div class="podborki-tile-shade"></div>' +
-            '<div class="podborki-tile-glow" style="background:' + t.glow + ';"></div>' +
             '<div class="podborki-tile-label-wrap"><span class="podborki-tile-label">' + t.label + '</span></div>';
           btn.addEventListener('click', function () {
             openPodborkaPlayer(t.label);
