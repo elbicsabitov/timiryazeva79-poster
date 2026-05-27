@@ -385,45 +385,65 @@
         gap: 4px;
       }
 
-      /* Sidebar logo at top */
+      /* Sidebar logo at top — Figma 2384:6054 spec: Actay Wide Bold 44px UPPERCASE */
       .sidebar-logo {
-        font-size: 22px;
+        font-size: 32px;
         font-weight: 900;
+        line-height: 1;
         letter-spacing: 0.04em;
         transform: scaleX(1.05);
         transform-origin: left center;
-        display: inline-block;
         color: var(--text-pri);
-        padding: 8px 8px 20px;
-        min-height: 44px;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 16px 6px 40px;
         display: flex;
         align-items: center;
+        min-height: 44px;
+        white-space: nowrap;
+      }
+      .sidebar-logo:hover {
+        color: var(--brand-cyan);
       }
 
-      /* Sidebar nav list */
+      /* Sidebar nav list — Figma 2384:6054 spec: icon-over-text vertical layout, ~110px row pitch */
       .sidebar-nav {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: 28px;
         flex: 1;
+        align-items: stretch;
+        padding-top: 8px;
       }
 
       .sidebar-item {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 14px;
-        padding: 12px 14px;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 8px;
         border-radius: var(--r-base);
-        color: var(--text-sec);
-        font-size: 17px;
+        color: var(--text-pri);
+        font-size: 15px;
         font-weight: 500;
         cursor: pointer;
-        min-height: 44px;
-        transition: background var(--t-fast), color var(--t-fast);
+        min-height: 80px;
+        text-align: center;
         text-decoration: none;
         border: none;
         width: 100%;
-        text-align: left;
+        transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);
+      }
+      .sidebar-item svg {
+        width: 34px;
+        height: 34px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
       }
 
       .sidebar-item:hover {
@@ -435,17 +455,6 @@
         background: var(--surf-glass-20);
         color: var(--text-pri);
         font-weight: 600;
-      }
-
-      .sidebar-item svg {
-        width: 24px;
-        height: 24px;
-        flex-shrink: 0;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 1.7;
-        stroke-linecap: round;
-        stroke-linejoin: round;
       }
 
       /* Sidebar footer — internal items + theme toggle */
@@ -2515,30 +2524,38 @@
       }
 
       /* Label container: flex to position rotated text at bottom-right */
+      /* Label wrap — fixed 56×~480 visual, centered text rotates -90 inside */
       .podborki-tile-label-wrap {
         position: absolute;
         bottom: 20px;
         right: 20px;
+        width: 56px;
+        height: 480px;
+        max-height: calc(100% - 40px);
         z-index: 3;
         display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        overflow: visible;
       }
 
-      /* Rotated label — Onest 900 fake-wide display */
+      /* Rotated text — CCW 90° around center, reads bottom-to-top per Figma */
       .podborki-tile-label {
         font-family: 'Onest', sans-serif;
         font-weight: 900;
-        font-size: 44px;
+        font-size: 36px;
         letter-spacing: 0.04em;
         text-transform: uppercase;
         color: #ffffff;
         white-space: nowrap;
         line-height: 1;
         transform: rotate(-90deg) scaleX(1.05);
-        transform-origin: bottom right;
+        transform-origin: center;
         display: block;
+        flex-shrink: 0;
         pointer-events: none;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
       }
     }
 
@@ -5466,7 +5483,6 @@
          TOPBAR — web surface only
          ================================================================== -->
     <header class="topbar" role="banner">
-      <a href="#/home" class="logo" aria-label="Город ФМ — на главную">Город.fm</a>
       <div class="topbar-spacer"></div>
 
       <!-- Search icon-pill -->
