@@ -1,13 +1,40 @@
 # DEBT — Дизайн-долг
 
-## ⚡ Bootstrap-порт (2026-05-19) — АКТИВНАЯ РАБОТА
+## ⚡ Город ФМ (2026-05-27) — АКТИВНАЯ РАБОТА (kickoff)
 
-Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер: `docs/superpowers/HANDOFF-bootstrap-port.md`.**
+Новый клиент — онлайн-радио платформа. Single-file HTML SPA по образцу `twinr-liquid-glass.html` / `showcase-aggregator.html`. 7 экранов + Monte Carlo-style player + flow map. Адаптивный для web/mobile/TVs/CarPlay future. Figma `ODcQ2ERWYi3w504Z86TOy3` (Город ФМ) + `l38kZVrZXzdNlBIIOLFX4g` (Monte Carlo player reference). **Полный handoff: `docs/superpowers/HANDOFF-gorod-fm.md`.** NO paws data.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| GOROD-001 | Figma context acquired (gorod-fm 2384:6054 + Monte Carlo 3314:13423 + 3407:2224) | done |
+| GOROD-002 | Brand tokens extracted (cinema gradient + glass-20 + tile-tr-60 + Monte Carlo backdrop-blur 30px + Onest substitute) | done |
+| GOROD-003 | Handoff `docs/superpowers/HANDOFF-gorod-fm.md` + session log + memory entry + RESUME swap | done |
+| GOROD-004 | Write `designs/gorod-fm.html` skeleton — `<head>` (meta + Onest fonts + inline CSS @layer reset/tokens/base/layout/components/surfaces/utilities) + `<body>` scaffold (bg-layers ×2 + topbar + sidebar + main + player-mini + player-full + mobile-tabbar + tweaks) | pending |
+| GOROD-005 | Build Flow Map (`#/map` index hub — карточки всех экранов) | pending |
+| GOROD-006 | Build Главная (`#/home` — stations grid + filter chips + center cover + 2 варианта corner-FAB/sidebar-drawer Tweak) | pending |
+| GOROD-007 | Build Подборки (`#/podborki` — gallery tiles по Figma 2384:6054, 245/299/310/309/373 widths, tile-tr-60 + label rotated -90°) | pending |
+| GOROD-008 | Build Медиатека (`#/library` — 2-row grid + ad slot, mobile single col) | pending |
+| GOROD-009 | Build Избранное (артист profile + раздел list) | pending |
+| GOROD-010 | Build Страница трека (Monte Carlo desktop + mobile carousel + lyrics + история, adapt warm → cinema tokens) | pending |
+| GOROD-011 | Build Player overlay (mini bar bottom + full-screen Monte-Carlo-style overlay) | pending |
+| GOROD-012 | Mobile responsive 375/414/768 — fix gallery (заказчик: «стремно») + Monte Carlo mobile player | pending |
+| GOROD-013 | Adaptable surface architecture (`data-surface="web/mobile/tv/carplay"`) | pending |
+| GOROD-014 | Anti-slop + WCAG AA pass via `compound-engineering:design:design-implementation-reviewer` (Holy Grail Часть 9) | pending |
+| GOROD-015 | Standalone build script `tools/build_gorod_fm_standalone.py` | pending |
+| GOROD-016 | Real assets Город ФМ (album covers + station artwork + artist photos) когда клиент пришлёт | pending |
+| GOROD-017 | Показ заказчику + фидбек по варианту (cinema / warm / light Tweaks) | pending |
+| GOROD-018 | После утверждения: Next.js + shadcn/ui dev-handoff | pending |
+
+---
+
+## ⏸️ Bootstrap-порт (2026-05-19) — ПАУЗА (Эльбик-gated)
+
+Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер: `docs/superpowers/HANDOFF-bootstrap-port.md`.** Paused 2026-05-27 — фокус на Город ФМ (новый клиент). Вернуться когда Эльбик попросит.
 
 | Проект | Статус |
 |--------|--------|
 | `crm-bootstrap/` (CRM, 29 экр.) | ✅ ГОТОВ + отдан Эльбику (2026-05-20) |
-| `twinr-bootstrap/` (Twinr, 21 стр. + AI + Customizer) | ⬜ Phase 0-3 done · NEXT = Phase 4 (Customizer) |
+| `twinr-bootstrap/` (Twinr, 21 стр. + AI + Customizer) | ⬜ Phase 0-3 done · NEXT = Phase 4 (Customizer) — на паузе |
 
 Ветка `feat/bootstrap-port` (worktree `.worktrees/feat-bootstrap-port`), не запушена/не смержена. Открытый пункт CRM (решение Эльбика): токен `--ds-ink-4` контраст ~3.5–4.1:1 < WCAG AA — взят из утверждённого прототипа, см. `crm-bootstrap/docs/ACCEPTANCE.md`.
 

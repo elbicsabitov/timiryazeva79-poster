@@ -1,22 +1,28 @@
 # Resume Design — Активация сессии
 
-## ⚡ ACTIVE WORK (2026-05-20): Liquid Glass → Bootstrap 5.3 порт
+## ⚡ ACTIVE WORK (2026-05-27): Город ФМ HTML SPA — kickoff
 
-Текущая активная работа — порт утверждённых Liquid Glass прототипов на Bootstrap 5.3 (формат dev-handoff). При `resume design` выполни:
+Новый клиент — **онлайн-радио «Город ФМ»**. Hi-fi clickable single-file HTML SPA, 7 экранов + Monte Carlo-style player overlay + flow map, адаптивный к web/mobile/TV/CarPlay. По образцу design-project's `twinr-liquid-glass.html` / `showcase-aggregator.html` (НЕ paws — только pattern). При `resume design` выполни:
 
-1. `cd ~/Desktop/design-project` · `git fetch && git pull` · `git log --oneline -5`
-2. **Прочитай ПЕРВЫМ:** `docs/superpowers/HANDOFF-bootstrap-port.md` — единый источник истины: статус, NEXT, carry-forward, протокол исполнения, commit ledger.
-3. **CRM-проект (`crm-bootstrap/`) ПОЛНОСТЬЮ ГОТОВ и отдан** (2026-05-20: все 29 экранов + styleguide + standalone + acceptance pass; архив отправлен Эльбику в Telegram). Не трогать без явного запроса.
-4. **NEXT = Twinr-проект (`twinr-bootstrap/`)** — Phase 4 (Liquid Glass Customizer: SCSS + JS + page-stats/page-guide) → Phase 5 (PORT-MAPPING + 19 страниц, per-screen fidelity-гейт) → Phase 6 (styleguide + standalone + acceptance). План: `docs/superpowers/plans/2026-05-19-twinr-bootstrap-port.md`.
-5. Работа в git-worktree `~/Desktop/design-project/.worktrees/feat-bootstrap-port`, ветка `feat/bootstrap-port` (не запушена, не смержена — merge gated на завершении Twinr, Эльбик-gated).
-6. Invoke `superpowers:subagent-driven-development`. Пересоздай TaskList по Twinr-плану (задачи T18–T44). Продолжай subagent-driven: **один implementer за раз** (общий git-index — не параллелить), 2-stage review (fidelity → code-quality). Прототип = ground truth: `designs/twinr-liquid-glass.html`.
-7. Ключевой carry-forward (полностью — в HANDOFF): AI-модуль = **9 инструментов**, не 11; `main.scss` уже корректен — не переписывать из плана; Customizer-значения брать из `tokens/_customizer.scss` (prototype-wins), не из плана; **CRM-паттерны копировать в Twinr** — `.btn-ghost`/`.btn-glass`/`.btn-primary`, glass только через `glass()` mixin, ноль inline `style=`/`on*=`, делегированные JS-модули (toast+form-preventDefault, counter, bulk, dynamic breadcrumb), responsive + a11y фиксы.
+1. `cd ~/Desktop/design-project` · `git fetch && git pull` · `git log --oneline -5` (kickoff commit должен быть на топе)
+2. **Прочитай ПЕРВЫМ:** `docs/superpowers/HANDOFF-gorod-fm.md` — единый источник истины: figma URLs/node IDs, tokens, screen list, persistent components, adaptable surface architecture, NEXT, carry-forward.
+3. **Прочитай:** `.claude-memory/session_2026_05_27_gorod_fm_kickoff.md` — что было в kickoff-сессии, что НЕ написано.
+4. **Скриншоты Figma** preserved в `.scratch/gorod-fm-research/` (3 PNG: gorod-home + MC-desktop + MC-mobile). Photo reference: `~/Desktop/photo_2026-05-27_17-27-05.jpg`.
+5. **Master direct** convention (НЕ feature branch). Atomic commits per screen.
+6. Invoke `superpowers:subagent-driven-development`. **One implementer at a time** (shared git index — не параллелить). TaskList state в HANDOFF — entry point task #4 (tokens write в файл) → #5 Flow Map → #6 Главная → ... → #15 standalone.
+7. **Carry-forward (полностью в HANDOFF):** NO paws data; Onest substitute for SF Pro/Gilroy/Actay Wide (Holy Grail compliant, fake-wide через `scaleX(1.05)`); asset placeholder V1 (Figma URLs expire 7d); Tweaks single-file (не N тематических); themes dual (cinema/warm) + light Phase 2; `data-surface="web|mobile|tv|carplay"`; round-button-UX «не додумали» → 2 Tweak варианта.
 
-Продолжай автономно — не жди подтверждения.
+Продолжай автономно — не жди подтверждения. Holy Grail Часть 9 чек-лист перед `done`/коммитом/отправкой заказчику.
 
 ---
 
-## Общий протокол (для дизайн-работы вне bootstrap-порта)
+## ⏸️ Paused work (Эльбик-gated to resume)
+
+**Bootstrap-port** (CRM `crm-bootstrap/` DONE 2026-05-20 + отдан в Telegram; Twinr `twinr-bootstrap/` Phase 0-3 done, **Phase 4 (Customizer) NEXT**). Worktree `.worktrees/feat-bootstrap-port`, branch `feat/bootstrap-port`, **не запушена / не смержена** — preserved as-is. HANDOFF: `docs/superpowers/HANDOFF-bootstrap-port.md`. Twinr Phase 4 не блокирует Город ФМ; вернёмся когда Эльбик попросит.
+
+---
+
+## Общий протокол (для дизайн-работы вне активных HANDOFF)
 
 ### 1. Verify Location
 ```bash
