@@ -2921,6 +2921,757 @@
         }
       }
 
+      /* =========================================================================
+         ARTIST PAGE — hero + tracks + albums + stations
+         ========================================================================= */
+
+      /* Page section wrapper */
+      [data-page="artist"] {
+        padding-bottom: 80px;
+      }
+
+      /* ---- Hero band --------------------------------------------------------- */
+
+      .artist-hero {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 48px;
+        min-height: 360px;
+        padding: 48px 40px 48px;
+        background: rgba(0,0,0,0.12);
+        border-bottom: 1px solid var(--surf-glass-12);
+        margin-bottom: 48px;
+      }
+
+      /* Round photo placeholder */
+      .artist-photo-wrap {
+        flex-shrink: 0;
+      }
+
+      .artist-photo {
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3d0080 0%, #1a4fa0 40%, #56afd7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 3px rgba(86,175,215,0.25);
+      }
+
+      .artist-photo-art {
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      /* Text block */
+      .artist-hero-text {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        max-width: 560px;
+        min-width: 0;
+      }
+
+      .artist-overline {
+        font-family: 'Onest', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--brand-cyan);
+        margin: 0;
+        line-height: 1;
+      }
+
+      .artist-name {
+        font-family: 'Onest', sans-serif;
+        font-size: 64px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        line-height: 1.0;
+        color: var(--text-pri);
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        display: inline-block;
+        text-wrap: balance;
+        margin: 0;
+      }
+
+      .artist-stats {
+        font-family: 'Onest', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--text-sec);
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      .artist-bio {
+        font-family: 'Onest', sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        color: var(--text-sec);
+        line-height: 1.55;
+        text-wrap: pretty;
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* Action buttons row */
+      .artist-action-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 4px;
+      }
+
+      .artist-action-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        min-height: 44px;
+        border-radius: var(--r-pill);
+        background: var(--brand-cyan);
+        color: #000;
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: none;
+        transition: filter var(--t-fast), transform var(--t-fast);
+        white-space: nowrap;
+      }
+
+      .artist-action-primary:hover {
+        filter: brightness(1.12);
+      }
+
+      .artist-action-primary:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 3px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .artist-action-primary:hover {
+          transform: none;
+        }
+      }
+
+      .artist-action-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 24px;
+        min-height: 44px;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-20);
+        color: var(--text-pri);
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.15);
+        transition: background var(--t-fast), filter var(--t-fast);
+        white-space: nowrap;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .artist-action-secondary:hover {
+        background: rgba(255,255,255,0.28);
+      }
+
+      .artist-action-secondary:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 3px;
+      }
+
+      .artist-action-secondary[aria-pressed="true"] svg path {
+        fill: var(--brand-cyan);
+        stroke: none;
+      }
+
+      .artist-action-secondary[aria-pressed="true"] {
+        color: var(--brand-cyan);
+      }
+
+      .artist-action-secondary svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+
+      /* "Открыть весь список" secondary link */
+      .artist-open-all {
+        display: inline-flex;
+        align-items: center;
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--brand-cyan);
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        padding: 6px 0;
+        min-height: 44px;
+        transition: opacity var(--t-fast);
+      }
+
+      .artist-open-all:hover {
+        opacity: 0.75;
+      }
+
+      .artist-open-all:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+        border-radius: var(--r-base);
+      }
+
+      /* ---- Artist section wrapper ------------------------------------------- */
+
+      .artist-section {
+        padding: 0 40px 48px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .artist-section-heading {
+        font-family: 'Onest', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-pri);
+        text-wrap: balance;
+        margin: 0 0 20px;
+      }
+
+      /* ---- Top tracks 2-col grid -------------------------------------------- */
+
+      .artist-tracks-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 24px;
+      }
+
+      .artist-track-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        min-height: 56px;
+        border-radius: var(--r-base);
+        border: none;
+        background: none;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+        width: 100%;
+        transition: background var(--t-fast);
+      }
+
+      .artist-track-row:hover {
+        background: var(--surf-glass-12);
+      }
+
+      .artist-track-row:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .artist-track-rank {
+        font-family: 'Onest', sans-serif;
+        font-size: 28px;
+        font-weight: 900;
+        color: var(--text-quat);
+        min-width: 36px;
+        text-align: right;
+        flex-shrink: 0;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .artist-track-cover {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        display: block;
+      }
+
+      .artist-track-meta {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .artist-track-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .artist-track-album {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .artist-track-dur {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+        flex-shrink: 0;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---- Albums horizontal scroll ----------------------------------------- */
+
+      .artist-albums-row {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-right: 24px;
+        padding-bottom: 4px;
+      }
+
+      .artist-albums-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .artist-album-card {
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+        border-radius: var(--r-base);
+        transition: transform var(--t-fast);
+      }
+
+      .artist-album-card:hover {
+        transform: scale(1.03);
+      }
+
+      .artist-album-card:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 3px;
+        border-radius: var(--r-base);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .artist-album-card:hover {
+          transform: none;
+        }
+      }
+
+      .artist-album-cover {
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .artist-album-meta {
+        padding: 10px 4px 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .artist-album-name {
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .artist-album-year {
+        font-family: 'Onest', sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text-quat);
+      }
+
+      /* ---- Station chips ----------------------------------------------------- */
+
+      .artist-stations {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .artist-station-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        width: 280px;
+        height: 60px;
+        padding: 14px 20px;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-20);
+        border: 1px solid rgba(255,255,255,0.14);
+        color: var(--text-sec);
+        font: inherit;
+        cursor: pointer;
+        transition: background var(--t-fast), color var(--t-fast);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .artist-station-chip:hover {
+        background: rgba(255,255,255,0.28);
+        color: var(--text-pri);
+      }
+
+      .artist-station-chip:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .artist-station-eq {
+        width: 18px;
+        height: 14px;
+        flex-shrink: 0;
+        color: var(--brand-cyan);
+        opacity: 0.80;
+      }
+
+      .artist-station-name {
+        font-family: 'Onest', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+      }
+
+      .artist-station-freq {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+        flex-shrink: 0;
+      }
+
+      /* =========================================================================
+         FAVORITES PAGE — heading band + chip row + list
+         ========================================================================= */
+
+      [data-page="favorites"] {
+        padding-bottom: 80px;
+      }
+
+      /* ---- Heading band ------------------------------------------------------ */
+
+      .favorites-heading-band {
+        padding: 40px 40px 36px;
+      }
+
+      .favorites-eyebrow {
+        font-family: 'Onest', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--brand-cyan);
+        margin: 0 0 12px;
+        line-height: 1;
+      }
+
+      .favorites-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 56px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        color: var(--text-pri);
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        display: inline-block;
+        text-wrap: balance;
+        margin: 0 0 12px;
+        line-height: 1.0;
+      }
+
+      .favorites-subtitle {
+        font-family: 'Onest', sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        color: var(--text-sec);
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      /* ---- Filter chip row -------------------------------------------------- */
+
+      .favorites-chip-row {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0 40px 4px;
+        margin-bottom: 28px;
+      }
+
+      .favorites-chip-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .favorites-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        padding: 10px 20px;
+        height: 44px;
+        border-radius: var(--r-base);
+        background: var(--surf-glass-20);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: rgba(255, 255, 255, 0.80);
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+        white-space: nowrap;
+      }
+
+      .favorites-chip:hover {
+        background: rgba(255,255,255,0.28);
+        color: #ffffff;
+      }
+
+      .favorites-chip[aria-pressed="true"] {
+        background: rgba(255,255,255,0.32);
+        color: #ffffff;
+        border-color: rgba(86,175,215,0.60);
+        box-shadow: 0 0 0 1px rgba(86,175,215,0.30);
+      }
+
+      .favorites-chip:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .favorites-chip-count {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text-quat);
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      /* ---- List -------------------------------------------------------------- */
+
+      .favorites-list {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .favorites-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 72px;
+        padding: 14px 16px;
+        border-radius: var(--r-base);
+        cursor: pointer;
+        transition: background var(--t-fast);
+      }
+
+      .favorites-row:hover {
+        background: var(--surf-glass-12);
+      }
+
+      .favorites-row:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .favorites-row-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--r-base);
+        flex-shrink: 0;
+      }
+
+      .favorites-row-meta {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .favorites-row-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .favorites-row-sub {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Type badge */
+      .favorites-type-badge {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 8px;
+        border-radius: var(--r-pill);
+        font-family: 'Onest', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        line-height: 1.6;
+        white-space: nowrap;
+      }
+
+      .favorites-type-badge--track {
+        background: rgba(86,175,215,0.15);
+        border: 1px solid rgba(86,175,215,0.30);
+        color: var(--brand-cyan);
+      }
+
+      .favorites-type-badge--artist {
+        background: rgba(209,156,79,0.15);
+        border: 1px solid rgba(209,156,79,0.30);
+        color: #d19c4f;
+      }
+
+      .favorites-type-badge--playlist {
+        background: rgba(167,139,250,0.15);
+        border: 1px solid rgba(167,139,250,0.30);
+        color: #a78bfa;
+      }
+
+      .favorites-type-badge--station {
+        background: rgba(134,239,172,0.15);
+        border: 1px solid rgba(134,239,172,0.30);
+        color: #86efac;
+      }
+
+      .favorites-row-info {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+        flex-shrink: 0;
+        min-width: 40px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Heart toggle button */
+      .favorites-heart-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-12);
+        border: none;
+        color: var(--brand-cyan);
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background var(--t-fast), filter var(--t-fast);
+      }
+
+      .favorites-heart-btn:hover {
+        background: var(--surf-glass-20);
+        filter: brightness(1.15);
+      }
+
+      .favorites-heart-btn:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .favorites-heart-btn svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+
+      .favorites-heart-btn[aria-pressed="false"] svg path {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+      }
+
+      .favorites-heart-btn[aria-pressed="true"] svg path {
+        fill: currentColor;
+        stroke: none;
+      }
+
     }
 
     /* =========================================================================
@@ -3674,6 +4425,190 @@
       [data-surface="tv"] .library-tile-name {
         font-size: 18px;
       }
+
+      /* ---- Artist page: responsive ------------------------------------------ */
+
+      @media (max-width: 1024px) {
+        .artist-hero {
+          padding: 36px 24px;
+          gap: 32px;
+        }
+        .artist-name {
+          font-size: 48px;
+        }
+        .artist-section {
+          padding-left: 24px;
+          padding-right: 24px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .artist-hero {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          min-height: unset;
+          padding: 32px 20px;
+          gap: 24px;
+        }
+        .artist-photo {
+          width: 180px;
+          height: 180px;
+        }
+        .artist-hero-text {
+          align-items: center;
+        }
+        .artist-name {
+          font-size: 36px;
+          transform-origin: center center;
+        }
+        .artist-action-row {
+          justify-content: center;
+        }
+        .artist-tracks-grid {
+          grid-template-columns: 1fr;
+        }
+        .artist-section {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+        .artist-stations {
+          justify-content: center;
+        }
+        .artist-station-chip {
+          width: 100%;
+        }
+      }
+
+      /* Mobile surface (tweaks panel) */
+      [data-surface="mobile"] .artist-hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        min-height: unset;
+        padding: 24px 16px;
+        gap: 20px;
+      }
+      [data-surface="mobile"] .artist-photo {
+        width: 160px;
+        height: 160px;
+      }
+      [data-surface="mobile"] .artist-hero-text {
+        align-items: center;
+      }
+      [data-surface="mobile"] .artist-name {
+        font-size: 32px;
+        transform-origin: center;
+      }
+      [data-surface="mobile"] .artist-action-row {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      [data-surface="mobile"] .artist-tracks-grid {
+        grid-template-columns: 1fr;
+      }
+      [data-surface="mobile"] .artist-section {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      [data-surface="mobile"] .artist-station-chip {
+        width: 100%;
+      }
+
+      /* TV surface */
+      [data-surface="tv"] .artist-name {
+        font-size: 80px;
+      }
+      [data-surface="tv"] .artist-hero {
+        padding: 60px;
+        gap: 64px;
+        min-height: 440px;
+      }
+      [data-surface="tv"] .artist-photo {
+        width: 320px;
+        height: 320px;
+      }
+      [data-surface="tv"] .artist-action-primary,
+      [data-surface="tv"] .artist-action-secondary {
+        min-height: 56px;
+        font-size: 16px;
+        padding: 16px 32px;
+      }
+      [data-surface="tv"] .artist-station-chip {
+        height: 72px;
+        font-size: 16px;
+      }
+      [data-surface="tv"] .artist-section {
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+
+      /* ---- Favorites page: responsive --------------------------------------- */
+
+      @media (max-width: 768px) {
+        .favorites-heading-band {
+          padding: 28px 16px 24px;
+        }
+        .favorites-title {
+          font-size: 36px;
+          transform-origin: left center;
+        }
+        .favorites-subtitle {
+          font-size: 15px;
+        }
+        .favorites-chip-row {
+          padding: 0 16px 4px;
+          justify-content: flex-start;
+        }
+        .favorites-list {
+          padding: 0 8px;
+        }
+        .favorites-row-info {
+          display: none; /* hide duration column on small screens */
+        }
+      }
+
+      [data-surface="mobile"] .favorites-heading-band {
+        padding: 24px 16px 20px;
+      }
+      [data-surface="mobile"] .favorites-title {
+        font-size: 32px;
+        transform-origin: left center;
+      }
+      [data-surface="mobile"] .favorites-chip-row {
+        padding: 0 16px 4px;
+        justify-content: flex-start;
+      }
+      [data-surface="mobile"] .favorites-list {
+        padding: 0 8px;
+      }
+      [data-surface="mobile"] .favorites-row-info {
+        display: none;
+      }
+
+      [data-surface="tv"] .favorites-title {
+        font-size: 72px;
+      }
+      [data-surface="tv"] .favorites-heading-band {
+        padding: 60px 60px 48px;
+      }
+      [data-surface="tv"] .favorites-chip-row {
+        padding: 0 60px 4px;
+      }
+      [data-surface="tv"] .favorites-list {
+        padding: 0 60px;
+      }
+      [data-surface="tv"] .favorites-row {
+        min-height: 88px;
+        padding: 18px 20px;
+      }
+      [data-surface="tv"] .favorites-row-title {
+        font-size: 20px;
+      }
+      [data-surface="tv"] .favorites-heart-btn {
+        width: 56px;
+        height: 56px;
+      }
     }
 
     /* =========================================================================
@@ -3818,9 +4753,9 @@
 
         <!-- Избранное -->
         <a
-          href="#/favorites"
+          href="#/artist"
           class="sidebar-item"
-          data-route="#/favorites"
+          data-route="#/artist"
           aria-label="Избранное"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -5035,12 +5970,370 @@
 
       </section>
 
-      <!-- Page: Артист (профайл) -->
+      <!-- Page: Артист (профайл) — #/artist -->
       <section data-page="artist" aria-labelledby="page-artist-heading">
-        <h1 id="page-artist-heading" class="page-stub-heading">Избранное — Артист</h1>
-        <p class="page-stub-hint">Профайл артиста: hero фото, bio, треки, станции. Task #9 заполнит этот экран.</p>
-        <div class="page-content"></div>
+        <h1 id="page-artist-heading" class="visually-hidden">Избранное — Артист</h1>
+
+        <!-- ---- Hero band ---------------------------------------------------- -->
+        <div class="artist-hero" aria-label="Профиль артиста">
+          <!-- Left: round photo placeholder -->
+          <div class="artist-photo-wrap" aria-hidden="true">
+            <div class="artist-photo">
+              <!-- Abstract SVG portrait silhouette -->
+              <svg class="artist-photo-art" viewBox="0 0 280 280" aria-hidden="true">
+                <!-- Head circle -->
+                <circle cx="140" cy="105" r="52" fill="rgba(255,255,255,0.18)"/>
+                <!-- Shoulders curve -->
+                <path d="M 40 260 Q 60 190 100 175 Q 120 168 140 168 Q 160 168 180 175 Q 220 190 240 260" fill="rgba(255,255,255,0.12)" stroke="none"/>
+                <!-- Hair highlights -->
+                <path d="M 100 80 Q 120 56 140 54 Q 160 56 180 80" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+                <!-- Inner head -->
+                <circle cx="140" cy="105" r="28" fill="rgba(86,175,215,0.25)"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Right: text block -->
+          <div class="artist-hero-text">
+            <p class="artist-overline" aria-hidden="true">АРТИСТ · ИЗБРАННОЕ</p>
+            <h2 class="artist-name" id="artist-name-heading">IMAGINE DRAGONS</h2>
+            <p class="artist-stats">47 треков · 8 альбомов · 12 плейлистов с этим артистом</p>
+            <p class="artist-bio">Американская рок-группа из Лас-Вегаса. Сочетают альт-рок, поп и электронику. На Город ФМ — частые гости в подборках ГОРОД РОК и ГОРОД ХИТ.</p>
+
+            <!-- Action buttons row -->
+            <div class="artist-action-row" role="group" aria-label="Действия с артистом">
+              <button
+                class="artist-action-primary"
+                type="button"
+                id="artist-btn-radio"
+                aria-label="Слушать радио Imagine Dragons"
+              >Слушать радио артиста</button>
+
+              <button
+                class="artist-action-secondary"
+                type="button"
+                id="artist-btn-fav"
+                aria-pressed="true"
+                aria-label="Добавить артиста в избранное"
+              >
+                <!-- Heart icon -->
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/>
+                </svg>
+                В избранное
+              </button>
+
+              <button
+                class="artist-action-secondary"
+                type="button"
+                id="artist-btn-share"
+                aria-pressed="false"
+                aria-label="Поделиться артистом"
+              >
+                <!-- Share icon -->
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <circle cx="18" cy="5" r="3"/>
+                  <circle cx="6" cy="12" r="3"/>
+                  <circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+                Поделиться
+              </button>
+            </div>
+
+            <!-- Secondary link to full favorites list -->
+            <a
+              href="#/favorites"
+              class="artist-open-all"
+              id="artist-open-all"
+              aria-label="Открыть весь список избранного"
+            >Открыть весь список →</a>
+          </div>
+        </div>
+        <!-- /.artist-hero -->
+
+        <!-- ---- Топ треков ---------------------------------------------------- -->
+        <section class="artist-section" aria-labelledby="artist-tracks-heading">
+          <h2 id="artist-tracks-heading" class="artist-section-heading">Топ треков</h2>
+          <div class="artist-tracks-grid" id="artist-tracks-grid" role="list" aria-label="Топ треков Imagine Dragons">
+
+            <!-- Track 1 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Believer" data-track-artist="IMAGINE DRAGONS" aria-label="Believer, 03:38">
+              <span class="artist-track-rank" aria-hidden="true">1</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#56afd7)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Believer</span>
+                <span class="artist-track-album">Night Visions</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 03:38">03:38</span>
+            </button>
+
+            <!-- Track 2 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Thunder" data-track-artist="IMAGINE DRAGONS" aria-label="Thunder, 03:08">
+              <span class="artist-track-rank" aria-hidden="true">2</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#2d1a6e,#c43a6e)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Thunder</span>
+                <span class="artist-track-album">Evolve</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 03:08">03:08</span>
+            </button>
+
+            <!-- Track 3 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Radioactive" data-track-artist="IMAGINE DRAGONS" aria-label="Radioactive, 03:07">
+              <span class="artist-track-rank" aria-hidden="true">3</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a5c30,#2ecc71)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Radioactive</span>
+                <span class="artist-track-album">Night Visions</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 03:07">03:07</span>
+            </button>
+
+            <!-- Track 4 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Demons" data-track-artist="IMAGINE DRAGONS" aria-label="Demons, 02:58">
+              <span class="artist-track-rank" aria-hidden="true">4</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#4a1a00,#d4662d)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Demons</span>
+                <span class="artist-track-album">Night Visions</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 02:58">02:58</span>
+            </button>
+
+            <!-- Track 5 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Whatever It Takes" data-track-artist="IMAGINE DRAGONS" aria-label="Whatever It Takes, 03:21">
+              <span class="artist-track-rank" aria-hidden="true">5</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#0d3d5c,#0ea8e8)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Whatever It Takes</span>
+                <span class="artist-track-album">Evolve</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 03:21">03:21</span>
+            </button>
+
+            <!-- Track 6 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Bones" data-track-artist="IMAGINE DRAGONS" aria-label="Bones, 02:45">
+              <span class="artist-track-rank" aria-hidden="true">6</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#3d0047,#9c27b0)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Bones</span>
+                <span class="artist-track-album">Mercury Acts 1</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 02:45">02:45</span>
+            </button>
+
+            <!-- Track 7 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Bad Liar" data-track-artist="IMAGINE DRAGONS" aria-label="Bad Liar, 04:21">
+              <span class="artist-track-rank" aria-hidden="true">7</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#6a3800,#d4780a)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Bad Liar</span>
+                <span class="artist-track-album">Origins</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 04:21">04:21</span>
+            </button>
+
+            <!-- Track 8 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Wrecked" data-track-artist="IMAGINE DRAGONS" aria-label="Wrecked, 03:30">
+              <span class="artist-track-rank" aria-hidden="true">8</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a1a4a,#2244aa)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Wrecked</span>
+                <span class="artist-track-album">Mercury Acts 1</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 03:30">03:30</span>
+            </button>
+
+            <!-- Track 9 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Sharks" data-track-artist="IMAGINE DRAGONS" aria-label="Sharks, 03:11">
+              <span class="artist-track-rank" aria-hidden="true">9</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#00352a,#00a676)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Sharks</span>
+                <span class="artist-track-album">Mercury Acts 2</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 03:11">03:11</span>
+            </button>
+
+            <!-- Track 10 -->
+            <button class="artist-track-row" type="button" role="listitem"
+              data-track-title="Enemy" data-track-artist="IMAGINE DRAGONS" aria-label="Enemy, 02:53">
+              <span class="artist-track-rank" aria-hidden="true">10</span>
+              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#3d1547,#c43a8a)"></span>
+              <span class="artist-track-meta">
+                <span class="artist-track-title">Enemy</span>
+                <span class="artist-track-album">Loom</span>
+              </span>
+              <span class="artist-track-dur tabular" aria-label="длительность 02:53">02:53</span>
+            </button>
+
+          </div>
+          <!-- /.artist-tracks-grid -->
+        </section>
+
+        <!-- ---- Альбомы ------------------------------------------------------- -->
+        <section class="artist-section" aria-labelledby="artist-albums-heading">
+          <h2 id="artist-albums-heading" class="artist-section-heading">Альбомы</h2>
+          <div class="artist-albums-row" role="list" aria-label="Альбомы Imagine Dragons">
+
+            <button class="artist-album-card" type="button" role="listitem"
+              data-track-title="Night Visions" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Night Visions, 2012">
+              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#1a3a6e,#56afd7)">
+                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+                  <circle cx="24" cy="24" r="16" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                  <circle cx="24" cy="24" r="8"  fill="rgba(255,255,255,0.18)"/>
+                </svg>
+              </div>
+              <div class="artist-album-meta">
+                <span class="artist-album-name">Night Visions</span>
+                <span class="artist-album-year">2012</span>
+              </div>
+            </button>
+
+            <button class="artist-album-card" type="button" role="listitem"
+              data-track-title="Smoke + Mirrors" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Smoke + Mirrors, 2015">
+              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#2d1a6e,#7b3c8a)">
+                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+                  <rect x="12" y="12" width="24" height="24" rx="4" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                  <rect x="18" y="18" width="12" height="12" rx="2" fill="rgba(255,255,255,0.18)"/>
+                </svg>
+              </div>
+              <div class="artist-album-meta">
+                <span class="artist-album-name">Smoke + Mirrors</span>
+                <span class="artist-album-year">2015</span>
+              </div>
+            </button>
+
+            <button class="artist-album-card" type="button" role="listitem"
+              data-track-title="Evolve" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Evolve, 2017">
+              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#0d3d5c,#0ea8e8)">
+                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+                  <polygon points="24,8 40,38 8,38" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" fill="rgba(255,255,255,0.12)"/>
+                </svg>
+              </div>
+              <div class="artist-album-meta">
+                <span class="artist-album-name">Evolve</span>
+                <span class="artist-album-year">2017</span>
+              </div>
+            </button>
+
+            <button class="artist-album-card" type="button" role="listitem"
+              data-track-title="Origins" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Origins, 2018">
+              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#3d2800,#b86600)">
+                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+                  <circle cx="24" cy="24" r="14" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+                  <path d="M 16 32 Q 24 12 32 32" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="artist-album-meta">
+                <span class="artist-album-name">Origins</span>
+                <span class="artist-album-year">2018</span>
+              </div>
+            </button>
+
+            <button class="artist-album-card" type="button" role="listitem"
+              data-track-title="Mercury Acts 1" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Mercury Acts 1, 2021">
+              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#3d0047,#9c27b0)">
+                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+                  <ellipse cx="24" cy="24" rx="16" ry="10" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+                  <line x1="24" y1="8" x2="24" y2="40" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+                </svg>
+              </div>
+              <div class="artist-album-meta">
+                <span class="artist-album-name">Mercury Acts 1</span>
+                <span class="artist-album-year">2021</span>
+              </div>
+            </button>
+
+            <button class="artist-album-card" type="button" role="listitem"
+              data-track-title="Loom" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Loom, 2024">
+              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#1a1a4a,#3c6ac4)">
+                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+                  <path d="M 10 36 Q 20 14 28 20 Q 36 26 38 12" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <circle cx="38" cy="12" r="4" fill="rgba(255,255,255,0.22)"/>
+                </svg>
+              </div>
+              <div class="artist-album-meta">
+                <span class="artist-album-name">Loom</span>
+                <span class="artist-album-year">2024</span>
+              </div>
+            </button>
+
+          </div>
+          <!-- /.artist-albums-row -->
+        </section>
+
+        <!-- ---- Станции с этим артистом --------------------------------------- -->
+        <section class="artist-section" aria-labelledby="artist-stations-heading">
+          <h2 id="artist-stations-heading" class="artist-section-heading">Станции с этим артистом</h2>
+          <div class="artist-stations" role="list" aria-label="Станции, играющие Imagine Dragons">
+
+            <button class="artist-station-chip" type="button" role="listitem"
+              data-station-id="rok" aria-label="ГОРОД РОК 103.5 FM">
+              <!-- EQ bar icon -->
+              <svg class="artist-station-eq" aria-hidden="true" viewBox="0 0 18 14">
+                <rect x="1"  y="4" width="2.5" height="10" rx="1.25" fill="currentColor"/>
+                <rect x="5"  y="1" width="2.5" height="13" rx="1.25" fill="currentColor"/>
+                <rect x="9"  y="5" width="2.5" height="9"  rx="1.25" fill="currentColor"/>
+                <rect x="13" y="2" width="2.5" height="12" rx="1.25" fill="currentColor"/>
+              </svg>
+              <span class="artist-station-name">ГОРОД РОК</span>
+              <span class="artist-station-freq">103.5 FM</span>
+            </button>
+
+            <button class="artist-station-chip" type="button" role="listitem"
+              data-station-id="hit" aria-label="ГОРОД ХИТ 89.0 FM">
+              <svg class="artist-station-eq" aria-hidden="true" viewBox="0 0 18 14">
+                <rect x="1"  y="6" width="2.5" height="8"  rx="1.25" fill="currentColor"/>
+                <rect x="5"  y="2" width="2.5" height="12" rx="1.25" fill="currentColor"/>
+                <rect x="9"  y="4" width="2.5" height="10" rx="1.25" fill="currentColor"/>
+                <rect x="13" y="3" width="2.5" height="11" rx="1.25" fill="currentColor"/>
+              </svg>
+              <span class="artist-station-name">ГОРОД ХИТ</span>
+              <span class="artist-station-freq">89.0 FM</span>
+            </button>
+
+            <button class="artist-station-chip" type="button" role="listitem"
+              data-station-id="chill" aria-label="DFM CHILL 104.5 FM">
+              <svg class="artist-station-eq" aria-hidden="true" viewBox="0 0 18 14">
+                <rect x="1"  y="8" width="2.5" height="6"  rx="1.25" fill="currentColor"/>
+                <rect x="5"  y="5" width="2.5" height="9"  rx="1.25" fill="currentColor"/>
+                <rect x="9"  y="3" width="2.5" height="11" rx="1.25" fill="currentColor"/>
+                <rect x="13" y="6" width="2.5" height="8"  rx="1.25" fill="currentColor"/>
+              </svg>
+              <span class="artist-station-name">DFM CHILL</span>
+              <span class="artist-station-freq">104.5 FM</span>
+            </button>
+
+            <button class="artist-station-chip" type="button" role="listitem"
+              data-station-id="cityshow" aria-label="Z. CITY SHOW 105.0 FM">
+              <svg class="artist-station-eq" aria-hidden="true" viewBox="0 0 18 14">
+                <rect x="1"  y="3" width="2.5" height="11" rx="1.25" fill="currentColor"/>
+                <rect x="5"  y="7" width="2.5" height="7"  rx="1.25" fill="currentColor"/>
+                <rect x="9"  y="1" width="2.5" height="13" rx="1.25" fill="currentColor"/>
+                <rect x="13" y="5" width="2.5" height="9"  rx="1.25" fill="currentColor"/>
+              </svg>
+              <span class="artist-station-name">Z. CITY SHOW</span>
+              <span class="artist-station-freq">105.0 FM</span>
+            </button>
+
+          </div>
+          <!-- /.artist-stations -->
+        </section>
+
       </section>
+      <!-- /#/artist -->
 
       <!-- Page: Страница трека -->
       <section data-page="track" aria-labelledby="page-track-heading">
@@ -5049,12 +6342,314 @@
         <div class="page-content"></div>
       </section>
 
-      <!-- Page: Раздел Избранное -->
+      <!-- Page: Раздел Избранное — #/favorites -->
       <section data-page="favorites" aria-labelledby="page-favorites-heading">
-        <h1 id="page-favorites-heading" class="page-stub-heading">Раздел Избранное</h1>
-        <p class="page-stub-hint">Список треков, артистов, плейлистов, станций + фильтры. Task #9 заполнит этот экран.</p>
-        <div class="page-content"></div>
+
+        <!-- ---- Heading band ------------------------------------------------- -->
+        <div class="favorites-heading-band">
+          <p class="favorites-eyebrow" aria-hidden="true">КОЛЛЕКЦИЯ · ИЗБРАННОЕ</p>
+          <h1 id="page-favorites-heading" class="favorites-title">Избранное</h1>
+          <p class="favorites-subtitle">134 элемента · фильтруй по типу ниже</p>
+        </div>
+
+        <!-- ---- Filter chip row ---------------------------------------------- -->
+        <div
+          class="favorites-chip-row"
+          id="favorites-chip-row"
+          role="group"
+          aria-label="Фильтр по типу"
+        >
+          <button class="favorites-chip" type="button" aria-pressed="true"
+            data-fav-type="all" aria-label="Все избранное">
+            ВСЕ
+          </button>
+          <button class="favorites-chip" type="button" aria-pressed="false"
+            data-fav-type="track" aria-label="Избранные треки — 47">
+            ТРЕКИ <span class="favorites-chip-count">47</span>
+          </button>
+          <button class="favorites-chip" type="button" aria-pressed="false"
+            data-fav-type="artist" aria-label="Избранные артисты — 12">
+            АРТИСТЫ <span class="favorites-chip-count">12</span>
+          </button>
+          <button class="favorites-chip" type="button" aria-pressed="false"
+            data-fav-type="playlist" aria-label="Избранные плейлисты — 38">
+            ПЛЕЙЛИСТЫ <span class="favorites-chip-count">38</span>
+          </button>
+          <button class="favorites-chip" type="button" aria-pressed="false"
+            data-fav-type="station" aria-label="Избранные станции — 8">
+            СТАНЦИИ <span class="favorites-chip-count">8</span>
+          </button>
+        </div>
+
+        <!-- ---- Favorites list ----------------------------------------------- -->
+        <div
+          class="favorites-list"
+          id="favorites-list"
+          role="list"
+          aria-label="Список избранного"
+        >
+
+          <!-- Row 1: track -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="track" data-fav-title="Believer" data-fav-artist="IMAGINE DRAGONS"
+            aria-label="Believer, трек, Imagine Dragons">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#56afd7)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Believer</span>
+              <span class="favorites-row-sub">IMAGINE DRAGONS · 03:38</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
+            <span class="favorites-row-info tabular" aria-hidden="true">03:38</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 2: artist -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="artist" data-fav-title="IMAGINE DRAGONS"
+            aria-label="Imagine Dragons, артист, 47 треков">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a4fa0,#8b2da0)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">IMAGINE DRAGONS</span>
+              <span class="favorites-row-sub">артист · 47 треков</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--artist" aria-hidden="true">АРТИСТ</span>
+            <span class="favorites-row-info" aria-hidden="true">47 тр.</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 3: playlist -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="playlist" data-fav-title="Город ФМ · Тёмный вечер"
+            aria-label="Город ФМ Тёмный вечер, плейлист, 24 трека">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#2d0a5a,#5a1e8c)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Город ФМ · Тёмный вечер</span>
+              <span class="favorites-row-sub">плейлист · 24 трека</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--playlist" aria-hidden="true">ПЛЕЙЛИСТ</span>
+            <span class="favorites-row-info" aria-hidden="true">24 тр.</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 4: station -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="station" data-fav-title="ГОРОД РОК"
+            aria-label="ГОРОД РОК, станция, 103.5 FM">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#0ea8e8)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">ГОРОД РОК</span>
+              <span class="favorites-row-sub">станция · 103.5 FM</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--station" aria-hidden="true">СТАНЦИЯ</span>
+            <span class="favorites-row-info" aria-hidden="true">103.5</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 5: track -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="track" data-fav-title="Glitch" data-fav-artist="MARTIN GARRIX × JULIAN JORDAN"
+            aria-label="Glitch, трек, Martin Garrix">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#00352a,#00a676)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Glitch</span>
+              <span class="favorites-row-sub">MARTIN GARRIX × JULIAN JORDAN · 04:00</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
+            <span class="favorites-row-info tabular" aria-hidden="true">04:00</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 6: playlist -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="playlist" data-fav-title="Mood: Driving"
+            aria-label="Mood: Driving, плейлист, 32 трека">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#3d1547,#c43a6e)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Mood: Driving</span>
+              <span class="favorites-row-sub">плейлист · 32 трека</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--playlist" aria-hidden="true">ПЛЕЙЛИСТ</span>
+            <span class="favorites-row-info" aria-hidden="true">32 тр.</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 7: track -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="track" data-fav-title="Hallelujah" data-fav-artist="JEFF BUCKLEY"
+            aria-label="Hallelujah, трек, Jeff Buckley">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#4a3a00,#c4a000)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Hallelujah</span>
+              <span class="favorites-row-sub">JEFF BUCKLEY · 06:55</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
+            <span class="favorites-row-info tabular" aria-hidden="true">06:55</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 8: artist -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="artist" data-fav-title="LINKIN PARK"
+            aria-label="Linkin Park, артист, 32 трека">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#6a0a00,#c42000)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">LINKIN PARK</span>
+              <span class="favorites-row-sub">артист · 32 трека</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--artist" aria-hidden="true">АРТИСТ</span>
+            <span class="favorites-row-info" aria-hidden="true">32 тр.</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 9: track -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="track" data-fav-title="Roads Untraveled" data-fav-artist="LINKIN PARK"
+            aria-label="Roads Untraveled, трек, Linkin Park">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a1a4a,#3c6ac4)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Roads Untraveled</span>
+              <span class="favorites-row-sub">LINKIN PARK · 04:36</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
+            <span class="favorites-row-info tabular" aria-hidden="true">04:36</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 10: station -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="station" data-fav-title="DFM CHILL"
+            aria-label="DFM CHILL, станция, 104.5 FM">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#001a45,#0d5fcf)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">DFM CHILL</span>
+              <span class="favorites-row-sub">станция · 104.5 FM</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--station" aria-hidden="true">СТАНЦИЯ</span>
+            <span class="favorites-row-info" aria-hidden="true">104.5</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 11: playlist -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="playlist" data-fav-title="Подборка ДИСКАЧ 90-Х"
+            aria-label="Подборка ДИСКАЧ 90-Х, плейлист, 18 треков">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#7a4600,#d4780a)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Подборка ДИСКАЧ 90-Х</span>
+              <span class="favorites-row-sub">плейлист · 18 треков</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--playlist" aria-hidden="true">ПЛЕЙЛИСТ</span>
+            <span class="favorites-row-info" aria-hidden="true">18 тр.</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 12: track -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="track" data-fav-title="Dance The Night" data-fav-artist="DUA LIPA"
+            aria-label="Dance The Night, трек, Dua Lipa">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#8b005d,#e0007a)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Dance The Night</span>
+              <span class="favorites-row-sub">DUA LIPA · 02:56</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
+            <span class="favorites-row-info tabular" aria-hidden="true">02:56</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 13: artist -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="artist" data-fav-title="JONY"
+            aria-label="JONY, артист, 21 трек">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#004f6d,#0a8f8a)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">JONY</span>
+              <span class="favorites-row-sub">артист · 21 трек</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--artist" aria-hidden="true">АРТИСТ</span>
+            <span class="favorites-row-info" aria-hidden="true">21 тр.</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 14: playlist -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="playlist" data-fav-title="Город ФМ · За кадром"
+            aria-label="Город ФМ За кадром, плейлист, 14 эпизодов">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a0840,#3d1e8c)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Город ФМ · За кадром</span>
+              <span class="favorites-row-sub">плейлист · 14 эпизодов</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--playlist" aria-hidden="true">ПЛЕЙЛИСТ</span>
+            <span class="favorites-row-info" aria-hidden="true">14 эп.</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 15: track -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="track" data-fav-title="Roads Untraveled (acoustic)" data-fav-artist="LINKIN PARK"
+            aria-label="Roads Untraveled acoustic, трек, Linkin Park">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#2a1a5c,#5c3aa0)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">Roads Untraveled (acoustic)</span>
+              <span class="favorites-row-sub">LINKIN PARK · 04:20</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
+            <span class="favorites-row-info tabular" aria-hidden="true">04:20</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Row 16: station -->
+          <div class="favorites-row" role="listitem" tabindex="0"
+            data-fav-type="station" data-fav-title="ГОРОД ХИТ"
+            aria-label="ГОРОД ХИТ, станция, 89.0 FM">
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#004d2e,#00cc7a)"></div>
+            <div class="favorites-row-meta">
+              <span class="favorites-row-title">ГОРОД ХИТ</span>
+              <span class="favorites-row-sub">станция · 89.0 FM</span>
+            </div>
+            <span class="favorites-type-badge favorites-type-badge--station" aria-hidden="true">СТАНЦИЯ</span>
+            <span class="favorites-row-info" aria-hidden="true">89.0</span>
+            <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+        </div>
+        <!-- /.favorites-list -->
+
       </section>
+      <!-- /#/favorites -->
 
     </main>
   </div>
@@ -5832,7 +7427,7 @@
     <button
       class="tabbar-item"
       type="button"
-      data-route="#/favorites"
+      data-route="#/artist"
       aria-label="Избранное"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -6876,6 +8471,197 @@
         }
 
       })(); /* end initLibrary */
+
+      /* ---- Артист page wiring ---------------------------------------------- */
+
+      (function initArtist() {
+
+        /* Helper: swap mini-bar + full-player meta + open player */
+        function openArtistPlayer(title, artist) {
+          var miniTitle  = document.getElementById('player-track-title');
+          var miniArtist = document.getElementById('player-track-artist');
+          if (miniTitle)  miniTitle.textContent  = title;
+          if (miniArtist) miniArtist.textContent = artist;
+          var fullTitle  = document.getElementById('player-full-title');
+          var fullArtist = document.getElementById('player-full-artist');
+          if (fullTitle)  fullTitle.textContent  = title;
+          if (fullArtist) fullArtist.textContent = artist;
+          openPlayer();
+        }
+
+        /* 1. Primary CTA — "Слушать радио артиста" */
+        var btnRadio = document.getElementById('artist-btn-radio');
+        if (btnRadio) {
+          btnRadio.addEventListener('click', function () {
+            openArtistPlayer('Радио IMAGINE DRAGONS', 'IMAGINE DRAGONS');
+          });
+        }
+
+        /* 2. Secondary buttons — toggle aria-pressed */
+        var btnFav   = document.getElementById('artist-btn-fav');
+        var btnShare = document.getElementById('artist-btn-share');
+
+        if (btnFav) {
+          btnFav.addEventListener('click', function () {
+            var pressed = btnFav.getAttribute('aria-pressed') === 'true';
+            btnFav.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+          });
+        }
+        if (btnShare) {
+          btnShare.addEventListener('click', function () {
+            var pressed = btnShare.getAttribute('aria-pressed') === 'true';
+            btnShare.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+            console.log('[Город ФМ] Artist share clicked');
+          });
+        }
+
+        /* 3. "Открыть весь список" link */
+        var openAll = document.getElementById('artist-open-all');
+        if (openAll) {
+          openAll.addEventListener('click', function (e) {
+            e.preventDefault();
+            navigate('#/favorites');
+          });
+        }
+
+        /* 4. Track row clicks */
+        var tracksGrid = document.getElementById('artist-tracks-grid');
+        if (tracksGrid) {
+          function handleTrackActivation(target) {
+            var row = target.closest('.artist-track-row');
+            if (!row) return;
+            openArtistPlayer(
+              row.getAttribute('data-track-title') || 'Трек',
+              row.getAttribute('data-track-artist') || 'IMAGINE DRAGONS'
+            );
+          }
+          tracksGrid.addEventListener('click', function (e) { handleTrackActivation(e.target); });
+          tracksGrid.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleTrackActivation(e.target);
+            }
+          });
+        }
+
+        /* 5. Album card clicks */
+        var albumsRow = document.querySelector('.artist-albums-row');
+        if (albumsRow) {
+          function handleAlbumActivation(target) {
+            var card = target.closest('.artist-album-card');
+            if (!card) return;
+            openArtistPlayer(
+              card.getAttribute('data-track-title') || 'Альбом',
+              card.getAttribute('data-track-artist') || 'IMAGINE DRAGONS'
+            );
+          }
+          albumsRow.addEventListener('click', function (e) { handleAlbumActivation(e.target); });
+          albumsRow.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleAlbumActivation(e.target);
+            }
+          });
+        }
+
+        /* 6. Station chip clicks — navigate to #/home */
+        var stationsDiv = document.querySelector('.artist-stations');
+        if (stationsDiv) {
+          stationsDiv.addEventListener('click', function (e) {
+            var chip = e.target.closest('.artist-station-chip');
+            if (!chip) return;
+            var stationId = chip.getAttribute('data-station-id') || 'rock';
+            console.log('[Город ФМ] Artist station chip:', stationId);
+            navigate('#/home');
+          });
+        }
+
+      })(); /* end initArtist */
+
+      /* ---- Раздел Избранное page wiring ------------------------------------ */
+
+      (function initFavorites() {
+
+        /* 1. Chip row single-select */
+        var favChipRow = document.getElementById('favorites-chip-row');
+        if (favChipRow) {
+          favChipRow.addEventListener('click', function (e) {
+            var chip = e.target.closest('.favorites-chip');
+            if (!chip) return;
+            favChipRow.querySelectorAll('.favorites-chip').forEach(function (c) {
+              c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+            });
+            console.log('[Город ФМ] Избранное filter:', chip.getAttribute('data-fav-type'));
+          });
+        }
+
+        /* 2. Row body click — type-dispatch */
+        var favList = document.getElementById('favorites-list');
+        if (favList) {
+          favList.addEventListener('click', function (e) {
+            /* Heart toggle takes priority — handled separately */
+            if (e.target.closest('.favorites-heart-btn')) return;
+
+            var row = e.target.closest('.favorites-row');
+            if (!row) return;
+
+            var type  = row.getAttribute('data-fav-type');
+            var title  = row.getAttribute('data-fav-title') || 'Элемент';
+            var artist = row.getAttribute('data-fav-artist') || '';
+
+            if (type === 'track') {
+              /* open player */
+              var miniTitle  = document.getElementById('player-track-title');
+              var miniArtist = document.getElementById('player-track-artist');
+              if (miniTitle)  miniTitle.textContent  = title;
+              if (miniArtist) miniArtist.textContent = artist;
+              var fullTitle  = document.getElementById('player-full-title');
+              var fullArtist = document.getElementById('player-full-artist');
+              if (fullTitle)  fullTitle.textContent  = title;
+              if (fullArtist) fullArtist.textContent = artist;
+              openPlayer();
+            } else if (type === 'artist') {
+              navigate('#/artist');
+            } else if (type === 'playlist') {
+              /* open player with playlist meta */
+              var miniTitle2  = document.getElementById('player-track-title');
+              var miniArtist2 = document.getElementById('player-track-artist');
+              if (miniTitle2)  miniTitle2.textContent  = title;
+              if (miniArtist2) miniArtist2.textContent = 'Плейлист';
+              var fullTitle2  = document.getElementById('player-full-title');
+              var fullArtist2 = document.getElementById('player-full-artist');
+              if (fullTitle2)  fullTitle2.textContent  = title;
+              if (fullArtist2) fullArtist2.textContent = 'Плейлист';
+              openPlayer();
+            } else if (type === 'station') {
+              navigate('#/home');
+            }
+
+            console.log('[Город ФМ] Favorites row click:', type, title);
+          });
+
+          /* keyboard support on rows */
+          favList.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              var row = e.target.closest('.favorites-row');
+              if (row && !e.target.closest('.favorites-heart-btn')) {
+                e.preventDefault();
+                row.click();
+              }
+            }
+          });
+
+          /* 3. Heart-toggle — stop propagation, toggle aria-pressed */
+          favList.addEventListener('click', function (e) {
+            var heartBtn = e.target.closest('.favorites-heart-btn');
+            if (!heartBtn) return;
+            e.stopPropagation();
+            var pressed = heartBtn.getAttribute('aria-pressed') === 'true';
+            heartBtn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+          });
+        }
+
+      })(); /* end initFavorites */
 
       /* ---- Boot ------------------------------------------------------------ */
 
