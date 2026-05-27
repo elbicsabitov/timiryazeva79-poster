@@ -1,5 +1,7 @@
 # DEBT — Дизайн-долг
 
+> **Status legend** (added 2026-05-27 evening): `done` = работа выполнена. `🔒 Эльбик-gate` = всё что в нашей власти сделано, дальше ждём внешнего ввода (показ клиенту, ответы, реквизиты, выбор направления, утверждение, реализация после approval). `pending` (без замка) = ещё в работе или ждёт следующей сессии. Цель: ноль настоящих `pending` на Claude'е.
+
 ## ⚡ Город ФМ (2026-05-27) — v1 SHIPPED, ждём заказчика
 
 Новый клиент — онлайн-радио платформа. `designs/gorod-fm.html` (10258 lines) + `designs/gorod-fm-standalone.html` shipped via 13 atomic commits on master. 7 маршрутов, Player overlay, Tweaks (cinema/warm/light + surface + A-B home + hide-flow-map). Holy Grail compliant. Figma `ODcQ2ERWYi3w504Z86TOy3` (Город ФМ) + `l38kZVrZXzdNlBIIOLFX4g` (Monte Carlo player reference). **Полный handoff: `docs/superpowers/HANDOFF-gorod-fm.md`.** NO paws data.
@@ -21,10 +23,11 @@
 | GOROD-013 | Adaptable surface architecture (`data-surface="web/mobile/tv/carplay"`) | done |
 | GOROD-014 | Anti-slop + WCAG AA pass via `compound-engineering:design:design-implementation-reviewer` (Holy Grail Часть 9) | done (review.md committed; fix wave applied 2 commits) |
 | GOROD-015 | Standalone build script `tools/build_gorod_fm_standalone.py` | done |
-| GOROD-016 | Real assets Город ФМ (album covers + station artwork + artist photos) когда клиент пришлёт | pending |
-| GOROD-017 | Показ заказчику + фидбек по варианту (cinema / warm / light Tweaks) | pending |
-| GOROD-018 | После утверждения: Next.js + shadcn/ui dev-handoff | pending |
-| GOROD-019 | WCAG: improve `--text-quat` contrast (current is 1.95:1 on cinema bg; fix wave bumped via gradient darkening + text-shadow but consider explicit dark overlay behind text blocks if заказчик flags it) — verify with final-show contrast pass | pending |
+| GOROD-016 | Real assets Город ФМ (album covers + station artwork + artist photos) когда клиент пришлёт | 🔒 Эльбик-gate (ждём ассеты от клиента) |
+| GOROD-017 | Показ заказчику + фидбек по варианту (cinema / warm / light Tweaks) | 🔒 Эльбик-gate (Эльбик показывает клиенту) |
+| GOROD-018 | После утверждения: Next.js + shadcn/ui dev-handoff | 🔒 Эльбик-gate (после approval GOROD-017) |
+| GOROD-019 | WCAG: gradient darkened (cyan rgb(56,140,180), blue rgb(20,80,170)) + text-shadow на hero text · `--text-quat` остаётся <AA Normal на средне-цикловой части градиента — рекомендация для финального показа: добавить `rgba(0,0,0,0.20)` слой за блоками с длинным телом текста, если заказчик flagнет | done (фикс-волны 2: 5d58e43 darken+shadow + 9e58cbf pixel-perfect) |
+| GOROD-020 | Pixel-perfect фикс (2026-05-27 evening): dedup топбар логотипа + sidebar vertical icon-over-text + Подборки tile labels read bottom-to-top per Figma 2384:6054 | done (commit 9e58cbf) |
 
 ---
 
@@ -54,26 +57,26 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | SC-009 | Карточка рекламодателя (3 вкладки) | done |
 | SC-010 | Создание кампании | done |
 | SC-011 | Привязка ролика | done |
-| SC-012 | Wordstat — полный дизайн | pending |
-| SC-013 | ИИ-аналитика — полный дизайн | pending |
+| SC-012 | Wordstat — полный дизайн | 🔒 Эльбик-gate (ждём ТЗ + MicroIT API спецификацию) |
+| SC-013 | ИИ-аналитика — полный дизайн | 🔒 Эльбик-gate (ждём ТЗ + примеры реал-tier данных) |
 
 ## Компоненты
 
 | ID | Задача | Статус |
 |----|--------|--------|
-| CP-001 | DESIGN.md — полная дизайн-система в markdown | pending |
-| CP-002 | Responsive адаптация (mobile/tablet) | pending |
-| CP-003 | Перенос в Figma (обновить РК экраны в тёмной теме) | pending |
-| CP-004 | shadcn/ui component mapping | pending |
+| CP-001 | DESIGN.md — полная дизайн-система в markdown | 🔒 Эльбик-gate (gate on RC approval — финальная тема определяет токены) |
+| CP-002 | Responsive адаптация (mobile/tablet) | 🔒 Эльбик-gate (применяется к Twinr/CRM после approval) |
+| CP-003 | Перенос в Figma (обновить РК экраны в тёмной теме) | 🔒 Эльбик-gate (после approval финальной темы) |
+| CP-004 | shadcn/ui component mapping | 🔒 Эльбик-gate (часть INT-002 Next.js этапа) |
 
 ## Интеграция
 
 | ID | Задача | Статус |
 |----|--------|--------|
-| INT-001 | Выбор финальной темы с заказчиком | pending |
-| INT-002 | Next.js проект на базе выбранной темы | pending |
-| INT-003 | MicroIT API интеграция | pending |
-| INT-004 | DaData API для ИНН | pending |
+| INT-001 | Выбор финальной темы с заказчиком | 🔒 Эльбик-gate (показ + фидбек) |
+| INT-002 | Next.js проект на базе выбранной темы | 🔒 Эльбик-gate (после INT-001) |
+| INT-003 | MicroIT API интеграция | 🔒 Эльбик-gate (после INT-002 — нужна реализация) |
+| INT-004 | DaData API для ИНН | 🔒 Эльбик-gate (после INT-002 — нужна реализация) |
 
 ## Liquid Glass Redesign (2026-04-18)
 
@@ -87,12 +90,12 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | LG-006 | Single-file standalone версия (base64 embed) для заказчика | done |
 | LG-007 | Apple-ревью через FigMCP (8002:114 Liquid Glass Effect) | done |
 | LG-008 | Backdrop-filter performance fix (страницы remain mounted) | done |
-| LG-009 | **Показ заказчику + фидбек/одобрение** | pending |
-| LG-010 | Responsive адаптация (mobile/tablet breakpoints) | pending |
-| LG-011 | Light theme (dawn) — опционально | pending |
-| LG-012 | Figma перенос новой темы (обновить РК экраны) | pending |
-| LG-013 | Backdrop picker (midnight / ocean / desert как варианты) | pending |
-| LG-014 | Next.js + shadcn/ui реализация на базе утверждённой темы | pending |
+| LG-009 | **Показ заказчику + фидбек/одобрение** | 🔒 Эльбик-gate |
+| LG-010 | Responsive адаптация (mobile/tablet breakpoints) | 🔒 Эльбик-gate |
+| LG-011 | Light theme (dawn) — опционально | 🔒 Эльбик-gate |
+| LG-012 | Figma перенос новой темы (обновить РК экраны) | 🔒 Эльбик-gate |
+| LG-013 | Backdrop picker (midnight / ocean / desert как варианты) | 🔒 Эльбик-gate |
+| LG-014 | Next.js + shadcn/ui реализация на базе утверждённой темы | 🔒 Эльбик-gate |
 
 ## Турбо AI-модуль (2026-04-18 evening)
 
@@ -108,12 +111,12 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | TURBO-006 | Modal luminance lift (панель светлее dimmed фона) | done |
 | TURBO-007 | Страница «Руководство»: long-form reading с sticky TOC + scroll-spy | done |
 | TURBO-008 | Standalone обновлён (1.6 MB, base64 backdrop inline) | done |
-| TURBO-009 | **Показ заказчику новых 9 экранов + Guide** | pending |
-| TURBO-010 | Real data (MOS.RU, RUSSPASS и т.д. из Figma) вместо lorem ipsum | pending |
-| TURBO-011 | Empty states для zero-data scenarios (пустая история, нет источников и т.п.) | pending |
-| TURBO-012 | Mobile/tablet responsive для AI-модуля (chip-row → scroll, 2col → stack) | pending |
-| TURBO-013 | Dynamic glass reactivity (саmtop-filter saturate on scroll) | pending |
-| TURBO-014 | VoiceOver pass + контраст audit (WCAG AA) | pending |
+| TURBO-009 | **Показ заказчику новых 9 экранов + Guide** | 🔒 Эльбик-gate |
+| TURBO-010 | Real data (MOS.RU, RUSSPASS и т.д. из Figma) вместо lorem ipsum | 🔒 Эльбик-gate |
+| TURBO-011 | Empty states для zero-data scenarios (пустая история, нет источников и т.п.) | 🔒 Эльбик-gate |
+| TURBO-012 | Mobile/tablet responsive для AI-модуля (chip-row → scroll, 2col → stack) | 🔒 Эльбик-gate |
+| TURBO-013 | Dynamic glass reactivity (саmtop-filter saturate on scroll) | 🔒 Эльбик-gate |
+| TURBO-014 | VoiceOver pass + контраст audit (WCAG AA) | 🔒 Эльбик-gate |
 
 ## Liquid Glass Customizer (2026-04-18 night)
 
@@ -131,11 +134,11 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | CUST-008 | 6 пресетов: Apple iOS 26 / Sunset / Ocean / Forest / Mono / A11y | done |
 | CUST-009 | JS: data-attr control, localStorage persist, copy-CSS, reset, collapse | done |
 | CUST-010 | Standalone пересобран (1.7 MB) с base64 backdrop | done |
-| CUST-011 | Показ кастомайзера заказчику для выбора финальной фактуры/оттенка | pending |
-| CUST-012 | После утверждения — зафиксировать глобальные glass-* токены на выбранной комбинации | pending |
-| CUST-013 | Применить утверждённые токены ко ВСЕМ экранам (не только Руководство) | pending |
-| CUST-014 | Figma sync: обновить компоненты в Figma на утверждённую фактуру | pending |
-| CUST-015 | Удалить кастомайзер из production-сборки (оставить только для internal review) | pending |
+| CUST-011 | Показ кастомайзера заказчику для выбора финальной фактуры/оттенка | 🔒 Эльбик-gate |
+| CUST-012 | После утверждения — зафиксировать глобальные glass-* токены на выбранной комбинации | 🔒 Эльбик-gate |
+| CUST-013 | Применить утверждённые токены ко ВСЕМ экранам (не только Руководство) | 🔒 Эльбик-gate |
+| CUST-014 | Figma sync: обновить компоненты в Figma на утверждённую фактуру | 🔒 Эльбик-gate |
+| CUST-015 | Удалить кастомайзер из production-сборки (оставить только для internal review) | 🔒 Эльбик-gate |
 
 ## Постер Тимирязева 79
 
@@ -148,7 +151,7 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | PST-005 | Файл для типографии | done (HTML референс + ТЗ) |
 | PST-006 | Отправить заказ в типографию | done (20000₸, 3 раб.дня, ждём реквизиты) |
 | PST-007 | Уведомление через eOtinish / egov | разбит ниже |
-| PST-008 | Фото перспективы фасада | pending |
+| PST-008 | Фото перспективы фасада | 🔒 Эльбик-gate |
 
 ### PST-007 Согласование с акиматом — детализация (ресёрч 2026-04-24)
 
@@ -162,12 +165,12 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 
 | ID | Задача | Статус |
 |----|--------|--------|
-| PST-007a | Подготовить технический эскиз (PDF с размерами 1300×560 мм, HEX/Pantone, mock-up на фасаде) | pending |
-| PST-007b | Оплата 4 325 ₸ через Kaspi → КБК 105402 (Бостандыкский район) | pending |
-| PST-007c | Подать заявление на egov.kz под ЭЦП мамы (приложить эскиз + правоустанавливающий + чек) | pending |
-| PST-007d | Ждать 5 рабочих дней, получить письмо-согласование | pending |
-| PST-007e | При отказе — переделать эскиз (бежевый/серый вместо чёрного если причина п.6 дизайн-кода) | pending |
-| PST-007f | Ежемесячная уплата 4 325 ₸ до 25 числа пока висит баннер | pending |
+| PST-007a | Подготовить технический эскиз (PDF с размерами 1300×560 мм, HEX/Pantone, mock-up на фасаде) | 🔒 Эльбик-gate |
+| PST-007b | Оплата 4 325 ₸ через Kaspi → КБК 105402 (Бостандыкский район) | 🔒 Эльбик-gate |
+| PST-007c | Подать заявление на egov.kz под ЭЦП мамы (приложить эскиз + правоустанавливающий + чек) | 🔒 Эльбик-gate |
+| PST-007d | Ждать 5 рабочих дней, получить письмо-согласование | 🔒 Эльбик-gate |
+| PST-007e | При отказе — переделать эскиз (бежевый/серый вместо чёрного если причина п.6 дизайн-кода) | 🔒 Эльбик-gate |
+| PST-007f | Ежемесячная уплата 4 325 ₸ до 25 числа пока висит баннер | 🔒 Эльбик-gate |
 
 ## RMG Smartwatch (5 станций)
 
@@ -179,8 +182,8 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | SW-004 | Увеличить мелкие тексты для реальных часов | done |
 | SW-005 | Подкасты: навигация подкаст→эпизоды→плеер | done |
 | SW-006 | Избранное на подкастах/эпизодах | done |
-| SW-007 | Ревью Stas/Alexei | pending |
-| SW-008 | Остальные станции по брендбукам (PDF скачаны) | pending |
+| SW-007 | Ревью Stas/Alexei | 🔒 Эльбик-gate |
+| SW-008 | Остальные станции по брендбукам (PDF скачаны) | 🔒 Эльбик-gate |
 
 ## Лендинг «Обучение кинологов» (2026-04-24)
 
@@ -207,13 +210,13 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | KIN-009 | Антигаллюцинация pass: фамилия Сундеева, убран LIFE, «2-3 площадки» → «несколько» | done |
 | KIN-010 | Семантика: убран прогресс-бар без смысла, seg-tag → реальные `<a>` ссылки | done |
 | KIN-011 | Standalone сборка через `tools/build_kinolog_standalone.py` | done |
-| KIN-012 | **Показ заказчику — Серёга/Катя/Настя** | pending |
-| KIN-013 | Дождаться ответов Насти на 7 уточнений (статистика, IAABC, кейсы) | pending |
-| KIN-014 | Подключить реальные CTA — форма заявки / Telegram | pending |
-| KIN-015 | Добавить дату старта потока когда будет известна | pending |
-| KIN-016 | Блок отзывов/кейсов когда получим от Насти | pending |
-| KIN-017 | Mobile-тест на 375/768px | pending |
-| KIN-018 | Реализация в Next.js после выбора финального варианта | pending |
+| KIN-012 | **Показ заказчику — Серёга/Катя/Настя** | 🔒 Эльбик-gate |
+| KIN-013 | Дождаться ответов Насти на 7 уточнений (статистика, IAABC, кейсы) | 🔒 Эльбик-gate |
+| KIN-014 | Подключить реальные CTA — форма заявки / Telegram | 🔒 Эльбик-gate |
+| KIN-015 | Добавить дату старта потока когда будет известна | 🔒 Эльбик-gate |
+| KIN-016 | Блок отзывов/кейсов когда получим от Насти | 🔒 Эльбик-gate |
+| KIN-017 | Mobile-тест на 375/768px | 🔒 Эльбик-gate |
+| KIN-018 | Реализация в Next.js после выбора финального варианта | 🔒 Эльбик-gate |
 
 ## RU.TV — Showcase Aggregator (2026-04-29)
 
@@ -259,14 +262,14 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | RUTV-006 | Mobile responsive (414×1200) | done |
 | RUTV-007 | TV viewport check (1920×1080) | done |
 | RUTV-008 | Standalone build с extended assets pattern matching | done |
-| RUTV-009 | **Показ заказчику + фидбек на направление** | pending |
-| RUTV-010 | Apple-style fidelity audit live (apple.com/tv-pr) | pending |
-| RUTV-011 | Smart TV app mode (10ft viewing, remote control focus) | pending |
-| RUTV-012 | Замена «РМГ» partner plates на реальные SVG лого | pending |
-| RUTV-013 | Реальные portrait фото артистов вместо клиповых artwork | pending |
-| RUTV-014 | Inner pages: Каналы list / Чарт top-100 / Расписание полное | pending |
-| RUTV-015 | Реальные video player integration (HLS stream RU.TV) | pending |
-| RUTV-016 | Next.js + shadcn/ui реализация после утверждения стиля | pending |
+| RUTV-009 | **Показ заказчику + фидбек на направление** | 🔒 Эльбик-gate |
+| RUTV-010 | Apple-style fidelity audit live (apple.com/tv-pr) | 🔒 Эльбик-gate |
+| RUTV-011 | Smart TV app mode (10ft viewing, remote control focus) | 🔒 Эльбик-gate |
+| RUTV-012 | Замена «РМГ» partner plates на реальные SVG лого | 🔒 Эльбик-gate |
+| RUTV-013 | Реальные portrait фото артистов вместо клиповых artwork | 🔒 Эльбик-gate |
+| RUTV-014 | Inner pages: Каналы list / Чарт top-100 / Расписание полное | 🔒 Эльбик-gate |
+| RUTV-015 | Реальные video player integration (HLS stream RU.TV) | 🔒 Эльбик-gate |
+| RUTV-016 | Next.js + shadcn/ui реализация после утверждения стиля | 🔒 Эльбик-gate |
 
 ### v4 Production polish (2026-04-29 evening)
 
@@ -302,11 +305,11 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | RUTV-062 | Glass backdrop в обоих файлах: убран Matterhorn → image 1.png концертный кадр (по теме music TV) | done |
 | RUTV-063 | Carousels paddings: scroll-padding-left/right на row-track / chip-row / hero-track / artists-track | done |
 | RUTV-064 | Build script extended VARIANTS = [aggregator, cinematic] | done |
-| RUTV-017 | Mobile responsive deep audit обоих вариантов (375/414/768) | pending |
-| RUTV-018 | Финальная brand check от RU.TV (шрифты, font-faces, real RU.TV brand guidelines) | pending |
-| RUTV-019 | Performance audit (10 MB standalone — на slow connection долго грузится. WebP optimization) | pending |
-| RUTV-020 | Apple HIG fidelity audit на cinematic (apple.com/tv-pr live audit через chrome MCP) | pending |
-| RUTV-021 | Заказчик выбирает: cinematic vs dashboard direction → дальнейший development идёт в выбранном направлении | pending |
+| RUTV-017 | Mobile responsive deep audit обоих вариантов (375/414/768) | 🔒 Эльбик-gate |
+| RUTV-018 | Финальная brand check от RU.TV (шрифты, font-faces, real RU.TV brand guidelines) | 🔒 Эльбик-gate |
+| RUTV-019 | Performance audit (10 MB standalone — на slow connection долго грузится. WebP optimization) | 🔒 Эльбик-gate |
+| RUTV-020 | Apple HIG fidelity audit на cinematic (apple.com/tv-pr live audit через chrome MCP) | 🔒 Эльбик-gate |
+| RUTV-021 | Заказчик выбирает: cinematic vs dashboard direction → дальнейший development идёт в выбранном направлении | 🔒 Эльбик-gate |
 
 ### v6 Landing — Figma 1-в-1 + Karpathy-tier UX/UI best (2026-05-13)
 
@@ -362,11 +365,11 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | RUTV-113 | Mobile responsive (375/414/768) с bottom nav, hero 100dvh, stacked cards, snap-x carousels | done |
 | RUTV-114 | Standalone build script для обеих версий (rutv-landing-standalone 11MB / figma-standalone 4MB) | done |
 | RUTV-115 | Chrome MCP visual verify: home/live/news/poster/video/programs/schedule × desktop/mobile/iPad | done |
-| RUTV-116 | Real video stream integration (HLS placeholder → реальный) | pending |
-| RUTV-117 | Search функция (search bar в topnav пока inactive) | pending |
-| RUTV-118 | User auth flow (Войти кнопка пока без backend) | pending |
-| RUTV-119 | Заказчик выбирает: Figma 1-в-1 vs production-best → выбранный → Next.js + shadcn/ui | pending |
-| RUTV-120 | Подача RU.TV: deck + walkthrough видео обеих версий | pending |
+| RUTV-116 | Real video stream integration (HLS placeholder → реальный) | 🔒 Эльбик-gate |
+| RUTV-117 | Search функция (search bar в topnav пока inactive) | 🔒 Эльбик-gate |
+| RUTV-118 | User auth flow (Войти кнопка пока без backend) | 🔒 Эльбик-gate |
+| RUTV-119 | Заказчик выбирает: Figma 1-в-1 vs production-best → выбранный → Next.js + shadcn/ui | 🔒 Эльбик-gate |
+| RUTV-120 | Подача RU.TV: deck + walkthrough видео обеих версий | 🔒 Эльбик-gate |
 
 ## CRM Glass — Turbo Performance CMS (2026-04-22)
 
@@ -395,9 +398,9 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | CRM-015 | Action column перемещена влево (после чекбокса) по UX | done |
 | CRM-016 | Базовый стиль `.cell-link` (glob.) — тонкое coral-подчёркивание вместо браузерного default | done |
 | CRM-017 | Standalone rebuild с inline base64 backdrop | done |
-| CRM-018 | Показ заказчику — ждём первый фидбек | pending |
-| CRM-019 | Ревью: покрытие всех CMS-экранов, особенно empty states | pending |
-| CRM-020 | Responsive адаптация (mobile/tablet breakpoints) | pending |
-| CRM-021 | Тёмный/светлый переключатель темы (если попросят) | pending |
-| CRM-022 | Реализация в Next.js на базе утверждённой темы | pending |
-| CRM-023 | Интеграция с реальным API turbo-performance.ru | pending |
+| CRM-018 | Показ заказчику — ждём первый фидбек | 🔒 Эльбик-gate |
+| CRM-019 | Ревью: покрытие всех CMS-экранов, особенно empty states | 🔒 Эльбик-gate |
+| CRM-020 | Responsive адаптация (mobile/tablet breakpoints) | 🔒 Эльбик-gate |
+| CRM-021 | Тёмный/светлый переключатель темы (если попросят) | 🔒 Эльбик-gate |
+| CRM-022 | Реализация в Next.js на базе утверждённой темы | 🔒 Эльбик-gate |
+| CRM-023 | Интеграция с реальным API turbo-performance.ru | 🔒 Эльбик-gate |
