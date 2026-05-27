@@ -2,7 +2,9 @@
 
 > **Status legend** (added 2026-05-27 evening): `done` = работа выполнена. `🔒 Эльбик-gate` = всё что в нашей власти сделано, дальше ждём внешнего ввода (показ клиенту, ответы, реквизиты, выбор направления, утверждение, реализация после approval). `pending` (без замка) = ещё в работе или ждёт следующей сессии. Цель: ноль настоящих `pending` на Claude'е.
 
-## ⚡ Город ФМ (2026-05-27) — v1 SHIPPED, ждём заказчика
+## ⚡ Город ФМ (2026-05-27) — v1 SHIPPED · v2 pixel-perfect rebuild PENDING
+
+**Update 2026-05-27 night:** v2 pixel-perfect rebuild from 5 newly-discovered Figma nodes is the next active task (GOROD-021). Full handoff: `docs/superpowers/HANDOFF-gorod-fm-v2-pixel-perfect.md`. v1 base remains shipped at HEAD `77ee5c1`.
 
 Новый клиент — онлайн-радио платформа. `designs/gorod-fm.html` (10258 lines) + `designs/gorod-fm-standalone.html` shipped via 13 atomic commits on master. 7 маршрутов, Player overlay, Tweaks (cinema/warm/light + surface + A-B home + hide-flow-map). Holy Grail compliant. Figma `ODcQ2ERWYi3w504Z86TOy3` (Город ФМ) + `l38kZVrZXzdNlBIIOLFX4g` (Monte Carlo player reference). **Полный handoff: `docs/superpowers/HANDOFF-gorod-fm.md`.** NO paws data.
 
@@ -23,11 +25,14 @@
 | GOROD-013 | Adaptable surface architecture (`data-surface="web/mobile/tv/carplay"`) | done |
 | GOROD-014 | Anti-slop + WCAG AA pass via `compound-engineering:design:design-implementation-reviewer` (Holy Grail Часть 9) | done (review.md committed; fix wave applied 2 commits) |
 | GOROD-015 | Standalone build script `tools/build_gorod_fm_standalone.py` | done |
-| GOROD-016 | Real assets Город ФМ (album covers + station artwork + artist photos) когда клиент пришлёт | 🔒 Эльбик-gate (ждём ассеты от клиента) |
+| GOROD-016 | Real assets Город ФМ (album covers + station artwork + artist photos) — PARTIALLY SUPERSEDED: оказалось ассеты есть в Figma `ODcQ2ERWYi3w504Z86TOy3`, скачиваются в GOROD-021. Остаются только реальные станционные обложки если клиент пришлёт отдельно | 🔒 partially superseded by GOROD-021 |
 | GOROD-017 | Показ заказчику + фидбек по варианту (cinema / warm / light Tweaks) | 🔒 Эльбик-gate (Эльбик показывает клиенту) |
 | GOROD-018 | После утверждения: Next.js + shadcn/ui dev-handoff | 🔒 Эльбик-gate (после approval GOROD-017) |
 | GOROD-019 | WCAG: gradient darkened (cyan rgb(56,140,180), blue rgb(20,80,170)) + text-shadow на hero text · `--text-quat` остаётся <AA Normal на средне-цикловой части градиента — рекомендация для финального показа: добавить `rgba(0,0,0,0.20)` слой за блоками с длинным телом текста, если заказчик flagнет | done (фикс-волны 2: 5d58e43 darken+shadow + 9e58cbf pixel-perfect) |
 | GOROD-020 | Pixel-perfect фикс (2026-05-27 evening): dedup топбар логотипа + sidebar vertical icon-over-text + Подборки tile labels read bottom-to-top per Figma 2384:6054 | done (commit 9e58cbf) |
+| GOROD-021 | **v2 pixel-perfect rebuild from 5 Figma nodes** (2026-05-27 night, user: «доведи все до pixel perfect с фигмы»). Discovered Figma has FULL designs for: `2174:422` Главная (dark black + 9 tiles + featured CTA), `2384:6054` Подборки (с реальными artist-photos), `2385:2924` Медиатека (Search+ABC+grid), `2535:11151` Раздел Избранное (DJ/Группы/Исполнители rows), `2537:14090` Страница артиста (photo+lyrics+tracks). Full strategy → `docs/superpowers/HANDOFF-gorod-fm-v2-pixel-perfect.md`. Next-session phases: (1) re-fetch 5 design contexts (URLs expire 7d), (2) download all assets to `designs/assets/gorod-fm/`, (3) rewrite 5 screens sequentially, (4) verify visually, (5) standalone rebuild. | pending — next session |
+| GOROD-022 | Add `--brand-blue-light: #5168FC` token + blue-tinted active states (chips + player bar on `#/home`) per Figma `2174:422` | pending — part of GOROD-021 wave |
+| GOROD-023 | Add `#/lives` placeholder route (sidebar item in Figma) | pending — part of GOROD-021 wave |
 
 ---
 
