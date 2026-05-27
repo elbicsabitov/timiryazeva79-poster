@@ -2535,6 +2535,394 @@
       }
     }
 
+      /* =========================================================================
+         МЕДИАТЕКА PAGE — 2-row grid + ad slot (Task #6)
+         ========================================================================= */
+
+      /* Page wrapper */
+      .library-page {
+        padding: 0 0 80px;
+        max-width: 1480px;
+        margin: 0 auto;
+      }
+
+      /* ---- Heading band ------------------------------------------------------ */
+
+      .library-heading-band {
+        padding: 40px 24px 36px;
+        text-align: center;
+      }
+
+      .library-eyebrow {
+        font-family: 'Onest', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--brand-cyan);
+        margin: 0 0 12px;
+      }
+
+      .library-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 48px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-pri);
+        transform: scaleX(1.05);
+        transform-origin: center;
+        display: block;
+        margin: 0 0 16px;
+        text-wrap: balance;
+        line-height: 1.05;
+      }
+
+      .library-subtitle {
+        font-family: 'Onest', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--text-sec);
+        margin: 0 auto;
+        max-width: 720px;
+        text-wrap: balance;
+        line-height: 1.55;
+      }
+
+      /* ---- Chip row ---------------------------------------------------------- */
+
+      .library-chip-row {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0 24px 4px;
+        margin-bottom: 40px;
+      }
+
+      .library-chip-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .library-chip {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        padding: 10px 24px;
+        height: 44px;
+        border-radius: var(--r-base);
+        background: var(--surf-glass-20);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: rgba(255, 255, 255, 0.80);
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
+        white-space: nowrap;
+      }
+
+      .library-chip:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #ffffff;
+      }
+
+      .library-chip[aria-pressed="true"] {
+        background: rgba(255, 255, 255, 0.32);
+        color: #ffffff;
+        border-color: rgba(86, 175, 215, 0.60);
+        box-shadow: 0 0 0 1px rgba(86, 175, 215, 0.30);
+      }
+
+      .library-chip:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      /* ---- 2-row grid -------------------------------------------------------- */
+
+      .library-grid-wrap {
+        padding: 0 24px;
+      }
+
+      .library-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr) 1fr; /* 5 content cols + 1 ad col */
+        grid-template-rows: auto auto;
+        gap: 20px;
+        align-items: start;
+      }
+
+      /* ---- Collection tile --------------------------------------------------- */
+
+      .library-tile {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        border-radius: 14px;
+        text-align: left;
+        transition: transform var(--t-med), box-shadow var(--t-med);
+      }
+
+      .library-tile:hover {
+        transform: scale(1.02);
+      }
+
+      .library-tile:hover .library-tile-cover {
+        box-shadow: 0 0 0 2px var(--brand-cyan), 0 8px 24px rgba(0, 0, 0, 0.5);
+      }
+
+      .library-tile:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 3px;
+        border-radius: 14px;
+      }
+
+      /* Cover square */
+      .library-tile-cover {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        transition: box-shadow var(--t-med);
+        flex-shrink: 0;
+      }
+
+      /* Gradient palettes per tile type */
+      .library-tile-cover--album {
+        background: linear-gradient(135deg, #0f2d6b 0%, #1a6bde 50%, #56afd7 100%);
+        box-shadow: 0 0 0 0 transparent, 0 4px 16px rgba(86, 175, 215, 0.25);
+      }
+
+      .library-tile-cover--playlist {
+        background: linear-gradient(135deg, #2d0a5a 0%, #5a1e8c 45%, #4b2bc4 100%);
+      }
+
+      .library-tile-cover--track {
+        background: linear-gradient(135deg, #0f1b4d 0%, #1553ac 50%, #56afd7 85%);
+      }
+
+      .library-tile-cover--podcast {
+        background: linear-gradient(135deg, #4a1a00 0%, #b84500 50%, #e57a30 100%);
+      }
+
+      /* SVG mini-art inside cover */
+      .library-tile-art {
+        width: 56px;
+        height: 56px;
+        opacity: 0.85;
+        flex-shrink: 0;
+      }
+
+      /* Cover inner shimmer layer */
+      .library-tile-cover::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(155deg, rgba(255,255,255,0.08) 0%, transparent 55%);
+        pointer-events: none;
+      }
+
+      /* Tile metadata below cover */
+      .library-tile-meta {
+        padding: 10px 2px 4px;
+      }
+
+      .library-tile-name {
+        font-family: 'Onest', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-pri);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 0 5px;
+        line-height: 1.3;
+      }
+
+      .library-tile-sub-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: nowrap;
+        overflow: hidden;
+      }
+
+      /* Type badge pill */
+      .library-tile-badge {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        padding: 2px 7px;
+        border-radius: var(--r-pill);
+        background: rgba(86, 175, 215, 0.18);
+        border: 1px solid rgba(86, 175, 215, 0.30);
+        font-family: 'Onest', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--brand-cyan);
+        white-space: nowrap;
+        line-height: 1.6;
+      }
+
+      .library-tile-info {
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-quat);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ---- Ad slot ----------------------------------------------------------- */
+
+      .library-ad-slot {
+        grid-row: 1 / span 2;
+        grid-column: 6; /* last column */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(135deg, rgba(86, 175, 215, 0.18), rgba(21, 82, 172, 0.32));
+        border: 1.5px dashed rgba(255, 255, 255, 0.20);
+        border-radius: 14px;
+        padding: 24px;
+        text-align: center;
+        cursor: default;
+        transition: box-shadow var(--t-med);
+      }
+
+      .library-ad-slot:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      .library-ad-slot:hover {
+        box-shadow: 0 0 0 1px rgba(86, 175, 215, 0.25);
+      }
+
+      .library-ad-label {
+        font-family: 'Onest', sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-quat);
+        align-self: flex-start;
+        text-align: left;
+        line-height: 1.4;
+      }
+
+      .library-ad-center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 20px 0;
+      }
+
+      .library-ad-icon {
+        width: 64px;
+        height: 64px;
+        opacity: 0.60;
+      }
+
+      .library-ad-caption {
+        font-family: 'Onest', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--text-sec);
+        text-wrap: balance;
+        max-width: 200px;
+        line-height: 1.5;
+      }
+
+      .library-ad-footnote {
+        font-family: 'Onest', sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--text-quat);
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      /* ---- Show more button -------------------------------------------------- */
+
+      .library-show-more-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 32px 24px 0;
+      }
+
+      .library-show-more {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: var(--r-pill);
+        background: var(--surf-glass-20);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: var(--text-pri);
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+      }
+
+      .library-show-more:hover {
+        background: rgba(255, 255, 255, 0.28);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      }
+
+      .library-show-more:focus-visible {
+        outline: 3px solid var(--brand-cyan);
+        outline-offset: 2px;
+      }
+
+      @keyframes library-bounce {
+        0%, 100% { transform: translateY(0); }
+        40%       { transform: translateY(-5px); }
+        70%       { transform: translateY(-2px); }
+      }
+
+      .library-show-more--bounce {
+        animation: library-bounce 0.4s ease;
+      }
+
+      /* Reduced motion: disable transforms on tiles + show-more */
+      @media (prefers-reduced-motion: reduce) {
+        .library-tile:hover {
+          transform: none;
+        }
+        .library-show-more--bounce {
+          animation: none;
+        }
+      }
+
+    }
+
     /* =========================================================================
        SURFACES — web / mobile / tv / carplay layout adapters
        ========================================================================= */
@@ -3110,6 +3498,181 @@
         height: 64px;
         font-size: 20px;
         padding: 14px 36px;
+      }
+
+      /* ---- Медиатека: responsive ------------------------------------------ */
+
+      /* Tablet (769-1024px): 4-col grid, ad spans both rows */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .library-grid {
+          grid-template-columns: repeat(4, 1fr) 1fr; /* 4 content + 1 ad */
+        }
+
+        .library-ad-slot {
+          grid-column: 5;
+        }
+
+        .library-title {
+          font-size: 36px;
+        }
+      }
+
+      /* Mobile (≤768px): single column stack, ad slot becomes horizontal banner */
+      @media (max-width: 768px) {
+
+        .library-heading-band {
+          padding: 28px 16px 24px;
+        }
+
+        .library-title {
+          font-size: 32px;
+          transform: scaleX(1.02);
+        }
+
+        .library-subtitle {
+          font-size: 16px;
+        }
+
+        .library-chip-row {
+          justify-content: flex-start;
+          padding: 0 16px 4px;
+          margin-bottom: 28px;
+        }
+
+        .library-grid-wrap {
+          padding: 0 16px;
+        }
+
+        /* Single column */
+        .library-grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto; /* natural flow */
+          gap: 12px;
+        }
+
+        /* Ad slot: inline horizontal banner, placed at 6th position via order */
+        .library-ad-slot {
+          grid-row: auto;
+          grid-column: 1;
+          height: 240px;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 20px;
+          padding: 20px;
+          order: 6; /* after tile #5, before tile #6 */
+        }
+
+        .library-ad-label {
+          display: none; /* hide the 300×600 label on mobile banner */
+        }
+
+        .library-ad-center {
+          flex: 1;
+          flex-direction: row;
+          justify-content: flex-start;
+          padding: 0;
+          gap: 16px;
+        }
+
+        .library-ad-icon {
+          width: 48px;
+          height: 48px;
+          flex-shrink: 0;
+        }
+
+        .library-ad-caption {
+          font-size: 14px;
+          max-width: none;
+          text-align: left;
+        }
+
+        .library-ad-footnote {
+          display: none; /* clean mobile experience */
+        }
+
+        /* Re-order tiles so ad slot falls between tile 5 and 6 */
+        .library-tile:nth-child(1)  { order: 1; }
+        .library-tile:nth-child(2)  { order: 2; }
+        .library-tile:nth-child(3)  { order: 3; }
+        .library-tile:nth-child(4)  { order: 4; }
+        .library-tile:nth-child(5)  { order: 5; }
+        .library-ad-slot            { order: 6; }
+        .library-tile:nth-child(6)  { order: 7; }
+        .library-tile:nth-child(7)  { order: 8; }
+        .library-tile:nth-child(8)  { order: 9; }
+        .library-tile:nth-child(9)  { order: 10; }
+        .library-tile:nth-child(10) { order: 11; }
+
+        .library-show-more-wrap {
+          padding: 24px 16px 0;
+        }
+      }
+
+      /* Mobile surface override (tweaks panel) */
+      [data-surface="mobile"] .library-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 12px;
+      }
+
+      [data-surface="mobile"] .library-ad-slot {
+        grid-row: auto;
+        grid-column: 1;
+        height: 240px;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        order: 6;
+      }
+
+      [data-surface="mobile"] .library-ad-label {
+        display: none;
+      }
+
+      [data-surface="mobile"] .library-ad-center {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 0;
+        gap: 16px;
+      }
+
+      [data-surface="mobile"] .library-ad-footnote {
+        display: none;
+      }
+
+      [data-surface="mobile"] .library-tile:nth-child(1)  { order: 1; }
+      [data-surface="mobile"] .library-tile:nth-child(2)  { order: 2; }
+      [data-surface="mobile"] .library-tile:nth-child(3)  { order: 3; }
+      [data-surface="mobile"] .library-tile:nth-child(4)  { order: 4; }
+      [data-surface="mobile"] .library-tile:nth-child(5)  { order: 5; }
+      [data-surface="mobile"] .library-ad-slot            { order: 6; }
+      [data-surface="mobile"] .library-tile:nth-child(6)  { order: 7; }
+      [data-surface="mobile"] .library-tile:nth-child(7)  { order: 8; }
+      [data-surface="mobile"] .library-tile:nth-child(8)  { order: 9; }
+      [data-surface="mobile"] .library-tile:nth-child(9)  { order: 10; }
+      [data-surface="mobile"] .library-tile:nth-child(10) { order: 11; }
+
+      [data-surface="mobile"] .library-chip-row {
+        justify-content: flex-start;
+        padding: 0 16px 4px;
+      }
+
+      /* TV surface */
+      [data-surface="tv"] .library-title {
+        font-size: 64px;
+      }
+
+      [data-surface="tv"] .library-chip {
+        height: 64px;
+        font-size: 20px;
+        padding: 14px 36px;
+      }
+
+      [data-surface="tv"] .library-tile-name {
+        font-size: 18px;
       }
     }
 
@@ -4100,10 +4663,376 @@
       </section>
 
       <!-- Page: Медиатека -->
+      <!-- ====================================================================
+           Page: Медиатека (#/library) — 2-row grid + ad slot (Task #6)
+           ==================================================================== -->
       <section data-page="library" aria-labelledby="page-library-heading">
-        <h1 id="page-library-heading" class="page-stub-heading">Медиатека</h1>
-        <p class="page-stub-hint">2-рядная сетка + рекламный слот. Task #8 заполнит этот экран.</p>
-        <div class="page-content"></div>
+        <h1 id="page-library-heading" class="visually-hidden">Медиатека</h1>
+
+        <div class="library-page">
+
+          <!-- Heading band -->
+          <div class="library-heading-band">
+            <p class="library-eyebrow">МЕДИАТЕКА · ГОРОД.FM</p>
+            <span class="library-title" role="heading" aria-level="2">Твоя медиатека</span>
+            <p class="library-subtitle">Твоя коллекция треков, плейлистов и подкастов · фильтр по жанру внизу</p>
+          </div>
+
+          <!-- Filter chip row -->
+          <div
+            class="library-chip-row"
+            role="group"
+            aria-label="Тип коллекции"
+            id="library-chip-row"
+          >
+            <button class="library-chip" type="button" aria-pressed="true"  data-lib-type="all"       aria-label="Фильтр: все">ВСЕ</button>
+            <button class="library-chip" type="button" aria-pressed="false" data-lib-type="tracks"    aria-label="Фильтр: треки">ТРЕКИ</button>
+            <button class="library-chip" type="button" aria-pressed="false" data-lib-type="albums"    aria-label="Фильтр: альбомы">АЛЬБОМЫ</button>
+            <button class="library-chip" type="button" aria-pressed="false" data-lib-type="playlists" aria-label="Фильтр: плейлисты">ПЛЕЙЛИСТЫ</button>
+            <button class="library-chip" type="button" aria-pressed="false" data-lib-type="podcasts"  aria-label="Фильтр: подкасты">ПОДКАСТЫ</button>
+          </div>
+
+          <!-- 2-row grid + ad slot -->
+          <div class="library-grid-wrap">
+            <div
+              class="library-grid"
+              id="library-grid"
+              role="list"
+              aria-label="Медиатека: коллекции"
+            >
+
+              <!-- ── ROW 1 ───────────────────────────────────────────── -->
+
+              <!-- Tile 1: Album — Believer / IMAGINE DRAGONS -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="album"
+                data-tile-title="Believer"
+                data-tile-artist="Imagine Dragons"
+                aria-label="Открыть альбом Believer — Imagine Dragons"
+              >
+                <div class="library-tile-cover library-tile-cover--album">
+                  <!-- Record / circle icon -->
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
+                    <circle cx="28" cy="28" r="12" stroke="rgba(86,175,215,0.90)" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="4"  fill="rgba(255,255,255,0.80)"/>
+                    <line x1="6" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                    <line x1="34" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Believer</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">АЛЬБОМ</span>
+                    <span class="library-tile-info">IMAGINE DRAGONS</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 2: Playlist — Город ФМ · Тёмный вечер -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="playlist"
+                data-tile-title="Город ФМ · Тёмный вечер"
+                data-tile-artist="Плейлист · 24 трека"
+                aria-label="Открыть плейлист Город ФМ · Тёмный вечер, 24 трека"
+              >
+                <div class="library-tile-cover library-tile-cover--playlist">
+                  <!-- Stack of 3 lines icon -->
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <rect x="12" y="16" width="32" height="4" rx="2" fill="rgba(255,255,255,0.80)"/>
+                    <rect x="12" y="26" width="24" height="4" rx="2" fill="rgba(255,255,255,0.60)"/>
+                    <rect x="12" y="36" width="28" height="4" rx="2" fill="rgba(255,255,255,0.40)"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Город ФМ · Тёмный вечер</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">ПЛЕЙЛИСТ</span>
+                    <span class="library-tile-info">24 трека</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 3: Album — Glitch / MARTIN GARRIX × JULIAN JORDAN -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="album"
+                data-tile-title="Glitch"
+                data-tile-artist="Martin Garrix × Julian Jordan"
+                aria-label="Открыть альбом Glitch — Martin Garrix × Julian Jordan"
+              >
+                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#0a2f70 0%,#0d74c4 45%,#1ecfe0 100%);">
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
+                    <circle cx="28" cy="28" r="12" stroke="rgba(30,207,224,0.90)" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="4"  fill="rgba(255,255,255,0.80)"/>
+                    <line x1="6" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                    <line x1="34" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Glitch</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">АЛЬБОМ</span>
+                    <span class="library-tile-info">MARTIN GARRIX × JULIAN JORDAN</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 4: Track — Roads Untraveled / LINKIN PARK -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="track"
+                data-tile-title="Roads Untraveled"
+                data-tile-artist="Linkin Park"
+                aria-label="Открыть трек Roads Untraveled — Linkin Park"
+              >
+                <div class="library-tile-cover library-tile-cover--track">
+                  <!-- Music note icon -->
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <path d="M22 38 L22 20 L40 16 L40 34" stroke="rgba(255,255,255,0.80)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="19" cy="38" r="4.5" fill="rgba(86,175,215,0.90)"/>
+                    <circle cx="37" cy="34" r="4.5" fill="rgba(86,175,215,0.70)"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Roads Untraveled</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">ТРЕК</span>
+                    <span class="library-tile-info">LINKIN PARK</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 5: Podcast — Звуковая Алматы S2E14 -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="podcast"
+                data-tile-title="Звуковая Алматы · S2E14"
+                data-tile-artist="Подкаст · 47 мин"
+                aria-label="Открыть подкаст Звуковая Алматы, сезон 2 эпизод 14, 47 минут"
+              >
+                <div class="library-tile-cover library-tile-cover--podcast">
+                  <!-- Microphone icon -->
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <rect x="20" y="10" width="16" height="24" rx="8" stroke="rgba(255,255,255,0.80)" stroke-width="2.5" fill="none"/>
+                    <path d="M12 28 C12 36.84 19.16 44 28 44 C36.84 44 44 36.84 44 28" stroke="rgba(229,122,48,0.90)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <line x1="28" y1="44" x2="28" y2="50" stroke="rgba(255,255,255,0.70)" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="22" y1="50" x2="34" y2="50" stroke="rgba(255,255,255,0.70)" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Звуковая Алматы · S2E14</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">ПОДКАСТ</span>
+                    <span class="library-tile-info">47 мин</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- ── ROW 2 ───────────────────────────────────────────── -->
+
+              <!-- Tile 6: Playlist — Mood: Driving -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="playlist"
+                data-tile-title="Mood: Driving"
+                data-tile-artist="Плейлист · 32 трека"
+                aria-label="Открыть плейлист Mood: Driving, 32 трека"
+              >
+                <div class="library-tile-cover library-tile-cover--playlist" style="background:linear-gradient(135deg,#1a0456 0%,#3b1a9c 45%,#7b4be0 100%);">
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <rect x="12" y="16" width="32" height="4" rx="2" fill="rgba(255,255,255,0.80)"/>
+                    <rect x="12" y="26" width="24" height="4" rx="2" fill="rgba(255,255,255,0.60)"/>
+                    <rect x="12" y="36" width="28" height="4" rx="2" fill="rgba(255,255,255,0.40)"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Mood: Driving</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">ПЛЕЙЛИСТ</span>
+                    <span class="library-tile-info">32 трека</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 7: Album — Hallelujah / JEFF BUCKLEY -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="album"
+                data-tile-title="Hallelujah"
+                data-tile-artist="Jeff Buckley"
+                aria-label="Открыть альбом Hallelujah — Jeff Buckley"
+              >
+                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#1a3060 0%,#2e6bb0 50%,#56afd7 100%);">
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
+                    <circle cx="28" cy="28" r="12" stroke="rgba(86,175,215,0.90)" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="4"  fill="rgba(255,255,255,0.80)"/>
+                    <line x1="6" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                    <line x1="34" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Hallelujah</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">АЛЬБОМ</span>
+                    <span class="library-tile-info">JEFF BUCKLEY</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 8: Playlist — Подборка ДИСКАЧ 90-Х -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="playlist"
+                data-tile-title="Подборка ДИСКАЧ 90-Х"
+                data-tile-artist="Плейлист · 18 треков"
+                aria-label="Открыть плейлист Подборка ДИСКАЧ 90-Х, 18 треков"
+              >
+                <div class="library-tile-cover library-tile-cover--playlist" style="background:linear-gradient(135deg,#5c1a00 0%,#b04a10 45%,#e8a030 100%);">
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <rect x="12" y="16" width="32" height="4" rx="2" fill="rgba(255,255,255,0.80)"/>
+                    <rect x="12" y="26" width="24" height="4" rx="2" fill="rgba(255,255,255,0.60)"/>
+                    <rect x="12" y="36" width="28" height="4" rx="2" fill="rgba(255,255,255,0.40)"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Подборка ДИСКАЧ 90-Х</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">ПЛЕЙЛИСТ</span>
+                    <span class="library-tile-info">18 треков</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 9: Album — Z. CITY SHOW / сборник 2026 -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="album"
+                data-tile-title="Z. CITY SHOW"
+                data-tile-artist="Сборник 2026"
+                aria-label="Открыть альбом Z. CITY SHOW — сборник 2026"
+              >
+                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#001440 0%,#1a6bde 50%,#56afd7 100%);">
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
+                    <circle cx="28" cy="28" r="12" stroke="rgba(86,175,215,0.90)" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="4"  fill="rgba(255,255,255,0.80)"/>
+                    <line x1="6" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                    <line x1="34" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Z. CITY SHOW</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">АЛЬБОМ</span>
+                    <span class="library-tile-info">СБОРНИК 2026</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- Tile 10: Podcast — Город ФМ · За кадром S1E3 -->
+              <button
+                class="library-tile"
+                type="button"
+                role="listitem"
+                data-tile-type="podcast"
+                data-tile-title="Город ФМ · За кадром"
+                data-tile-artist="Подкаст · S1E3 · 28 мин"
+                aria-label="Открыть подкаст Город ФМ За кадром, сезон 1 эпизод 3, 28 минут"
+              >
+                <div class="library-tile-cover library-tile-cover--podcast" style="background:linear-gradient(135deg,#3d1400 0%,#a03a10 45%,#d46030 100%);">
+                  <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                    <rect x="20" y="10" width="16" height="24" rx="8" stroke="rgba(255,255,255,0.80)" stroke-width="2.5" fill="none"/>
+                    <path d="M12 28 C12 36.84 19.16 44 28 44 C36.84 44 44 36.84 44 28" stroke="rgba(229,122,48,0.90)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <line x1="28" y1="44" x2="28" y2="50" stroke="rgba(255,255,255,0.70)" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="22" y1="50" x2="34" y2="50" stroke="rgba(255,255,255,0.70)" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="library-tile-meta">
+                  <div class="library-tile-name">Город ФМ · За кадром</div>
+                  <div class="library-tile-sub-row">
+                    <span class="library-tile-badge">ПОДКАСТ</span>
+                    <span class="library-tile-info">S1E3 · 28 мин</span>
+                  </div>
+                </div>
+              </button>
+
+              <!-- ── AD SLOT (spans both rows, far-right column) ─────── -->
+
+              <aside
+                class="library-ad-slot"
+                aria-label="Рекламный блок"
+                tabindex="0"
+                role="complementary"
+              >
+                <!-- Top label -->
+                <div class="library-ad-label">РЕКЛАМНЫЙ БЛОК · 300×600</div>
+
+                <!-- Center: icon + caption -->
+                <div class="library-ad-center">
+                  <!-- Megaphone / sparkle SVG -->
+                  <svg class="library-ad-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <!-- Megaphone body -->
+                    <path d="M8 22 L8 42 L20 42 L20 22 Z" stroke="rgba(255,255,255,0.50)" stroke-width="2" stroke-linejoin="round" fill="rgba(255,255,255,0.08)"/>
+                    <!-- Horn -->
+                    <path d="M20 20 L52 10 L52 54 L20 44 Z" stroke="rgba(255,255,255,0.50)" stroke-width="2" stroke-linejoin="round" fill="rgba(86,175,215,0.15)"/>
+                    <!-- Sound waves -->
+                    <path d="M56 24 Q62 32 56 40" stroke="rgba(86,175,215,0.70)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    <path d="M59 20 Q68 32 59 44" stroke="rgba(86,175,215,0.40)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    <!-- Sparkles -->
+                    <circle cx="34" cy="8" r="2" fill="rgba(86,175,215,0.60)"/>
+                    <circle cx="42" cy="5" r="1.5" fill="rgba(255,255,255,0.40)"/>
+                    <circle cx="28" cy="6" r="1" fill="rgba(255,255,255,0.30)"/>
+                  </svg>
+                  <p class="library-ad-caption">Здесь будет реклама партнёра</p>
+                </div>
+
+                <!-- Bottom footnote -->
+                <p class="library-ad-footnote">IAB 300×600 vertical · контракт через рекламный отдел Город ФМ</p>
+              </aside>
+
+            </div>
+            <!-- /.library-grid -->
+          </div>
+          <!-- /.library-grid-wrap -->
+
+          <!-- Show more button -->
+          <div class="library-show-more-wrap">
+            <button
+              class="library-show-more"
+              type="button"
+              id="library-show-more-btn"
+              aria-label="Показать больше коллекций"
+            >
+              Показать больше
+            </button>
+          </div>
+
+        </div>
+        <!-- /.library-page -->
+
       </section>
 
       <!-- Page: Артист (профайл) -->
@@ -5868,6 +6797,85 @@
         }
 
       })(); /* end initPodborki */
+
+      /* ---- Медиатека page — chip row + grid wiring ------------------------ */
+
+      (function initLibrary() {
+
+        /* 1. Chip single-select toggle */
+        var libChipRow = document.getElementById('library-chip-row');
+        if (libChipRow) {
+          libChipRow.addEventListener('click', function (e) {
+            var chip = e.target.closest('.library-chip');
+            if (!chip) return;
+            libChipRow.querySelectorAll('.library-chip').forEach(function (c) {
+              c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+            });
+            console.log('[Город ФМ] Медиатека filter:', chip.getAttribute('data-lib-type'));
+          });
+        }
+
+        /* 2. Tile click — open player overlay + swap mini bar title/artist */
+        function openLibraryPlayer(title, artist) {
+          var miniTitle  = document.getElementById('player-track-title');
+          var miniArtist = document.getElementById('player-track-artist');
+          if (miniTitle)  miniTitle.textContent  = title;
+          if (miniArtist) miniArtist.textContent = artist;
+
+          var fullTitle  = document.getElementById('player-full-title');
+          var fullArtist = document.getElementById('player-full-artist');
+          if (fullTitle)  fullTitle.textContent  = title;
+          if (fullArtist) fullArtist.textContent = artist;
+
+          openPlayer();
+          console.log('[Город ФМ] Медиатека tile:', title, '—', artist);
+        }
+
+        var libGrid = document.getElementById('library-grid');
+        if (libGrid) {
+          libGrid.addEventListener('click', function (e) {
+            var tile = e.target.closest('.library-tile');
+            if (!tile) return;
+            openLibraryPlayer(
+              tile.getAttribute('data-tile-title') || 'Трек',
+              tile.getAttribute('data-tile-artist') || 'Исполнитель'
+            );
+          });
+
+          libGrid.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              var tile = e.target.closest('.library-tile');
+              if (tile) {
+                e.preventDefault();
+                openLibraryPlayer(
+                  tile.getAttribute('data-tile-title') || 'Трек',
+                  tile.getAttribute('data-tile-artist') || 'Исполнитель'
+                );
+              }
+            }
+          });
+        }
+
+        /* 3. Show more button — bounce + log */
+        var showMoreBtn = document.getElementById('library-show-more-btn');
+        if (showMoreBtn) {
+          showMoreBtn.addEventListener('click', function () {
+            console.log('[Город ФМ] Медиатека: показать больше');
+            var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!prefersReducedMotion) {
+              showMoreBtn.classList.remove('library-show-more--bounce');
+              // Force reflow to restart animation
+              void showMoreBtn.offsetWidth;
+              showMoreBtn.classList.add('library-show-more--bounce');
+              showMoreBtn.addEventListener('animationend', function onEnd() {
+                showMoreBtn.classList.remove('library-show-more--bounce');
+                showMoreBtn.removeEventListener('animationend', onEnd);
+              });
+            }
+          });
+        }
+
+      })(); /* end initLibrary */
 
       /* ---- Boot ------------------------------------------------------------ */
 
