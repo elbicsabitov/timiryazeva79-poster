@@ -132,7 +132,7 @@
         /* — Layout geometry — */
         --sidebar-w:    240px;
         --topbar-h:     64px;
-        --player-mini-h: 72px;
+        --player-mini-h: 84px;   /* +12 for the always-on «почему» reason line (GOROD-040) */
         --tabbar-h:     64px;
 
         /* — Transitions — */
@@ -618,6 +618,52 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
+      /* GOROD-040 — always-on behavioral «почему» line (L1). The reason lives
+         ON the track, passively visible; tap the pill for L2 (Исправь причину). */
+      .player-mini-reason {
+        display: flex; align-items: center; gap: 5px; margin-top: 2px;
+        font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 500;
+        color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .player-mini-reason svg { width: 11px; height: 11px; flex: none; color: var(--brand-blue-light); }
+      .player-mini-reason b { color: #cdd4f5; font-weight: 600; }
+
+      /* GOROD-041 — «Почему играет сейчас» L2 popover: explainable attributes,
+         each REJECTABLE («не моё» → seamful reject, recomputes the wave). The
+         category-defining mechanic. Clones the wave-dials dialog language. */
+      .why-pop {
+        position: fixed; right: 20px; bottom: calc(var(--player-mini-h) + 16px);
+        width: 384px; max-width: calc(100vw - 36px); z-index: 96;
+        background: rgba(18, 18, 24, 0.97);
+        backdrop-filter: blur(26px) saturate(1.2); -webkit-backdrop-filter: blur(26px) saturate(1.2);
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 20px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62); padding: 16px 16px 14px;
+        opacity: 0; transform: translateY(16px) scale(0.97); transform-origin: bottom right;
+        pointer-events: none; transition: opacity 0.2s ease, transform 0.2s cubic-bezier(.34, 1.4, .64, 1);
+      }
+      .why-pop.is-open { opacity: 1; transform: none; pointer-events: auto; }
+      .why-pop-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+      .why-pop-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 16px; color: #fff; }
+      .why-pop-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: rgba(255, 255, 255, 0.06); color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      .why-pop-close:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+      .why-pop-close svg { width: 15px; height: 15px; }
+      .why-pop-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+      .why-row { display: flex; align-items: center; gap: 10px; padding: 10px 11px; border-radius: 11px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); transition: opacity var(--t-fast); }
+      .why-row-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-blue-light); flex: none; }
+      .why-row-text { flex: 1 1 auto; font-family: 'Onest', sans-serif; font-size: 13.5px; line-height: 1.4; color: #eef0f6; }
+      .why-row-reject { flex: none; background: none; border: 1px solid rgba(255, 255, 255, 0.16); color: var(--text-sec); font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: var(--r-pill); cursor: pointer; transition: color var(--t-fast), border-color var(--t-fast); white-space: nowrap; }
+      .why-row-reject:hover { color: #fff; border-color: var(--brand-blue-light); }
+      .why-row-reject:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .why-row.is-rejected { opacity: 0.5; }
+      .why-row.is-rejected .why-row-text { text-decoration: line-through; }
+      .why-row.is-rejected .why-row-dot { background: var(--text-quat); }
+      .why-pop-foot { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding-top: 11px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+      .why-pop-status { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-sec); }
+      .why-pop-status.is-set { color: var(--brand-blue-light); font-weight: 600; }
+      .why-pop-more { align-self: flex-start; background: none; border: none; color: var(--brand-blue-light); font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; }
+      .why-pop-more:hover { text-decoration: underline; }
+      .why-pop-more:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; border-radius: 4px; }
 
       /* Transport controls row */
       .player-mini-controls {
@@ -9544,10 +9590,14 @@
       </div>
     </div>
 
-    <!-- Track meta -->
+    <!-- Track meta — title, artist, + always-on behavioral «почему» (GOROD-040) -->
     <div class="player-mini-meta">
       <div class="player-mini-title" id="player-track-title">Believer</div>
       <div class="player-mini-artist" id="player-track-artist">Imagine Dragons</div>
+      <div class="player-mini-reason" id="player-track-reason">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
+        <span>Ты дослушал <b>Imagine Dragons</b> до конца 3 раза</span>
+      </div>
     </div>
 
     <!-- Transport controls — stop propagation so they don't trigger full overlay -->
@@ -9629,6 +9679,21 @@
   </div>
 
   <!-- Wave dials — lazy steering surface (Yandex «Моя волна» style), opens from player ✨ -->
+  <!-- «Почему играет сейчас» L2 popover — explainable + seamful reject (GOROD-041) -->
+  <div class="why-pop" id="why-pop" role="dialog" aria-label="Почему играет этот трек" aria-hidden="true">
+    <div class="why-pop-head">
+      <span class="why-pop-title">Почему играет сейчас</span>
+      <button class="why-pop-close" id="why-pop-close" type="button" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <ul class="why-pop-list" id="why-pop-list" aria-live="polite"><!-- rows injected by TwinrWhy --></ul>
+    <div class="why-pop-foot">
+      <span class="why-pop-status" id="why-pop-status">Нажми «не моё» — уберу причину из твоей волны.</span>
+      <button class="why-pop-more" id="why-pop-more" type="button">Подробнее в чате →</button>
+    </div>
+  </div>
+
   <div class="wave-dials" id="wave-dials" role="dialog" aria-label="Настроить волну" aria-hidden="true">
     <div class="wave-dials-head">
       <span class="wave-dials-title">Настроить волну</span>
@@ -12232,7 +12297,7 @@
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dock.classList.contains('is-open')) collapse(); });
       // Native AI: the player itself is the entry point (research 07 — "AI is a layer")
       var pw = document.getElementById('player-why');
-      if (pw) pw.addEventListener('click', function (e) { e.stopPropagation(); ask('why', 'Почему именно этот трек?'); });
+      if (pw) pw.addEventListener('click', function (e) { e.stopPropagation(); if (window.TwinrWhy) window.TwinrWhy.open(); else ask('why', 'Почему именно этот трек?'); });
       var ps = document.getElementById('player-steer');
       if (ps) ps.addEventListener('click', function (e) { e.stopPropagation(); if (window.WaveDials) window.WaveDials.open(); else ask('different', '🔀 Сделай по-другому'); });
       renderProfile();
@@ -12667,6 +12732,79 @@
     function open() { if (panel) { panel.classList.add('is-open'); panel.setAttribute('aria-hidden', 'false'); } }
     function close() { if (panel) { panel.classList.remove('is-open'); panel.setAttribute('aria-hidden', 'true'); } }
     window.WaveDials = { open: open, close: close };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- Twinr «почему» L2 — explainable attributes + seamful REJECT --------
+     GOROD-041. The category-defining mechanic: the user can reject a specific
+     REASON the track is playing → it strikes through, persists, and the wave
+     recomputes. Steering THROUGH explanation. Opens from the player «почему?». */
+  (function () {
+    'use strict';
+    // Honest, behavioral/attributive reasons for the now-playing track — never
+    // marketing ("тебе понравится"). Each is individually rejectable.
+    var REASONS = [
+      { id: 'artist', t: 'Imagine Dragons — ты дослушал до конца 3 раза за неделю' },
+      { id: 'genre',  t: 'Арена-рок 2010-х — твой сильный паттерн' },
+      { id: 'tempo',  t: 'Темп ~120 BPM — под твой обычный вечер' }
+    ];
+    var REJECT_KEY = 'gorodfm_rejected';
+    var pop, listEl, statusEl;
+    function $(id) { return document.getElementById(id); }
+    function getRej() { try { return JSON.parse(localStorage.getItem(REJECT_KEY) || '[]'); } catch (e) { return []; } }
+    function setRej(a) { try { localStorage.setItem(REJECT_KEY, JSON.stringify(a)); } catch (e) {} }
+    function shortName(r) { return r.t.split('—')[0].trim(); }
+    function render() {
+      if (!listEl) return;
+      var rej = getRej();
+      listEl.innerHTML = '';
+      REASONS.forEach(function (r) {
+        var isRej = rej.indexOf(r.id) !== -1;
+        var li = document.createElement('li');
+        li.className = 'why-row' + (isRej ? ' is-rejected' : '');
+        li.setAttribute('data-attr', r.id);
+        var dot = document.createElement('span'); dot.className = 'why-row-dot';
+        var tx = document.createElement('span'); tx.className = 'why-row-text'; tx.textContent = r.t;
+        var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'why-row-reject';
+        btn.textContent = isRej ? 'вернуть' : 'не моё';
+        btn.addEventListener('click', function () { toggle(r); });
+        li.appendChild(dot); li.appendChild(tx); li.appendChild(btn);
+        listEl.appendChild(li);
+      });
+    }
+    function toggle(r) {
+      var rej = getRej(), i = rej.indexOf(r.id), nowRej;
+      if (i === -1) { rej.push(r.id); nowRej = true; } else { rej.splice(i, 1); nowRej = false; }
+      setRej(rej); render();
+      if (statusEl) {
+        statusEl.textContent = nowRej
+          ? ('✓ Убрал «' + shortName(r) + '» — пересчитываю волну')
+          : ('Вернул «' + shortName(r) + '» в волну');
+        statusEl.classList.add('is-set');
+      }
+      if (window.TwinrWave) window.TwinrWave.bump();   // visible effect — the wave reacts
+      if (nowRej && window.TwinrRibbon) window.TwinrRibbon.show('Убрал из волны: <b>' + shortName(r) + '</b>. <span class="ai-why">меньше такого дальше</span>.');
+    }
+    function open() {
+      pop = pop || $('why-pop'); listEl = listEl || $('why-pop-list'); statusEl = statusEl || $('why-pop-status');
+      if (!pop) return;
+      render();
+      if (statusEl) { statusEl.textContent = 'Нажми «не моё» — уберу причину из твоей волны.'; statusEl.classList.remove('is-set'); }
+      pop.classList.add('is-open'); pop.setAttribute('aria-hidden', 'false');
+    }
+    function close() { if (pop) { pop.classList.remove('is-open'); pop.setAttribute('aria-hidden', 'true'); } }
+    function init() {
+      pop = $('why-pop'); if (!pop) return;
+      listEl = $('why-pop-list'); statusEl = $('why-pop-status');
+      var c = $('why-pop-close'); if (c) c.addEventListener('click', close);
+      var more = $('why-pop-more'); if (more) more.addEventListener('click', function () {
+        close(); if (window.TwinrChat && window.TwinrChat.ask) window.TwinrChat.ask('why', 'Почему именно этот трек?');
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && pop.classList.contains('is-open')) close(); });
+    }
+    window.TwinrWhy = { open: open, close: close };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   })();
   </script>
