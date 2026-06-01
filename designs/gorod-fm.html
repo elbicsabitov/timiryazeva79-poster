@@ -10959,7 +10959,7 @@
     var field, countEl, countN, cta, alt, fallback;
     var bubbles = [], byName = {};
     var raf = 0, running = false, built = false, placed = false;
-    var W = 0, H = 0;
+    var W = 0, H = 0, PAD_TOP = 0, PAD_BOTTOM = 0;   // safe-zone insets (below header / above footer)
 
     function selectedNames() {
       return bubbles.filter(function (b) { return b.sel; }).map(function (b) { return b.d.t; });
@@ -11064,7 +11064,7 @@
         b.x = parent.x + Math.cos(ang) * (parent.r * 0.5);
         b.y = parent.y + Math.sin(ang) * (parent.r * 0.5);
         b.vx = Math.cos(ang) * sp; b.vy = Math.sin(ang) * sp;
-        if (W) { b.x = Math.max(b.r, Math.min(W - b.r, b.x)); b.y = Math.max(b.r, Math.min(H - b.r, b.y)); }
+        if (W) { b.x = Math.max(b.r, Math.min(W - b.r, b.x)); b.y = Math.max(PAD_TOP + b.r, Math.min(H - PAD_BOTTOM - b.r, b.y)); }
         paint(b);
         el.style.opacity = '0';
         requestAnimationFrame(function () { el.style.opacity = '1'; });
@@ -11102,18 +11102,29 @@
       if (!field) return;
       var r = field.getBoundingClientRect();
       W = r.width; H = r.height;
+      // keep bubbles strictly between the header and the footer (no text/button overlap)
+      var head = document.querySelector('.onb-head');
+      var foot = document.querySelector('.onb-foot');
+      PAD_TOP = head ? Math.max(0, head.getBoundingClientRect().bottom - r.top + 14) : 70;
+      var footTop = foot ? (foot.getBoundingClientRect().top - r.top - 14) : H;
+      PAD_BOTTOM = Math.max(0, H - footTop);
+      if (PAD_TOP + PAD_BOTTOM > H - 140) {            // guard tiny viewports
+        var over = (PAD_TOP + PAD_BOTTOM) - (H - 140);
+        PAD_TOP = Math.max(0, PAD_TOP - over / 2);
+        PAD_BOTTOM = Math.max(0, PAD_BOTTOM - over / 2);
+      }
     }
 
     function scatter() {
       measure();
       if (W < 10 || H < 10) return false;
+      var bandTop = PAD_TOP, bandH = Math.max(80, H - PAD_TOP - PAD_BOTTOM), bandMid = bandTop + bandH / 2;
       bubbles.forEach(function (b, i) {
         var ang = (i / bubbles.length) * Math.PI * 2 + Math.random() * 0.6;
-        var rad = Math.min(W, H) * (0.18 + Math.random() * 0.28);
-        b.x = W / 2 + Math.cos(ang) * rad;
-        b.y = H * 0.57 + Math.sin(ang) * rad;
+        b.x = W / 2 + Math.cos(ang) * (W * (0.12 + Math.random() * 0.30));
+        b.y = bandMid + Math.sin(ang) * (bandH * (0.16 + Math.random() * 0.30));
         b.x = Math.max(b.r, Math.min(W - b.r, b.x));
-        b.y = Math.max(b.r, Math.min(H - b.r, b.y));
+        b.y = Math.max(bandTop + b.r, Math.min(H - PAD_BOTTOM - b.r, b.y));
         b.vx = (Math.random() - 0.5) * 0.6;
         b.vy = (Math.random() - 0.5) * 0.6;
         paint(b);
@@ -11128,7 +11139,8 @@
     }
 
     function step() {
-      var cx = W / 2, cy = H * 0.57, i, j, b;   // pull slightly below centre → clears the title
+      var bandTop = PAD_TOP, bandBot = H - PAD_BOTTOM;
+      var cx = W / 2, cy = bandTop + (bandBot - bandTop) * 0.5, i, j, b;   // centre of the safe band
       for (i = 0; i < bubbles.length; i++) {
         b = bubbles[i];
         var k = b.sel ? 0.00020 : 0.00008;
@@ -11157,8 +11169,8 @@
         b.x += b.vx; b.y += b.vy;
         if (b.x < b.r) { b.x = b.r; b.vx *= -0.55; }
         else if (b.x > W - b.r) { b.x = W - b.r; b.vx *= -0.55; }
-        if (b.y < b.r) { b.y = b.r; b.vy *= -0.55; }
-        else if (b.y > H - b.r) { b.y = H - b.r; b.vy *= -0.55; }
+        if (b.y < bandTop + b.r) { b.y = bandTop + b.r; b.vy *= -0.55; }
+        else if (b.y > bandBot - b.r) { b.y = bandBot - b.r; b.vy *= -0.55; }
         paint(b);
       }
       raf = requestAnimationFrame(step);
