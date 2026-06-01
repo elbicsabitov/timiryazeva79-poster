@@ -106,8 +106,11 @@
         --r-pill:          999px;
 
         /* — Backgrounds — */
-        --bg-base:     linear-gradient(-90deg, var(--brand-cyan) 0%, var(--brand-blue) 49.519%, var(--brand-deep) 100%);
-        --bg-overlay:  linear-gradient(-88.75deg, rgba(30,27,46,0) 72.913%, rgba(30,27,46,0.3) 86.553%, rgba(30,27,46,0.5) 99.397%);
+        /* Tech-modern restyle (2026-06-02): neutral near-black + ONE restrained
+           brand glow instead of the saturated cyan/blue wash (anti-slop, research 10).
+           Reads premium/technological (Linear/Arc/Vercel) and lets cover art carry colour. */
+        --bg-base:     radial-gradient(120% 82% at 50% -8%, rgba(81,104,252,0.12) 0%, rgba(81,104,252,0) 46%), #0B0C0F;
+        --bg-overlay:  linear-gradient(-88.75deg, rgba(10,11,15,0) 70%, rgba(10,11,15,0.35) 88%, rgba(10,11,15,0.6) 100%);
         --tile-shade:  linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
 
         /* — Warm palette tokens (Monte Carlo player overlay) — */
