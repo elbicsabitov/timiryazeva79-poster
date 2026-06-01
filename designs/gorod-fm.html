@@ -2545,6 +2545,46 @@
       .wave-dials-precise:hover { text-decoration: underline; }
       .wave-dials-precise:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; border-radius: 4px; }
 
+      /* Between-track ambient ribbon */
+      .ai-ribbon {
+        position: fixed; top: 16px; left: 50%; transform: translate(-50%, -150%);
+        z-index: 93; display: flex; align-items: center; gap: 10px;
+        max-width: min(640px, calc(100vw - 40px));
+        padding: 9px 10px 9px 13px; border-radius: var(--r-pill);
+        background: rgba(18, 18, 24, 0.95);
+        backdrop-filter: blur(22px) saturate(1.2); -webkit-backdrop-filter: blur(22px) saturate(1.2);
+        border: 1px solid rgba(81, 104, 252, 0.35);
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.5);
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.4s cubic-bezier(.34, 1.4, .64, 1);
+      }
+      .ai-ribbon.is-show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+      .ai-ribbon-spark { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6); display: flex; align-items: center; justify-content: center; }
+      .ai-ribbon-spark svg { width: 14px; height: 14px; }
+      .ai-ribbon-text { font-family: 'Onest', sans-serif; font-size: 13.5px; color: #eef0f6; line-height: 1.35; }
+      .ai-ribbon-text b { color: #fff; font-weight: 700; }
+      .ai-ribbon-text .ai-why { color: var(--brand-blue-light); }
+      .ai-ribbon-why { flex-shrink: 0; background: var(--tint-blue-light-20); border: 1px solid rgba(81, 104, 252, 0.35); color: #c7d0ff; font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: var(--r-pill); cursor: pointer; transition: color var(--t-fast); }
+      .ai-ribbon-why:hover { color: #fff; }
+      .ai-ribbon-why:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .ai-ribbon-close { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.06); color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      .ai-ribbon-close:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+      .ai-ribbon-close svg { width: 13px; height: 13px; }
+      @media (max-width: 560px) { .ai-ribbon-why { display: none; } }
+
+      /* Sonify-the-wave toggle on the taste hero */
+      .taste-sonify {
+        display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 16px;
+        border: 1px solid rgba(255, 255, 255, 0.14); border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.05); color: #eef0f6; cursor: pointer;
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600;
+        transition: background var(--t-fast), border-color var(--t-fast);
+      }
+      .taste-sonify:hover { background: rgba(255, 255, 255, 0.1); }
+      .taste-sonify.is-on { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); color: #fff; }
+      .taste-sonify:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .taste-sonify svg { width: 16px; height: 16px; }
+
       /* =====================================================================
          МОЙ ВКУС (#/taste) — living wave hero + editable Twinr profile
          ===================================================================== */
@@ -8965,6 +9005,10 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                   Поделиться карточкой
                 </button>
+                <button class="taste-sonify" type="button" id="taste-sonify" aria-pressed="false" aria-label="Озвучить волну — реагирует на реальный звук">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h2l2-5 3 11 2.5-8 1.5 4H19"/></svg>
+                  <span id="taste-sonify-label">Озвучить волну</span>
+                </button>
                 <span class="taste-delta" id="taste-delta" aria-live="polite">▲ +darkwave · −арена-рок за неделю</span>
               </div>
             </div>
@@ -9366,6 +9410,18 @@
       <span class="wave-dials-status" id="wave-dials-status" aria-live="polite">Все правки идут в один вектор вашей волны</span>
       <button class="wave-dials-precise" id="wave-dials-precise" type="button">Точнее — скажу словами →</button>
     </div>
+  </div>
+
+  <!-- Between-track ribbon — ambient AI narration (research 07, budget-gated) -->
+  <div class="ai-ribbon" id="ai-ribbon" role="status" aria-live="polite" aria-hidden="true">
+    <span class="ai-ribbon-spark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+    </span>
+    <span class="ai-ribbon-text" id="ai-ribbon-text"></span>
+    <button class="ai-ribbon-why" id="ai-ribbon-why" type="button">почему?</button>
+    <button class="ai-ribbon-close" id="ai-ribbon-close" type="button" aria-label="Скрыть">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </div>
 
   <!-- ======================================================================
@@ -11914,6 +11970,7 @@
     'use strict';
     var canvas, ctx, raf = 0, running = false, w = 0, h = 0, t = 0, pulse = 0;
     var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var audioCtx, analyser, freqData, audioMaster, audioOn = false, audioEnergy = 0, audioInit = false;
     var LAYERS = [
       { amp: 0.17, freq: 1.1, speed: 0.6, alpha: 0.55, color: '#5168FC', width: 2.5 },
       { amp: 0.12, freq: 1.8, speed: -0.95, alpha: 0.42, color: '#8b5cf6', width: 2 },
@@ -11929,7 +11986,12 @@
     }
     function frame() {
       ctx.clearRect(0, 0, w, h);
-      var mid = h * 0.52, e = 1 + pulse * 1.5, i, x;
+      if (audioOn && analyser) {
+        analyser.getByteFrequencyData(freqData);
+        var sum = 0, bi; for (bi = 2; bi < 48; bi++) sum += freqData[bi];
+        audioEnergy += ((sum / 46 / 255) - audioEnergy) * 0.2;   // real FFT energy
+      } else if (audioEnergy > 0.001) { audioEnergy *= 0.94; }
+      var mid = h * 0.52, e = 1 + pulse * 1.5 + audioEnergy * 1.7, i, x;
       for (i = 0; i < LAYERS.length; i++) {
         var L = LAYERS[i];
         ctx.beginPath();
@@ -11958,6 +12020,52 @@
       pulse = Math.min(1.5, pulse + 0.75);
       if (!running && canvas && ctx && !REDUCE) { running = true; loop(); }
     }
+
+    /* Audio-reactive demo: a gentle WebAudio ambient pad → AnalyserNode → the wave
+       reacts to the REAL FFT (in production this AnalyserNode connects to the audio stream). */
+    function initAudio() {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      audioCtx = new AC();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048; analyser.smoothingTimeConstant = 0.82;
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      audioMaster = audioCtx.createGain(); audioMaster.gain.value = 0;
+      var lp = audioCtx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 950; lp.Q.value = 0.7;
+      [110, 164.81, 220, 277.18].forEach(function (f, i) {     // A major-ish pad
+        var o = audioCtx.createOscillator(); o.type = i % 2 ? 'triangle' : 'sine';
+        o.frequency.value = f; o.detune.value = (i - 1.5) * 6;
+        var g = audioCtx.createGain(); g.gain.value = 0.14;
+        var lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.05 + i * 0.03;
+        var lfoG = audioCtx.createGain(); lfoG.gain.value = 0.07;
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        o.connect(g); g.connect(lp); o.start(); lfo.start();
+      });
+      lp.connect(audioMaster); audioMaster.connect(analyser); analyser.connect(audioCtx.destination);
+      audioInit = true; return true;
+    }
+    function startAudio() {
+      if (!audioInit && !initAudio()) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      audioMaster.gain.cancelScheduledValues(audioCtx.currentTime);
+      audioMaster.gain.linearRampToValueAtTime(0.07, audioCtx.currentTime + 0.8);
+      audioOn = true;
+      if (!running && canvas && ctx && !REDUCE) { running = true; loop(); }
+    }
+    function stopAudio() {
+      audioOn = false;
+      if (audioMaster && audioCtx) { audioMaster.gain.cancelScheduledValues(audioCtx.currentTime); audioMaster.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4); }
+      var btn = document.getElementById('taste-sonify'), label = document.getElementById('taste-sonify-label');
+      if (btn) { btn.classList.remove('is-on'); btn.setAttribute('aria-pressed', 'false'); }
+      if (label) label.textContent = 'Озвучить волну';
+    }
+    function toggleSonify(btn) {
+      if (audioOn) stopAudio(); else startAudio();
+      var label = document.getElementById('taste-sonify-label');
+      if (btn) { btn.classList.toggle('is-on', audioOn); btn.setAttribute('aria-pressed', String(audioOn)); }
+      if (label) label.textContent = audioOn ? 'Звучит — волна реагирует' : 'Озвучить волну';
+    }
+
     window.addEventListener('resize', function () { if (canvas && ctx && running) size(); });
     window.TwinrWave = { start: startWave, stop: stopWave, bump: bump };
 
@@ -12023,12 +12131,14 @@
         if (d) d.textContent = '✓ карточка вкуса скопирована';
         if (window.TwinrWave) window.TwinrWave.bump();
       });
+      var sonify = document.getElementById('taste-sonify');
+      if (sonify) sonify.addEventListener('click', function () { toggleSonify(sonify); });
     }
     function onRoute() {
       if (location.hash === '#/taste') {
         if (!built) { seed(); render(); built = true; }
         if (window.TwinrWave) setTimeout(function () { window.TwinrWave.start(); }, 30);
-      } else if (window.TwinrWave) window.TwinrWave.stop();
+      } else { if (window.TwinrWave) window.TwinrWave.stop(); stopAudio(); }
     }
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'complete' || document.readyState === 'interactive') onRoute();
@@ -12069,10 +12179,45 @@
       var parts = Object.keys(sel).map(function (k) { return sel[k]; });
       if (statusEl) { statusEl.textContent = 'Волна: ' + parts.join(' · '); statusEl.classList.add('is-set'); }
       if (window.TwinrWave) window.TwinrWave.bump();
+      if (window.TwinrRibbon) window.TwinrRibbon.show('Перестроил волну: <b>' + parts.join(' · ') + '</b>. <span class="ai-why">подобрал треки под новый вектор</span>.');
     }
     function open() { if (panel) { panel.classList.add('is-open'); panel.setAttribute('aria-hidden', 'false'); } }
     function close() { if (panel) { panel.classList.remove('is-open'); panel.setAttribute('aria-hidden', 'true'); } }
     window.WaveDials = { open: open, close: close };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- Between-track ambient ribbon — AI narrates transitions (budget-gated) - */
+  (function () {
+    'use strict';
+    var el, textEl, budget = 4, hideTimer = 0;
+    function init() {
+      el = document.getElementById('ai-ribbon'); if (!el) return;
+      textEl = document.getElementById('ai-ribbon-text');
+      document.getElementById('ai-ribbon-close').addEventListener('click', hide);
+      document.getElementById('ai-ribbon-why').addEventListener('click', function () {
+        hide();
+        if (window.TwinrChat && window.TwinrChat.ask) window.TwinrChat.ask('why', 'Почему именно этот трек?');
+      });
+      // first ambient now→next narration ~5s after load (not during onboarding)
+      setTimeout(function () {
+        show('Сейчас <b>Believer</b> → дальше <b>Centuries</b> · Fall Out Boy — <span class="ai-why">наследник по энергии и припеву</span>.');
+      }, 5200);
+    }
+    function resetTimer() { clearTimeout(hideTimer); hideTimer = setTimeout(hide, 9000); }
+    function show(html) {
+      if (!el || (window.location.hash || '') === '#/onboarding') return;
+      if (el.classList.contains('is-show')) { textEl.innerHTML = html; resetTimer(); return; }  // update, no budget cost
+      if (budget <= 0) return;
+      budget--;
+      textEl.innerHTML = html;
+      el.classList.add('is-show'); el.setAttribute('aria-hidden', 'false');
+      resetTimer();
+    }
+    function hide() { if (el) { el.classList.remove('is-show'); el.setAttribute('aria-hidden', 'true'); } clearTimeout(hideTimer); }
+    window.TwinrRibbon = { show: show, hide: hide };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   })();
   </script>
