@@ -1968,6 +1968,286 @@
         opacity: 0;
       }
 
+      /* =====================================================================
+         ONBOARDING (#/onboarding) — собери свой вкус (floating bubble picker)
+         First-run taste capture for the "First AI-driven music" narrative.
+         ===================================================================== */
+
+      /* Full-bleed black stage — suppress app chrome so it reads first-run */
+      html[data-active-route="#/onboarding"] .bg-layer { opacity: 0; }
+      html[data-active-route="#/onboarding"] { background: var(--home-bg-base); }
+      html[data-active-route="#/onboarding"] .sidebar,
+      html[data-active-route="#/onboarding"] .topbar,
+      html[data-active-route="#/onboarding"] .player-mini,
+      html[data-active-route="#/onboarding"] .mobile-tabbar,
+      html[data-active-route="#/onboarding"] .home-fab,
+      html[data-active-route="#/onboarding"] .tweaks-fab,
+      html[data-active-route="#/onboarding"] .tweaks,
+      html[data-active-route="#/onboarding"] .ai-launcher,
+      html[data-active-route="#/onboarding"] .ai-dock {
+        display: none !important;
+      }
+      /* Escape the app-shell/main sidebar gutter entirely → true full-viewport */
+      html[data-active-route="#/onboarding"] [data-page="onboarding"] {
+        position: fixed;
+        inset: 0;
+        margin: 0;
+        z-index: 200;
+        overflow: hidden;
+      }
+
+      .onb-stage {
+        position: relative;
+        min-height: 100dvh;
+        background: var(--home-bg-base);
+        overflow: hidden;
+      }
+      /* top + bottom scrims keep header/footer legible over full-screen bubbles */
+      .onb-stage::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background: linear-gradient(180deg,
+          rgba(12,11,11,0.92) 0%, rgba(12,11,11,0.4) 13%, rgba(12,11,11,0) 27%,
+          rgba(12,11,11,0) 73%, rgba(12,11,11,0.55) 89%, rgba(12,11,11,0.96) 100%);
+      }
+
+      .onb-bg-particles {
+        position: absolute;
+        inset: -60px;
+        background: url(assets/gorod-fm/home-bg-particles.png) center/cover no-repeat;
+        filter: blur(48px);
+        opacity: 0.55;
+        z-index: 0;
+        pointer-events: none;
+      }
+      /* radial brand glow toward the centre to reinforce the gravity metaphor */
+      .onb-stage::after {
+        content: '';
+        position: absolute;
+        left: 50%; top: 54%;
+        width: 60vw; height: 60vw;
+        max-width: 760px; max-height: 760px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, rgba(81,104,252,0.18) 0%, rgba(81,104,252,0) 62%);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .onb-head {
+        position: absolute;
+        top: clamp(20px, 3.5vh, 44px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 4;
+        text-align: center;
+        width: min(660px, 92%);
+        pointer-events: none;
+      }
+      .onb-kicker {
+        display: inline-block;
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--brand-blue-light);
+        padding: 6px 14px;
+        border: 1px solid rgba(81,104,252,0.35);
+        border-radius: var(--r-pill);
+        background: var(--tint-blue-light-20);
+        margin-bottom: 12px;
+      }
+      .onb-title {
+        font-family: 'Onest', sans-serif;
+        font-weight: 900;
+        font-size: clamp(28px, 4vw, 46px);
+        letter-spacing: -0.01em;
+        line-height: 1.02;
+        color: #fff;
+        text-wrap: balance;
+        margin: 0 0 10px;
+      }
+      .onb-sub {
+        font-family: 'Onest', sans-serif;
+        font-size: clamp(15px, 1.6vw, 18px);
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--text-sec);
+        text-wrap: pretty;
+        margin: 0 auto;
+        max-width: 540px;
+      }
+      .onb-sub strong { color: #fff; font-weight: 700; }
+      .onb-sub-accent { color: var(--brand-blue-light); font-weight: 600; }
+
+      /* Bubble playfield — absolute-positioned children driven by rAF physics */
+      .onb-field {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        touch-action: manipulation;
+      }
+      .onb-field-fallback {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-sec); font-family: 'Onest', sans-serif;
+      }
+
+      .onb-bubble {
+        position: absolute;
+        top: 0; left: 0;
+        width: var(--size, 104px);
+        height: var(--size, 104px);
+        border-radius: 50%;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        color: #fff;
+        font-family: 'Onest', sans-serif;
+        font-weight: 700;
+        font-size: clamp(12px, calc(var(--size) * 0.16), 19px);
+        letter-spacing: 0.01em;
+        line-height: 1.05;
+        overflow: hidden;
+        will-change: transform;
+        /* transform is owned by JS (translate+scale); only animate the look */
+        transition: box-shadow var(--t-fast), filter var(--t-fast), opacity 0.35s ease;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 10px 30px rgba(0,0,0,0.45);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .onb-bubble-label {
+        position: relative;
+        z-index: 2;
+        padding: 0 8px;
+        text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+        pointer-events: none;
+      }
+      /* genre bubbles: brand-tinted gradient by --hue */
+      .onb-bubble--genre {
+        background:
+          radial-gradient(circle at 32% 28%, hsla(var(--hue,230),80%,68%,0.95), hsla(var(--hue,230),72%,42%,0.92) 70%);
+      }
+      /* artist bubbles: photo fill + dark wash for legibility */
+      .onb-bubble--artist {
+        background-size: cover;
+        background-position: center;
+      }
+      .onb-bubble--artist::before {
+        content: '';
+        position: absolute; inset: 0; z-index: 1;
+        background: linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.72) 100%);
+      }
+      .onb-bubble:hover { filter: brightness(1.12); }
+      .onb-bubble:focus-visible {
+        outline: 3px solid var(--brand-blue-light);
+        outline-offset: 3px;
+      }
+      .onb-bubble.is-selected {
+        box-shadow:
+          0 0 0 3px var(--home-bg-base),
+          0 0 0 6px var(--brand-blue-light),
+          0 0 28px rgba(81,104,252,0.6),
+          0 10px 30px rgba(0,0,0,0.5);
+      }
+      .onb-bubble-check {
+        position: absolute;
+        z-index: 3;
+        right: 8px; bottom: 8px;
+        width: 24px; height: 24px;
+        border-radius: 50%;
+        background: var(--brand-blue-light);
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: opacity var(--t-fast), transform var(--t-fast);
+      }
+      .onb-bubble.is-selected .onb-bubble-check { opacity: 1; transform: scale(1); }
+      .onb-bubble-check svg { width: 14px; height: 14px; }
+
+      .onb-foot {
+        position: absolute;
+        bottom: clamp(18px, 3vh, 32px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .onb-count {
+        font-family: 'Onest', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-sec);
+      }
+      .onb-count #onb-count-n { color: var(--brand-blue-light); }
+      .onb-count.is-met #onb-count-n { color: var(--success, #34d399); }
+      .onb-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 56px;
+        padding: 0 30px;
+        border: none;
+        border-radius: var(--r-pill);
+        background: var(--brand-blue-light);
+        color: #fff;
+        font-family: 'Onest', sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform var(--t-fast), background var(--t-fast), opacity var(--t-fast), box-shadow var(--t-fast);
+        box-shadow: 0 10px 30px rgba(81,104,252,0.4);
+      }
+      .onb-cta:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(81,104,252,0.5); }
+      .onb-cta:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+      .onb-cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+      .onb-cta:disabled {
+        background: rgba(255,255,255,0.08);
+        color: var(--text-sec);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .onb-alt {
+        background: none;
+        border: none;
+        color: var(--text-sec);
+        font-family: 'Onest', sans-serif;
+        font-size: 14px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+        transition: color var(--t-fast);
+      }
+      .onb-alt:hover { color: #fff; }
+      .onb-alt:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; border-radius: 6px; }
+
+      /* Reduced-motion / fallback: static centered wrap grid, no physics */
+      .onb-field.is-static {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .onb-field.is-static .onb-bubble {
+        position: relative;
+        transform: none !important;
+      }
+
+      @media (max-width: 760px) {
+        .onb-stage { padding: 20px 16px; }
+        .onb-field { min-height: 300px; }
+      }
+
       /* ---- Home page — hero band ------------------------------------------- */
 
       .home-hero {
@@ -8271,6 +8551,43 @@
       </section>
       <!-- /#/favorites -->
 
+      <!-- Page: Онбординг — собери свой вкус (genre/artist bubble picker) -->
+      <section data-page="onboarding" aria-labelledby="page-onboarding-heading">
+        <div class="onb-stage" id="onb-stage">
+          <div class="onb-bg-particles" aria-hidden="true"></div>
+
+          <header class="onb-head">
+            <span class="onb-kicker">Первый AI-музыкальный стриминг</span>
+            <h1 id="page-onboarding-heading" class="onb-title">Соберём ваш вкус</h1>
+            <p class="onb-sub">
+              Нажмите минимум <strong>5</strong> исполнителей и жанров, которые вы знаете —
+              <span class="onb-sub-accent">Twinr&nbsp;AI</span> соберёт ваш профиль и настроит радио под вас.
+            </p>
+          </header>
+
+          <div class="onb-field" id="onb-field" role="group" aria-label="Жанры и исполнители — нажмите чтобы выбрать">
+            <!-- bubbles injected by JS (GorodOnboarding) -->
+            <p class="onb-field-fallback" id="onb-field-fallback" hidden>Загрузка…</p>
+          </div>
+
+          <footer class="onb-foot">
+            <div class="onb-count" id="onb-count" aria-live="polite">
+              <span id="onb-count-n">0</span>&nbsp;/&nbsp;5 выбрано
+            </div>
+            <button class="onb-cta" id="onb-cta" type="button" disabled aria-disabled="true">
+              Продолжить
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+                <polyline points="9 6 15 12 9 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="onb-alt" id="onb-alt" type="button">
+              или загрузите резюме — подберём музыку по нему
+            </button>
+          </footer>
+        </div>
+      </section>
+      <!-- /#/onboarding -->
+
     </main>
   </div>
   <!-- /.app-shell -->
@@ -9271,7 +9588,7 @@
         trackView:    'gorod-fm.track-view',
       };
 
-      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites'];
+      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding'];
       const DEFAULT_ROUTE = '#/map';
 
       /* ---- localStorage helpers -------------------------------------------- */
@@ -10555,6 +10872,361 @@
       boot();
 
     })();
+  </script>
+
+  <!-- =======================================================================
+       Город ФМ v2 — AI-product layer (onboarding bubbles + Twinr AI chat)
+       Self-contained; decoupled from the main app IIFE. See
+       docs/superpowers/VISION-gorod-fm-ai-driven.md
+       ======================================================================= -->
+  <script>
+  /* ---- Genre/artist bubble onboarding (#/onboarding) -------------------- */
+  (function () {
+    'use strict';
+    var ASSET = 'assets/gorod-fm/';
+    var DATA = [
+      { t: 'ПОП', hue: 330, w: 1.15 },
+      { t: 'РОК', hue: 2, w: 1.1 },
+      { t: 'ХИП-ХОП', hue: 258, w: 1.2 },
+      { t: 'Егор Крид', img: 'home-featured-egor-krid.png', w: 1.15, g: 'ПОП' },
+      { t: 'ДИСКО', hue: 292, w: 1.0 },
+      { t: 'Макс Корж', img: 'favs-artist-maks-korzh-base.png', w: 1.1, g: 'ХИП-ХОП' },
+      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05 },
+      { t: 'Дима Билан', img: 'favs-artist-dima-bilan-overlay.png', w: 1.0, g: 'ПОП' },
+      { t: 'ЛОФАЙ', hue: 222, w: 0.95 },
+      { t: 'Martin Garrix', img: 'favs-dj-martin-garrix.png', w: 1.05, g: 'ЭЛЕКТРО' },
+      { t: 'ИНДИ', hue: 152, w: 0.95 },
+      { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК' },
+      { t: 'ДЖАЗ', hue: 36, w: 0.9 },
+      { t: 'Вадим Адамов', img: 'home-tile-vadim-adamov-base.png', w: 1.0, g: 'ЭЛЕКТРО' },
+      { t: 'РЭП', hue: 278, w: 1.0 },
+      { t: 'Мия Бойка', img: 'favs-artist-mia-boyka.png', w: 0.95, g: 'ПОП' },
+      { t: 'R&B', hue: 320, w: 0.9 },
+      { t: 'Рамиль', img: 'favs-artist-ramil.png', w: 0.95, g: 'ПОП' },
+      { t: 'МЕТАЛЛ', hue: 210, w: 0.9 },
+      { t: 'КЛАССИКА', hue: 45, w: 0.85 }
+    ];
+    // Apple-Music-style: tapping a bubble spawns related ones.
+    // genre -> representative artists; artist -> similar artists.
+    var REL = {
+      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина'],
+      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons'],
+      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит'],
+      'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин'],
+      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker'],
+      'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib'],
+      'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco'],
+      'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong'],
+      'РЭП': ['Eminem','Kendrick Lamar','Drake','ЛСП'],
+      'R&B': ['The Weeknd','Frank Ocean','SZA','Бьянка'],
+      'МЕТАЛЛ': ['Metallica','Rammstein','Ария','S.O.A.D.'],
+      'КЛАССИКА': ['Чайковский','Моцарт','L.Einaudi','H.Zimmer'],
+      'Егор Крид': ['Niletto','MONATIK','JONY','Артур Пирожков'],
+      'Макс Корж': ['Баста','Скриптонит','Каста','ЛСП'],
+      'Дима Билан': ['С.Лазарев','П.Гагарина','Zivert','Егор Крид'],
+      'Martin Garrix': ['David Guetta','Avicii','Tiësto','Alan Walker'],
+      'Linkin Park': ['Imagine Dragons','Papa Roach','3 Days Grace','Limp Bizkit'],
+      'Вадим Адамов': ['DJ Smash','Filatov & Karas','Burito','Niletto'],
+      'Мия Бойка': ['INSTASAMKA','Клава Кока','Зомб','Дора'],
+      'Рамиль': ['JONY','HammAli & Navai','Niletto','Zivert']
+    };
+    var MAX_BUBBLES = 80;
+    var GENRE_HUE = {
+      'ПОП': 330, 'РОК': 2, 'ХИП-ХОП': 258, 'ДИСКО': 292, 'ЭЛЕКТРО': 190,
+      'ЛОФАЙ': 222, 'ИНДИ': 152, 'ДЖАЗ': 36, 'РЭП': 278, 'R&B': 320,
+      'МЕТАЛЛ': 210, 'КЛАССИКА': 45
+    };
+    // Deep fallback pool so ANY bubble keeps blooming coherent "similar" ones
+    // (genre-tagged) — endless Apple-Music-style expansion.
+    var POOL = {
+      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина','Niletto','JONY','Дора','Клава Кока','Dua Lipa','The Weeknd'],
+      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons','ДДТ','Nirvana','Coldplay','Muse','The Beatles','Queen'],
+      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит','Каста','ЛСП','Travis Scott','Kanye West','Тимати','Гуф'],
+      'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин','Bee Gees','Daft Punk','Donna Summer','CHIC'],
+      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker','Calvin Harris','Skrillex','deadmau5','Zedd','ODESZA'],
+      'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib','Idealism','Jinsang','mac ayres','Powfu'],
+      'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco','Tame Impala','The Strokes','Cigarettes A.S.','Phoenix'],
+      'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong','John Coltrane','Ella Fitzgerald','Чет Бейкер','Norah Jones'],
+      'РЭП': ['Eminem','Kendrick Lamar','Drake','ЛСП','J.Cole','50 Cent','Тимати','Big Baby Tape'],
+      'R&B': ['The Weeknd','Frank Ocean','SZA','Бьянка','Usher','Alicia Keys','H.E.R.','Daniel Caesar'],
+      'МЕТАЛЛ': ['Metallica','Rammstein','Ария','S.O.A.D.','Slipknot','Korn','Nightwish','Disturbed'],
+      'КЛАССИКА': ['Чайковский','Моцарт','L.Einaudi','H.Zimmer','Бетховен','Бах','Vivaldi','Шопен']
+    };
+    var TASTE_KEY = 'gorodfm_taste';
+    var BASE = 104;
+    var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var field, countEl, countN, cta, alt, fallback;
+    var bubbles = [], byName = {};
+    var raf = 0, running = false, built = false, placed = false;
+    var W = 0, H = 0;
+
+    function selectedNames() {
+      return bubbles.filter(function (b) { return b.sel; }).map(function (b) { return b.d.t; });
+    }
+    function saveTaste() {
+      try { localStorage.setItem(TASTE_KEY, JSON.stringify(selectedNames())); } catch (e) {}
+    }
+    function refreshCount() {
+      var n = bubbles.filter(function (b) { return b.sel; }).length;
+      if (countN) countN.textContent = n;
+      var met = n >= 5;
+      if (countEl) countEl.classList.toggle('is-met', met);
+      if (cta) { cta.disabled = !met; cta.setAttribute('aria-disabled', String(!met)); }
+    }
+    function toggle(b) {
+      b.sel = !b.sel;
+      b.el.classList.toggle('is-selected', b.sel);
+      b.el.setAttribute('aria-pressed', String(b.sel));
+      refreshCount();
+      saveTaste();
+    }
+
+    function hashHue(s) {
+      var h = 0, i;
+      for (i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360;
+      return h;
+    }
+
+    // Apple-Music-style: first tap selects AND blooms related bubbles outward.
+    function onTap(b) {
+      toggle(b);
+      if (!b.expanded) {            // every bubble blooms its similar ones, once
+        b.expanded = true;
+        spawnChildren(b);
+      }
+    }
+
+    // curated relations first, then top up from the genre pool → endless coherent bloom
+    function relatedFor(b) {
+      var list = REL[b.d.t] ? REL[b.d.t].slice() : [];
+      var pool = (POOL[b.genre] || []).slice();
+      for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1)), t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+      }
+      for (i = 0; i < pool.length && list.length < 4; i++) {
+        if (list.indexOf(pool[i]) === -1) list.push(pool[i]);
+      }
+      return list;
+    }
+
+    // recycle oldest untouched bubbles (unselected & unexpanded) so the field stays light
+    function ensureRoom(n) {
+      while (bubbles.length + n > MAX_BUBBLES) {
+        var idx = -1, i;
+        for (i = 0; i < bubbles.length; i++) {
+          if (!bubbles[i].sel && !bubbles[i].expanded) { idx = i; break; }
+        }
+        if (idx === -1) break;
+        var rm = bubbles.splice(idx, 1)[0];
+        delete byName[rm.d.t];
+        if (rm.el && rm.el.parentNode) rm.el.parentNode.removeChild(rm.el);
+      }
+    }
+
+    function spawnChildren(parent) {
+      var names = relatedFor(parent).filter(function (nm) { return !byName[nm]; });
+      if (!names.length) { pulse(parent); return; }   // exhausted this branch
+      ensureRoom(names.length);
+      names.forEach(function (name) { makeBubble({ t: name }, parent.depth + 1, parent); });
+    }
+
+    function pulse(b) {
+      if (b.el.animate) b.el.animate([{ transform: b.el.style.transform + ' scale(1.12)' }, { transform: b.el.style.transform }], { duration: 320 });
+    }
+
+    function makeBubble(d, depth, parent) {
+      if (byName[d.t]) {                 // already present → pulse instead of duplicating
+        var ex = byName[d.t];
+        if (ex.el.animate) ex.el.animate([{ filter: 'brightness(1.7)' }, { filter: 'brightness(1)' }], { duration: 380 });
+        return null;
+      }
+      if (bubbles.length >= MAX_BUBBLES) return null;
+      var genre = d.g || (parent ? parent.genre : (d.img ? null : d.t));
+      var wgt = depth === 0 ? d.w : Math.max(0.52, 0.7 - depth * 0.05);
+      var size = Math.round(BASE * wgt);
+      var el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'onb-bubble ' + (d.img ? 'onb-bubble--artist' : 'onb-bubble--genre');
+      el.style.setProperty('--size', size + 'px');
+      if (d.img) { el.style.backgroundImage = 'url(' + ASSET + d.img + ')'; }
+      else { el.style.setProperty('--hue', d.hue != null ? d.hue : (GENRE_HUE[genre] != null ? GENRE_HUE[genre] : hashHue(d.t))); }
+      el.setAttribute('aria-pressed', 'false');
+      el.setAttribute('aria-label', 'Выбрать: ' + d.t);
+      el.innerHTML =
+        '<span class="onb-bubble-label">' + d.t + '</span>' +
+        '<span class="onb-bubble-check" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</span>';
+      var b = { d: d, el: el, genre: genre, sel: false, depth: depth, expanded: false, r: size / 2, x: 0, y: 0, vx: 0, vy: 0 };
+      if (parent) {
+        var ang = Math.random() * Math.PI * 2, sp = 2.6 + Math.random() * 1.8;
+        b.x = parent.x + Math.cos(ang) * (parent.r * 0.5);
+        b.y = parent.y + Math.sin(ang) * (parent.r * 0.5);
+        b.vx = Math.cos(ang) * sp; b.vy = Math.sin(ang) * sp;
+        if (W) { b.x = Math.max(b.r, Math.min(W - b.r, b.x)); b.y = Math.max(b.r, Math.min(H - b.r, b.y)); }
+        paint(b);
+        el.style.opacity = '0';
+        requestAnimationFrame(function () { el.style.opacity = '1'; });
+      }
+      el.addEventListener('click', function () { onTap(b); });
+      field.appendChild(el);
+      bubbles.push(b);
+      byName[d.t] = b;
+      return b;
+    }
+
+    function build() {
+      field = document.getElementById('onb-field');
+      if (!field) return false;
+      countEl = document.getElementById('onb-count');
+      countN = document.getElementById('onb-count-n');
+      cta = document.getElementById('onb-cta');
+      alt = document.getElementById('onb-alt');
+      fallback = document.getElementById('onb-field-fallback');
+      if (fallback) { fallback.hidden = true; fallback.style.display = 'none'; }
+
+      byName = {};
+      DATA.forEach(function (d) { makeBubble(d, 0, null); });
+
+      if (cta) cta.addEventListener('click', onContinue);
+      if (alt) alt.addEventListener('click', onResumeDemo);
+      window.addEventListener('resize', onResize);
+
+      if (REDUCE) field.classList.add('is-static');
+      built = true;
+      return true;
+    }
+
+    function measure() {
+      if (!field) return;
+      var r = field.getBoundingClientRect();
+      W = r.width; H = r.height;
+    }
+
+    function scatter() {
+      measure();
+      if (W < 10 || H < 10) return false;
+      bubbles.forEach(function (b, i) {
+        var ang = (i / bubbles.length) * Math.PI * 2 + Math.random() * 0.6;
+        var rad = Math.min(W, H) * (0.18 + Math.random() * 0.28);
+        b.x = W / 2 + Math.cos(ang) * rad;
+        b.y = H * 0.57 + Math.sin(ang) * rad;
+        b.x = Math.max(b.r, Math.min(W - b.r, b.x));
+        b.y = Math.max(b.r, Math.min(H - b.r, b.y));
+        b.vx = (Math.random() - 0.5) * 0.6;
+        b.vy = (Math.random() - 0.5) * 0.6;
+        paint(b);
+      });
+      placed = true;
+      return true;
+    }
+
+    function paint(b) {
+      var s = b.sel ? 1.08 : 1;
+      b.el.style.transform = 'translate(' + (b.x - b.r) + 'px,' + (b.y - b.r) + 'px) scale(' + s + ')';
+    }
+
+    function step() {
+      var cx = W / 2, cy = H * 0.57, i, j, b;   // pull slightly below centre → clears the title
+      for (i = 0; i < bubbles.length; i++) {
+        b = bubbles[i];
+        var k = b.sel ? 0.00020 : 0.00008;
+        b.vx += (cx - b.x) * k;
+        b.vy += (cy - b.y) * k;
+        b.vx *= 0.965; b.vy *= 0.965;
+      }
+      // pairwise soft repulsion so bubbles never fully overlap
+      for (i = 0; i < bubbles.length; i++) {
+        for (j = i + 1; j < bubbles.length; j++) {
+          var a = bubbles[i], c = bubbles[j];
+          var dx = c.x - a.x, dy = c.y - a.y;
+          var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+          var min = a.r + c.r + 13;
+          if (dist < min) {
+            var push = (min - dist) / dist * 0.16;
+            var px = dx * push, py = dy * push;
+            a.vx -= px; a.vy -= py; c.vx += px; c.vy += py;
+          }
+        }
+      }
+      for (i = 0; i < bubbles.length; i++) {
+        b = bubbles[i];
+        var sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+        if (sp > 2.6) { b.vx = b.vx / sp * 2.6; b.vy = b.vy / sp * 2.6; }
+        b.x += b.vx; b.y += b.vy;
+        if (b.x < b.r) { b.x = b.r; b.vx *= -0.55; }
+        else if (b.x > W - b.r) { b.x = W - b.r; b.vx *= -0.55; }
+        if (b.y < b.r) { b.y = b.r; b.vy *= -0.55; }
+        else if (b.y > H - b.r) { b.y = H - b.r; b.vy *= -0.55; }
+        paint(b);
+      }
+      raf = requestAnimationFrame(step);
+    }
+
+    function onResize() {
+      if (!running) return;
+      var oldW = W, oldH = H;
+      measure();
+      if (oldW > 0 && oldH > 0) {
+        var sx = W / oldW, sy = H / oldH;
+        bubbles.forEach(function (b) {
+          b.x = Math.max(b.r, Math.min(W - b.r, b.x * sx));
+          b.y = Math.max(b.r, Math.min(H - b.r, b.y * sy));
+        });
+      }
+    }
+
+    function onResumeDemo() {
+      // Concept demo: "drop your resume -> we infer your taste" auto-fills bubbles
+      var pick = ['ИНДИ', 'ЛОФАЙ', 'ДЖАЗ', 'ЭЛЕКТРО', 'Martin Garrix'];
+      bubbles.forEach(function (b) {
+        if (pick.indexOf(b.d.t) !== -1 && !b.sel) toggle(b);
+      });
+      if (alt) alt.textContent = 'По резюме мы определили: инди · лофай · джаз · электро · Garrix — поправьте если что';
+    }
+
+    function onContinue() {
+      if (cta && cta.disabled) return;
+      saveTaste();
+      // hand off to the app + let Twinr AI greet with the fresh profile
+      window.location.hash = '#/home';
+      if (window.TwinrChat && window.TwinrChat.greetFromOnboarding) {
+        setTimeout(function () { window.TwinrChat.greetFromOnboarding(selectedNames()); }, 450);
+      }
+    }
+
+    function start() {
+      if (!built && !build()) return;
+      if (REDUCE) return; // static layout; no physics
+      running = true;
+      if (!placed) {
+        if (!scatter()) { // field not measurable yet; retry next frame
+          raf = requestAnimationFrame(function () { if (running) { scatter(); if (placed) step(); } });
+          return;
+        }
+      } else {
+        measure();
+      }
+      cancelAnimationFrame(raf);
+      step();
+    }
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    window.GorodOnboarding = { start: start, stop: stop };
+
+    function route() { return (window.location.hash || ''); }
+    function sync() {
+      if (route() === '#/onboarding') start(); else stop();
+    }
+    window.addEventListener('hashchange', sync);
+    // initial (main app has already run activatePage by now)
+    if (document.readyState === 'complete' || document.readyState === 'interactive') sync();
+    else window.addEventListener('DOMContentLoaded', sync);
+  })();
   </script>
 
 </body>
