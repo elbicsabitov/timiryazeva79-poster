@@ -2246,9 +2246,149 @@
         transform: none !important;
       }
 
+      /* =====================================================================
+         RÉSUMÉ → MUSIC — concept-demo (VISION #7). Drop/paste a résumé →
+         Twinr "reads" it → assembles an explainable starter taste that seeds
+         the bubble field. Scripted + on-device. Matches the dialog language.
+         ===================================================================== */
+      .resume-modal {
+        position: fixed; inset: 0; z-index: 140;
+        display: flex; align-items: center; justify-content: center;
+        padding: 24px;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.22s ease;
+      }
+      .resume-modal.is-open { opacity: 1; pointer-events: auto; }
+      .resume-backdrop {
+        position: absolute; inset: 0;
+        background: rgba(6, 7, 10, 0.66);
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      }
+      .resume-panel {
+        position: relative; width: 480px; max-width: 100%;
+        max-height: calc(100vh - 48px); overflow-y: auto;
+        background: rgba(18, 18, 24, 0.97);
+        backdrop-filter: blur(26px) saturate(1.2); -webkit-backdrop-filter: blur(26px) saturate(1.2);
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 22px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62);
+        padding: 26px 26px 22px;
+        transform: translateY(14px) scale(0.98);
+        transition: transform 0.24s cubic-bezier(.34, 1.4, .64, 1);
+      }
+      .resume-modal.is-open .resume-panel { transform: none; }
+      .resume-close {
+        position: absolute; top: 14px; right: 14px;
+        width: 34px; height: 34px; border-radius: 9px; border: none;
+        background: rgba(255, 255, 255, 0.06); color: var(--text-sec);
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: background var(--t-fast), color var(--t-fast);
+      }
+      .resume-close:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+      .resume-close:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .resume-close svg { width: 16px; height: 16px; }
+
+      .resume-spark {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+        background: var(--tint-blue-light-20); color: var(--brand-blue-light);
+      }
+      .resume-spark svg { width: 22px; height: 22px; }
+      .resume-spark--spin svg { animation: resume-spin 1.4s linear infinite; }
+      @keyframes resume-spin { to { transform: rotate(360deg); } }
+
+      .resume-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.2; color: #fff; margin: 0 0 8px; }
+      .resume-sub { font-family: 'Onest', sans-serif; font-size: 14px; line-height: 1.5; color: var(--text-sec); margin: 0 0 18px; }
+
+      .resume-drop {
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+        padding: 22px 16px; border-radius: 14px; cursor: pointer;
+        border: 1.5px dashed rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.03);
+        text-align: center;
+        transition: border-color var(--t-fast), background var(--t-fast);
+      }
+      .resume-drop:hover, .resume-drop.is-drag { border-color: var(--brand-blue-light); background: var(--tint-blue-light-20); }
+      .resume-drop:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .resume-drop svg { width: 26px; height: 26px; color: var(--brand-blue-light); margin-bottom: 4px; }
+      .resume-drop-title { font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 600; color: #fff; }
+      .resume-drop-hint { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-quat); }
+
+      .resume-or { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-quat); text-align: center; margin: 14px 0 8px; }
+      .resume-text {
+        width: 100%; box-sizing: border-box; resize: vertical; min-height: 64px;
+        font-family: 'Onest', sans-serif; font-size: 14px; line-height: 1.5;
+        color: #fff; background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 12px;
+        padding: 12px 14px;
+      }
+      .resume-text::placeholder { color: var(--text-quat); }
+      .resume-text:focus-visible { outline: none; border-color: var(--brand-blue-light); }
+
+      .resume-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+      .resume-actions--result { justify-content: flex-end; }
+      .resume-sample, .resume-edit {
+        background: none; border: none; color: var(--text-sec);
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600;
+        cursor: pointer; padding: 12px 8px; border-radius: 6px;
+      }
+      .resume-sample:hover, .resume-edit:hover { color: #fff; }
+      .resume-sample:focus-visible, .resume-edit:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .resume-go, .resume-build {
+        display: inline-flex; align-items: center; gap: 7px; height: 48px; padding: 0 22px;
+        border: none; border-radius: var(--r-pill); background: var(--brand-blue-light); color: #fff;
+        font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer;
+        box-shadow: 0 10px 28px rgba(81, 104, 252, 0.4);
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+      }
+      .resume-go:hover, .resume-build:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(81, 104, 252, 0.5); }
+      .resume-go:active, .resume-build:active { transform: translateY(0) scale(0.98); }
+      .resume-go:focus-visible, .resume-build:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+      .resume-go svg, .resume-build svg { width: 18px; height: 18px; }
+
+      .resume-log { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+      .resume-log li {
+        font-family: 'Onest', sans-serif; font-size: 14px; color: var(--text-sec);
+        display: flex; align-items: center; gap: 10px;
+        opacity: 0; transform: translateY(6px); animation: resume-in 0.3s ease forwards;
+      }
+      .resume-log li::before {
+        content: ''; width: 7px; height: 7px; border-radius: 50%;
+        background: var(--brand-blue-light); flex: none;
+      }
+      .resume-log li.is-done { color: #fff; }
+      @keyframes resume-in { to { opacity: 1; transform: none; } }
+
+      .resume-derived { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+      .resume-derived li {
+        display: flex; align-items: center; gap: 12px;
+        padding: 11px 13px; border-radius: 13px;
+        background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .resume-tag {
+        flex: none; font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700;
+        padding: 6px 12px; border-radius: var(--r-pill);
+        background: var(--tint-blue-light-20); color: #fff; border: 1px solid var(--brand-blue-light);
+        white-space: nowrap;
+      }
+      .resume-why { font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.45; color: var(--text-sec); }
+      .resume-insight {
+        font-family: 'Onest', sans-serif; font-size: 13px; color: var(--brand-blue-light); font-weight: 600;
+        margin: 12px 0 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .resume-modal, .resume-panel { transition: none; }
+        .resume-spark--spin svg { animation: none; }
+        .resume-log li { animation: none; opacity: 1; transform: none; }
+      }
+
       @media (max-width: 760px) {
         .onb-stage { padding: 20px 16px; }
         .onb-field { min-height: 300px; }
+        .resume-panel { padding: 22px 18px 18px; border-radius: 18px; }
+        .resume-title { font-size: 19px; }
+        .resume-actions { flex-direction: column-reverse; align-items: stretch; }
+        .resume-go, .resume-build { justify-content: center; }
       }
 
       /* =====================================================================
@@ -8990,6 +9130,71 @@
       </section>
       <!-- /#/onboarding -->
 
+      <!-- Résumé → music concept-demo (VISION #7) — opened from onboarding "загрузите резюме" -->
+      <div class="resume-modal" id="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resume-title" aria-hidden="true">
+        <div class="resume-backdrop" id="resume-backdrop" aria-hidden="true"></div>
+        <div class="resume-panel" role="document">
+          <button class="resume-close" id="resume-close" type="button" aria-label="Закрыть">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+
+          <!-- step 1: input -->
+          <div class="resume-step" id="resume-step-input">
+            <span class="resume-spark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+            </span>
+            <h2 class="resume-title" id="resume-title">Соберём вкус из вашего резюме</h2>
+            <p class="resume-sub">Twinr прочитает ваш опыт и интересы — и настроит станцию под вас. Демо: файл остаётся на устройстве, на сервер ничего не уходит.</p>
+
+            <label class="resume-drop" id="resume-drop" for="resume-file">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span class="resume-drop-title">Перетащите резюме или нажмите</span>
+              <span class="resume-drop-hint">PDF, DOCX, TXT — не покидает устройство</span>
+              <input type="file" id="resume-file" accept=".pdf,.doc,.docx,.txt,.rtf" hidden>
+            </label>
+
+            <div class="resume-or">или вставьте пару строк о себе</div>
+            <textarea class="resume-text" id="resume-text" rows="3" placeholder="Напр.: продакт-дизайнер, 7 лет в IT, выпуск 2014, кофе и винил, по утрам бегаю, играю на гитаре, инди и сиэтл-гранж…"></textarea>
+
+            <div class="resume-actions">
+              <button class="resume-sample" id="resume-sample" type="button">Заполнить примером</button>
+              <button class="resume-go" id="resume-go" type="button">
+                Прочитать
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- step 2: parsing theater -->
+          <div class="resume-step" id="resume-step-parse" hidden>
+            <span class="resume-spark resume-spark--spin" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+            </span>
+            <h2 class="resume-title">Twinr читает ваше резюме…</h2>
+            <ul class="resume-log" id="resume-log" aria-live="polite"></ul>
+          </div>
+
+          <!-- step 3: explainable result -->
+          <div class="resume-step" id="resume-step-result" hidden>
+            <span class="resume-spark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+            </span>
+            <h2 class="resume-title">Вот ваш стартовый вкус</h2>
+            <p class="resume-sub">Собрал из резюме — каждый пункт объяснён. Поправите вручную в любой момент.</p>
+            <ul class="resume-derived" id="resume-derived"></ul>
+            <p class="resume-insight" id="resume-insight" hidden></p>
+            <div class="resume-actions resume-actions--result">
+              <button class="resume-edit" id="resume-edit" type="button">Поправлю сам</button>
+              <button class="resume-build" id="resume-build" type="button">
+                Собрать радио
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /resume-modal -->
+
       <!-- Page: Мой вкус — живой редактируемый Twinr-профиль (UX research 09/10) -->
       <section data-page="taste" aria-labelledby="page-taste-heading">
         <div class="taste-stage">
@@ -11684,14 +11889,185 @@
       }
     }
 
-    function onResumeDemo() {
-      // Concept demo: "drop your resume -> we infer your taste" auto-fills bubbles
-      var pick = ['ИНДИ', 'ЛОФАЙ', 'ДЖАЗ', 'ЭЛЕКТРО', 'Martin Garrix'];
-      bubbles.forEach(function (b) {
-        if (pick.indexOf(b.d.t) !== -1 && !b.sel) toggle(b);
+    /* ---- Résumé → music concept-demo (VISION #7) ----------------------- */
+    // Trigger lives on #onb-alt. Opens a modal: drop/paste a résumé, Twinr
+    // "reads" it (scripted), derives an EXPLAINABLE starter taste mapped to
+    // real bubbles, and seeds the field. On-device, no upload.
+    var R = {};                          // cached modal refs
+    var rWired = false, rDerived = null;
+
+    var RESUME_SAMPLE =
+      'Продакт-дизайнер, 7 лет в IT. Выпуск 2014. ' +
+      'Люблю кофе и винил, по выходным бегаю, немного играю на гитаре. ' +
+      'Жил в Алматы, сейчас в Москве. Фанат инди и сиэтл-гранжа.';
+
+    // keyword -> taste. Every pick MUST be an existing bubble name (DATA), so
+    // the field visibly lights up when applied.
+    var RESUME_RULES = [
+      { kw: ['дизайн', 'design', 'продакт', 'product', 'креатив', 'creativ', 'бренд', 'brand', 'ux', 'ui '], picks: ['ИНДИ', 'ЛОФАЙ'], why: 'креативная профессия — инди и лёгкий лофай' },
+      { kw: ['разработ', 'developer', 'engineer', 'инженер', 'программ', 'data', 'аналит', 'analyst', 'devops', 'backend'], picks: ['ЛОФАЙ', 'ЭЛЕКТРО'], why: 'много фокус-работы — лофай и электроника для концентрации' },
+      { kw: ['маркет', 'market', 'smm', 'реклам', 'sales', 'продаж', 'менедж', 'manager'], picks: ['ПОП', 'ЭЛЕКТРО'], why: 'энергичная среда — поп и электро' },
+      { kw: ['финанс', 'finance', 'банк', 'bank', 'бухгалт', 'эконом', 'консалт', 'consult'], picks: ['ДЖАЗ', 'КЛАССИКА'], why: 'строгая сфера — джаз и классика для ясной головы' },
+      { kw: ['студент', 'student', 'универ', 'univers', 'школ', 'college', 'стажёр', 'intern'], picks: ['ХИП-ХОП', 'ПОП'], why: 'студенческая энергия — хип-хоп и поп' },
+      { kw: ['препод', 'учител', 'teacher', 'наук', 'science', 'research', 'исследов', 'phd', 'академ'], picks: ['КЛАССИКА', 'ДЖАЗ'], why: 'академический бэкграунд — классика и джаз' },
+      { kw: ['кофе', 'coffee', 'винил', 'vinyl', 'бариста', 'barista', 'книг', 'book', 'читаю'], picks: ['ИНДИ', 'ДЖАЗ'], why: 'кофе и винил — инди и тёплый джаз' },
+      { kw: ['спорт', 'gym', 'зал', 'бег', 'run', 'фитнес', 'fitness', 'трениров', 'marathon', 'workout'], picks: ['ЭЛЕКТРО', 'Martin Garrix'], why: 'спорт и бег — электро и EDM (Garrix)' },
+      { kw: ['игр', 'game', 'gaming', 'гейм', 'киберспорт', 'esports', 'twitch', 'стрим'], picks: ['ЭЛЕКТРО', 'МЕТАЛЛ'], why: 'гейминг — драйвовое электро и тяжёлое' },
+      { kw: ['кино', 'film', 'movie', 'сериал', 'режисс', 'фото', 'photo', 'видео', 'video', 'монтаж'], picks: ['КЛАССИКА', 'ИНДИ'], why: 'кино и визуал — саундтреки и инди' },
+      { kw: ['путешеств', 'travel', 'тревел', 'explore', 'хайк', 'hike', 'дорог'], picks: ['ИНДИ', 'ЛОФАЙ'], why: 'любите дорогу — инди и лофай в путь' },
+      { kw: ['рок', 'rock', 'гитар', 'guitar', 'группа', 'band', 'панк', 'punk', 'гранж', 'grunge'], picks: ['РОК', 'Linkin Park'], why: 'рок и гитара — рок и Linkin Park' },
+      { kw: ['рэп', 'rap', 'хип-хоп', 'hip-hop', 'хип хоп', 'баттл', 'battle'], picks: ['ХИП-ХОП', 'РЭП'], why: 'тяга к рэпу — хип-хоп и рэп' },
+      { kw: ['танц', 'dance', 'клуб', 'club', 'вечеринк', 'party', 'диджей', 'techno', 'хаус', 'house'], picks: ['ДИСКО', 'ЭЛЕКТРО'], why: 'танцы и клубы — диско и электро' },
+      { kw: ['казах', 'алмат', 'almaty', 'astana', 'астан', 'караганд'], picks: ['Макс Корж', 'Рамиль'], why: 'постсоветская волна — Макс Корж и Рамиль' }
+    ];
+    var RESUME_FALLBACK = [
+      { name: 'ПОП', why: 'универсальный старт — потом сузим' },
+      { name: 'ИНДИ', why: 'для настроения между делами' },
+      { name: 'ЛОФАЙ', why: 'фон для работы и фокуса' },
+      { name: 'ЭЛЕКТРО', why: 'когда нужен драйв' },
+      { name: 'ДЖАЗ', why: 'на вечер' }
+    ];
+
+    function deriveTaste(text) {
+      var low = (' ' + text + ' ').toLowerCase();
+      var items = [], seen = {}, matched = [];
+      RESUME_RULES.forEach(function (rule) {
+        var hit = null, i;
+        for (i = 0; i < rule.kw.length; i++) {
+          if (low.indexOf(rule.kw[i]) !== -1) { hit = rule.kw[i].trim(); break; }
+        }
+        if (!hit) return;
+        if (matched.indexOf(hit) === -1) matched.push(hit);
+        rule.picks.forEach(function (name) {
+          if (!seen[name]) { seen[name] = 1; items.push({ name: name, why: rule.why }); }
+        });
       });
-      if (alt) alt.textContent = 'По резюме мы определили: инди · лофай · джаз · электро · Garrix — поправьте если что';
+      RESUME_FALLBACK.forEach(function (f) {     // top up so "Собрать радио" (>=5) always works
+        if (items.length >= 5 || seen[f.name]) return;
+        seen[f.name] = 1; items.push({ name: f.name, why: f.why });
+      });
+      var insight = '', ym = low.match(/\b(19[6-9]\d|20[0-2]\d)\b/);
+      if (ym) {
+        var y = parseInt(ym[1], 10), dec = Math.floor(y / 10) * 10;
+        insight = 'Год ' + y + ' в резюме → добавил ноту ' + dec + '-х в вашу волну.';
+      }
+      return { items: items.slice(0, 7), insight: insight, matched: matched.slice(0, 5) };
     }
+
+    function resumeRefs() {
+      if (R.modal) return R;
+      R.modal = document.getElementById('resume-modal');
+      R.stepInput = document.getElementById('resume-step-input');
+      R.stepParse = document.getElementById('resume-step-parse');
+      R.stepResult = document.getElementById('resume-step-result');
+      R.log = document.getElementById('resume-log');
+      R.derived = document.getElementById('resume-derived');
+      R.insight = document.getElementById('resume-insight');
+      R.text = document.getElementById('resume-text');
+      R.drop = document.getElementById('resume-drop');
+      R.file = document.getElementById('resume-file');
+      return R;
+    }
+    function showStep(which) {
+      [R.stepInput, R.stepParse, R.stepResult].forEach(function (el) { if (el) el.hidden = true; });
+      if (which) which.hidden = false;
+    }
+    function openResume() {
+      resumeRefs();
+      if (!R.modal) return;
+      wireResume();
+      showStep(R.stepInput);
+      R.modal.classList.add('is-open');
+      R.modal.setAttribute('aria-hidden', 'false');
+      setTimeout(function () { if (R.go) R.go.focus(); }, 60);
+    }
+    function closeResume() {
+      if (!R.modal) return;
+      R.modal.classList.remove('is-open');
+      R.modal.setAttribute('aria-hidden', 'true');
+      if (alt) alt.focus();
+    }
+    function runParse(text) {
+      rDerived = deriveTaste(text);
+      showStep(R.stepParse);
+      if (R.log) R.log.innerHTML = '';
+      var seen = rDerived.matched.length ? ('вижу: ' + rDerived.matched.join(', ')) : 'читаю опыт и интересы';
+      var lines = ['Открываю резюме…', seen + '…', 'Связываю профиль с музыкой…', 'Собираю Twinr-профиль…'];
+      if (REDUCE) { showResult(); return; }
+      var i = 0;
+      (function next() {
+        if (i >= lines.length) { setTimeout(showResult, 360); return; }
+        var li = document.createElement('li');
+        li.textContent = lines[i];
+        if (R.log) {
+          if (R.log.lastChild) R.log.lastChild.classList.add('is-done');
+          R.log.appendChild(li);
+        }
+        i++;
+        setTimeout(next, 600);
+      })();
+    }
+    function showResult() {
+      showStep(R.stepResult);
+      if (R.derived) {
+        R.derived.innerHTML = '';
+        rDerived.items.forEach(function (it) {
+          var li = document.createElement('li');
+          var tag = document.createElement('span'); tag.className = 'resume-tag'; tag.textContent = it.name;
+          var why = document.createElement('span'); why.className = 'resume-why'; why.textContent = it.why;
+          li.appendChild(tag); li.appendChild(why);
+          R.derived.appendChild(li);
+        });
+      }
+      if (R.insight) {
+        if (rDerived.insight) { R.insight.textContent = rDerived.insight; R.insight.hidden = false; }
+        else R.insight.hidden = true;
+      }
+      var build = document.getElementById('resume-build');
+      if (build) setTimeout(function () { build.focus(); }, 60);
+    }
+    function applyDerived() {
+      if (!built) build();
+      if (!rDerived) return;
+      rDerived.items.forEach(function (it) {
+        var b = byName[it.name];
+        if (b && !b.sel) toggle(b);
+      });
+      for (var i = 0; i < bubbles.length && selectedNames().length < 5; i++) {
+        if (!bubbles[i].sel) toggle(bubbles[i]);
+      }
+      saveTaste();
+    }
+    function wireResume() {
+      if (rWired) return;
+      resumeRefs();
+      R.go = document.getElementById('resume-go');
+      var close = document.getElementById('resume-close');
+      var backdrop = document.getElementById('resume-backdrop');
+      var sample = document.getElementById('resume-sample');
+      var edit = document.getElementById('resume-edit');
+      var build = document.getElementById('resume-build');
+      var typedOrSample = function () { return (R.text && R.text.value.trim()) || RESUME_SAMPLE; };
+      if (close) close.addEventListener('click', closeResume);
+      if (backdrop) backdrop.addEventListener('click', closeResume);
+      if (sample) sample.addEventListener('click', function () { if (R.text) { R.text.value = RESUME_SAMPLE; R.text.focus(); } });
+      if (R.go) R.go.addEventListener('click', function () { runParse(typedOrSample()); });
+      if (edit) edit.addEventListener('click', function () { applyDerived(); closeResume(); });
+      if (build) build.addEventListener('click', function () { applyDerived(); closeResume(); onContinue(); });
+      if (R.drop) {
+        R.drop.setAttribute('tabindex', '0');
+        R.drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (R.file) R.file.click(); } });
+        R.drop.addEventListener('dragover', function (e) { e.preventDefault(); R.drop.classList.add('is-drag'); });
+        R.drop.addEventListener('dragleave', function () { R.drop.classList.remove('is-drag'); });
+        R.drop.addEventListener('drop', function (e) { e.preventDefault(); R.drop.classList.remove('is-drag'); runParse(typedOrSample()); });
+      }
+      if (R.file) R.file.addEventListener('change', function () { runParse(typedOrSample()); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && R.modal && R.modal.classList.contains('is-open')) closeResume();
+      });
+      rWired = true;
+    }
+    function onResumeDemo() { openResume(); }
 
     function onContinue() {
       if (cta && cta.disabled) return;
