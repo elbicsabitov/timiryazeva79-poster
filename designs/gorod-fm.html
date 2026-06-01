@@ -1665,68 +1665,307 @@
         .map-card-subtitle { font-size: 15px; }
       }
 
-      /* ---- Home page — chip row ------------------------------------------- */
+      /* ---- Home v2 (Figma 2174:422) — dark stage + chip row + tile row + featured -- */
 
-      .home-page {
-        padding: 24px 0 80px;
-        max-width: 960px;
-        margin: 0 auto;
+      /* Override #app padding on home so stage fills full viewport */
+      [data-page="home"] {
+        margin: calc(-1 * var(--topbar-h)) -40px calc(-1 * 40px);
+      }
+
+      .home-stage {
         position: relative;
+        min-height: calc(100dvh - var(--player-mini-h));
+        padding-top: var(--topbar-h);
+        background: var(--home-bg-base);
+        overflow: hidden;
       }
 
-      /* Filter chips strip */
+      /* Blurred radial particle bg (Figma 2174:423) */
+      .home-bg-particles {
+        position: absolute;
+        inset: -40px;
+        background: url(assets/gorod-fm/home-bg-particles.png) center/cover no-repeat;
+        filter: blur(40px);
+        opacity: 0.85;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* Chip row centered horizontally (Figma 2174:473, top=145, gap=63) */
       .home-chip-row {
+        position: relative;
+        z-index: 5;
         display: flex;
-        gap: 12px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 4px;
-        padding-right: 24px;
-        margin-bottom: 32px;
-        -webkit-overflow-scrolling: touch;
-        /* hide scrollbar */
-        scrollbar-width: none;
-      }
-
-      .home-chip-row::-webkit-scrollbar {
-        display: none;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        padding-top: 60px;
+        padding-bottom: 0;
       }
 
       .home-chip {
         display: inline-flex;
         align-items: center;
-        flex-shrink: 0;
-        scroll-snap-align: start;
-        padding: 10px 18px;
-        min-height: 44px;
-        border-radius: var(--r-pill);
-        background: var(--surf-glass-20);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        color: rgba(255, 255, 255, 0.80);
+        justify-content: center;
+        height: 52px;
+        min-width: 44px;
+        padding: 0 30px;
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        color: var(--text-pri);
         font-family: 'Onest', sans-serif;
-        font-size: 14px;
+        font-size: 17px;
         font-weight: 500;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.02em;
         text-transform: uppercase;
         cursor: pointer;
-        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
         white-space: nowrap;
+        transition: background var(--t-fast), border-color var(--t-fast);
       }
 
       .home-chip:hover {
-        background: rgba(255, 255, 255, 0.28);
-        color: #ffffff;
+        background: rgba(0, 0, 0, 0.65);
+        border-color: rgba(81, 104, 252, 0.30);
       }
 
       .home-chip[aria-pressed="true"] {
-        background: rgba(255, 255, 255, 0.32);
-        color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.35);
+        background: var(--tint-blue-light-20);
+        border-color: var(--brand-blue-light);
       }
 
       .home-chip:focus-visible {
-        outline: 3px solid var(--brand-cyan);
+        outline: 3px solid var(--brand-blue-light);
         outline-offset: 2px;
+      }
+
+      /* Tile row container — absolute children, sits below chip row */
+      .home-tile-row {
+        position: relative;
+        z-index: 2;
+        height: 628px;
+        margin-top: 80px;
+      }
+
+      /* Whole-row darkening overlay (Figma 2174:529 rgba(3,3,3,0.35)) */
+      .home-tile-row-darken {
+        position: absolute;
+        left: calc(8.33% + 35px);
+        right: -180px;
+        top: 0;
+        height: 607px;
+        background: var(--tile-darkening);
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      /* Individual tile — top:0 inside tile-row (which provides the chip-row offset) */
+      .home-tile {
+        position: absolute;
+        top: var(--top, 0);
+        left: var(--x);
+        width: var(--w);
+        height: var(--h, 600px);
+        border: none;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+        border-top-right-radius: var(--r-tile-tr);
+        overflow: hidden;
+        transition: transform var(--t-fast), filter var(--t-fast);
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .home-tile:hover {
+          transform: scale(1.02);
+          z-index: 5;
+        }
+      }
+
+      .home-tile:focus-visible {
+        outline: 3px solid var(--brand-blue-light);
+        outline-offset: 3px;
+      }
+
+      .home-tile-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .home-tile-bg--layer {
+        z-index: 1;
+      }
+
+      .home-tile-shade {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background: var(--tile-shade-strong);
+      }
+
+      .home-tile-label-wrap {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 480px;
+        max-height: calc(100% - 40px);
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        overflow: visible;
+      }
+
+      .home-tile-label {
+        font-family: 'Onest', sans-serif;
+        font-weight: 900;
+        font-size: 36px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #ffffff;
+        white-space: nowrap;
+        line-height: 1;
+        transform: rotate(-90deg) scaleX(1.05);
+        transform-origin: center;
+      }
+
+      /* Halo blur backdrop behind featured (Figma 2174:530, top=438 in artboard,
+         offset 165 from tile-row top=273) */
+      .home-featured-halo {
+        position: absolute;
+        left: calc(33.33% + 88px);
+        width: 617px;
+        max-width: calc(100% - 100px);
+        top: 165px;
+        height: 480px;
+        background: rgba(255, 255, 255, 0.28);
+        filter: blur(22.4px);
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      /* Featured central card (Figma 2174:531) — large image + CTA bar
+         Figma top=240, offset = 240 - 273 = -33 relative to tile-row */
+      .home-featured {
+        position: absolute;
+        left: calc(33.33% + 88px);
+        top: -33px;
+        width: 617px;
+        max-width: calc(100% - 100px);
+        height: 673px;
+        border-radius: 20px;
+        overflow: hidden;
+        z-index: 4;
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
+      }
+
+      .home-featured-img {
+        position: absolute;
+        inset: 0;
+        background: url(assets/gorod-fm/home-featured-egor-krid.png) center/cover no-repeat;
+      }
+
+      .home-featured-img-shade {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50.2%, rgba(0, 0, 0, 0.5) 86.5%);
+        pointer-events: none;
+      }
+
+      /* CTA bar at bottom (Figma 2174:533, h=77, bg=#2d2d5d) */
+      .home-featured-cta-bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 77px;
+        background: var(--featured-cta-bg);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 16px 16px 24px;
+        gap: 24px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+
+      .home-featured-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        color: #ffffff;
+        min-width: 0;
+      }
+
+      .home-featured-title {
+        font-family: 'Onest', sans-serif;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        line-height: 1.1;
+        transform: scaleX(1.05);
+        transform-origin: left center;
+        display: inline-block;
+      }
+
+      .home-featured-artist {
+        font-family: 'Onest', sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.1;
+      }
+
+      .home-featured-play {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #ffffff;
+        flex-shrink: 0;
+        transition: background var(--t-fast), transform var(--t-fast);
+      }
+
+      .home-featured-play:hover {
+        background: rgba(255, 255, 255, 0.35);
+        transform: scale(1.06);
+      }
+
+      .home-featured-play:focus-visible {
+        outline: 3px solid var(--brand-blue-light);
+        outline-offset: 3px;
+      }
+
+      .home-featured-play svg {
+        width: 26px;
+        height: 26px;
+        margin-left: 3px;
+      }
+
+      /* Player mini bar gets blue-tinted variant on #/home (Figma 2174:430) */
+      html[data-active-route="#/home"] .player-mini {
+        background: var(--tint-blue-light-20) !important;
+      }
+
+      /* Home is a dedicated dark-black screen (Figma 2174:422) — suppress the
+         themed cinema/warm gradient layers so the whole viewport (incl. sidebar
+         + topbar chrome) reads pure black like the design, regardless of theme. */
+      html[data-active-route="#/home"] {
+        background: var(--home-bg-base);
+      }
+      html[data-active-route="#/home"] .bg-layer {
+        opacity: 0;
       }
 
       /* ---- Home page — hero band ------------------------------------------- */
@@ -6011,311 +6250,149 @@
       <section data-page="home" aria-labelledby="page-home-heading">
         <h1 id="page-home-heading" class="visually-hidden">Главная</h1>
 
-        <div class="home-page">
+        <!-- Figma 2174:422 — dark home with 8 tiles + featured central card + blue player -->
+        <div class="home-stage">
 
-          <!-- Filter chips row -->
+          <!-- Background: blurred radial particles (Figma img3DRender...Particles3) -->
+          <div class="home-bg-particles" aria-hidden="true"></div>
+
+          <!-- Chip row centered horizontally above tiles -->
           <div
             class="home-chip-row"
             role="group"
             aria-label="Жанр"
             id="home-chip-row"
           >
-            <button
-              class="home-chip"
-              type="button"
-              aria-pressed="true"
-              data-genre="rok"
-              aria-label="РОК"
-            >РОК</button>
-            <button
-              class="home-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="disko"
-              aria-label="ДИСКО"
-            >ДИСКО</button>
-            <button
-              class="home-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="pop"
-              aria-label="ПОП"
-            >ПОП</button>
-            <button
-              class="home-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="hip-hop"
-              aria-label="ХИП-ХОП"
-            >ХИП-ХОП</button>
-            <button
-              class="home-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="eshche"
-              aria-label="Показать ещё жанры"
-            >ЕЩЁ</button>
+            <button class="home-chip" type="button" aria-pressed="false"
+                    data-genre="rok" aria-label="РОК">РОК</button>
+            <button class="home-chip" type="button" aria-pressed="false"
+                    data-genre="disko" aria-label="ДИСКО">ДИСКО</button>
+            <button class="home-chip" type="button" aria-pressed="false"
+                    data-genre="pop" aria-label="ПОП">ПОП</button>
+            <button class="home-chip" type="button" aria-pressed="true"
+                    data-genre="hip-hop" aria-label="ХИП-ХОП — выбран">ХИП-ХОП</button>
+            <button class="home-chip" type="button" aria-pressed="false"
+                    data-genre="eshche" aria-label="Показать ещё жанры">ЕЩЁ</button>
           </div>
 
-          <!-- Hero band: overline + cover + meta -->
-          <div class="home-hero" aria-label="Сейчас в эфире">
-            <div class="home-hero-overline" aria-hidden="true">СЕЙЧАС В ЭФИРЕ · РОК</div>
+          <!-- Tile row darkening overlay (Figma 2174:529 rgba(3,3,3,0.35)) -->
+          <div class="home-tile-row-darken" aria-hidden="true"></div>
 
-            <!-- Large cover with abstract SVG art -->
-            <div
-              class="home-cover"
-              id="home-cover"
-              aria-hidden="true"
-            >
-              <!-- Abstract album art: concentric arcs + wave lines -->
-              <svg class="home-cover-art" viewBox="0 0 480 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-                <!-- Outer glow rings -->
-                <circle cx="240" cy="240" r="200" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
-                <circle cx="240" cy="240" r="160" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-                <circle cx="240" cy="240" r="120" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1.5"/>
-                <circle cx="240" cy="240" r="80"  fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
-                <!-- Center disc -->
-                <circle cx="240" cy="240" r="44"  fill="rgba(255,255,255,0.12)"/>
-                <circle cx="240" cy="240" r="16"  fill="rgba(255,255,255,0.20)"/>
-                <!-- Highlight arc top-left -->
-                <path d="M 80 180 Q 150 60 280 100" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="2"/>
-                <!-- Wave lines bottom -->
-                <path d="M 60 340 Q 120 310 180 340 Q 240 370 300 340 Q 360 310 420 340" fill="none" stroke="rgba(86,175,215,0.25)" stroke-width="1.5"/>
-                <path d="M 40 360 Q 120 330 200 360 Q 280 390 360 360 Q 400 345 440 360" fill="none" stroke="rgba(86,175,215,0.15)" stroke-width="1"/>
-              </svg>
+          <!-- 8 absolute-positioned tiles per Figma 2174:422 -->
+          <div class="home-tile-row" role="list" aria-label="Подборки на главной">
+
+            <!-- 1: POP GOLD 2010s — Figma 2174:527 left=8.33%+35 w=184 -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(8.33% + 35px); --w: 184px; --h: 600px;"
+                    data-label="POP GOLD 2010s"
+                    aria-label="Открыть подборку POP GOLD 2010s">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-pop-gold-2010s.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">POP GOLD 2010s</span></div>
+            </button>
+
+            <!-- 2: K-POP — Figma 2174:525 left=8.33%+154 w=249 -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(8.33% + 154px); --w: 249px; --h: 600px;"
+                    data-label="K-POP"
+                    aria-label="Открыть подборку K-POP">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-k-pop.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">K-POP</span></div>
+            </button>
+
+            <!-- 3: CHILL — Figma 2174:523 left=16.67%+133 w=339 -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(16.67% + 133px); --w: 339px; --h: 600px;"
+                    data-label="CHILL"
+                    aria-label="Открыть подборку CHILL">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-chill.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">CHILL</span></div>
+            </button>
+
+            <!-- 4: ДИСКАЧ 90-Х — Figma 2174:521 left=58.33%+100 w=309 -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(58.33% + 100px); --w: 309px; --h: 600px;"
+                    data-label="ДИСКАЧ 90-Х"
+                    aria-label="Открыть подборку ДИСКАЧ 90-Х">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-discach-90.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">ДИСКАЧ 90-Х</span></div>
+            </button>
+
+            <!-- 5: Z. CITY SHOW — Figma 2174:519 left=66.67%+50 w=383 -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(66.67% + 50px); --w: 383px; --h: 600px;"
+                    data-label="Z. CITY SHOW"
+                    aria-label="Открыть подборку Z. CITY SHOW">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-z-city-show.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">Z. CITY SHOW</span></div>
+            </button>
+
+            <!-- 6: VADIM ADAMOV (base) — Figma 2174:484 left=75%+89 w=368 top=272 (-1 from baseline) -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(75% + 89px); --w: 368px; --h: 600px; --top: -1px;"
+                    data-label="VADIM ADAMOV"
+                    aria-label="Открыть подборку VADIM ADAMOV">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-vadim-adamov-base.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">VADIM ADAMOV</span></div>
+            </button>
+
+            <!-- 7: VADIM ADAMOV (base+overlay) — Figma 2174:541 left=91.67%+51 w=373 top=276 (+3 from baseline) -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(91.67% + 51px); --w: 373px; --h: 600px; --top: 3px;"
+                    data-label="VADIM ADAMOV"
+                    aria-label="Открыть подборку VADIM ADAMOV">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-vadim-adamov-base.png);"></div>
+              <div class="home-tile-bg home-tile-bg--layer" style="background-image:url(assets/gorod-fm/home-tile-vadim-adamov-overlay.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">VADIM ADAMOV</span></div>
+            </button>
+
+            <!-- 8: DFM CHILL — Figma 2174:469 left=100%+193 w=373 top=240 h=628 (mostly off-screen right) -->
+            <button class="home-tile" type="button" role="listitem"
+                    style="--x: calc(100% + 193px); --w: 373px; --h: 628px; --top: -33px;"
+                    data-label="DFM CHILL"
+                    aria-label="Открыть подборку DFM CHILL">
+              <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-dfm-chill-far.png);"></div>
+              <div class="home-tile-shade"></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">DFM CHILL</span></div>
+            </button>
+
+            <!-- Bg blur halo behind featured (Figma 2174:530, top=438 in artboard) -->
+            <div class="home-featured-halo" aria-hidden="true"></div>
+
+            <!-- Center featured card (Figma 2174:531-538) — Потрачу / Егор Крид
+                 Figma top=240, so offset = -33 relative to tile-row top (273) -->
+            <div class="home-featured" aria-label="Сейчас в эфире: Потрачу — Егор Крид">
+              <div class="home-featured-img" aria-hidden="true"></div>
+              <div class="home-featured-img-shade" aria-hidden="true"></div>
+
+              <div class="home-featured-cta-bar">
+                <div class="home-featured-meta">
+                  <span class="home-featured-title">Потрачу</span>
+                  <span class="home-featured-artist">Егор Крид</span>
+                </div>
+                <button
+                  class="home-featured-play"
+                  type="button"
+                  aria-label="Воспроизвести Потрачу — Егор Крид"
+                  data-featured-play
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <polygon points="6 4 20 12 6 20" fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
             </div>
 
-            <!-- Track meta -->
-            <div class="home-hero-meta">
-              <div
-                class="home-track-title"
-                id="home-track-title"
-              >Believer</div>
-              <div
-                class="home-track-artist"
-                id="home-track-artist"
-              >IMAGINE DRAGON · Z. CITY SHOW</div>
-            </div>
           </div>
-
-          <!-- Stations grid -->
-          <div class="home-stations-heading" aria-hidden="true">СТАНЦИИ</div>
-          <div
-            class="home-stations-grid"
-            role="list"
-            aria-label="Радиостанции"
-            id="home-stations-grid"
-          >
-
-            <!-- Station 1: ГОРОД РОК (active default) -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="rock"
-              data-active="true"
-              aria-label="ГОРОД РОК, 103.5 FM — сейчас активна"
-              aria-pressed="true"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД РОК</span>
-              <span class="home-station-freq">103.5 FM</span>
-            </button>
-
-            <!-- Station 2 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="pop"
-              data-active="false"
-              aria-label="ГОРОД ПОП, 104.0 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД ПОП</span>
-              <span class="home-station-freq">104.0 FM</span>
-            </button>
-
-            <!-- Station 3 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="disko"
-              data-active="false"
-              aria-label="ГОРОД ДИСКО, 104.5 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД ДИСКО</span>
-              <span class="home-station-freq">104.5 FM</span>
-            </button>
-
-            <!-- Station 4 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="hiphop"
-              data-active="false"
-              aria-label="ГОРОД ХИП-ХОП, 105.0 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД ХИП-ХОП</span>
-              <span class="home-station-freq">105.0 FM</span>
-            </button>
-
-            <!-- Station 5 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="chill"
-              data-active="false"
-              aria-label="ГОРОД CHILL, 105.5 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД CHILL</span>
-              <span class="home-station-freq">105.5 FM</span>
-            </button>
-
-            <!-- Station 6 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="lirika"
-              data-active="false"
-              aria-label="ГОРОД ЛИРИКА, 106.0 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД ЛИРИКА</span>
-              <span class="home-station-freq">106.0 FM</span>
-            </button>
-
-            <!-- Station 7 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="80s"
-              data-active="false"
-              aria-label="ГОРОД 80-х, 106.5 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД 80-х</span>
-              <span class="home-station-freq">106.5 FM</span>
-            </button>
-
-            <!-- Station 8 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="90s"
-              data-active="false"
-              aria-label="ГОРОД 90-х, 107.0 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД 90-х</span>
-              <span class="home-station-freq">107.0 FM</span>
-            </button>
-
-            <!-- Station 9 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="00s"
-              data-active="false"
-              aria-label="ГОРОД 00-х, 107.5 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД 00-х</span>
-              <span class="home-station-freq">107.5 FM</span>
-            </button>
-
-            <!-- Station 10 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="jazz"
-              data-active="false"
-              aria-label="ГОРОД ДЖАЗ, 108.0 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД ДЖАЗ</span>
-              <span class="home-station-freq">108.0 FM</span>
-            </button>
-
-            <!-- Station 11 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="indie"
-              data-active="false"
-              aria-label="ГОРОД ИНДИ, 88.5 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД ИНДИ</span>
-              <span class="home-station-freq">88.5 FM</span>
-            </button>
-
-            <!-- Station 12 -->
-            <button
-              class="home-station"
-              type="button"
-              role="listitem"
-              data-station="hit"
-              data-active="false"
-              aria-label="ГОРОД ХИТ, 89.0 FM"
-              aria-pressed="false"
-            >
-              <span class="home-station-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><polyline points="2 16 6 8 10 14 14 6 18 12 22 8"/></svg>
-              </span>
-              <span class="home-station-name">ГОРОД ХИТ</span>
-              <span class="home-station-freq">89.0 FM</span>
-            </button>
-
-          </div>
-          <!-- /.home-stations-grid -->
 
         </div>
-        <!-- /.home-page -->
+        <!-- /.home-stage -->
 
       </section>
 
@@ -9228,6 +9305,10 @@
       function activatePage(route) {
         if (!route) return;
         const key = pageKeyFromRoute(route);
+
+        // Reflect active route on <html> so CSS can apply per-route overrides
+        // (e.g. dark home bg, blue-tinted player bar)
+        document.documentElement.setAttribute('data-active-route', route);
 
         // Deactivate all sections
         document.querySelectorAll('[data-page]').forEach(function (sec) {
