@@ -3622,6 +3622,60 @@
         outline-offset: 2px;
       }
 
+      /* =====================================================================
+         ОТКРЫТЬ — conversational + taste-adjacency discovery (GOROD-046).
+         «Открыть» = неизвестное: спроси словами или двигайся от своего вкуса;
+         каждый результат объяснён. Старая галерея → ряд «От редакции».
+         ===================================================================== */
+      .discover-head { max-width: 1080px; margin: 8px auto 0; padding: 0 clamp(16px, 4vw, 28px); }
+      .discover-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: clamp(26px, 4vw, 36px); color: #fff; margin: 0; letter-spacing: -0.01em; }
+      .discover-sub { font-family: 'Onest', sans-serif; font-size: 14px; color: var(--text-sec); margin: 6px 0 0; }
+      .discover-ask { max-width: 1080px; margin: 18px auto 0; padding: 0 clamp(16px, 4vw, 28px); }
+      .discover-ask-field {
+        display: flex; align-items: center; gap: 10px;
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: var(--r-pill); padding: 6px 6px 6px 16px; transition: border-color var(--t-fast);
+      }
+      .discover-ask-field:focus-within { border-color: var(--brand-blue-light); }
+      .discover-ask-field > svg { width: 18px; height: 18px; color: var(--text-sec); flex: none; }
+      .discover-input { flex: 1 1 auto; min-width: 0; background: none; border: none; outline: none; font-family: 'Onest', sans-serif; font-size: 15px; color: #fff; }
+      .discover-input::placeholder { color: var(--text-quat); }
+      .discover-ask-go { flex: none; height: 40px; padding: 0 20px; border: none; border-radius: var(--r-pill); background: var(--brand-blue-light); color: #fff; font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: transform var(--t-fast); }
+      .discover-ask-go:hover { transform: translateY(-1px); }
+      .discover-ask-go:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+      .discover-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+      .discover-chip { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: var(--r-pill); cursor: pointer; background: rgba(255, 255, 255, 0.05); color: #d6dbe8; border: 1px solid rgba(255, 255, 255, 0.1); transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast); }
+      .discover-chip:hover { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); color: #fff; }
+      .discover-chip:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .discover-results { max-width: 1080px; margin: 18px auto 0; padding: 0 clamp(16px, 4vw, 28px); }
+      .discover-results[hidden] { display: none; }
+      .discover-results-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+      .discover-results-title { font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
+      .discover-results-title b { color: var(--brand-blue-light); }
+      .discover-results-play { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border: 1px solid var(--brand-blue-light); border-radius: var(--r-pill); background: var(--tint-blue-light-20); color: #fff; font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background var(--t-fast); }
+      .discover-results-play:hover { background: var(--brand-blue-light); }
+      .discover-results-play:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+      .discover-results-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+      .discover-track { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); }
+      .discover-track-play { flex: none; width: 36px; height: 36px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.08); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--t-fast); }
+      .discover-track-play:hover { background: var(--brand-blue-light); }
+      .discover-track-play svg { width: 14px; height: 14px; }
+      .discover-track-meta { flex: 1 1 auto; min-width: 0; }
+      .discover-track-name { font-family: 'Onest', sans-serif; font-size: 14.5px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .discover-track-why { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); margin-top: 2px; }
+      .discover-track-why b { color: #cdd4f5; font-weight: 600; }
+      .discover-near { max-width: 1080px; margin: 26px auto 0; padding: 0 clamp(16px, 4vw, 28px); }
+      .discover-near-title { font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: #fff; margin: 0 0 14px; }
+      .discover-near-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+      .discover-near-row::-webkit-scrollbar { display: none; }
+      .discover-near-card { flex: none; width: 220px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: linear-gradient(160deg, var(--tint-blue-light-20), rgba(255, 255, 255, 0.03)); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform var(--t-fast), border-color var(--t-fast); }
+      .discover-near-card:hover { transform: translateY(-3px); border-color: var(--brand-blue-light); }
+      .discover-near-card:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .discover-near-name { font-family: 'Onest', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
+      .discover-near-dist { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); margin-top: 6px; }
+      .discover-near-dist b { color: var(--brand-blue-light); }
+      .discover-editorial-title { max-width: 1080px; margin: 30px auto 14px; padding: 0 clamp(16px, 4vw, 28px); font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: #fff; }
+
       /* Mobile 2-row gallery container */
       .podborki-gallery-mobile {
         display: none;
@@ -7307,6 +7361,43 @@
         <h1 id="page-podborki-heading" class="visually-hidden">Подборки</h1>
 
         <div class="podborki-page">
+
+          <!-- Открыть: conversational + taste-adjacency discovery (GOROD-046) -->
+          <header class="discover-head">
+            <h2 class="discover-title">Открыть</h2>
+            <p class="discover-sub">Твой вкус — это точка. Здесь ты двигаешься от неё.</p>
+          </header>
+
+          <div class="discover-ask">
+            <div class="discover-ask-field">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+              <input class="discover-input" id="discover-input" type="text" placeholder="«как Земфира, но темнее» · «что-то на вечер»" aria-label="Опиши, что хочешь послушать">
+              <button class="discover-ask-go" id="discover-go" type="button">Найти</button>
+            </div>
+            <div class="discover-chips" id="discover-chips" role="group" aria-label="Быстрый старт по контексту">
+              <button class="discover-chip" type="button" data-q="утро в дороге">утро в дороге</button>
+              <button class="discover-chip" type="button" data-q="фокус на работе">фокус на работе</button>
+              <button class="discover-chip" type="button" data-q="тёмный вечер с вином">тёмный вечер</button>
+              <button class="discover-chip" type="button" data-q="энергия для тренировки">энергия</button>
+              <button class="discover-chip" type="button" data-q="успокоиться">успокоиться</button>
+              <button class="discover-chip" type="button" data-q="открыть новое рядом">новое рядом</button>
+            </div>
+          </div>
+
+          <div class="discover-results" id="discover-results" hidden>
+            <div class="discover-results-head">
+              <span class="discover-results-title" id="discover-results-title"></span>
+              <button class="discover-results-play" id="discover-results-play" type="button">▶ Запустить как волну</button>
+            </div>
+            <ul class="discover-results-list" id="discover-results-list"></ul>
+          </div>
+
+          <section class="discover-near" aria-label="Рядом с твоим вкусом">
+            <h3 class="discover-near-title">Рядом с твоим вкусом</h3>
+            <div class="discover-near-row" id="discover-near-row"></div>
+          </section>
+
+          <h3 class="discover-editorial-title">От редакции</h3>
 
           <!-- Chip row -->
           <div
@@ -12845,6 +12936,115 @@
     function refresh() { apply(document.getElementById('mini-art-img')); }
     window.NowPlayingTint = { refresh: refresh };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh); else refresh();
+  })();
+  </script>
+
+  <script>
+  /* ---- Открыть — conversational + taste-adjacency discovery (GOROD-046) ----
+     «Открыть» = неизвестное. Спроси словами или двигайся от своего вкуса;
+     каждый результат ОБЪЯСНЁН. Scripted, on-device. */
+  (function () {
+    'use strict';
+    var TASTE_KEY = 'gorodfm_taste';
+    var VIBES = {
+      dark:  { label: 'тёмный пост-панк', tracks: [['Судно', 'Молчат Дома'], ['Звёзды', 'Buerak'], ['Кукушка', 'Цой'], ['Toska', 'Motorama']] },
+      calm:  { label: 'лофай для фокуса',  tracks: [['Aruarian Dance', 'Nujabes'], ['Slow Dancing', 'Joji'], ['Snowman', 'WYS'], ['Reflections', 'Idealism']] },
+      up:    { label: 'бодрый поп',        tracks: [['Любимка', 'Niletto'], ['Credo', 'Zivert'], ['Кружит', 'MONATIK'], ['Втюрилась', 'Дора']] },
+      drive: { label: 'электро для драйва', tracks: [['Animals', 'Martin Garrix'], ['Levels', 'Avicii'], ['The Motto', 'Tiësto'], ['Faded', 'Alan Walker']] },
+      indie: { label: 'инди в дорогу',      tracks: [['Heat Waves', 'Glass Animals'], ['Do I Wanna Know?', 'Arctic Monkeys'], ['The Less I Know', 'Tame Impala'], ['Sweater Weather', 'The Neighbourhood']] }
+    };
+    var Q2V = [
+      { kw: ['тёмн', 'темн', 'вечер', 'ночь', 'вино', 'груст', 'меланхол', 'dark'], v: 'dark' },
+      { kw: ['фокус', 'работа', 'спокой', 'успоко', 'учеб', 'чита', 'calm', 'лофай', 'лофи'], v: 'calm' },
+      { kw: ['утро', 'бодр', 'energ', 'энерг', 'дорог', 'road', 'весел'], v: 'up' },
+      { kw: ['трениров', 'спорт', 'бег', 'зал', 'драйв', 'танц', 'клуб', 'electro', 'электро'], v: 'drive' },
+      { kw: ['нов', 'откры', 'инди', 'indie', 'гитар', 'рядом'], v: 'indie' }
+    ];
+    var NEAR = {
+      'РОК': ['Пост-панк', 'Гранж'], 'ИНДИ': ['Дрим-поп', 'Шугейз'], 'МЕТАЛЛ': ['Индастриал', 'Хардкор'],
+      'ЭЛЕКТРО': ['Синтвейв', 'Хаус'], 'ЛОФАЙ': ['Чилхоп', 'Эмбиент'], 'ДЖАЗ': ['Соул', 'Босанова'],
+      'ПОП': ['Синти-поп', 'Хайпер-поп'], 'ХИП-ХОП': ['Клауд-рэп', 'Трэп'], 'ДИСКО': ['Фанк', 'Ню-диско'],
+      'РЭП': ['Грайм', 'Бумбап'], 'R&B': ['Нео-соул', 'Альт-R&B'], 'КЛАССИКА': ['Неоклассика', 'Саундтреки']
+    };
+    var inited = false, els = {};
+    function $(id) { return document.getElementById(id); }
+    function topTaste() {
+      var picks = [];
+      try { picks = JSON.parse(localStorage.getItem(TASTE_KEY) || '[]'); } catch (e) {}
+      return picks.filter(function (p) { return NEAR[p]; });
+    }
+    function pickVibe(q) {
+      var low = (' ' + q + ' ').toLowerCase();
+      for (var i = 0; i < Q2V.length; i++) { for (var j = 0; j < Q2V[i].kw.length; j++) { if (low.indexOf(Q2V[i].kw[j]) !== -1) return Q2V[i].v; } }
+      return 'indie';
+    }
+    function trackRow(t, why) {
+      var li = document.createElement('li'); li.className = 'discover-track';
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'discover-track-play'; btn.setAttribute('aria-label', 'Слушать ' + t[0]);
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+      btn.addEventListener('click', function () { if (window.TwinrRibbon) window.TwinrRibbon.show('Ставлю <b>' + t[0] + '</b> · ' + t[1] + ' — <span class="ai-why">' + why + '</span>.'); });
+      var meta = document.createElement('div'); meta.className = 'discover-track-meta';
+      var nm = document.createElement('div'); nm.className = 'discover-track-name'; nm.textContent = t[0] + ' · ' + t[1];
+      var wh = document.createElement('div'); wh.className = 'discover-track-why'; wh.innerHTML = 'почему: ' + why;
+      meta.appendChild(nm); meta.appendChild(wh);
+      li.appendChild(btn); li.appendChild(meta);
+      return li;
+    }
+    function run(q) {
+      if (!els.results) return;
+      var v = VIBES[pickVibe(q)], tt = topTaste(), anchor = tt.length ? tt[0] : null;
+      els.title.innerHTML = 'По запросу <b>«' + q + '»</b> — ' + v.label + (anchor ? ', рядом с твоим ' + anchor : '');
+      els.list.innerHTML = '';
+      v.tracks.forEach(function (t, i) {
+        var why = i === 0 ? (v.label + ' под «' + q + '»' + (anchor ? ', близко к твоему ' + anchor : ''))
+          : (i === 1 && anchor ? ('ты часто дослушиваешь ' + anchor + ' — это рядом') : (v.label + ', в том же настроении'));
+        els.list.appendChild(trackRow(t, why));
+      });
+      els.results.hidden = false;
+      els.results.scrollIntoView({ block: 'nearest' });
+    }
+    function renderNear() {
+      if (!els.near) return;
+      var tt = topTaste(); els.near.innerHTML = ''; var shown = 0;
+      tt.forEach(function (g) {
+        (NEAR[g] || []).forEach(function (nb) {
+          if (shown >= 4) return;
+          var card = document.createElement('button'); card.type = 'button'; card.className = 'discover-near-card';
+          card.innerHTML = '<div class="discover-near-name"></div><div class="discover-near-dist">в <b>1 шаге</b> от твоего ' + g + '</div>';
+          card.querySelector('.discover-near-name').textContent = nb;
+          card.addEventListener('click', function () { run(nb + ' рядом с ' + g); });
+          els.near.appendChild(card); shown++;
+        });
+      });
+      if (shown === 0) {
+        ['Инди', 'Лофай', 'Электро'].forEach(function (nb) {
+          var card = document.createElement('button'); card.type = 'button'; card.className = 'discover-near-card';
+          card.innerHTML = '<div class="discover-near-name">' + nb + '</div><div class="discover-near-dist">собери вкус в онбординге, чтобы точнее</div>';
+          card.addEventListener('click', function () { run(nb); });
+          els.near.appendChild(card);
+        });
+      }
+    }
+    function init() {
+      if (inited) return;
+      els.input = $('discover-input'); if (!els.input) return;
+      els.results = $('discover-results'); els.title = $('discover-results-title'); els.list = $('discover-results-list'); els.near = $('discover-near-row');
+      var go = function () { var q = (els.input.value || '').trim(); if (q) run(q); };
+      var goBtn = $('discover-go'); if (goBtn) goBtn.addEventListener('click', go);
+      els.input.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
+      [].forEach.call(document.querySelectorAll('#discover-chips .discover-chip'), function (c) {
+        c.addEventListener('click', function () { els.input.value = c.getAttribute('data-q'); run(c.getAttribute('data-q')); });
+      });
+      var play = $('discover-results-play');
+      if (play) play.addEventListener('click', function () {
+        window.location.hash = '#/home';
+        if (window.TwinrRibbon) setTimeout(function () { window.TwinrRibbon.show('Запустил волну из «Открыть» — <span class="ai-why">по твоему запросу</span>.'); }, 400);
+      });
+      inited = true;
+    }
+    function onRoute() { if (location.hash === '#/podborki') { init(); renderNear(); } }
+    window.addEventListener('hashchange', onRoute);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
   })();
   </script>
 
