@@ -124,6 +124,7 @@
         /* — Figma 2174:422 Главная palette (dark variant) — */
         --brand-blue-light:    #5168FC;                  /* Figma "blue light" */
         --tint-blue-light-20:  rgba(81, 104, 252, 0.2);  /* active chip + home player bar */
+        --np-accent:           var(--brand-blue-light);  /* now-playing accent — JS overrides from cover (GOROD-042) */
         --featured-cta-bg:     #2d2d5d;                  /* purple bar under featured card */
         --home-bg-base:        #0C0B0B;                  /* dark home background */
         --tile-shade-strong:   linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
@@ -557,12 +558,12 @@
       .player-mini-progress-fill {
         height: 100%;
         width: 30%;
-        background: linear-gradient(90deg, var(--player-accent), var(--brand-cyan));
+        background: var(--np-accent);   /* color-from-cover (GOROD-042) */
         border-radius: var(--r-pill);
-        transition: width var(--t-slow);
+        transition: width var(--t-slow), background var(--t-slow);
       }
 
-      /* Album art thumbnail — 60×60 */
+      /* Album art thumbnail — 60×60 real cover, glows in the cover's color */
       .player-mini-art {
         width: 60px;
         height: 60px;
@@ -570,7 +571,10 @@
         background: var(--surf-glass-20);
         flex-shrink: 0;
         overflow: hidden;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 4px 20px -4px var(--np-accent);
+        transition: box-shadow var(--t-slow);
       }
+      .player-mini-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
       .player-mini-art-placeholder {
         width: 100%;
@@ -9583,20 +9587,18 @@
       <div class="player-mini-progress-fill" id="mini-progress-fill"></div>
     </div>
 
-    <!-- Album art — 60×60, cycles through 3 track color gradients -->
-    <div class="player-mini-art" aria-hidden="true">
-      <div class="player-mini-art-placeholder player-mini-art-placeholder--1" id="mini-art-placeholder">
-        Believer
-      </div>
+    <!-- Album art — real cover; color-from-art tints the player (GOROD-042/043) -->
+    <div class="player-mini-art">
+      <img id="mini-art-img" src="assets/gorod-fm/home-featured-egor-krid.png" alt="Обложка: Слеза — Егор Крид">
     </div>
 
     <!-- Track meta — title, artist, + always-on behavioral «почему» (GOROD-040) -->
     <div class="player-mini-meta">
-      <div class="player-mini-title" id="player-track-title">Believer</div>
-      <div class="player-mini-artist" id="player-track-artist">Imagine Dragons</div>
+      <div class="player-mini-title" id="player-track-title">Слеза</div>
+      <div class="player-mini-artist" id="player-track-artist">Егор Крид</div>
       <div class="player-mini-reason" id="player-track-reason">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
-        <span>Ты дослушал <b>Imagine Dragons</b> до конца 3 раза</span>
+        <span>Ты дослушал <b>Егора Крида</b> до конца 3 раза</span>
       </div>
     </div>
 
@@ -12373,13 +12375,13 @@
     ];
 
     function greet() {
-      aiSay('Привет! Я веду ваше радио. Сейчас в эфире <b>Believer</b> — Imagine Dragons. Дальше поставлю <b>Centuries</b> — Fall Out Boy, <span class="ai-why">потому что вы любите арена-рок 2010-х</span>, а это его прямой наследник по энергии и припеву.' + track('Centuries', 'Fall Out Boy'), 600)
+      aiSay('Привет! Я веду ваше радио. Сейчас в эфире <b>Слеза</b> — Егор Крид. Дальше — <b>Любимка</b> · Niletto, <span class="ai-why">вы часто дослушиваете такие тёплые треки до конца</span>.' + track('Любимка', 'Niletto'), 600)
         .then(function () { setChips(DEFAULT_CHIPS); });
     }
 
     var intents = {
       why: function () {
-        aiSay('Разложу честно: у Believer и Centuries общий «арена-рок» ДНК — мощные ударные, припев-гимн, темп ~125 BPM. Вы <b>7 раз</b> дослушали такие треки до конца и ни разу не пропустили → уверенность <b>89%</b>.<br>В Яндексе и Spotify это решает чёрный ящик. У нас вы видите причину — и можете поспорить.')
+        aiSay('Разложу честно: у «Слезы» и «Любимки» общий тёплый поп-вокал и темп ~95 BPM. Вы <b>7 раз</b> дослушали такие треки до конца и ни разу не пропустили → уверенность <b>89%</b>.<br>В Яндексе и Spotify это решает чёрный ящик. У нас вы видите причину — и можете поспорить.')
           .then(function () { setChips(DEFAULT_CHIPS); });
       },
       different: function () {
@@ -12415,7 +12417,7 @@
           .then(function () { setChips([{ label: '💾 Собрать плейлист', intent: 'savetour' }, { label: '↩️ Вернуться к радио', intent: 'backradio' }]); });
       },
       savetour: function () { aiSay('Готово — плейлист «Путь к Imagine Dragons» (5 треков) сохранён в вашу Медиатеку. ✅').then(function () { setChips(DEFAULT_CHIPS); }); },
-      backradio: function () { aiSay('Возвращаю вашу волну. Сейчас — Believer, дальше Centuries. Приятного!').then(function () { setChips(DEFAULT_CHIPS); }); }
+      backradio: function () { aiSay('Возвращаю вашу волну. Сейчас — Слеза, дальше Любимка. Приятного!').then(function () { setChips(DEFAULT_CHIPS); }); }
     };
 
     function handleText(text) {
@@ -12436,7 +12438,7 @@
       open();
       msgs.innerHTML = '';
       aiSay('Профиль собран! Вижу: <b>' + esc(pretty) + '</b>. Настраиваю вашу волну…', 500)
-        .then(function () { return aiSay('Готово. Первый трек — <b>Believer</b> (Imagine Dragons), <span class="ai-why">он на пересечении ваших жанров</span>. Дальше объясню каждый выбор и подстроюсь под ваши правки.' + track('Believer', 'Imagine Dragons')); })
+        .then(function () { return aiSay('Готово. Первый трек — <b>Слеза</b> (Егор Крид), <span class="ai-why">он на пересечении ваших жанров</span>. Дальше объясню каждый выбор и подстроюсь под ваши правки.' + track('Слеза', 'Егор Крид')); })
         .then(function () { setChips(DEFAULT_CHIPS); });
     }
 
@@ -12746,9 +12748,9 @@
     // Honest, behavioral/attributive reasons for the now-playing track — never
     // marketing ("тебе понравится"). Each is individually rejectable.
     var REASONS = [
-      { id: 'artist', t: 'Imagine Dragons — ты дослушал до конца 3 раза за неделю' },
-      { id: 'genre',  t: 'Арена-рок 2010-х — твой сильный паттерн' },
-      { id: 'tempo',  t: 'Темп ~120 BPM — под твой обычный вечер' }
+      { id: 'artist', t: 'Егор Крид — ты дослушал до конца 3 раза за неделю' },
+      { id: 'vocal',  t: 'Тёплый поп-вокал — паттерн, который ты часто дослушиваешь' },
+      { id: 'tempo',  t: 'Темп ~95 BPM — под твой вечер' }
     ];
     var REJECT_KEY = 'gorodfm_rejected';
     var pop, listEl, statusEl;
@@ -12810,6 +12812,43 @@
   </script>
 
   <script>
+  /* ---- Color-from-cover — tints the player in the now-playing cover's color
+     (GOROD-042). Self-contained canvas sampler (no Vibrant.js dependency; works
+     in the standalone too — same-origin & data-URI images don't taint canvas).
+     Sets --np-accent → progress fill + cover glow recolor. */
+  (function () {
+    'use strict';
+    function sample(img) {
+      var c = document.createElement('canvas'); c.width = 18; c.height = 18;
+      var ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, 18, 18);
+      var d;
+      try { d = ctx.getImageData(0, 0, 18, 18).data; } catch (e) { return null; }
+      var best = null, bestScore = -1;
+      for (var i = 0; i < d.length; i += 4) {
+        var r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3];
+        if (a < 200) continue;
+        var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, chroma = mx - mn;
+        if (l < 30 || l > 232 || chroma < 28) continue;           // skip near-black/white/gray
+        var score = chroma * (1 - Math.abs(l - 140) / 200);       // vibrant + mid-light wins
+        if (score > bestScore) { bestScore = score; best = [r, g, b]; }
+      }
+      if (!best) return null;
+      var r2 = best[0], g2 = best[1], b2 = best[2], mx2 = Math.max(r2, g2, b2);
+      if (mx2 < 130) { var f = 150 / mx2; r2 = Math.min(255, r2 * f); g2 = Math.min(255, g2 * f); b2 = Math.min(255, b2 * f); }
+      return 'rgb(' + Math.round(r2) + ',' + Math.round(g2) + ',' + Math.round(b2) + ')';
+    }
+    function apply(img) {
+      if (!img) return;
+      var go = function () { var c = sample(img); if (c) document.documentElement.style.setProperty('--np-accent', c); };
+      if (img.complete && img.naturalWidth) go(); else img.addEventListener('load', go);
+    }
+    function refresh() { apply(document.getElementById('mini-art-img')); }
+    window.NowPlayingTint = { refresh: refresh };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh); else refresh();
+  })();
+  </script>
+
+  <script>
   /* ---- Between-track ambient ribbon — AI narrates transitions (budget-gated) - */
   (function () {
     'use strict';
@@ -12824,7 +12863,7 @@
       });
       // first ambient now→next narration ~5s after load (not during onboarding)
       setTimeout(function () {
-        show('Сейчас <b>Believer</b> → дальше <b>Centuries</b> · Fall Out Boy — <span class="ai-why">наследник по энергии и припеву</span>.');
+        show('Сейчас <b>Слеза</b> → дальше <b>Любимка</b> · Niletto — <span class="ai-why">тёплый поп, как ты любишь</span>.');
       }, 5200);
     }
     function resetTimer() { clearTimeout(hideTimer); hideTimer = setTimeout(hide, 9000); }
