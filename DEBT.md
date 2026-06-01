@@ -2,9 +2,11 @@
 
 > **Status legend** (added 2026-05-27 evening): `done` = работа выполнена. `🔒 Эльбик-gate` = всё что в нашей власти сделано, дальше ждём внешнего ввода (показ клиенту, ответы, реквизиты, выбор направления, утверждение, реализация после approval). `pending` (без замка) = ещё в работе или ждёт следующей сессии. Цель: ноль настоящих `pending` на Claude'е.
 
-## ⚡ Город ФМ (2026-05-27) — v1 SHIPPED · v2 pixel-perfect rebuild PENDING
+## ⚡ Город ФМ — v1 SHIPPED · v2 в работе · AI-product pivot + Karpathy research (2026-06-02)
 
-**Update 2026-05-27 night:** v2 pixel-perfect rebuild from 5 newly-discovered Figma nodes is the next active task (GOROD-021). Full handoff: `docs/superpowers/HANDOFF-gorod-fm-v2-pixel-perfect.md`. v1 base remains shipped at HEAD `77ee5c1`.
+**Update 2026-06-02:** Эльбик дал большую продуктовую визию (AI-driven music streaming) → pivot за пределы pixel-perfect. Сделано: Главная v2 закоммичена (была uncommitted после краша прошлой сессии), **онбординг-пузыри Apple-Music-style** (`#/onboarding`), **Twinr AI чат** (explainable+steerable+живой профиль), **native AI в плеере** («почему?» + steer). + **10 Karpathy-ресёрч брифов** (`docs/research/gorod-fm/01-10`) → **3 синтез-дока** (`ARCHITECTURE-gorod-fm-nextgen.md`, `UX-DIRECTION-gorod-fm.md`, `VISION-gorod-fm-ai-driven.md`). 🔑 Ресёрч-вывод: «первый AI» уже неправда (Spotify/Yandex), разворот на «музыка, которая твоя: видишь/правишь вкус, знаешь почему» + KZ/СНГ локальность; узкое горло = лицензирование.
+
+**Update 2026-05-27 night:** v2 pixel-perfect rebuild from 5 newly-discovered Figma nodes (GOROD-021). Full handoff: `docs/superpowers/HANDOFF-gorod-fm-v2-pixel-perfect.md`. v1 base shipped at HEAD `77ee5c1`.
 
 Новый клиент — онлайн-радио платформа. `designs/gorod-fm.html` (10258 lines) + `designs/gorod-fm-standalone.html` shipped via 13 atomic commits on master. 7 маршрутов, Player overlay, Tweaks (cinema/warm/light + surface + A-B home + hide-flow-map). Holy Grail compliant. Figma `ODcQ2ERWYi3w504Z86TOy3` (Город ФМ) + `l38kZVrZXzdNlBIIOLFX4g` (Monte Carlo player reference). **Полный handoff: `docs/superpowers/HANDOFF-gorod-fm.md`.** NO paws data.
 
@@ -30,9 +32,18 @@
 | GOROD-018 | После утверждения: Next.js + shadcn/ui dev-handoff | 🔒 Эльбик-gate (после approval GOROD-017) |
 | GOROD-019 | WCAG: gradient darkened (cyan rgb(56,140,180), blue rgb(20,80,170)) + text-shadow на hero text · `--text-quat` остаётся <AA Normal на средне-цикловой части градиента — рекомендация для финального показа: добавить `rgba(0,0,0,0.20)` слой за блоками с длинным телом текста, если заказчик flagнет | done (фикс-волны 2: 5d58e43 darken+shadow + 9e58cbf pixel-perfect) |
 | GOROD-020 | Pixel-perfect фикс (2026-05-27 evening): dedup топбар логотипа + sidebar vertical icon-over-text + Подборки tile labels read bottom-to-top per Figma 2384:6054 | done (commit 9e58cbf) |
-| GOROD-021 | **v2 pixel-perfect rebuild from 5 Figma nodes** (2026-05-27 night, user: «доведи все до pixel perfect с фигмы»). Discovered Figma has FULL designs for: `2174:422` Главная (dark black + 9 tiles + featured CTA), `2384:6054` Подборки (с реальными artist-photos), `2385:2924` Медиатека (Search+ABC+grid), `2535:11151` Раздел Избранное (DJ/Группы/Исполнители rows), `2537:14090` Страница артиста (photo+lyrics+tracks). Full strategy → `docs/superpowers/HANDOFF-gorod-fm-v2-pixel-perfect.md`. Next-session phases: (1) re-fetch 5 design contexts (URLs expire 7d), (2) download all assets to `designs/assets/gorod-fm/`, (3) rewrite 5 screens sequentially, (4) verify visually, (5) standalone rebuild. | pending — next session |
-| GOROD-022 | Add `--brand-blue-light: #5168FC` token + blue-tinted active states (chips + player bar on `#/home`) per Figma `2174:422` | pending — part of GOROD-021 wave |
-| GOROD-023 | Add `#/lives` placeholder route (sidebar item in Figma) | pending — part of GOROD-021 wave |
+| GOROD-021 | **v2 pixel-perfect rebuild from 5 Figma nodes**. ✅ Главная `2174:422` (commit `afd072a`, чёрная как Figma), ✅ Подборки `2384:6054` real photos (`b4edbed`), 87 assets скачаны. ⬜ Остаются: Медиатека `2385:2924`, Раздел Избранное `2535:11151`, Страница артиста `2537:14090` + standalone rebuild. | partial — 3 экрана + standalone остаются |
+| GOROD-022 | `--brand-blue-light: #5168FC` + blue-tinted active (chips + player на `#/home`) | done (`b4edbed`) |
+| GOROD-023 | `#/lives` placeholder route (Figma sidebar item) | done (`b4edbed`) |
+| GOROD-024 | **AI-product визия зафиксирована** — `docs/superpowers/VISION-gorod-fm-ai-driven.md` (12 сообщений Эльбика 27.05, которые прошлая сессия потеряла) | done (`6c8e802`) |
+| GOROD-025 | **Онбординг-пузыри `#/onboarding`** — Apple-Music-style: тап = выбор + рекурсивный bloom (жанр→артисты, артист→похожие), genre-coherent, безлимит, во весь экран, safe-zone (не на текст/кнопки) | done (`6c8e802` + `ef483a4`) |
+| GOROD-026 | **Twinr AI чат** — collapsible dock, живой профиль (мутирует при стиринге), explainable «почему», AI-экскурс Imagine Dragons, вкусовая реклама, free-text | done (`38d334a`) |
+| GOROD-027 | **Native AI в плеере** — «✨ почему?» reason-pill + Twinr steer-кнопка → открывают чат к ответу (AI = слой, не угловой виджет) | done (`8ec5e4a`) |
+| GOROD-028 | **Karpathy ресёрч ×10** (`docs/research/gorod-fm/01-10`) + 2 синтез-дока: `ARCHITECTURE-gorod-fm-nextgen.md` (recsys/CLAP/BaRT/steering/licensing/MVP-roadmap) + `UX-DIRECTION-gorod-fm.md` (native AI, 3-tab IA, wave-identity) | done (`commits research` + `UX docs`) |
+| GOROD-029 | **Стратегический разворот позиционирования** — «первый AI» → «музыка, которая твоя: видишь/правишь вкус, знаешь почему» + KZ/СНГ локальность. Решение Эльбика. | 🔒 Эльбик-gate (принять позиционирование) |
+| GOROD-030 | **Лицензирование** (узкое горло №1): 7digital MaaS demo-переговоры + Spotify SDK для демо + свой KZ/CC seed + найм KZ IP-юриста. Старт НЕМЕДЛЕННО параллельно билду. | 🔒 Эльбик-gate (внешний/легал) |
+| GOROD-031 | **Следующая UX-волна** (из `UX-DIRECTION` D-H): живая «волна» (CSS-breathing→AnalyserNode), экран «Мой вкус» (редактируемый Twinr-вектор), in-player mood/activity-диалы, between-track «now→next» лента (budget 3-5), 3-tab IA (Волна/Мой вкус/Открыть) | pending — следующая сессия |
+| GOROD-032 | Standalone rebuild `tools/build_gorod_fm_standalone.py` (после остальных экранов; инлайнит 87 assets base64) для шеринга инвесторам | pending — после GOROD-021 экранов |
 
 ---
 
