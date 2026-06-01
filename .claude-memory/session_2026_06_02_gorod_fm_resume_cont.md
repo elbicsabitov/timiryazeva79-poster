@@ -27,3 +27,12 @@ Built: onboarding bubbles, Twinr chat, explainable «почему», taste-corre
 - Continue AI radio: **#9 sponsor-by-taste tile** (native, explainable «почему вам») — next increment.
 - Push (2 commits pending Эльбик go-ahead).
 - Demo: `cd designs && python -m http.server 8765` → `http://127.0.0.1:8765/gorod-fm.html#/onboarding`.
+
+## Update (cont-2b) — Chrome reconnected → visual QA + #9 built
+- **Chrome extension reconnected** (Эльбик открыл прототип на :8765). Сделал полноценный live visual QA.
+- 🐞 **z-index баг найден+фикс** (`0ff6cda`): resume-модалка открывалась (is-open/opacity1) но была НЕВИДИМА — onboarding `<section>` = `position:fixed z-200` рисовался поверх modal z-140. → modal z-**250**. Урок: новые fixed-оверлеи на onboarding должны быть >200.
+- ✅ **Resume→music визуально подтверждён e2e**: onboarding→модалка→«Заполнить примером»→«Прочитать» (theater: «вижу: дизайн, кофе, бег, игр, гитар»)→result (7 explainable picks + «Год 2014→2010-х»)→«Собрать радио» (selects bubbles, saves taste, #/home, Twinr greets «Вижу: РОК·ЭЛЕКТРО·ЛОФАЙ»). 0 console errors.
+- ✅ **#9 Taste-based sponsor tile построен** (`GOROD-035`, commit next) — нативная explainable steerable карточка на `#/taste`. `matchSponsor` (5 спонсоров, weighted tag-overlap, case-insensitive) → «Спонсор · по вкусу» + «Почему вам:» + «Меньше рекламы» steer (flag `gorodfm_ad_less`) + live re-match при +/−. Visual QA ✅ (Яндекс-Афиша на rock/metal, steer→«✓ учту», 0 errors). VISION #9 теперь DONE.
+- **VISION status:** все 9 фич + UX A–H построены. Осталось: deepen core loop / voice-steer / why-chip L2-L3 / real backend (Ф1+).
+- **Next:** push; затем по желанию — voice-steer или deepen explainability (why-chip L2 hovercard).
+- QA tab: 403285447. Эльбик параллельно открыл the-coffee creatives (другой проект, isolation OK).

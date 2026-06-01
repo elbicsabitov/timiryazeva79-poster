@@ -2815,6 +2815,40 @@
       .taste-ctrl:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
       .taste-foot { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-ter, var(--text-sec)); margin-top: 22px; text-align: center; opacity: 0.75; }
 
+      /* =====================================================================
+         СПОНСОР ПО ВКУСУ (VISION #9) — taste-based advertising as a native,
+         honest, EXPLAINABLE, steerable surface. Reads the live taste vector,
+         matches a sponsor by weighted tag-overlap, shows «почему вам» + a
+         «меньше рекламы» steer. Ads behave like the music: relevant + editable.
+         ===================================================================== */
+      .taste-sponsor {
+        max-width: 1080px; margin: 22px auto 0; box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 16px; padding: 16px 18px;
+      }
+      .taste-sponsor[hidden] { display: none; }
+      .taste-sponsor.is-dismissed { opacity: 0; transform: translateY(6px); transition: opacity .24s ease, transform .24s ease; }
+      .taste-sponsor-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+      .taste-sponsor-badge { font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-quat); }
+      .taste-sponsor-less { background: none; border: none; color: var(--text-sec); font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 600; cursor: pointer; padding: 4px 2px; border-radius: 6px; }
+      .taste-sponsor-less:hover { color: #fff; }
+      .taste-sponsor-less:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .taste-sponsor-main { display: flex; align-items: center; gap: 14px; }
+      .taste-sponsor-logo { flex: none; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Onest', sans-serif; font-weight: 800; font-size: 20px; color: #fff; background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6); }
+      .taste-sponsor-info { flex: 1 1 auto; min-width: 0; }
+      .taste-sponsor-brand { font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
+      .taste-sponsor-offer { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); line-height: 1.4; margin-top: 2px; }
+      .taste-sponsor-cta { flex: none; height: 40px; padding: 0 18px; border: 1px solid var(--brand-blue-light); border-radius: var(--r-pill); background: var(--tint-blue-light-20); color: #fff; font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background var(--t-fast); }
+      .taste-sponsor-cta:hover { background: var(--brand-blue-light); }
+      .taste-sponsor-cta:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+      .taste-sponsor-cta:disabled { opacity: .8; cursor: default; }
+      .taste-sponsor-why { font-family: 'Onest', sans-serif; font-size: 12.5px; line-height: 1.45; color: var(--text-sec); margin: 12px 0 0; padding-top: 11px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+      .taste-sponsor-why-mark { color: var(--brand-blue-light); font-weight: 700; }
+      @media (max-width: 640px) {
+        .taste-sponsor-main { flex-wrap: wrap; }
+        .taste-sponsor-cta { width: 100%; margin-top: 4px; }
+      }
+
       @media (max-width: 760px) {
         .taste-body { grid-template-columns: 1fr; }
         .taste-row-name { width: 92px; }
@@ -9223,6 +9257,23 @@
             <!-- groups injected by GorodTaste -->
           </div>
 
+          <!-- Спонсор по вкусу (VISION #9) — native, explainable, steerable taste-ad -->
+          <aside class="taste-sponsor" id="taste-sponsor" hidden aria-label="Спонсор, подобранный по вашему вкусу">
+            <div class="taste-sponsor-top">
+              <span class="taste-sponsor-badge">Спонсор · по вкусу</span>
+              <button class="taste-sponsor-less" id="taste-sponsor-less" type="button">Меньше рекламы</button>
+            </div>
+            <div class="taste-sponsor-main">
+              <span class="taste-sponsor-logo" id="taste-sponsor-logo" aria-hidden="true"></span>
+              <div class="taste-sponsor-info">
+                <div class="taste-sponsor-brand" id="taste-sponsor-brand"></div>
+                <div class="taste-sponsor-offer" id="taste-sponsor-offer"></div>
+              </div>
+              <button class="taste-sponsor-cta" id="taste-sponsor-cta" type="button">Открыть</button>
+            </div>
+            <p class="taste-sponsor-why"><span class="taste-sponsor-why-mark">Почему вам:</span> <span class="taste-sponsor-why-text" id="taste-sponsor-why"></span></p>
+          </aside>
+
           <p class="taste-foot">Правки сохраняются в ваш Twinr-профиль. В проде — через подтверждение, чтобы «тренировочная» волна не переписала вкус навсегда.</p>
         </div>
       </section>
@@ -12498,6 +12549,7 @@
             rowEl.querySelector('.taste-row-pct').textContent = r.w + '%';
           }
           if (window.TwinrWave) window.TwinrWave.bump();   // the wave reacts — "ты это сформировал"
+          renderSponsor();                                  // taste changed → ad re-matches live
         });
         body.appendChild(card);
       });
@@ -12510,9 +12562,64 @@
       var sonify = document.getElementById('taste-sonify');
       if (sonify) sonify.addEventListener('click', function () { toggleSonify(sonify); });
     }
+    /* ---- Спонсор по вкусу (VISION #9): taste-based, explainable, steerable - */
+    var SPONSORS = [
+      { tags: ['РОК', 'МЕТАЛЛ', 'Linkin Park', 'Imagine Dragons', 'Арена-рок', 'ПОП', 'Егор Крид', 'twenty one pilots'], brand: 'Яндекс Афиша', offer: 'Концерты ваших артистов в этом месяце — −15% по промокоду ВОЛНА', reason: 'живые выступления тех, кого вы слушаете — рядом и со скидкой.' },
+      { tags: ['ИНДИ', 'ЛОФАЙ', 'ДЖАЗ'], brand: 'The Coffee', offer: 'Раф «Твоя волна» — −20% в приложении', reason: 'это музыка для кофеен и неспешных вечеров — как ваш плейлист.' },
+      { tags: ['ДЖАЗ', 'КЛАССИКА', 'ЛОФАЙ', 'Martin Garrix', 'ЭЛЕКТРО'], brand: 'Звук Аудио', offer: 'Наушники с тёплым звуком — тест-драйв в шоуруме', reason: 'на хорошем звуке ваши жанры раскрываются богаче.' },
+      { tags: ['ЭЛЕКТРО', 'ДИСКО', 'Martin Garrix', 'ХИП-ХОП'], brand: 'World Class', offer: 'Беговой плейлист под ваш темп + 7 дней зала', reason: 'ваш бит задаёт темп для тренировок.' },
+      { tags: ['РОК', 'ИНДИ', 'ДЖАЗ', 'КЛАССИКА'], brand: 'Винил Маркет', offer: 'Пластинки ваших артистов — кураторская подборка', reason: 'эти жанры звучат особенно тепло на виниле.' }
+    ];
+    var sponsorWired = false;
+    function matchSponsor() {
+      var taste = [];
+      ['Жанры', 'Артисты'].forEach(function (g) { (data[g] || []).forEach(function (r) { taste.push({ n: r.n, w: r.w }); }); });
+      taste.sort(function (a, b) { return b.w - a.w; });
+      var best = null, bestScore = -1, bestHits = [];
+      SPONSORS.forEach(function (s) {
+        var up = s.tags.map(function (t) { return t.toUpperCase(); });
+        var score = 0, hits = [];
+        taste.forEach(function (t) {
+          if (up.indexOf(t.n.toUpperCase()) !== -1) { score += t.w; if (hits.length < 2) hits.push(t.n); }
+        });
+        if (score > bestScore) { bestScore = score; best = s; bestHits = hits; }
+      });
+      if (!best || bestScore <= 0) return null;
+      if (!bestHits.length) bestHits = [best.tags[0]];
+      return { s: best, hits: bestHits };
+    }
+    function renderSponsor() {
+      var card = document.getElementById('taste-sponsor'); if (!card) return;
+      var off = false; try { off = localStorage.getItem('gorodfm_ad_less') === '1'; } catch (e) {}
+      var m = off ? null : matchSponsor();
+      if (!m) { card.hidden = true; return; }
+      document.getElementById('taste-sponsor-logo').textContent = m.s.brand.charAt(0);
+      document.getElementById('taste-sponsor-brand').textContent = m.s.brand;
+      document.getElementById('taste-sponsor-offer').textContent = m.s.offer;
+      document.getElementById('taste-sponsor-why').textContent = 'вы часто слушаете ' + m.hits.join(' и ') + ' — ' + m.s.reason;
+      card.hidden = false;
+    }
+    function wireSponsor() {
+      if (sponsorWired) return;
+      var card = document.getElementById('taste-sponsor');
+      var less = document.getElementById('taste-sponsor-less');
+      var cta = document.getElementById('taste-sponsor-cta');
+      if (less) less.addEventListener('click', function () {
+        try { localStorage.setItem('gorodfm_ad_less', '1'); } catch (e) {}
+        if (card) { card.classList.add('is-dismissed'); setTimeout(function () { card.hidden = true; card.classList.remove('is-dismissed'); }, 260); }
+        var d = document.getElementById('taste-delta'); if (d) d.textContent = '✓ учту — реклама будет реже и точнее';
+      });
+      if (cta) cta.addEventListener('click', function () {
+        var t = cta.textContent; cta.textContent = 'Демо ✓'; cta.disabled = true;
+        setTimeout(function () { cta.textContent = t; cta.disabled = false; }, 1500);
+      });
+      sponsorWired = true;
+    }
+
     function onRoute() {
       if (location.hash === '#/taste') {
         if (!built) { seed(); render(); built = true; }
+        wireSponsor(); renderSponsor();
         if (window.TwinrWave) setTimeout(function () { window.TwinrWave.start(); }, 30);
       } else { if (window.TwinrWave) window.TwinrWave.stop(); stopAudio(); }
     }
