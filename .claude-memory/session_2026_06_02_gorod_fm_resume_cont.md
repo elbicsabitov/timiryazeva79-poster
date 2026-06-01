@@ -36,3 +36,11 @@ Built: onboarding bubbles, Twinr chat, explainable «почему», taste-corre
 - **VISION status:** все 9 фич + UX A–H построены. Осталось: deepen core loop / voice-steer / why-chip L2-L3 / real backend (Ф1+).
 - **Next:** push; затем по желанию — voice-steer или deepen explainability (why-chip L2 hovercard).
 - QA tab: 403285447. Эльбик параллельно открыл the-coffee creatives (другой проект, isolation OK).
+
+## Update (cont-2c) — Karpathy-tier АУДИТ всего сервиса
+- Эльбик: «аудит по всем экранам, как сделать главную и тд, UX/UI + архитектура, ресёрч на уровне карпати».
+- Запустил **6 параллельных best-practices-агентов** (sonnet, background): Волна / Открыть / Explainability+Steering / Визуал+Motion / Онбординг+Habit / Архитектура+Монетизация. Все 6 вернулись.
+- Grounded current-state: заскринил все legacy-экраны (Подборки/Медиатека/Артист/Трек/Избранное) — generic + slop (градиент-плейсхолдер обложки, силуэт-аватар).
+- Синтез → **`docs/superpowers/AUDIT-gorod-fm-screens-and-service.md`** (9 секций: TL;DR, current-state, IA-решение, Волна 3-зоны, wedge-углубление, дизайн-система, habit, архитектура/moat, приоритизированный план GOROD-040..057).
+- 🔑 Конвергенция 3/6 агентов: честная «почему»-строка под каждым треком. Уникальная механика: «Исправь причину». IA: «Открыть»=неизвестное / «Мой вкус» впитывает архив. Moat=reason_tag corpus. Премиум: цвет-от-обложки.
+- Commit: docs+DEBT+RESUME+log. **Next = P0 quick wins GOROD-040..044** (см. AUDIT §8). Полные URL-источники — в transcript'ах агентов.

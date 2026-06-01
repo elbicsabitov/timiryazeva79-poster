@@ -10,7 +10,9 @@
 
 ⚠️ **Visual QA pending** — Chrome-extension был отключён, live-скриншотов/design-reviewer НЕ было. Logic/syntax/struct verified (node --check 6/6, deriveTaste юнит-тест). **Эльбик глазами:** `gorod-fm.html#/onboarding` → «Заполнить примером» → «Прочитать» → «Собрать радио». Если ext подключён — сделать design-implementation-reviewer pass.
 
-**Next (по приоритету):** (1) visual-QA resume-flagship + iterate · (2) **#9 taste-based sponsor-tile** (нативный, explainable «почему вам» — монетизация, «куда должен развиваться сервис») · (3) deepen core loop / voice-steer / why-chip L2-L3. Session log: `.claude-memory/session_2026_06_02_gorod_fm_resume_cont.md`.
+**Сделано далее:** ✅ resume-flagship visual-QA + z-fix `0ff6cda` · ✅ **#9 taste-ad** `b3be4db` (visual ✓) · ✅ **Karpathy-tier АУДИТ всего сервиса** `docs/superpowers/AUDIT-gorod-fm-screens-and-service.md` (6 ресёрч-агентов + grounded current-state). **VISION 1-9 + UX A-H все построены.**
+
+**Next = P0 quick wins из аудита (GOROD-040..044, высокий ROI):** (1) честная «почему»-строка под каждым треком (поведенческая, 3/6 агентов = top) · (2) «Исправь причину» L2 (seamful reject — steering через объяснение, уникально рынку) · (3) цвет-от-обложки Vibrant.js (топ-ROI премиальности) · (4) убить slop-плейсхолдеры (градиент-обложки Трек/Медиатека/Избранное + силуэт-аватар Артист) · (5) behavioral-anchoring copy. Потом P1 rework (Волна 3-зоны §3, IA-реорг §2). **Полный план → AUDIT §8.** Session logs: `session_2026_06_02_gorod_fm_resume_cont.md`.
 
 ---
 
