@@ -1,5 +1,19 @@
 # Resume Design — Активация сессии
 
+## ⚡ LATEST (2026-06-02 cont-2) — продолжаем СТРОИТЬ AI РАДИО (не legacy-экраны!)
+
+🧭 **Эльбик-steer (важно):** «продолжим строить AI радио» — НЕ предлагать completion/polish (A: 3 Figma-экрана / C: стиль). Двигать **AI-продукт по VISION**. Re-anchor: `docs/superpowers/VISION-gorod-fm-ai-driven.md` + `UX-DIRECTION-gorod-fm.md`.
+
+**Сделано в этой сессии (master, HEAD `259e28e`):**
+- `14d0426` **Standalone-оптимизация** — наивный инлайн = 71 MB → **2.1 MB** (downscale+WebP в `tools/build_gorod_fm_standalone.py`, originals не тронуты). GOROD-032 done.
+- `2c07d3d` **Resume→music flagship (VISION #7)** — был bare stub → полноценная модалка: drop/paste/пример → «AI читает» theater → explainable `deriveTaste` (15 правил → реальные bubbles + «почему» + era) → seeds поле → handoff. GOROD-034 done.
+
+⚠️ **Visual QA pending** — Chrome-extension был отключён, live-скриншотов/design-reviewer НЕ было. Logic/syntax/struct verified (node --check 6/6, deriveTaste юнит-тест). **Эльбик глазами:** `gorod-fm.html#/onboarding` → «Заполнить примером» → «Прочитать» → «Собрать радио». Если ext подключён — сделать design-implementation-reviewer pass.
+
+**Next (по приоритету):** (1) visual-QA resume-flagship + iterate · (2) **#9 taste-based sponsor-tile** (нативный, explainable «почему вам» — монетизация, «куда должен развиваться сервис») · (3) deepen core loop / voice-steer / why-chip L2-L3. Session log: `.claude-memory/session_2026_06_02_gorod_fm_resume_cont.md`.
+
+---
+
 ## ⚡ ACTIVE WORK (2026-06-02 → next session): Город ФМ AI-product (pivot done, ЗАПУШЕНО)
 
 Город ФМ развернулся в **AI-музыкальную платформу** (визия Эльбика). Весь AI-product слой ПОСТРОЕН + 10 Karpathy-брифов + синтез-доки. **ВСЁ ЗАКОММИЧЕНО И ЗАПУШЕНО** (`origin/master`, HEAD `d4479a3`+).
