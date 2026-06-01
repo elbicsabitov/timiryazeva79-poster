@@ -2506,6 +2506,101 @@
         .player-why-pill { padding: 0 9px; }
       }
 
+      /* =====================================================================
+         МОЙ ВКУС (#/taste) — living wave hero + editable Twinr profile
+         ===================================================================== */
+      .taste-stage { max-width: 1080px; margin: 0 auto; padding: 8px 0 40px; }
+
+      .taste-hero {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        min-height: 280px;
+        display: flex;
+        align-items: flex-end;
+        background: linear-gradient(160deg, #14161c 0%, #0c0d12 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 28px;
+      }
+      .taste-wave { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+      .taste-hero-glow {
+        position: absolute; left: 50%; top: 40%; width: 70%; height: 80%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(ellipse, rgba(81, 104, 252, 0.22) 0%, rgba(81, 104, 252, 0) 65%);
+        z-index: 0; pointer-events: none;
+      }
+      .taste-hero-content { position: relative; z-index: 2; padding: 32px clamp(20px, 4vw, 44px); max-width: 640px; }
+      .taste-kicker {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600;
+        letter-spacing: 0.1em; text-transform: uppercase; color: #c7d0ff;
+        padding: 5px 12px; border-radius: var(--r-pill);
+        background: var(--tint-blue-light-20); border: 1px solid rgba(81, 104, 252, 0.35);
+        margin-bottom: 14px;
+      }
+      .taste-kicker-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-blue-light); box-shadow: 0 0 8px var(--brand-blue-light); }
+      .taste-title { font-family: 'Onest', sans-serif; font-weight: 900; font-size: clamp(32px, 4.5vw, 50px); color: #fff; margin: 0 0 10px; letter-spacing: -0.01em; }
+      .taste-sub { font-family: 'Onest', sans-serif; font-size: clamp(14px, 1.5vw, 16px); line-height: 1.5; color: var(--text-sec); text-wrap: pretty; margin: 0 0 18px; }
+      .taste-hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+      .taste-share-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        height: 42px; padding: 0 18px; border: none; border-radius: var(--r-pill);
+        background: var(--brand-blue-light); color: #fff; cursor: pointer;
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700;
+        box-shadow: 0 8px 24px rgba(81, 104, 252, 0.4);
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+      }
+      .taste-share-btn:hover { transform: translateY(-2px); }
+      .taste-share-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+      .taste-share-btn svg { stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .taste-delta { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--success, #34d399); }
+
+      .taste-body { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      .taste-group {
+        background: var(--bg-card, rgba(255,255,255,0.03));
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 16px; padding: 18px 18px 10px;
+      }
+      .taste-group-title {
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700;
+        letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-sec);
+        margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
+      }
+      .taste-group-title span { color: var(--brand-blue-light); font-weight: 800; }
+      .taste-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+      .taste-row:first-of-type { border-top: none; }
+      .taste-row.is-muted { opacity: 0.4; }
+      .taste-row.is-pinned .taste-row-name::after { content: ' 📌'; }
+      .taste-pin {
+        width: 26px; height: 26px; border-radius: 7px; border: none; flex-shrink: 0;
+        background: transparent; color: var(--text-sec); cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: color var(--t-fast), background var(--t-fast);
+      }
+      .taste-pin:hover { background: rgba(255,255,255,0.08); color: #fff; }
+      .taste-pin.is-on { color: var(--brand-blue-light); }
+      .taste-pin svg { width: 14px; height: 14px; }
+      .taste-row-name { font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600; color: #eef0f6; flex-shrink: 0; width: 116px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .taste-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
+      .taste-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--brand-blue-light), #8b5cf6); transition: width 0.35s cubic-bezier(.34,1.4,.64,1); }
+      .taste-row-pct { font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 700; color: var(--text-sec); width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+      .taste-ctrls { display: flex; gap: 4px; flex-shrink: 0; }
+      .taste-ctrl {
+        width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #d6dbe8; cursor: pointer; font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 700;
+        display: flex; align-items: center; justify-content: center; line-height: 1;
+        transition: background var(--t-fast), color var(--t-fast);
+      }
+      .taste-ctrl:hover { background: var(--tint-blue-light-20); color: #fff; }
+      .taste-ctrl:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .taste-foot { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-ter, var(--text-sec)); margin-top: 22px; text-align: center; opacity: 0.75; }
+
+      @media (max-width: 760px) {
+        .taste-body { grid-template-columns: 1fr; }
+        .taste-row-name { width: 92px; }
+      }
+
       /* ---- Home page — hero band ------------------------------------------- */
 
       .home-hero {
@@ -6503,6 +6598,19 @@
           </svg>
           Избранное
         </a>
+
+        <!-- Мой вкус — AI-native living Twinr taste profile (#/taste) -->
+        <a
+          href="#/taste"
+          class="sidebar-item"
+          data-route="#/taste"
+          aria-label="Мой вкус"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M2 12h3l2.5-7 3.5 14 3-10 2 6 2.5-3H22"/>
+          </svg>
+          Мой вкус
+        </a>
       </nav>
 
       <div class="sidebar-footer">
@@ -8846,6 +8954,35 @@
       </section>
       <!-- /#/onboarding -->
 
+      <!-- Page: Мой вкус — живой редактируемый Twinr-профиль (UX research 09/10) -->
+      <section data-page="taste" aria-labelledby="page-taste-heading">
+        <div class="taste-stage">
+          <header class="taste-hero">
+            <canvas class="taste-wave" id="taste-wave" aria-hidden="true"></canvas>
+            <div class="taste-hero-glow" aria-hidden="true"></div>
+            <div class="taste-hero-content">
+              <span class="taste-kicker"><span class="taste-kicker-dot" aria-hidden="true"></span>Twinr · ваш вкус живой</span>
+              <h1 id="page-taste-heading" class="taste-title">Мой вкус</h1>
+              <p class="taste-sub">Не чёрный ящик. Вы видите, из чего собрана ваша волна — и меняете её одним касанием. Волна реагирует.</p>
+              <div class="taste-hero-actions">
+                <button class="taste-share-btn" type="button" id="taste-share">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  Поделиться карточкой
+                </button>
+                <span class="taste-delta" id="taste-delta" aria-live="polite">▲ +darkwave · −арена-рок за неделю</span>
+              </div>
+            </div>
+          </header>
+
+          <div class="taste-body" id="taste-body">
+            <!-- groups injected by GorodTaste -->
+          </div>
+
+          <p class="taste-foot">Правки сохраняются в ваш Twinr-профиль. В проде — через подтверждение, чтобы «тренировочная» волна не переписала вкус навсегда.</p>
+        </div>
+      </section>
+      <!-- /#/taste -->
+
     </main>
   </div>
   <!-- /.app-shell -->
@@ -9854,7 +9991,7 @@
         trackView:    'gorod-fm.track-view',
       };
 
-      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding'];
+      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste'];
       const DEFAULT_ROUTE = '#/map';
 
       /* ---- localStorage helpers -------------------------------------------- */
@@ -11732,6 +11869,134 @@
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- Living Twinr wave (canvas) + «Мой вкус» editable profile --------- */
+  (function () {
+    'use strict';
+    var canvas, ctx, raf = 0, running = false, w = 0, h = 0, t = 0, pulse = 0;
+    var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var LAYERS = [
+      { amp: 0.17, freq: 1.1, speed: 0.6, alpha: 0.55, color: '#5168FC', width: 2.5 },
+      { amp: 0.12, freq: 1.8, speed: -0.95, alpha: 0.42, color: '#8b5cf6', width: 2 },
+      { amp: 0.08, freq: 2.7, speed: 1.35, alpha: 0.30, color: '#5168FC', width: 1.6 }
+    ];
+    function size() {
+      var r = canvas.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(r.width * dpr));
+      canvas.height = Math.max(1, Math.round(r.height * dpr));
+      w = r.width; h = r.height;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function frame() {
+      ctx.clearRect(0, 0, w, h);
+      var mid = h * 0.52, e = 1 + pulse * 1.5, i, x;
+      for (i = 0; i < LAYERS.length; i++) {
+        var L = LAYERS[i];
+        ctx.beginPath();
+        for (x = 0; x <= w; x += 5) {
+          var nx = x / w, env = Math.sin(nx * Math.PI);   // taper to 0 at both ends
+          var y = mid + Math.sin(nx * Math.PI * 2 * L.freq + t * L.speed) * (h * L.amp) * e * env;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = L.color; ctx.globalAlpha = L.alpha; ctx.lineWidth = L.width;
+        ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      t += 0.016; pulse *= 0.94;
+    }
+    function loop() { frame(); raf = requestAnimationFrame(loop); }
+    function startWave() {
+      canvas = document.getElementById('taste-wave');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      size();
+      if (REDUCE) { frame(); return; }   // single static frame
+      running = true; cancelAnimationFrame(raf); loop();
+    }
+    function stopWave() { running = false; cancelAnimationFrame(raf); }
+    function bump() {
+      pulse = Math.min(1.5, pulse + 0.75);
+      if (!running && canvas && ctx && !REDUCE) { running = true; loop(); }
+    }
+    window.addEventListener('resize', function () { if (canvas && ctx && running) size(); });
+    window.TwinrWave = { start: startWave, stop: stopWave, bump: bump };
+
+    /* ---- «Мой вкус» editable profile ---- */
+    var DEFAULT = {
+      'Жанры': [{ n: 'Арена-рок', w: 80 }, { n: 'Хип-хоп 2010-х', w: 66 }, { n: 'Электро-поп', w: 54 }, { n: 'Инди', w: 40 }],
+      'Настроения': [{ n: 'Энергичное', w: 74 }, { n: 'Драйв', w: 60 }, { n: 'Меланхолия', w: 46 }],
+      'Артисты': [{ n: 'Imagine Dragons', w: 90 }, { n: 'Егор Крид', w: 62 }, { n: 'twenty one pilots', w: 55 }, { n: 'OneRepublic', w: 44 }],
+      'Эпохи': [{ n: '2010-е', w: 80 }, { n: '2020-е', w: 64 }, { n: '2000-е', w: 50 }, { n: '90-е', w: 30 }]
+    };
+    var data, built = false;
+    var PIN = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 4h6l-1 7 3 2v2h-4v5l-1 1-1-1v-5H6v-2l3-2z"/></svg>';
+
+    function seed() {
+      data = JSON.parse(JSON.stringify(DEFAULT));
+      try {
+        var picks = (JSON.parse(localStorage.getItem('gorodfm_taste') || '[]')).slice(0, 8);
+        picks.forEach(function (p) {
+          var grp = (p === p.toUpperCase()) ? 'Жанры' : 'Артисты';   // uppercase = genre
+          if (!data[grp].some(function (r) { return r.n === p; })) data[grp].unshift({ n: p, w: 84 + Math.floor(Math.random() * 12) });
+        });
+      } catch (e) {}
+      // keep each group readable
+      Object.keys(data).forEach(function (g) { if (data[g].length > 6) data[g] = data[g].slice(0, 6); });
+    }
+    function rowHtml(r) {
+      return '<div class="taste-row' + (r.pinned ? ' is-pinned' : '') + '" data-tag="' + r.n + '">' +
+        '<button class="taste-pin' + (r.pinned ? ' is-on' : '') + '" type="button" data-act="pin" aria-label="Закрепить ' + r.n + '">' + PIN + '</button>' +
+        '<span class="taste-row-name">' + r.n + '</span>' +
+        '<div class="taste-bar"><div class="taste-bar-fill" style="width:' + r.w + '%"></div></div>' +
+        '<span class="taste-row-pct">' + r.w + '%</span>' +
+        '<div class="taste-ctrls">' +
+          '<button class="taste-ctrl" type="button" data-act="minus" aria-label="Меньше ' + r.n + '">−</button>' +
+          '<button class="taste-ctrl" type="button" data-act="plus" aria-label="Больше ' + r.n + '">+</button>' +
+        '</div></div>';
+    }
+    function render() {
+      var body = document.getElementById('taste-body');
+      if (!body) return;
+      body.innerHTML = '';
+      Object.keys(data).forEach(function (g) {
+        var card = document.createElement('div'); card.className = 'taste-group';
+        card.innerHTML = '<div class="taste-group-title">' + g + ' <span>' + data[g].length + '</span></div>' + data[g].map(rowHtml).join('');
+        card.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-act]'); if (!btn) return;
+          var rowEl = btn.closest('.taste-row'); var tag = rowEl.getAttribute('data-tag');
+          var r = data[g].filter(function (x) { return x.n === tag; })[0]; if (!r) return;
+          var act = btn.getAttribute('data-act');
+          if (act === 'plus') r.w = Math.min(100, r.w + 10);
+          else if (act === 'minus') r.w = Math.max(0, r.w - 10);
+          else if (act === 'pin') { r.pinned = !r.pinned; rowEl.classList.toggle('is-pinned', !!r.pinned); rowEl.querySelector('[data-act="pin"]').classList.toggle('is-on', !!r.pinned); }
+          if (act === 'plus' || act === 'minus') {
+            rowEl.querySelector('.taste-bar-fill').style.width = r.w + '%';
+            rowEl.querySelector('.taste-row-pct').textContent = r.w + '%';
+          }
+          if (window.TwinrWave) window.TwinrWave.bump();   // the wave reacts — "ты это сформировал"
+        });
+        body.appendChild(card);
+      });
+      var share = document.getElementById('taste-share');
+      if (share) share.addEventListener('click', function () {
+        var d = document.getElementById('taste-delta');
+        if (d) d.textContent = '✓ карточка вкуса скопирована';
+        if (window.TwinrWave) window.TwinrWave.bump();
+      });
+    }
+    function onRoute() {
+      if (location.hash === '#/taste') {
+        if (!built) { seed(); render(); built = true; }
+        if (window.TwinrWave) setTimeout(function () { window.TwinrWave.start(); }, 30);
+      } else if (window.TwinrWave) window.TwinrWave.stop();
+    }
+    window.addEventListener('hashchange', onRoute);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') onRoute();
+    else window.addEventListener('DOMContentLoaded', onRoute);
   })();
   </script>
 
