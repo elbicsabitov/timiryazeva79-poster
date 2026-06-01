@@ -2506,6 +2506,42 @@
         .player-why-pill { padding: 0 9px; }
       }
 
+      /* Wave dials — lazy steering popover (Yandex «Моя волна» style, research 09) */
+      .wave-dials {
+        position: fixed; right: 20px; bottom: calc(var(--player-mini-h) + 16px);
+        width: 360px; max-width: calc(100vw - 36px); z-index: 94;
+        background: rgba(18, 18, 24, 0.97);
+        backdrop-filter: blur(26px) saturate(1.2); -webkit-backdrop-filter: blur(26px) saturate(1.2);
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 20px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62); padding: 16px 16px 14px;
+        opacity: 0; transform: translateY(16px) scale(0.97); transform-origin: bottom right;
+        pointer-events: none; transition: opacity 0.2s ease, transform 0.2s cubic-bezier(.34, 1.4, .64, 1);
+      }
+      .wave-dials.is-open { opacity: 1; transform: none; pointer-events: auto; }
+      .wave-dials-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+      .wave-dials-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 16px; color: #fff; }
+      .wave-dials-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: rgba(255, 255, 255, 0.06); color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      .wave-dials-close:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+      .wave-dials-close svg { width: 15px; height: 15px; }
+      .wave-dial { margin-bottom: 13px; }
+      .wave-dial-label { display: block; font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 7px; }
+      .wave-dial-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+      .wave-chip {
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600;
+        padding: 7px 13px; border-radius: var(--r-pill); cursor: pointer;
+        background: rgba(255, 255, 255, 0.05); color: #d6dbe8; border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+      }
+      .wave-chip:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+      .wave-chip.is-on { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); color: #fff; }
+      .wave-chip:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .wave-dials-foot { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+      .wave-dials-status { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-sec); }
+      .wave-dials-status.is-set { color: var(--brand-blue-light); font-weight: 600; }
+      .wave-dials-precise { align-self: flex-start; background: none; border: none; color: var(--brand-blue-light); font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; }
+      .wave-dials-precise:hover { text-decoration: underline; }
+      .wave-dials-precise:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; border-radius: 4px; }
+
       /* =====================================================================
          МОЙ ВКУС (#/taste) — living wave hero + editable Twinr profile
          ===================================================================== */
@@ -6539,77 +6575,34 @@
       <a href="#/home" class="sidebar-logo" aria-label="Город ФМ — на главную">Город.fm</a>
 
       <nav class="sidebar-nav">
-        <!-- Лайвы — Figma item 1 (Player/Music Artist mic icon) -->
-        <a
-          href="#/lives"
-          class="sidebar-item"
-          data-route="#/lives"
-          aria-label="Лайвы"
-        >
+        <!-- 3-tab IA (UX research 08): Волна / Мой вкус / Открыть.
+             Folds the old Лайвы/Подборки/Медиатека/Избранное into 'Открыть'. -->
+
+        <!-- Волна — ваше адаптивное радио (now-playing + живая волна) -->
+        <a href="#/home" class="sidebar-item" data-route="#/home" aria-label="Волна">
           <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M12 14a3 3 0 003-3V6a3 3 0 00-6 0v5a3 3 0 003 3z"/>
-            <path d="M19 11a7 7 0 01-14 0"/>
-            <line x1="12" y1="18" x2="12" y2="22"/>
-            <line x1="8" y1="22" x2="16" y2="22"/>
+            <path d="M2 12h2.5l2-6 3 12 3-9 2 5 2.5-2H22"/>
           </svg>
-          Лайвы
+          Волна
         </a>
 
-        <!-- Подборки — Figma item 2 (Podcast/mic-lines, active on Подборки screen) -->
-        <a
-          href="#/podborki"
-          class="sidebar-item"
-          data-route="#/podborki"
-          aria-label="Подборки"
-        >
+        <!-- Мой вкус — живой редактируемый Twinr-профиль -->
+        <a href="#/taste" class="sidebar-item" data-route="#/taste" aria-label="Мой вкус">
           <svg aria-hidden="true" viewBox="0 0 24 24">
-            <rect x="9" y="3" width="6" height="11" rx="3"/>
-            <line x1="11" y1="6" x2="13" y2="6"/>
-            <line x1="11" y1="9" x2="13" y2="9"/>
-            <path d="M5 11a7 7 0 0014 0"/>
-            <line x1="12" y1="18" x2="12" y2="22"/>
-          </svg>
-          Подборки
-        </a>
-
-        <!-- Медиатека — Figma item 3 -->
-        <a
-          href="#/library"
-          class="sidebar-item"
-          data-route="#/library"
-          aria-label="Медиатека"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
-          </svg>
-          Медиатека
-        </a>
-
-        <!-- Избранное — Figma item 4 (star, routes to Раздел Избранное list) -->
-        <a
-          href="#/favorites"
-          class="sidebar-item"
-          data-route="#/favorites"
-          aria-label="Избранное"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/>
-          </svg>
-          Избранное
-        </a>
-
-        <!-- Мой вкус — AI-native living Twinr taste profile (#/taste) -->
-        <a
-          href="#/taste"
-          class="sidebar-item"
-          data-route="#/taste"
-          aria-label="Мой вкус"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M2 12h3l2.5-7 3.5 14 3-10 2 6 2.5-3H22"/>
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="4.5"/>
+            <circle cx="12" cy="12" r="1.2" fill="currentColor"/>
           </svg>
           Мой вкус
+        </a>
+
+        <!-- Открыть — открыть/найти музыку (коллекции, медиатека, избранное) -->
+        <a href="#/podborki" class="sidebar-item" data-route="#/podborki" aria-label="Открыть">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <polygon points="16 8 13.5 13.5 8 16 10.5 10.5" fill="currentColor" stroke="none"/>
+          </svg>
+          Открыть
         </a>
       </nav>
 
@@ -9332,6 +9325,46 @@
     </div>
   </div>
 
+  <!-- Wave dials — lazy steering surface (Yandex «Моя волна» style), opens from player ✨ -->
+  <div class="wave-dials" id="wave-dials" role="dialog" aria-label="Настроить волну" aria-hidden="true">
+    <div class="wave-dials-head">
+      <span class="wave-dials-title">Настроить волну</span>
+      <button class="wave-dials-close" id="wave-dials-close" type="button" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="wave-dial">
+      <span class="wave-dial-label">Настроение</span>
+      <div class="wave-dial-chips" role="group" aria-label="Настроение">
+        <button class="wave-chip" type="button" data-v="Бодрое">Бодрое</button>
+        <button class="wave-chip" type="button" data-v="Спокойное">Спокойное</button>
+        <button class="wave-chip" type="button" data-v="Меланхолия">Меланхолия</button>
+        <button class="wave-chip" type="button" data-v="Драйв">Драйв</button>
+      </div>
+    </div>
+    <div class="wave-dial">
+      <span class="wave-dial-label">Под занятие</span>
+      <div class="wave-dial-chips" role="group" aria-label="Под занятие">
+        <button class="wave-chip" type="button" data-v="Работа">Работа</button>
+        <button class="wave-chip" type="button" data-v="Тренировка">Тренировка</button>
+        <button class="wave-chip" type="button" data-v="За рулём">За рулём</button>
+        <button class="wave-chip" type="button" data-v="Вечеринка">Вечеринка</button>
+      </div>
+    </div>
+    <div class="wave-dial">
+      <span class="wave-dial-label">Характер</span>
+      <div class="wave-dial-chips" role="group" aria-label="Характер">
+        <button class="wave-chip" type="button" data-v="Любимое">Любимое</button>
+        <button class="wave-chip" type="button" data-v="Незнакомое">Незнакомое</button>
+        <button class="wave-chip is-on" type="button" data-v="Микс" aria-pressed="true">Микс</button>
+      </div>
+    </div>
+    <div class="wave-dials-foot">
+      <span class="wave-dials-status" id="wave-dials-status" aria-live="polite">Все правки идут в один вектор вашей волны</span>
+      <button class="wave-dials-precise" id="wave-dials-precise" type="button">Точнее — скажу словами →</button>
+    </div>
+  </div>
+
   <!-- ======================================================================
        PLAYER FULL OVERLAY — Monte Carlo style (Task #2)
        ====================================================================== -->
@@ -11715,7 +11748,7 @@
       var pw = document.getElementById('player-why');
       if (pw) pw.addEventListener('click', function (e) { e.stopPropagation(); ask('why', 'Почему именно этот трек?'); });
       var ps = document.getElementById('player-steer');
-      if (ps) ps.addEventListener('click', function (e) { e.stopPropagation(); ask('different', '🔀 Сделай по-другому'); });
+      if (ps) ps.addEventListener('click', function (e) { e.stopPropagation(); if (window.WaveDials) window.WaveDials.open(); else ask('different', '🔀 Сделай по-другому'); });
       renderProfile();
     }
 
@@ -11997,6 +12030,47 @@
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'complete' || document.readyState === 'interactive') onRoute();
     else window.addEventListener('DOMContentLoaded', onRoute);
+  })();
+  </script>
+
+  <script>
+  /* ---- Wave dials — lazy steering surface (opens from player ✨) -------- */
+  (function () {
+    'use strict';
+    var panel, statusEl, sel = {};
+    function $(id) { return document.getElementById(id); }
+    function init() {
+      panel = $('wave-dials'); if (!panel) return;
+      statusEl = $('wave-dials-status');
+      $('wave-dials-close').addEventListener('click', close);
+      $('wave-dials-precise').addEventListener('click', function () {
+        close();
+        if (window.TwinrChat && window.TwinrChat.ask) window.TwinrChat.ask('different', '🔀 Сделай по-другому');
+        else if (window.TwinrChat) window.TwinrChat.open();
+      });
+      [].forEach.call(panel.querySelectorAll('.wave-dial'), function (dial) {
+        dial.addEventListener('click', function (e) {
+          var chip = e.target.closest('.wave-chip'); if (!chip) return;
+          [].forEach.call(dial.querySelectorAll('.wave-chip'), function (c) { c.classList.remove('is-on'); c.removeAttribute('aria-pressed'); });
+          chip.classList.add('is-on'); chip.setAttribute('aria-pressed', 'true');
+          sel[dial.querySelector('.wave-dial-label').textContent] = chip.getAttribute('data-v');
+          apply();
+        });
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('is-open')) close(); });
+      [].forEach.call(panel.querySelectorAll('.wave-chip.is-on'), function (c) {
+        sel[c.closest('.wave-dial').querySelector('.wave-dial-label').textContent] = c.getAttribute('data-v');
+      });
+    }
+    function apply() {
+      var parts = Object.keys(sel).map(function (k) { return sel[k]; });
+      if (statusEl) { statusEl.textContent = 'Волна: ' + parts.join(' · '); statusEl.classList.add('is-set'); }
+      if (window.TwinrWave) window.TwinrWave.bump();
+    }
+    function open() { if (panel) { panel.classList.add('is-open'); panel.setAttribute('aria-hidden', 'false'); } }
+    function close() { if (panel) { panel.classList.remove('is-open'); panel.setAttribute('aria-hidden', 'true'); } }
+    window.WaveDials = { open: open, close: close };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   })();
   </script>
 
