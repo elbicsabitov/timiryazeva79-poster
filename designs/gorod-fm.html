@@ -2248,6 +2248,233 @@
         .onb-field { min-height: 300px; }
       }
 
+      /* =====================================================================
+         TWINR AI CHAT — persistent collapsible music-companion dock.
+         Demonstrates: explainable autoplay ("why this next track"), steerable
+         taste ("сделай по-другому"), live Twinr profile, AI music tours.
+         ===================================================================== */
+      .ai-launcher {
+        position: fixed;
+        right: 20px;
+        bottom: calc(var(--player-mini-h) + 74px);
+        z-index: 95;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        height: 52px;
+        padding: 0 18px 0 13px;
+        border: none;
+        border-radius: var(--r-pill);
+        background: linear-gradient(135deg, var(--brand-blue-light) 0%, #8b5cf6 100%);
+        color: #fff;
+        font-family: 'Onest', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        box-shadow: 0 10px 34px rgba(81, 104, 252, 0.5);
+        transition: transform var(--t-fast), box-shadow var(--t-fast), opacity var(--t-fast);
+      }
+      .ai-launcher:hover { transform: translateY(-2px); box-shadow: 0 14px 42px rgba(81, 104, 252, 0.6); }
+      .ai-launcher:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+      .ai-launcher.is-hidden { opacity: 0; transform: scale(0.7) translateY(10px); pointer-events: none; }
+      .ai-launcher-spark {
+        width: 26px; height: 26px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(255, 255, 255, 0.22); border-radius: 50%;
+      }
+      .ai-launcher-spark svg { width: 16px; height: 16px; }
+      @media (prefers-reduced-motion: no-preference) {
+        .ai-launcher::after {
+          content: ''; position: absolute; inset: -4px; border-radius: inherit;
+          border: 2px solid var(--brand-blue-light); opacity: 0;
+          animation: ai-pulse 2.8s ease-out infinite;
+        }
+      }
+      @keyframes ai-pulse { 0% { opacity: 0.5; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.25); } }
+
+      .ai-dock {
+        position: fixed;
+        right: 20px;
+        bottom: calc(var(--player-mini-h) + 16px);
+        width: 388px;
+        max-width: calc(100vw - 36px);
+        height: 560px;
+        max-height: calc(100dvh - var(--player-mini-h) - 96px);
+        z-index: 96;
+        display: flex;
+        flex-direction: column;
+        background: rgba(18, 18, 24, 0.97);
+        backdrop-filter: blur(26px) saturate(1.2);
+        -webkit-backdrop-filter: blur(26px) saturate(1.2);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 22px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(18px) scale(0.97);
+        transform-origin: bottom right;
+        pointer-events: none;
+        transition: opacity 0.22s ease, transform 0.22s cubic-bezier(.34, 1.4, .64, 1);
+      }
+      .ai-dock.is-open { opacity: 1; transform: none; pointer-events: auto; }
+
+      .ai-dock-head {
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 14px 14px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(135deg, rgba(81, 104, 252, 0.18), rgba(139, 92, 246, 0.10));
+        flex-shrink: 0;
+      }
+      .ai-dock-avatar {
+        width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+        background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ai-dock-avatar svg { width: 20px; height: 20px; }
+      .ai-dock-titles { flex: 1; min-width: 0; }
+      .ai-dock-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 16px; color: #fff; }
+      .ai-dock-sub { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-sec); display: flex; align-items: center; gap: 5px; }
+      .ai-dock-sub::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--success, #34d399); box-shadow: 0 0 8px var(--success, #34d399); }
+      .ai-dock-btn {
+        width: 34px; height: 34px; border-radius: 9px; border: none;
+        background: rgba(255, 255, 255, 0.06); color: var(--text-sec);
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: background var(--t-fast), color var(--t-fast);
+      }
+      .ai-dock-btn:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+      .ai-dock-btn:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .ai-dock-btn svg { width: 17px; height: 17px; }
+
+      /* live Twinr taste profile strip */
+      .ai-profile {
+        flex-shrink: 0;
+        padding: 11px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .ai-profile-label {
+        font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 600;
+        letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sec);
+        margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+      }
+      .ai-profile-label b { color: var(--brand-blue-light); font-weight: 700; }
+      .ai-profile-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+      .ai-profile-tag {
+        font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600;
+        padding: 4px 10px; border-radius: var(--r-pill);
+        background: var(--tint-blue-light-20); color: #c7d0ff;
+        border: 1px solid rgba(81, 104, 252, 0.3);
+        animation: ai-tag-in 0.3s ease;
+      }
+      .ai-profile-tag.is-fading { opacity: 0; transform: scale(0.8); transition: opacity .3s, transform .3s; }
+      @keyframes ai-tag-in { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+
+      .ai-msgs {
+        flex: 1; min-height: 0; overflow-y: auto;
+        padding: 16px; display: flex; flex-direction: column; gap: 12px;
+        scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent;
+      }
+      .ai-msgs::-webkit-scrollbar { width: 7px; }
+      .ai-msgs::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 4px; }
+      .ai-msg {
+        max-width: 86%; display: flex; gap: 8px;
+        animation: ai-msg-in 0.28s ease;
+      }
+      @keyframes ai-msg-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      .ai-msg-avatar {
+        width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; margin-top: 2px;
+        background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ai-msg-avatar svg { width: 14px; height: 14px; }
+      .ai-msg-bubble {
+        font-family: 'Onest', sans-serif; font-size: 14px; line-height: 1.45;
+        padding: 10px 13px; border-radius: 14px; color: #eef0f6;
+        background: rgba(255, 255, 255, 0.07);
+        border-top-left-radius: 4px;
+        text-wrap: pretty;
+      }
+      .ai-msg-bubble b { color: #fff; font-weight: 700; }
+      .ai-msg-bubble .ai-why { color: var(--brand-blue-light); font-weight: 600; }
+      .ai-msg--user { align-self: flex-end; flex-direction: row-reverse; }
+      .ai-msg--user .ai-msg-bubble {
+        background: var(--brand-blue-light); color: #fff;
+        border-top-left-radius: 14px; border-top-right-radius: 4px;
+      }
+      .ai-msg--user .ai-msg-avatar { display: none; }
+
+      /* track chip rendered inside a message (mini now-playing / tour stop) */
+      .ai-track {
+        display: flex; align-items: center; gap: 10px; margin-top: 8px;
+        padding: 8px; border-radius: 10px; background: rgba(0, 0, 0, 0.28);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .ai-track-cover {
+        width: 38px; height: 38px; border-radius: 7px; flex-shrink: 0;
+        background: linear-gradient(135deg, #5168fc, #8b5cf6); background-size: cover; background-position: center;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ai-track-cover svg { width: 16px; height: 16px; opacity: 0.85; }
+      .ai-track-meta { flex: 1; min-width: 0; }
+      .ai-track-title { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .ai-track-artist { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-sec); }
+      .ai-track-play {
+        width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; border: none;
+        background: var(--brand-blue-light); color: #fff; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ai-track-play svg { width: 13px; height: 13px; margin-left: 1px; }
+
+      .ai-typing { display: flex; gap: 4px; padding: 12px 14px; align-items: center; }
+      .ai-typing span {
+        width: 7px; height: 7px; border-radius: 50%; background: var(--text-sec);
+        animation: ai-blink 1.2s infinite both;
+      }
+      .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+      .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+      @keyframes ai-blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+      .ai-chips {
+        flex-shrink: 0; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .ai-chip {
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600;
+        padding: 8px 13px; border-radius: var(--r-pill); cursor: pointer;
+        background: rgba(255, 255, 255, 0.06); color: #d6dbe8;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+      }
+      .ai-chip:hover { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); color: #fff; }
+      .ai-chip:active { transform: scale(0.96); }
+      .ai-chip:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+
+      .ai-input {
+        flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+        padding: 12px 14px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .ai-input-field {
+        flex: 1; height: 42px; padding: 0 14px; border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff; font-family: 'Onest', sans-serif; font-size: 14px;
+      }
+      .ai-input-field::placeholder { color: var(--text-sec); }
+      .ai-input-field:focus { outline: none; border-color: var(--brand-blue-light); background: rgba(255, 255, 255, 0.09); }
+      .ai-send {
+        width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; border: none;
+        background: var(--brand-blue-light); color: #fff; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform var(--t-fast), background var(--t-fast);
+      }
+      .ai-send:hover { transform: scale(1.06); }
+      .ai-send:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+      .ai-send svg { width: 18px; height: 18px; }
+
+      @media (max-width: 480px) {
+        .ai-dock { right: 12px; left: 12px; width: auto; bottom: calc(var(--player-mini-h) + 12px); height: 70dvh; }
+        .ai-launcher { right: 14px; }
+      }
+
       /* ---- Home page — hero band ------------------------------------------- */
 
       .home-hero {
@@ -11238,6 +11465,220 @@
     // initial (main app has already run activatePage by now)
     if (document.readyState === 'complete' || document.readyState === 'interactive') sync();
     else window.addEventListener('DOMContentLoaded', sync);
+  })();
+  </script>
+
+  <!-- ===================== Twinr AI chat — launcher + dock ==================== -->
+  <button class="ai-launcher" id="ai-launcher" type="button"
+          aria-label="Открыть Twinr AI — музыкальный помощник" aria-expanded="false" aria-controls="ai-dock">
+    <span class="ai-launcher-spark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+    </span>
+    Twinr AI
+  </button>
+
+  <aside class="ai-dock" id="ai-dock" role="dialog" aria-label="Twinr AI — музыкальный помощник">
+    <div class="ai-dock-head">
+      <div class="ai-dock-avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+      </div>
+      <div class="ai-dock-titles">
+        <div class="ai-dock-title">Twinr AI</div>
+        <div class="ai-dock-sub">ваш музыкальный директор</div>
+      </div>
+      <button class="ai-dock-btn" id="ai-collapse" type="button" aria-label="Свернуть чат">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+
+    <div class="ai-profile" id="ai-profile">
+      <div class="ai-profile-label">Ваш <b>Twinr</b>-профиль · живой</div>
+      <div class="ai-profile-tags" id="ai-profile-tags"></div>
+    </div>
+
+    <div class="ai-msgs" id="ai-msgs" aria-live="polite"></div>
+
+    <div class="ai-chips" id="ai-chips"></div>
+
+    <form class="ai-input" id="ai-input-form">
+      <input class="ai-input-field" id="ai-input" type="text" placeholder="Скажите, что поставить…" autocomplete="off" aria-label="Сообщение для Twinr AI">
+      <button class="ai-send" type="submit" aria-label="Отправить">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+  </aside>
+
+  <script>
+  /* ---- Twinr AI chat — scripted music companion ------------------------- */
+  (function () {
+    'use strict';
+    var SPARK = '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>';
+    var dock, launcher, msgs, chipsEl, profileTags, inputForm, input;
+    var profile = ['Арена-рок', 'Хип-хоп 2010-х', 'Электро-поп'];
+    var greeted = false;
+
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function scrollDown() { msgs.scrollTop = msgs.scrollHeight; }
+
+    function init() {
+      dock = $('ai-dock'); launcher = $('ai-launcher'); msgs = $('ai-msgs');
+      chipsEl = $('ai-chips'); profileTags = $('ai-profile-tags');
+      inputForm = $('ai-input-form'); input = $('ai-input');
+      if (!dock) return;
+      launcher.addEventListener('click', open);
+      $('ai-collapse').addEventListener('click', collapse);
+      inputForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var v = input.value.trim();
+        if (!v) return;
+        addUser(v); input.value = ''; chipsEl.innerHTML = ''; handleText(v);
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dock.classList.contains('is-open')) collapse(); });
+      renderProfile();
+    }
+
+    function open() {
+      dock.classList.add('is-open');
+      launcher.classList.add('is-hidden');
+      launcher.setAttribute('aria-expanded', 'true');
+      if (!greeted) { greeted = true; greet(); }
+      setTimeout(function () { if (input) input.focus(); }, 260);
+    }
+    function collapse() {
+      dock.classList.remove('is-open');
+      launcher.classList.remove('is-hidden');
+      launcher.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderProfile() {
+      profileTags.innerHTML = '';
+      profile.forEach(function (t) {
+        var s = document.createElement('span'); s.className = 'ai-profile-tag'; s.textContent = t;
+        profileTags.appendChild(s);
+      });
+    }
+    function updateProfile(remove, add) {
+      [].forEach.call(profileTags.children, function (ch) { if (remove && remove.indexOf(ch.textContent) !== -1) ch.classList.add('is-fading'); });
+      setTimeout(function () {
+        if (remove) profile = profile.filter(function (t) { return remove.indexOf(t) === -1; });
+        if (add) add.forEach(function (t) { if (profile.indexOf(t) === -1) profile.push(t); });
+        renderProfile();
+      }, 320);
+    }
+
+    function addUser(text) {
+      var m = document.createElement('div'); m.className = 'ai-msg ai-msg--user';
+      var b = document.createElement('div'); b.className = 'ai-msg-bubble'; b.textContent = text;
+      m.appendChild(b); msgs.appendChild(m); scrollDown();
+    }
+    function addAI(html) {
+      var m = document.createElement('div'); m.className = 'ai-msg ai-msg--ai';
+      m.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div><div class="ai-msg-bubble">' + html + '</div>';
+      msgs.appendChild(m); scrollDown(); return m;
+    }
+    function aiSay(html, delay) {
+      return new Promise(function (res) {
+        var t = document.createElement('div'); t.className = 'ai-msg ai-msg--ai';
+        t.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div><div class="ai-msg-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>';
+        msgs.appendChild(t); scrollDown();
+        setTimeout(function () { t.remove(); addAI(html); res(); }, delay || 760);
+      });
+    }
+    function track(title, artist) {
+      return '<div class="ai-track"><div class="ai-track-cover" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3" fill="#fff" stroke="none"/><circle cx="18" cy="16" r="3" fill="#fff" stroke="none"/></svg></div>' +
+        '<div class="ai-track-meta"><div class="ai-track-title">' + esc(title) + '</div><div class="ai-track-artist">' + esc(artist) + '</div></div>' +
+        '<button class="ai-track-play" type="button" aria-label="Слушать ' + esc(title) + '"><svg viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 20 12 6 20"/></svg></button></div>';
+    }
+    function setChips(list) {
+      chipsEl.innerHTML = '';
+      list.forEach(function (c) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = c.label;
+        b.addEventListener('click', function () { addUser(c.label); chipsEl.innerHTML = ''; intents[c.intent](); });
+        chipsEl.appendChild(b);
+      });
+    }
+
+    var DEFAULT_CHIPS = [
+      { label: 'Почему именно он?', intent: 'why' },
+      { label: '🔀 Сделай по-другому', intent: 'different' },
+      { label: '➕ Больше такого', intent: 'more' },
+      { label: '🎓 Путь к Imagine Dragons', intent: 'tour' },
+      { label: '📉 Меньше рекламы', intent: 'ads' }
+    ];
+
+    function greet() {
+      aiSay('Привет! Я веду ваше радио. Сейчас в эфире <b>Believer</b> — Imagine Dragons. Дальше поставлю <b>Centuries</b> — Fall Out Boy, <span class="ai-why">потому что вы любите арена-рок 2010-х</span>, а это его прямой наследник по энергии и припеву.' + track('Centuries', 'Fall Out Boy'), 600)
+        .then(function () { setChips(DEFAULT_CHIPS); });
+    }
+
+    var intents = {
+      why: function () {
+        aiSay('Разложу честно: у Believer и Centuries общий «арена-рок» ДНК — мощные ударные, припев-гимн, темп ~125 BPM. Вы <b>7 раз</b> дослушали такие треки до конца и ни разу не пропустили → уверенность <b>89%</b>.<br>В Яндексе и Spotify это решает чёрный ящик. У нас вы видите причину — и можете поспорить.')
+          .then(function () { setChips(DEFAULT_CHIPS); });
+      },
+      different: function () {
+        aiSay('Понял — убираю арена-рок из ближайшей волны и беру более тёмный электронный бит:' + track('The Motto — darkwave edit', 'Tiësto'))
+          .then(function () { updateProfile(['Арена-рок'], ['Darkwave']); return aiSay('Готово — обновил ваш <b>Twinr-профиль</b> (слева: −арена-рок, +darkwave). Волна перестроена на лету. Так и работает «скажи — и радио поменяется».'); })
+          .then(function () { setChips([{ label: '↩️ Верни как было', intent: 'revert' }, { label: '🌑 Ещё темнее', intent: 'darker' }, { label: '🎓 Путь к Imagine Dragons', intent: 'tour' }]); });
+      },
+      revert: function () {
+        updateProfile(['Darkwave', 'Индастриал'], ['Арена-рок']);
+        aiSay('Вернул арена-рок. Видите — профиль живой, меняется от каждого вашего слова.').then(function () { setChips(DEFAULT_CHIPS); });
+      },
+      darker: function () {
+        updateProfile([], ['Индастриал']);
+        aiSay('Ещё мрачнее — добавил индастриал-грань:' + track('Closer', 'Nine Inch Nails')).then(function () { setChips(DEFAULT_CHIPS); });
+      },
+      more: function () {
+        updateProfile([], ['Стадион-звук']);
+        aiSay('Отлично, усиливаю линию. Добавил в очередь:' + track('Counting Stars', 'OneRepublic') + track('Heathens', 'twenty one pilots'))
+          .then(function () { return aiSay('Ваш профиль теперь сильнее тянет в стадион-звук — учту это и завтра, не только сейчас.'); })
+          .then(function () { setChips(DEFAULT_CHIPS); });
+      },
+      ads: function () {
+        aiSay('Уменьшаю частоту рекламы. И главное — реклама у нас <b>подбирается под ваш вкус</b>: вместо случайных баннеров вы увидите, например, концерт Imagine Dragons в вашем городе или новый альбом в любимом жанре. Это наша модель — а не раздражитель.')
+          .then(function () { setChips(DEFAULT_CHIPS); });
+      },
+      tour: function () {
+        aiSay('Поехали. Путь к звуку Imagine Dragons — это ~20 лет эволюции громкого рока. Покажу ключевые точки и дам послушать:', 500)
+          .then(function () { return aiSay('<b>1) Нач. 90-х — гранж.</b> Nirvana дают сырую эмоцию и динамику «тихо→громко».' + track('Smells Like Teen Spirit', 'Nirvana')); })
+          .then(function () { return aiSay('<b>2) 2000-е — эмо / поп-панк.</b> Fall Out Boy и My Chemical Romance добавляют театральность и припевы-гимны.' + track('Welcome to the Black Parade', 'My Chemical Romance')); })
+          .then(function () { return aiSay('<b>3) Кон. 2000-х — арена-инди.</b> Kings of Leon выводят звук на стадионы.' + track('Sex on Fire', 'Kings of Leon')); })
+          .then(function () { return aiSay('<b>4) 2012 — синтез.</b> Imagine Dragons соединяют стадион-динамику + электронику + фолк-удар = «Radioactive». Так родился их звук.' + track('Radioactive', 'Imagine Dragons')); })
+          .then(function () { return aiSay('Это и есть AI-экскурс: я не просто играю — объясняю <i>почему</i> и показываю связи. Собрать дорожку в плейлист в вашу Медиатеку?'); })
+          .then(function () { setChips([{ label: '💾 Собрать плейлист', intent: 'savetour' }, { label: '↩️ Вернуться к радио', intent: 'backradio' }]); });
+      },
+      savetour: function () { aiSay('Готово — плейлист «Путь к Imagine Dragons» (5 треков) сохранён в вашу Медиатеку. ✅').then(function () { setChips(DEFAULT_CHIPS); }); },
+      backradio: function () { aiSay('Возвращаю вашу волну. Сейчас — Believer, дальше Centuries. Приятного!').then(function () { setChips(DEFAULT_CHIPS); }); }
+    };
+
+    function handleText(text) {
+      var t = text.toLowerCase();
+      if (/по-друг|по друг|не нрав|друг|смени|поменяй/.test(t)) return intents.different();
+      if (/почему|why|обоснуй/.test(t)) return intents.why();
+      if (/экскурс|истори|tour|путь|эволюц/.test(t)) return intents.tour();
+      if (/реклам|ads/.test(t)) return intents.ads();
+      if (/грустн|спокойн|тих|чилл|calm|sad|расслаб/.test(t)) { updateProfile([], ['Чилл']); return aiSay('Сбавляю темп — спокойная волна: меньше ударных, тёплые синты, лоу-фай грань.' + track('Weightless', 'Marconi Union')).then(function () { setChips(DEFAULT_CHIPS); }); }
+      if (/бодр|энерг|качай|трениров|workout|драйв/.test(t)) { updateProfile([], ['Энергия']); return aiSay('Поднимаю энергию — забойная волна для движения.' + track('Stronger', 'Kanye West')).then(function () { setChips(DEFAULT_CHIPS); }); }
+      return aiSay('Уловил: «' + esc(text) + '». В проде я бы разобрал это через ваш вкусовой вектор и перестроил волну на лету. Пока попробуйте кнопки — они показывают, как это работает.').then(function () { setChips(DEFAULT_CHIPS); });
+    }
+
+    function greetFromOnboarding(names) {
+      var pretty = (names && names.length) ? names.slice(0, 3).join(' · ') : 'ваш вкус';
+      if (names && names.length) { profile = names.slice(0, 4); renderProfile(); }
+      greeted = true;
+      open();
+      msgs.innerHTML = '';
+      aiSay('Профиль собран! Вижу: <b>' + esc(pretty) + '</b>. Настраиваю вашу волну…', 500)
+        .then(function () { return aiSay('Готово. Первый трек — <b>Believer</b> (Imagine Dragons), <span class="ai-why">он на пересечении ваших жанров</span>. Дальше объясню каждый выбор и подстроюсь под ваши правки.' + track('Believer', 'Imagine Dragons')); })
+        .then(function () { setChips(DEFAULT_CHIPS); });
+    }
+
+    window.TwinrChat = { open: open, greetFromOnboarding: greetFromOnboarding };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
   })();
   </script>
 
