@@ -1,33 +1,25 @@
 # Resume Design — Активация сессии
 
-## ⚡ ACTIVE WORK (2026-05-27 night → next session): Город ФМ v2 pixel-perfect rebuild from Figma
+## ⚡ ACTIVE WORK (2026-06-02 → next session): Город ФМ AI-product (pivot done, ЗАПУШЕНО)
 
-**v1 SHIPPED** (16 commits, HEAD `77ee5c1`, file `designs/gorod-fm.html` 10,274 lines). v1 covered все 7 routes + Player overlay + Tweaks panel. Holy Grail compliant.
+Город ФМ развернулся в **AI-музыкальную платформу** (визия Эльбика). Весь AI-product слой ПОСТРОЕН + 10 Karpathy-брифов + синтез-доки. **ВСЁ ЗАКОММИЧЕНО И ЗАПУШЕНО** (`origin/master`, HEAD `d4479a3`+).
 
-**v2 NEEDED** — user feedback 2026-05-27 night: «доведи все до pixel perfect с фигмы». Discovered 5 fuller Figma designs we missed:
+**📖 READ FIRST: `docs/superpowers/HANDOFF-gorod-fm-ai-product.md`** — полное состояние, архитектура decoupled-модулей (window.GorodOnboarding/TwinrChat/TwinrWave/WaveDials/TwinrRibbon), стратегия (Москва, разворот, лицензирование), open-gates, опции, как запустить демо.
 
-| Figma node | Screen | Status |
-|---|---|---|
-| `2174:422` | Главная (dark black, 9 tiles + featured CTA card) | ❌ наш сильно отличается |
-| `2384:6054` | Подборки (с РЕАЛЬНЫМИ фото artists) | ⚠️ структура OK, нет реальных картинок |
-| `2385:2924` | Медиатека (Search+ABC+artist grid) | ❌ |
-| `2535:11151` | Раздел Избранное (DJ/Группы/Исполнители rows) | ❌ |
-| `2537:14090` | Страница артиста (photo card + lyrics + tracks) | ❌ |
+**Готово:** Главная v2 `#/home` · онбординг-пузыри `#/onboarding` (Apple-style рекурс) · Twinr AI чат (explainable/steerable/живой профиль) · native-AI плеер («почему?»+steer) · живая волна + «Мой вкус» `#/taste` · 3-tab IA (Волна/Мой вкус/Открыть) · wave-диалы · between-track лента · audio-reactive волна · **tech-modern restyle** (нейтрал near-black `#0B0C0F` + 1 акцент `#5168FC`). UX-волна **6/6 done**.
 
-**Полный handoff v2:** `docs/superpowers/HANDOFF-gorod-fm-v2-pixel-perfect.md` — READ FIRST.
+🎯 **Рынок = МОСКВА** (не Казахстан). Wedge = прозрачность + редактируемый вкус + объяснимость (не локальность — домашка Яндекса).
 
 При `resume design`:
+1. `cd ~/Desktop/design-project` · `git pull` · `git log --oneline -8` (HEAD `d4479a3`+ на top)
+2. **Read `docs/superpowers/HANDOFF-gorod-fm-ai-product.md`** (главный артефакт) + `.claude-memory/session_2026_06_02_gorod_fm_ai_pivot.md`
+3. Демо: `cd designs && python -m http.server 8765` → `http://127.0.0.1:8765/gorod-fm.html#/onboarding` · `#/home` · `#/taste`
+4. **Опции (выбрать с Эльбиком):** (A) добить 3 Figma-экрана GOROD-021 (Медиатека 2385:2924 / Избранное 2535:11151 / Артист 2537:14090) под нейтрал-рестайл · (B) standalone-сборка для инвесторов GOROD-032 · (C) полировка стиля (UI-AUDIT: унификация акцента, ретема, волна за плеером) · (D) реальный бэкенд (Ф1+, по ARCHITECTURE). **Рекомендация: B → A/C.**
+5. 🔒 **Эльбик-gate (НЕ Claude):** GOROD-029 принять позиционирование · GOROD-030 лицензирование (7digital/Spotify-SDK + IP-юрист, узкое горло №1).
 
-1. `cd ~/Desktop/design-project` · `git fetch && git pull` · `git log --oneline -10` (verify HEAD `77ee5c1` Город ФМ commits on top)
-2. **Read `docs/superpowers/HANDOFF-gorod-fm-v2-pixel-perfect.md`** — strategy, 5 Figma nodes, new brand tokens, sidebar nav decisions, file pointers
-3. Read `.claude-memory/session_2026_05_27_gorod_fm_v2_handoff.md` (this session's transcript)
-4. **Phase 1:** re-fetch all 5 Figma design contexts in parallel (URLs from previous session expired). Download & dedupe assets to `designs/assets/gorod-fm/`.
-5. **Phase 2:** rewrite each screen sequentially. Order: Подборки (smallest delta) → Главная → Медиатека → Раздел Избранное → Страница артиста. Atomic commit per screen.
-6. **Phase 3:** visual verify via Chrome MCP at `http://127.0.0.1:8765/gorod-fm.html`.
-7. **Phase 4:** standalone rebuild (assets will be inlined as base64 by `tools/build_gorod_fm_standalone.py`).
-8. Close GOROD-021 in DEBT.md; update session log + memory.
+v2 pixel-perfect (GOROD-021): Главная+Подборки ✅; 3 экрана остаются (старый `HANDOFF-gorod-fm-v2-pixel-perfect.md` валиден для них).
 
-Продолжай автономно — не жди подтверждения. Holy Grail Часть 9 чек-лист перед `done`.
+Продолжай автономно — не жди подтверждения. Holy Grail Часть 9 + anti-slop gate перед `done`.
 
 ---
 
