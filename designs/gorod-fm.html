@@ -2475,6 +2475,37 @@
         .ai-launcher { right: 14px; }
       }
 
+      /* Native Twinr AI inside the player — explanation + steer (research 07/09) */
+      .player-why-pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        height: 34px; padding: 0 12px 0 9px;
+        border-radius: var(--r-pill);
+        background: var(--tint-blue-light-20);
+        border: 1px solid rgba(81, 104, 252, 0.35);
+        color: #c7d0ff; cursor: pointer;
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600;
+        white-space: nowrap;
+        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+      }
+      .player-why-pill:hover { background: rgba(81, 104, 252, 0.32); color: #fff; border-color: var(--brand-blue-light); }
+      .player-why-pill:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .player-why-pill svg { width: 15px; height: 15px; flex-shrink: 0; }
+      .player-steer-btn {
+        width: 38px; height: 38px; border-radius: 50%; border: none; flex-shrink: 0;
+        background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6);
+        color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 16px rgba(81, 104, 252, 0.45);
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+      }
+      .player-steer-btn:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(81, 104, 252, 0.6); }
+      .player-steer-btn:active { transform: scale(0.95); }
+      .player-steer-btn:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .player-steer-btn svg { width: 19px; height: 19px; }
+      @media (max-width: 720px) {
+        .player-why-pill span { display: none; }
+        .player-why-pill { padding: 0 9px; }
+      }
+
       /* ---- Home page — hero band ------------------------------------------- */
 
       .home-hero {
@@ -9126,6 +9157,14 @@
 
     <!-- Volume + Share extras -->
     <div class="player-mini-extras" onclick="event.stopPropagation()">
+      <!-- Native Twinr AI affordances — explanation + steer live ON the player -->
+      <button class="player-why-pill" type="button" id="player-why" aria-label="Почему играет этот трек">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
+        <span>почему?</span>
+      </button>
+      <button class="player-steer-btn" type="button" id="player-steer" aria-label="Twinr — сделать по-другому">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3.5l2.5 7 4-14 2.5 7H21"/></svg>
+      </button>
       <button
         class="player-ctrl-btn"
         type="button"
@@ -11535,6 +11574,11 @@
         addUser(v); input.value = ''; chipsEl.innerHTML = ''; handleText(v);
       });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dock.classList.contains('is-open')) collapse(); });
+      // Native AI: the player itself is the entry point (research 07 — "AI is a layer")
+      var pw = document.getElementById('player-why');
+      if (pw) pw.addEventListener('click', function (e) { e.stopPropagation(); ask('why', 'Почему именно этот трек?'); });
+      var ps = document.getElementById('player-steer');
+      if (ps) ps.addEventListener('click', function (e) { e.stopPropagation(); ask('different', '🔀 Сделай по-другому'); });
       renderProfile();
     }
 
@@ -11675,7 +11719,16 @@
         .then(function () { setChips(DEFAULT_CHIPS); });
     }
 
-    window.TwinrChat = { open: open, greetFromOnboarding: greetFromOnboarding };
+    // opened from an inline affordance (player "почему?" / steer) — go straight to the answer
+    function ask(intent, label) {
+      greeted = true;            // user asked something specific → skip the auto-greet
+      open();
+      addUser(label || '…');
+      chipsEl.innerHTML = '';
+      if (intents[intent]) intents[intent]();
+    }
+
+    window.TwinrChat = { open: open, greetFromOnboarding: greetFromOnboarding, ask: ask };
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
