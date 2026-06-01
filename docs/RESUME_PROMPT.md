@@ -1,18 +1,19 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-2) — продолжаем СТРОИТЬ AI РАДИО (не legacy-экраны!)
+## ⚡ LATEST (2026-06-02 cont-3) — AI-радио: audit + P0 + P1 done, дальше остаток P1
 
-🧭 **Эльбик-steer (важно):** «продолжим строить AI радио» — НЕ предлагать completion/polish (A: 3 Figma-экрана / C: стиль). Двигать **AI-продукт по VISION**. Re-anchor: `docs/superpowers/VISION-gorod-fm-ai-driven.md` + `UX-DIRECTION-gorod-fm.md`.
+📖 **READ FIRST: `docs/superpowers/HANDOFF-gorod-fm-cont-2026-06-02.md`** — полный хендофф (что построено, архитектура модулей, forward-план, gates, демо, constraints). Потом `AUDIT-gorod-fm-screens-and-service.md` §8 (план GOROD-040..057).
 
-**Сделано в этой сессии (master, HEAD `259e28e`):**
-- `14d0426` **Standalone-оптимизация** — наивный инлайн = 71 MB → **2.1 MB** (downscale+WebP в `tools/build_gorod_fm_standalone.py`, originals не тронуты). GOROD-032 done.
-- `2c07d3d` **Resume→music flagship (VISION #7)** — был bare stub → полноценная модалка: drop/paste/пример → «AI читает» theater → explainable `deriveTaste` (15 правил → реальные bubbles + «почему» + era) → seeds поле → handoff. GOROD-034 done.
+🧭 **Эльбик-steer:** строить **AI-радио по VISION** (не legacy-completion). Доверие = fidelity (объяснение = реальный вектор). **«Почему» всегда поведенческая** («дослушал 3×»), не маркетинг. Визуально верифицировать каждый шаг (Chrome MCP).
 
-⚠️ **Visual QA pending** — Chrome-extension был отключён, live-скриншотов/design-reviewer НЕ было. Logic/syntax/struct verified (node --check 6/6, deriveTaste юнит-тест). **Эльбик глазами:** `gorod-fm.html#/onboarding` → «Заполнить примером» → «Прочитать» → «Собрать радио». Если ext подключён — сделать design-implementation-reviewer pass.
+**Сделано (master, ВСЁ PUSHED, HEAD `7520cb2`):** standalone-opt 71→2.1 MB · resume→music flagship · #9 taste-ad · **6-агентный Karpathy АУДИТ** · **P0 5/5** (`040` always-on «почему» · `041` «Исправь причину» L2 · `042` цвет-от-обложки `NowPlayingTint` · `043` slop-kill+realign now-playing→Слеза/Егор Крид · `044` behavioral-copy) · **P1 `046` «Открыть» rebuild** (`GorodDiscover`: разговор+explained-results + taste-adjacency). VISION 1-9 + UX A-H все built.
 
-**Сделано далее:** ✅ resume-flagship visual-QA + z-fix `0ff6cda` · ✅ **#9 taste-ad** `b3be4db` (visual ✓) · ✅ **Karpathy-tier АУДИТ всего сервиса** `docs/superpowers/AUDIT-gorod-fm-screens-and-service.md` (6 ресёрч-агентов + grounded current-state). **VISION 1-9 + UX A-H все построены.**
+**Next = остаток P1:**
+- 🟢 **Safe (бери сразу):** `GOROD-048` transition-card («DJ объявляет следующий + почему») · `GOROD-049` Twinr **edge-glow** (вместо орба) + motion-токены.
+- 🔒 **Gate/realign:** `GOROD-045` **Волна 3-зоны** (audit §3 — ломает pixel-perfect home, **решение Эльбика**) · `GOROD-047` Артист/Трек deep-dive + slop-kill (нужен realign на реал-ассеты как плеер, ИЛИ обложки от Эльбика).
+- Потом P2 loops (recap-карточка, контекст-старты, открытый-профиль, стрики) → P3 backend (reason_tag pipeline=moat, 🔒лицензии CC→MERLIN, B2B taste-ads).
 
-**Next = P0 quick wins из аудита (GOROD-040..044, высокий ROI):** (1) честная «почему»-строка под каждым треком (поведенческая, 3/6 агентов = top) · (2) «Исправь причину» L2 (seamful reject — steering через объяснение, уникально рынку) · (3) цвет-от-обложки Vibrant.js (топ-ROI премиальности) · (4) убить slop-плейсхолдеры (градиент-обложки Трек/Медиатека/Избранное + силуэт-аватар Артист) · (5) behavioral-anchoring copy. Потом P1 rework (Волна 3-зоны §3, IA-реорг §2). **Полный план → AUDIT §8.** Session logs: `session_2026_06_02_gorod_fm_resume_cont.md`.
+**Эльбик-gates:** GOROD-029 позиционирование · GOROD-030 лицензии · IA/pixel-perfect (GOROD-045). **Asset wall:** прототип без per-track обложек → GOROD-047 нужен realign/ассеты.
 
 ---
 
