@@ -40,9 +40,9 @@
 | GOROD-026 | **Twinr AI чат** — collapsible dock, живой профиль (мутирует при стиринге), explainable «почему», AI-экскурс Imagine Dragons, вкусовая реклама, free-text | done (`38d334a`) |
 | GOROD-027 | **Native AI в плеере** — «✨ почему?» reason-pill + Twinr steer-кнопка → открывают чат к ответу (AI = слой, не угловой виджет) | done (`8ec5e4a`) |
 | GOROD-028 | **Karpathy ресёрч ×10** (`docs/research/gorod-fm/01-10`) + 2 синтез-дока: `ARCHITECTURE-gorod-fm-nextgen.md` (recsys/CLAP/BaRT/steering/licensing/MVP-roadmap) + `UX-DIRECTION-gorod-fm.md` (native AI, 3-tab IA, wave-identity) | done (`commits research` + `UX docs`) |
-| GOROD-029 | **Стратегический разворот позиционирования** — «первый AI» → «музыка, которая твоя: видишь/правишь вкус, знаешь почему» + KZ/СНГ локальность. Решение Эльбика. | 🔒 Эльбик-gate (принять позиционирование) |
+| GOROD-029 | **Стратегический разворот позиционирования** — «первый AI» → «музыка, которая твоя: видишь/правишь вкус, знаешь почему». 🆕 рынок = **МОСКВА** (Эльбик 06-02), НЕ KZ → локальность-как-moat ИСЧЕЗАЕТ (домашка Яндекса), wedge = только прозрачность+редактируемый вкус+объяснимость. | 🔒 Эльбик-gate (принять позиционирование) |
 | GOROD-030 | **Лицензирование** (узкое горло №1): 7digital MaaS demo-переговоры + Spotify SDK для демо + свой KZ/CC seed + найм KZ IP-юриста. Старт НЕМЕДЛЕННО параллельно билду. | 🔒 Эльбик-gate (внешний/легал) |
-| GOROD-031 | **Следующая UX-волна** (из `UX-DIRECTION` D-H): живая «волна» (CSS-breathing→AnalyserNode), экран «Мой вкус» (редактируемый Twinr-вектор), in-player mood/activity-диалы, between-track «now→next» лента (budget 3-5), 3-tab IA (Волна/Мой вкус/Открыть) | pending — следующая сессия |
+| GOROD-031 | **UX-волна** (из `UX-DIRECTION`): ✅ живая «волна» (canvas rAF, pulse на стир) + ✅ экран «Мой вкус» `#/taste` (редактируемый Twinr-вектор, sidebar item) — commit `a745802`. ⬜ Остаются: in-player mood/activity-диалы, between-track «now→next» лента (budget 3-5), AnalyserNode реал-аудио реактив, 3-tab IA (Волна/Мой вкус/Открыть) | partial — wave+Мой вкус done |
 | GOROD-032 | Standalone rebuild `tools/build_gorod_fm_standalone.py` (после остальных экранов; инлайнит 87 assets base64) для шеринга инвесторам | pending — после GOROD-021 экранов |
 
 ---
