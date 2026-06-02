@@ -1,6 +1,17 @@
-# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-7)
+# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-8)
 
-**Branch:** master — закоммичено, push в финале sync (HEAD `161c9fa`+).
+**Branch:** master — всё закоммичено локально, push отложен до явного `sync` (HEAD `d884221`).
+
+## cont-8 — БЛЮПРИНТ ДОВЕДЁН (ship) + de-purple + GOROD-051 + W1 fidelity-петля
+**Резюм cont-7 → исполнение.** Всё верифицировано Chrome MCP (:8770) + 13/13 `node --check` + 0 console errors. 5 атомарных коммитов на master (НЕ запушено).
+- ✅ **Блюпринт ДОВЕДЁН** → `docs/superpowers/BLUEPRINT-gorod-fm-full-service.md` (build-ready master, §0–§10). Синтез-workflow: до-исследованы 2 недостающих измерения (IA, legacy) → 9 dims + AUDIT + стратег-доки → синтез → **adversarial completeness-critic (verdict `ship`)** → финал. Критик подтвердил мой код построчно + поймал 4 grounding-ошибки синтеза (search уже есть / resume-import уже built / ложный warmth-claim про #8b5cf6 / ложный CarPlay-guard) → пофикшены, +§10 perf/a11y. **Директива «лучший сервис» ИСПОЛНЕНА.** (Supersedes `BLUEPRINT-research-dimensions-partial.md`.)
+- ✅ **de-purple** `5355db8`: #8b5cf6 (wave LAYERS + 8 градиентов) → синяя семья (#8094ff/`--accent-on-dark`). 0 violet.
+- ✅ **GOROD-051** `9788ae9`: контекст-старты на #/taste (`GorodContext` + `TwinrWave.setContext`, аддитивно, **НЕ триггерит 045**, honesty-floor suggest-only; + fidelity-фикс: pressed только при applied-today).
+- ✅ **W1 fidelity-петля** `18d8816`: GorodTaste читает `gorodfm_rejected` (был live баг — `#/taste` игнорировал, хотя Profile/Recap читают) → совпавшие грани struck+понижены (Егор Крид 62→12%) + карточка «Отклонено в плеере» (все reject'ы видны, matched=accent / reason-only=plain); убран `Math.random@seed` (детерминизм). Замыкает explain→reject→see-in-vector.
+- ✅ standalone 2.41 MB `d884221`.
+- **Next (блюпринт §7 ВОЛНА-0 остаток, порядок):** GOROD-055-lite reason_tag-эмиттер (is_synthetic) → W2 steering-provenance → DEFAULT_ROUTE 3-фикс → 047a Трек. 🔒 gate: 045/046/047b/029/030. Отложено информированно: legacy cyan (§5, много на legacy-экранах под IA-реорг). **PUSH отложен — всё локально на master.**
+
+---
 
 ## cont-7 — ДВА РЕСЁРЧА захвачены (директива «делаем лучший сервис»), блюпринт прерван оператором
 Эльбик: «продумай фулл структуру, все страницы, UX/UI ресёрч, архитектуру — Карпати-уровень, лучший сервис» → затем «прерывай что есть, делай передачу».

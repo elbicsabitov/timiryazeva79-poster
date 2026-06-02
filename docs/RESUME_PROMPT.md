@@ -1,6 +1,27 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-7) — ДВА РЕСЁРЧА (директива «делаем лучший сервис»). Блюпринт-workflow прерван оператором; всё захвачено в durable-доки
+## ⚡ LATEST (2026-06-02 cont-8) — БЛЮПРИНТ ДОВЕДЁН (ship) + de-purple + GOROD-051 + W1 fidelity-петля. Всё закоммичено локально (master), PUSH отложен
+
+🎯 Резюм cont-7 → исполнение. **HEAD `d884221`, 5 коммитов локально на master; PUSH ждёт явного `sync`.** Всё верифицировано Chrome MCP (:8770) + 13/13 `node --check` + zero console errors.
+
+1. ✅ **Блюпринт ДОВЕДЁН** (директива «лучший сервис» ИСПОЛНЕНА): `docs/superpowers/BLUEPRINT-gorod-fm-full-service.md` — build-ready master-план (§0 one-page · §1 IA все роуты · §2 flows · §3 per-surface · §4 AI/recsys · §5 дизайн-система · §6 монетизация · §7 roadmap · §8 gated · §9 конфликты · §10 perf/a11y). Синтез-workflow: до-исследованы 2 недостающих измерения (IA+legacy) → 9 dims + AUDIT + стратег-доки → синтез → **adversarial completeness-critic (verdict=ship)** → finalize. Критик проверил мой код построчно (de-purple реально сделан, warmth жива/корректна, 051 wired, все 12 роутов) + поймал 4 grounding-ошибки синтеза (search уже есть / resume-import уже built / ложный warmth-claim / ложный CarPlay-guard) → пофикшены + добавлено §10.
+2. ✅ **de-purple** `5355db8` — violet #8b5cf6 (wave LAYERS + 8 градиентов) → синяя семья (#8094ff / var(--accent-on-dark)). 0 violet (anti-slop P0).
+3. ✅ **GOROD-051 контекст-старты** `9788ae9` — `GorodContext` + `TwinrWave.setContext` на #/taste (Утро/День/Вечер/Ночь + Тренировка/Дорога), аддитивно, **НЕ триггерит 045**, honesty-floor suggest-only. + fidelity-фикс сверх спека: pressed-state только при applied-today.
+4. ✅ **W1 fidelity-петля** `18d8816` — GorodTaste теперь ЧИТАЕТ `gorodfm_rejected` (был live fidelity-баг): совпавшие грани struck+понижены (Егор Крид 62→12%), все reject'ы в карточке «Отклонено в плеере»; + убран `Math.random` в seed (детерминизм). Замыкает explain→reject→see-in-vector.
+5. ✅ standalone 2.41 MB `d884221`.
+
+**СЛЕД. СЕССИЯ (блюпринт §7, ВОЛНА 0 остаток — порядок):**
+- 🟢 **GOROD-055-lite reason_tag-эмиттер** (is_synthetic + schema_v): headless append-only лог (track,reason,action,surface,session_vec,ts) на scripted-данных — единственный незаменимый ров.
+- 🟢 **W2 steering-provenance**: «следующее почему ссылается на твою последнюю правку» (last_steer key; TwinrWhy dynamic first-reason).
+- 🟢 **DEFAULT_ROUTE 3-фикс**: DEFAULT→#/home; cold-start (нет taste И нет onboarded)→#/onboarding ДО savedRoute; #/map,#/lives за флаг (router @~12165).
+- Затем 047a Трек deep-dive (effort med; demo-вектор+соседи с лейблом «демо-вектор»).
+- 🔒 Эльбик-gate: 045 Волна-3-зоны · 046 IA-реорг (Медиатека/Избранное→Сохранённое) · 047b Артист · 029/030/056.
+- ⚠️ Отложено информированно: legacy cyan retirement (`--brand-cyan`/`#56afd7`/`rgba(86,175,215)`) — по блюпринту §5; много на legacy-экранах под IA-реорг.
+- **PUSH**: всё локально на master — запушить при `sync`.
+
+---
+
+## ⚡ PREV (2026-06-02 cont-7) — ДВА РЕСЁРЧА (директива «делаем лучший сервис»). Блюпринт-workflow прерван оператором; всё захвачено в durable-доки
 
 🎯 **Эльбик directive cont-7:** «продумай фулл структуру, все страницы и UX/UI ресёрч и по архитектуре на Карпати-уровне — делаем ЛУЧШИЙ сервис». Затем «прерывай что есть и делай передачу».
 
