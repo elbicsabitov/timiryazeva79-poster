@@ -2540,6 +2540,148 @@
       }
 
       /* =====================================================================
+         GOROD-ONB — экран «модель за N сигналов» + стриминг-import overlay.
+         Аддитивно поверх онбординга. Onest only, один акцент, art-tint логика.
+         ===================================================================== */
+      .onb-model {
+        position: fixed; inset: 0; z-index: 260;   /* above resume-modal (z-250) */
+        display: flex; align-items: center; justify-content: center; padding: 24px;
+        opacity: 0; pointer-events: none; transition: opacity 0.22s ease;
+      }
+      .onb-model.is-open { opacity: 1; pointer-events: auto; }
+      .onb-model-backdrop {
+        position: absolute; inset: 0; background: rgba(6, 7, 10, 0.72);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      }
+      .onb-model-panel {
+        position: relative; width: 560px; max-width: 100%;
+        max-height: calc(100vh - 48px); overflow-y: auto;
+        background: rgba(18, 18, 24, 0.97);
+        backdrop-filter: blur(26px) saturate(1.2); -webkit-backdrop-filter: blur(26px) saturate(1.2);
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 22px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62);
+        padding: 28px 28px 22px;
+        transform: translateY(14px) scale(0.98);
+        transition: transform 0.24s cubic-bezier(.34, 1.4, .64, 1);
+      }
+      .onb-model.is-open .onb-model-panel { transform: none; }
+
+      .onb-model-kicker {
+        display: inline-block; font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 700;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-on-dark); margin-bottom: 8px;
+      }
+      .onb-model-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.18; color: #fff; margin: 0 0 8px; }
+      .onb-model-title b { color: var(--brand-blue-light); font-weight: 800; }
+      .onb-model-sub { font-family: 'Onest', sans-serif; font-size: 14px; line-height: 1.5; color: var(--text-sec); margin: 0 0 18px; }
+
+      .onb-model-spark {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+        background: var(--tint-blue-light-20); color: var(--brand-blue-light);
+      }
+      .onb-model-spark svg { width: 22px; height: 22px; }
+      .onb-model-spark--spin svg { animation: resume-spin 1.4s linear infinite; }   /* reuse existing keyframe */
+
+      /* the editable mini-vector */
+      .onb-model-vec { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+      .onb-vec-row {
+        padding: 12px 14px; border-radius: 13px;
+        background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .onb-vec-main { display: flex; align-items: center; gap: 12px; }
+      .onb-vec-name { font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 700; color: #fff; flex: none; min-width: 116px; }
+      .onb-vec-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.10); overflow: hidden; }
+      .onb-vec-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--brand-blue-light), var(--accent-on-dark)); transition: width 0.32s cubic-bezier(.34,1.4,.64,1); }
+      .onb-vec-pct { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent-on-dark); flex: none; min-width: 38px; text-align: right; }
+      .onb-vec-ctrl { display: flex; gap: 6px; flex: none; }
+      .onb-vec-btn {
+        width: 44px; height: 44px; border-radius: 10px; cursor: pointer;
+        background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.12);
+        font-family: 'Onest', sans-serif; font-size: 18px; font-weight: 700; line-height: 1;
+        display: flex; align-items: center; justify-content: center;
+        transition: background var(--t-fast), border-color var(--t-fast);
+      }
+      .onb-vec-btn:hover { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); }
+      .onb-vec-btn:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .onb-vec-btn--x { color: var(--text-sec); font-size: 15px; }
+      .onb-vec-btn--x:hover { color: #fff; }
+      .onb-vec-why {
+        display: block; margin-top: 8px;
+        font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.45; color: var(--text-sec);
+      }
+      .onb-vec-why b { color: var(--accent-on-dark); font-weight: 700; }
+
+      .onb-model-receipt {
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--accent-on-dark);
+        min-height: 18px; margin: 14px 0 0;
+      }
+
+      .onb-model-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; }
+      .onb-model-ghost {
+        background: none; border: none; color: var(--text-sec);
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; padding: 12px 8px; border-radius: 6px;
+      }
+      .onb-model-ghost:hover { color: #fff; }
+      .onb-model-ghost:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .onb-model-go {
+        display: inline-flex; align-items: center; gap: 7px; height: 52px; padding: 0 26px;
+        border: none; border-radius: var(--r-pill); background: var(--brand-blue-light); color: #fff;
+        font-family: 'Onest', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer;
+        box-shadow: 0 10px 30px rgba(81, 104, 252, 0.4);
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+      }
+      .onb-model-go:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(81, 104, 252, 0.5); }
+      .onb-model-go:active { transform: translateY(0) scale(0.98); }
+      .onb-model-go:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+      .onb-model-go svg { width: 18px; height: 18px; }
+
+      /* import source picker */
+      .onb-src-row { display: flex; flex-direction: column; gap: 10px; }
+      .onb-src {
+        display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+        min-height: 56px; padding: 11px 16px; cursor: pointer; text-align: left;
+        background: rgba(255, 255, 255, 0.04); color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: var(--r-base);
+        font-family: 'Onest', sans-serif;
+        transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+      }
+      .onb-src:hover { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); transform: translateY(-1px); }
+      .onb-src:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .onb-src-name { font-size: 15px; font-weight: 700; }
+      .onb-src-hint { font-size: 12px; font-weight: 600; color: var(--text-quat); }
+
+      /* import parsing log — reuse resume-log visual language */
+      .onb-model-log { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+      .onb-model-log li {
+        font-family: 'Onest', sans-serif; font-size: 14px; color: var(--text-sec);
+        display: flex; align-items: center; gap: 10px;
+        opacity: 0; transform: translateY(6px); animation: resume-in 0.3s ease forwards;   /* reuse */
+      }
+      .onb-model-log li::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--brand-blue-light); flex: none; }
+      .onb-model-log li.is-done { color: #fff; }
+
+      /* import entry link in footer — same family as .onb-alt */
+      .onb-alt--import { color: var(--accent-on-dark); }
+      .onb-alt--import:hover { color: #fff; }
+
+      @media (max-width: 760px) {
+        .onb-model-panel { padding: 22px 18px 18px; border-radius: 18px; width: 100%; }
+        .onb-model-title { font-size: 20px; }
+        .onb-vec-main { flex-wrap: wrap; }
+        .onb-vec-name { min-width: 0; flex: 1 1 100%; }
+        .onb-vec-ctrl { margin-left: auto; }
+        .onb-model-actions { flex-direction: column-reverse; align-items: stretch; }
+        .onb-model-go { justify-content: center; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .onb-model, .onb-model-panel { transition: none; }
+        .onb-model-spark--spin svg { animation: none; }
+        .onb-model-log li { animation: none; opacity: 1; transform: none; }
+        .onb-vec-fill { transition: none; }
+        .onb-src:hover, .onb-model-go:hover { transform: none; }
+      }
+
+      /* =====================================================================
          TWINR AI CHAT — persistent collapsible music-companion dock.
          Demonstrates: explainable autoplay ("why this next track"), steerable
          taste ("сделай по-другому"), live Twinr profile, AI music tours.
@@ -9110,6 +9252,9 @@
             <button class="onb-alt" id="onb-alt" type="button">
               или загрузите резюме — подберём музыку по нему
             </button>
+            <button class="onb-alt onb-alt--import" id="onb-import" type="button">
+              или импортируй вкус из Last.fm · Яндекс · ВК
+            </button>
           </footer>
         </div>
       </section>
@@ -9179,6 +9324,55 @@
         </div>
       </div>
       <!-- /resume-modal -->
+
+      <!-- GOROD-ONB — «Модель за N сигналов» + стриминг-import (augment онбординга) -->
+      <div class="onb-model" id="onb-model" role="dialog" aria-modal="true" aria-labelledby="onb-model-title" aria-hidden="true">
+        <div class="onb-model-backdrop" id="onb-model-backdrop" aria-hidden="true"></div>
+        <div class="onb-model-panel" role="document">
+
+          <!-- STEP: import source picker (only via «импортируй») -->
+          <div class="onb-model-step" id="onb-import-pick" hidden>
+            <h2 class="onb-model-title">Откуда взять вкус?</h2>
+            <p class="onb-model-sub">Демо: реальная история не загружается — соберём правдоподобный пример из выбранного сервиса. Ты увидишь и поправишь каждый пункт.</p>
+            <div class="onb-src-row" role="group" aria-label="Сервис-источник">
+              <button class="onb-src" type="button" data-src="lastfm"><span class="onb-src-name">Last.fm</span><span class="onb-src-hint">scrobble-история</span></button>
+              <button class="onb-src" type="button" data-src="yandex"><span class="onb-src-name">Яндекс Музыка</span><span class="onb-src-hint">история прослушиваний</span></button>
+              <button class="onb-src" type="button" data-src="vk"><span class="onb-src-name">ВК Музыка</span><span class="onb-src-hint">твои аудиозаписи</span></button>
+            </div>
+            <div class="onb-model-actions"><button class="onb-model-ghost" id="onb-import-back" type="button">Назад к пузырям</button></div>
+          </div>
+
+          <!-- STEP: import parsing theatre (~3s «нашли вкус») -->
+          <div class="onb-model-step" id="onb-import-parse" hidden>
+            <span class="onb-model-spark onb-model-spark--spin" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+            </span>
+            <h2 class="onb-model-title">Читаю историю <span id="onb-import-svc">Last.fm</span>…</h2>
+            <ul class="onb-model-log" id="onb-import-log" aria-live="polite"></ul>
+          </div>
+
+          <!-- STEP: the model (shared destination of bubbles / resume / import) -->
+          <div class="onb-model-step" id="onb-model-main" hidden>
+            <span class="onb-model-kicker" id="onb-model-kicker">Вот как я тебя понял</span>
+            <h2 class="onb-model-title" id="onb-model-title">Твоя модель за <b id="onb-model-n">7</b> сигналов</h2>
+            <p class="onb-model-sub" id="onb-model-prov">Собрал из выбранных тобой сигналов — каждый пункт объяснён. Поправь прямо тут.</p>
+
+            <ul class="onb-model-vec" id="onb-model-vec" aria-label="Стартовый вектор вкуса — можно поправить"></ul>
+
+            <p class="onb-model-receipt" id="onb-model-receipt" role="status" aria-live="polite"></p>
+
+            <div class="onb-model-actions">
+              <button class="onb-model-ghost" id="onb-model-deeper" type="button">Открыть полный профиль</button>
+              <button class="onb-model-go" id="onb-model-go" type="button">
+                Собрать радио
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- /onb-model -->
 
       <!-- Page: Мой вкус — живой редактируемый Twinr-профиль (UX research 09/10) -->
       <section data-page="taste" aria-labelledby="page-taste-heading">
@@ -11891,6 +12085,8 @@
 
       if (cta) cta.addEventListener('click', onContinue);
       if (alt) alt.addEventListener('click', onResumeDemo);
+      var imp = document.getElementById('onb-import');
+      if (imp) imp.addEventListener('click', function () { Import.open(); });
       window.addEventListener('resize', onResize);
 
       if (REDUCE) field.classList.add('is-static');
@@ -12153,7 +12349,7 @@
       if (sample) sample.addEventListener('click', function () { if (R.text) { R.text.value = RESUME_SAMPLE; R.text.focus(); } });
       if (R.go) R.go.addEventListener('click', function () { runParse(typedOrSample()); });
       if (edit) edit.addEventListener('click', function () { applyDerived(); closeResume(); });
-      if (build) build.addEventListener('click', function () { applyDerived(); closeResume(); onContinue(); });
+      if (build) build.addEventListener('click', function () { applyDerived(); closeResume(); saveTaste(); Model.show('resume'); });
       if (R.drop) {
         R.drop.setAttribute('tabindex', '0');
         R.drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (R.file) R.file.click(); } });
@@ -12169,15 +12365,213 @@
     }
     function onResumeDemo() { openResume(); }
 
-    function onContinue() {
+    function onContinue() {           // bubbles door → show model first (no longer jumps home)
       if (cta && cta.disabled) return;
       saveTaste();
-      // hand off to the app + let Twinr AI greet with the fresh profile
+      Model.show('bubbles');
+    }
+    function goHome() {               // model «Собрать радио» → the real handoff (was inside onContinue)
+      saveTaste();
+      try { localStorage.setItem('gorodfm_onboarded', '1'); } catch (e) {}   // C7 — durable cold-start flag (W0)
       window.location.hash = '#/home';
       if (window.TwinrChat && window.TwinrChat.greetFromOnboarding) {
         setTimeout(function () { window.TwinrChat.greetFromOnboarding(selectedNames()); }, 450);
       }
     }
+
+    /* ---- GOROD-ONB: экран «модель за N сигналов» (видимый редакт. вектор) ---- */
+    var Model = (function () {
+      var M = {}, wired = false, vec = [], source = 'bubbles';
+      var GENRE_LC = { 'ПОП':'поп','РОК':'рок','ХИП-ХОП':'хип-хоп','ДИСКО':'диско','ЭЛЕКТРО':'электронику',
+        'ЛОФАЙ':'лофай','ИНДИ':'инди','ДЖАЗ':'джаз','РЭП':'рэп','R&B':'r&b','МЕТАЛЛ':'тяжёлое','КЛАССИКА':'классику' };
+      var MOOD = [
+        { any:['РОК','МЕТАЛЛ','Linkin Park'], name:'Энергичное', why:'рок и тяжёлое в выборе → энергичный профиль' },
+        { any:['ХИП-ХОП','ЭЛЕКТРО','ДИСКО','РЭП'], name:'Драйв', why:'хип-хоп и электро в выборе → ритм и драйв' },
+        { any:['ЛОФАЙ','ДЖАЗ','КЛАССИКА','ИНДИ'], name:'Спокойное', why:'инди и лофай в выборе → спокойный профиль' }
+      ];
+      function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+      function weightFor(i){ return Math.max(58, 88 - i * 4); }
+      function lc(g){ return GENRE_LC[g] || (g ? g.toLowerCase() : ''); }
+      function isGenre(name){ return name === String(name).toUpperCase() && /[А-ЯA-Z]/.test(name); }
+
+      // Build vec from current selected bubbles (deterministic, by selection order)
+      function fromBubbles(){
+        var picked = bubbles.filter(function(b){ return b.sel; });
+        var rows = [], seen = {}, i = 0;
+        picked.forEach(function(b){
+          var nm = b.d.t;
+          if (isGenre(nm)) {
+            if (seen[nm]) return; seen[nm]=1;
+            rows.push({ name: cap(nm), weight: weightFor(i++), kind:'genre',
+              why: 'выбрал <b>'+esc(nm)+'</b> — поставил '+lc(nm)+' в центр вектора.' });
+          } else {
+            if (seen[nm]) return; seen[nm]=1;
+            var g = b.genre || '';
+            rows.push({ name: nm, weight: weightFor(i++), kind:'artist',
+              why: 'тапнул <b>'+esc(nm)+'</b>'+(g?' → подтянул '+lc(g)+' и похожих.':'.') });
+          }
+        });
+        // 1 mood derived from genre mix (moods are not bubbles — honest derivation)
+        var names = picked.map(function(b){ return b.d.t; });
+        for (var m=0;m<MOOD.length;m++){
+          if (MOOD[m].any.some(function(x){ return names.indexOf(x)!==-1; })){
+            rows.push({ name: MOOD[m].name, weight: 64, kind:'mood', why: MOOD[m].why }); break;
+          }
+        }
+        return rows;
+      }
+      function cap(s){ s=String(s).toLowerCase(); return s.charAt(0).toUpperCase()+s.slice(1); }
+
+      // Build vec from resume rDerived ({name, why}) — provenance already explained
+      function fromDerived(items){
+        return (items||[]).map(function(it,i){
+          return { name: cap(it.name), weight: weightFor(i), kind:'genre',
+            why: esc(it.why) }; });
+      }
+      // Build vec from import seed (set by Import module)
+      function fromImport(items){
+        return (items||[]).map(function(it,i){
+          return { name: it.disp, weight: weightFor(i), kind: it.kind,
+            why: it.why }; });   // why already a trusted literal from Import
+      }
+
+      function refs(){
+        if (M.root) return;
+        M.root=document.getElementById('onb-model'); M.back=document.getElementById('onb-model-backdrop');
+        M.main=document.getElementById('onb-model-main'); M.vecEl=document.getElementById('onb-model-vec');
+        M.n=document.getElementById('onb-model-n'); M.prov=document.getElementById('onb-model-prov');
+        M.kicker=document.getElementById('onb-model-kicker'); M.receipt=document.getElementById('onb-model-receipt');
+        M.go=document.getElementById('onb-model-go'); M.deeper=document.getElementById('onb-model-deeper');
+      }
+      function pickedCount(){ return vec.filter(function(r){ return r.kind!=='mood'; }).length; }  // mood = derived, not a chosen signal (fidelity)
+      function render(){
+        if (!M.vecEl) return;
+        if (M.n) M.n.textContent = pickedCount();
+        M.vecEl.innerHTML = vec.map(function(r){
+          return '<li class="onb-vec-row" data-name="'+esc(r.name)+'">'+
+            '<div class="onb-vec-main">'+
+              '<span class="onb-vec-name">'+esc(r.name)+'</span>'+
+              '<div class="onb-vec-bar"><div class="onb-vec-fill" style="width:'+r.weight+'%"></div></div>'+
+              '<span class="onb-vec-pct">'+r.weight+'%</span>'+
+              '<div class="onb-vec-ctrl">'+
+                '<button class="onb-vec-btn" type="button" data-act="down" aria-label="Меньше: '+esc(r.name)+'">–</button>'+
+                '<button class="onb-vec-btn" type="button" data-act="up" aria-label="Больше: '+esc(r.name)+'">+</button>'+
+                '<button class="onb-vec-btn onb-vec-btn--x" type="button" data-act="remove" aria-label="Убрать: '+esc(r.name)+'">✕</button>'+
+              '</div>'+
+            '</div>'+
+            '<span class="onb-vec-why">'+r.why+'</span>'+   // why = trusted literal (<b>signal</b>), module-built
+          '</li>'; }).join('');
+      }
+      function provText(){
+        if (source==='resume') return 'Собрал из твоего резюме — каждый пункт объяснён. Поправь прямо тут.';
+        if (source==='import') return 'Вытащил из истории '+esc(Import.svcLabel())+' — каждый пункт объяснён. Поправь прямо тут.';
+        return 'Собрал из '+pickedCount()+' выбранных тобой сигналов — каждый пункт объяснён. Поправь прямо тут.';
+      }
+      function announce(t){ if (M.receipt) M.receipt.textContent=t; }
+      function wire(){
+        if (wired) return; refs(); if (!M.root) return;
+        M.vecEl.addEventListener('click', function(e){
+          var btn=e.target.closest('.onb-vec-btn'); if(!btn) return;
+          var li=btn.closest('.onb-vec-row'); var nm=li&&li.getAttribute('data-name');
+          var i=vec.map(function(r){return r.name;}).indexOf(nm); if(i<0) return;
+          var act=btn.getAttribute('data-act'), r=vec[i];
+          if(act==='up'){ var ow=r.weight; r.weight=Math.min(100,r.weight+6); render(); announce(esc(r.name)+' '+ow+' → '+r.weight+' % — пересчитал.'); }
+          else if(act==='down'){ var ow2=r.weight; r.weight=Math.max(4,r.weight-6); render(); announce(esc(r.name)+' '+ow2+' → '+r.weight+' % — пересчитал.'); }
+          else if(act==='remove'){ vec.splice(i,1); render(); announce('Убрал '+esc(nm)+' — больше не в стартовом векторе.'); }
+          syncTaste();
+        });
+        if (M.go) M.go.addEventListener('click', function(){ syncTaste(); hide(); goHome(); });
+        if (M.deeper) M.deeper.addEventListener('click', function(){ syncTaste();
+          try{ localStorage.setItem('gorodfm_onboarded','1'); }catch(e){}
+          hide(); window.location.hash='#/taste'; });
+        // Esc on the model step does NOT cancel onboarding (mandatory); only import steps escape (handled by Import)
+        wired=true;
+      }
+      // write the edited vector back to gorodfm_taste as a name-array (same format GorodTaste reads)
+      function syncTaste(){
+        try { localStorage.setItem('gorodfm_taste',
+          JSON.stringify(vec.map(function(r){ return r.kind==='genre' ? r.name.toUpperCase() : r.name; }).slice(0,8))); } catch(e){}
+      }
+      function show(src){
+        refs(); wire(); if(!M.root) return;
+        source = src || 'bubbles';
+        vec = (src==='resume') ? fromDerived(rDerived && rDerived.items) :
+              (src==='import') ? fromImport(Import.seed()) : fromBubbles();
+        if (!vec.length) vec = fromDerived(RESUME_FALLBACK.map(function(f){return {name:f.name,why:f.why};}));
+        if (window.GorodOnboarding) stop();      // freeze bubble physics behind overlay
+        Import.hideSteps();
+        if (M.main) M.main.hidden=false;
+        if (M.kicker) M.kicker.textContent = (src==='resume'?'Вот что я прочитал':'Вот как я тебя понял');
+        if (M.prov) M.prov.innerHTML = provText();
+        render(); announce('');
+        M.root.classList.add('is-open'); M.root.setAttribute('aria-hidden','false');
+        setTimeout(function(){ if(M.go) M.go.focus(); }, 60);
+      }
+      function hide(){ if(!M.root) return; M.root.classList.remove('is-open'); M.root.setAttribute('aria-hidden','true'); }
+      return { show: show, hide: hide, refs: refs };
+    })();
+
+    /* ---- GOROD-ONB: стриминг-import-seed (fake, opt-in, on-device) ---- */
+    var Import = (function () {
+      var I = {}, wired = false, current = 'lastfm';
+      var SRC = {
+        lastfm: { label:'Last.fm', seed:[
+          { disp:'Инди',  kind:'genre',  why:'прослушал <b>214×</b> в Last.fm — добавил в стартовый вкус.' },
+          { disp:'Рок',   kind:'genre',  why:'прослушал <b>180×</b> в Last.fm — добавил в стартовый вкус.' },
+          { disp:'Электро',kind:'genre', why:'прослушал <b>96×</b> в Last.fm — добавил в стартовый вкус.' },
+          { disp:'Arctic Monkeys', kind:'artist', why:'часто слушал <b>Arctic Monkeys</b> в Last.fm.' },
+          { disp:'Tame Impala',    kind:'artist', why:'часто слушал <b>Tame Impala</b> в Last.fm.' } ] },
+        yandex: { label:'Яндекс Музыка', seed:[
+          { disp:'Поп',     kind:'genre',  why:'много в истории <b>Яндекс Музыки</b> — добавил в вкус.' },
+          { disp:'Хип-хоп', kind:'genre',  why:'значимая доля в <b>Яндекс Музыке</b> — добавил.' },
+          { disp:'Электро', kind:'genre',  why:'средне в истории <b>Яндекс Музыки</b>.' },
+          { disp:'Егор Крид', kind:'artist', why:'часто слушал <b>Егора Крида</b> в Яндекс Музыке.' },
+          { disp:'Macan',     kind:'artist', why:'часто слушал <b>Macan</b> в Яндекс Музыке.' } ] },
+        vk: { label:'ВК Музыка', seed:[
+          { disp:'Хип-хоп', kind:'genre', why:'основа аудиозаписей <b>ВК</b> — добавил в вкус.' },
+          { disp:'Рэп',     kind:'genre', why:'много рэпа в <b>ВК Музыке</b> — добавил.' },
+          { disp:'Поп',     kind:'genre', why:'заметная доля в <b>ВК</b>.' },
+          { disp:'Макс Корж',  kind:'artist', why:'часто слушал <b>Макса Коржа</b> в ВК.' },
+          { disp:'Скриптонит', kind:'artist', why:'часто слушал <b>Скриптонита</b> в ВК.' } ] }
+      };
+      function refs(){
+        if (I.root) return;
+        I.root=document.getElementById('onb-model');
+        I.pick=document.getElementById('onb-import-pick'); I.parse=document.getElementById('onb-import-parse');
+        I.log=document.getElementById('onb-import-log'); I.svc=document.getElementById('onb-import-svc');
+        I.back=document.getElementById('onb-import-back'); I.backdrop=document.getElementById('onb-model-backdrop');
+      }
+      function hideSteps(){ [I.pick,I.parse].forEach(function(el){ if(el) el.hidden=true; }); var m=document.getElementById('onb-model-main'); if(m) m.hidden=true; }
+      function open(){
+        refs(); wire(); if(!I.root) return;
+        if (window.GorodOnboarding) stop();
+        hideSteps(); if(I.pick) I.pick.hidden=false;
+        I.root.classList.add('is-open'); I.root.setAttribute('aria-hidden','false');
+        setTimeout(function(){ var b=I.pick&&I.pick.querySelector('.onb-src'); if(b) b.focus(); }, 60);
+      }
+      function close(){ if(I.root){ I.root.classList.remove('is-open'); I.root.setAttribute('aria-hidden','true'); } }
+      function run(src){
+        current = SRC[src] ? src : 'lastfm';
+        if (I.svc) I.svc.textContent = SRC[current].label;
+        hideSteps(); if(I.parse) I.parse.hidden=false; if(I.log) I.log.innerHTML='';
+        var lines=['Подключаюсь к '+SRC[current].label+'…','Читаю историю прослушиваний…','Нахожу повторы и фаворитов…','Собираю стартовый вкус…'];
+        if (REDUCE){ Model.show('import'); return; }
+        var i=0;(function n(){ if(i>=lines.length){ setTimeout(function(){ Model.show('import'); },300); return; }
+          var li=document.createElement('li'); li.textContent=lines[i];
+          if(I.log){ if(I.log.lastChild) I.log.lastChild.classList.add('is-done'); I.log.appendChild(li); }
+          i++; setTimeout(n,520); })();
+      }
+      function wire(){
+        if (wired) return; refs(); if(!I.root) return;
+        if (I.pick) I.pick.addEventListener('click', function(e){ var b=e.target.closest('.onb-src'); if(b) run(b.getAttribute('data-src')); });
+        if (I.back) I.back.addEventListener('click', function(){ close(); if (window.GorodOnboarding) start(); });
+        document.addEventListener('keydown', function(e){
+          if(e.key==='Escape' && I.root && I.root.classList.contains('is-open') && I.pick && !I.pick.hidden){ close(); if(window.GorodOnboarding) start(); }
+        });
+        wired=true;
+      }
+      return { open:open, hideSteps:hideSteps, seed:function(){ return SRC[current].seed; }, svcLabel:function(){ return SRC[current].label; } };
+    })();
 
     function start() {
       if (!built && !build()) return;
