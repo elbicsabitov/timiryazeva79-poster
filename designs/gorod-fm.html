@@ -3057,6 +3057,43 @@
       .taste-share-btn svg { stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
       .taste-delta { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--success, #34d399); }
 
+      /* ---- GOROD-051 — контекстный старт (на #/taste, аддитивно, single-hue) ---- */
+      .ctx-strip { margin: 0 0 28px; }
+      .ctx-strip-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+      .ctx-strip-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 18px; color: #fff; margin: 0; letter-spacing: -0.01em; }
+      .ctx-strip-hint { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--accent-on-dark); margin: 0; }
+      .ctx-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+      .ctx-row + .ctx-row { margin-top: 10px; }
+      .ctx-row--activity { align-items: center; }
+      .ctx-row-cap { font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255, 255, 255, 0.70); margin-right: 2px; }
+      .ctx-chip {
+        position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+        min-height: 56px; min-width: 120px; padding: 9px 16px; cursor: pointer;
+        font-family: 'Onest', sans-serif; text-align: left;
+        background: rgba(255, 255, 255, 0.04); color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: var(--r-base);
+        transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+      }
+      .ctx-chip--act { min-height: 44px; min-width: auto; flex-direction: row; align-items: center; gap: 8px; }
+      .ctx-chip-label { font-size: 14px; font-weight: 700; line-height: 1.1; }
+      .ctx-chip-params { font-size: 11px; font-weight: 600; color: rgba(235, 235, 245, 0.60); letter-spacing: 0.01em; }
+      .ctx-chip:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-1px); }
+      .ctx-chip[aria-pressed="true"], .ctx-chip.is-on {
+        background: rgba(81, 104, 252, 0.16);
+        border-color: rgba(81, 104, 252, 0.55);
+        box-shadow: 0 0 0 1px rgba(81, 104, 252, 0.30), 0 6px 20px -8px var(--brand-blue-light);
+      }
+      .ctx-chip[aria-pressed="true"] .ctx-chip-params { color: var(--accent-on-dark); }
+      .ctx-chip:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .ctx-chip[data-now="1"] .ctx-chip-label::after {
+        content: " · сейчас"; font-size: 10px; font-weight: 700; color: var(--accent-on-dark);
+        text-transform: uppercase; letter-spacing: 0.05em;
+      }
+      .ctx-why { margin: 14px 0 0; font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.70); max-width: 560px; }
+      .ctx-why b { color: var(--accent-on-dark); font-weight: 700; }
+      @media (max-width: 560px) { .ctx-chip { flex: 1 1 calc(50% - 5px); min-width: 0; } }
+      @media (prefers-reduced-motion: reduce) { .ctx-chip { transition: none; } .ctx-chip:hover { transform: none; } }
+
       .taste-body { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
       .taste-group {
         background: var(--bg-card, rgba(255,255,255,0.03));
@@ -9631,6 +9668,43 @@
             </div>
           </header>
 
+          <section class="ctx-strip" aria-labelledby="ctx-strip-h">
+            <div class="ctx-strip-head">
+              <h2 class="ctx-strip-title" id="ctx-strip-h">Контекстный старт</h2>
+              <p class="ctx-strip-hint" id="ctx-hint" aria-live="polite"></p>
+            </div>
+            <div class="ctx-row" role="group" aria-label="Контекст по времени суток">
+              <button class="ctx-chip" type="button" data-ctx="morning" aria-pressed="false">
+                <span class="ctx-chip-label">Утро</span>
+                <span class="ctx-chip-params">85 BPM · мягко · ~40 мин</span>
+              </button>
+              <button class="ctx-chip" type="button" data-ctx="day" aria-pressed="false">
+                <span class="ctx-chip-label">День</span>
+                <span class="ctx-chip-params">100 BPM · ровно · ~90 мин</span>
+              </button>
+              <button class="ctx-chip" type="button" data-ctx="evening" aria-pressed="false">
+                <span class="ctx-chip-label">Вечер</span>
+                <span class="ctx-chip-params">95 BPM · теплее · ~60 мин</span>
+              </button>
+              <button class="ctx-chip" type="button" data-ctx="night" aria-pressed="false">
+                <span class="ctx-chip-label">Ночь</span>
+                <span class="ctx-chip-params">70 BPM · тихо · ~30 мин</span>
+              </button>
+            </div>
+            <div class="ctx-row ctx-row--activity" role="group" aria-label="Занятие — накладывается поверх времени">
+              <span class="ctx-row-cap" aria-hidden="true">Занятие</span>
+              <button class="ctx-chip ctx-chip--act" type="button" data-act="workout" aria-pressed="false">
+                <span class="ctx-chip-label">Тренировка</span>
+                <span class="ctx-chip-params">128 BPM</span>
+              </button>
+              <button class="ctx-chip ctx-chip--act" type="button" data-act="commute" aria-pressed="false">
+                <span class="ctx-chip-label">Дорога</span>
+                <span class="ctx-chip-params">108 BPM</span>
+              </button>
+            </div>
+            <p class="ctx-why" id="ctx-why" role="status" aria-live="polite"></p>
+          </section>
+
           <div class="taste-body" id="taste-body">
             <!-- groups injected by GorodTaste -->
           </div>
@@ -12922,6 +12996,8 @@
     var canvas, ctx, raf = 0, running = false, w = 0, h = 0, t = 0, pulse = 0;
     var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var audioCtx, analyser, freqData, audioMaster, audioOn = false, audioEnergy = 0, audioInit = false;
+    var ctxState  = { ampMul: 1, speedMul: 1, energyBoost: 0, warm: 0 };   // GOROD-051 — neutral = current behavior
+    var ctxTarget = { ampMul: 1, speedMul: 1, energyBoost: 0, warm: 0 };   // interpolation target
     var LAYERS = [
       { amp: 0.17, freq: 1.1, speed: 0.6, alpha: 0.55, color: '#5168FC', width: 2.5 },
       { amp: 0.12, freq: 1.8, speed: -0.95, alpha: 0.42, color: '#8094ff', width: 2 },
@@ -12942,16 +13018,22 @@
         var sum = 0, bi; for (bi = 2; bi < 48; bi++) sum += freqData[bi];
         audioEnergy += ((sum / 46 / 255) - audioEnergy) * 0.2;   // real FFT energy
       } else if (audioEnergy > 0.001) { audioEnergy *= 0.94; }
-      var mid = h * 0.52, e = 1 + pulse * 1.5 + audioEnergy * 1.7, i, x;
+      ctxState.ampMul      += (ctxTarget.ampMul      - ctxState.ampMul)      * 0.05;   // GOROD-051 — smooth ctx shift (~1–1.5s)
+      ctxState.speedMul    += (ctxTarget.speedMul    - ctxState.speedMul)    * 0.05;
+      ctxState.energyBoost += (ctxTarget.energyBoost - ctxState.energyBoost) * 0.05;
+      ctxState.warm        += (ctxTarget.warm        - ctxState.warm)        * 0.05;
+      var mid = h * 0.52, e = 1 + pulse * 1.5 + audioEnergy * 1.7 + ctxState.energyBoost, i, x;
       for (i = 0; i < LAYERS.length; i++) {
         var L = LAYERS[i];
         ctx.beginPath();
         for (x = 0; x <= w; x += 5) {
           var nx = x / w, env = Math.sin(nx * Math.PI);   // taper to 0 at both ends
-          var y = mid + Math.sin(nx * Math.PI * 2 * L.freq + t * L.speed) * (h * L.amp) * e * env;
+          var y = mid + Math.sin(nx * Math.PI * 2 * L.freq + t * L.speed * ctxState.speedMul) * (h * L.amp * ctxState.ampMul) * e * env;
           if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = L.color; ctx.globalAlpha = L.alpha; ctx.lineWidth = L.width;
+        ctx.strokeStyle = L.color;
+        ctx.globalAlpha = L.alpha * (L.color === '#8094ff' ? (1 + ctxState.warm * 0.5) : (1 - ctxState.warm * 0.2));   // GOROD-051 — warmth via alpha, single hue
+        ctx.lineWidth = L.width;
         ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
       }
       ctx.globalAlpha = 1;
@@ -12970,6 +13052,15 @@
     function bump() {
       pulse = Math.min(1.5, pulse + 0.75);
       if (!running && canvas && ctx && !REDUCE) { running = true; loop(); }
+    }
+    function setContext(c) {                                  // GOROD-051 — durable ctx state (not transient bump)
+      if (!c) return;
+      ctxTarget = { ampMul: c.ampMul, speedMul: c.speedMul, energyBoost: c.energyBoost, warm: c.warm };
+      if (REDUCE) {
+        ctxState = { ampMul: c.ampMul, speedMul: c.speedMul, energyBoost: c.energyBoost, warm: c.warm };
+        if (canvas && ctx) frame(); return;                   // single static frame, like startWave
+      }
+      if (!running && canvas && ctx) { running = true; loop(); }
     }
 
     /* Audio-reactive demo: a gentle WebAudio ambient pad → AnalyserNode → the wave
@@ -13018,7 +13109,7 @@
     }
 
     window.addEventListener('resize', function () { if (canvas && ctx && running) size(); });
-    window.TwinrWave = { start: startWave, stop: stopWave, bump: bump };
+    window.TwinrWave = { start: startWave, stop: stopWave, bump: bump, setContext: setContext };
 
     /* ---- «Мой вкус» editable profile ---- */
     var DEFAULT = {
@@ -13927,6 +14018,87 @@
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
     window.GorodRecap = { render: render };
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-051 — контекстный старт: пере-форма ВОЛНЫ по времени/занятию ----
+     Аддитивно. TwinrWave.setContext (устойчивый state, не transient bump).
+     «Почему» — всегда параметрическое (BPM/энергия/длит), никогда маркетинг. */
+  (function () {
+    'use strict';
+    var LS = 'gorodfm_context';
+    var CTX = {
+      morning: { label: 'Утро',  bpm: 85,  energy: 'низкая→средняя', dur: 40, wave: { ampMul: .78, speedMul: .70, energyBoost: .00, warm: 0 },
+        why: 'Старт мягкий: <b>85 BPM</b>, низкая энергия первые 10 минут — потом плавно вверх. Без рывка.' },
+      day: { label: 'День', bpm: 100, energy: 'средняя, ровная', dur: 90, wave: { ampMul: .85, speedMul: .92, energyBoost: .15, warm: .15 },
+        why: 'Ровный темп <b>~100 BPM</b>, без скачков энергии 90 минут — фон для работы.' },
+      evening: { label: 'Вечер', bpm: 95, energy: 'средняя, теплее', dur: 60, wave: { ampMul: 1.0, speedMul: .85, energyBoost: .25, warm: .55 },
+        why: 'Тёплый вектор <b>~95 BPM</b> — так ты дослушиваешь до конца вечером.' },
+      night: { label: 'Ночь', bpm: 70, energy: 'низкая', dur: 30, wave: { ampMul: .62, speedMul: .50, energyBoost: -.10, warm: 0 },
+        why: 'Медленно, <b>70 BPM</b>, низкая энергия — волна почти не двигается.' }
+    };
+    var ACT = {
+      workout: { label: 'Тренировка', bpm: 128, energy: 'высокая', dur: 45, wave: { ampMul: 1.35, speedMul: 1.40, energyBoost: .60, warm: .30 },
+        why: '<b>128 BPM</b>, высокая энергия — бит задаёт темп под нагрузку. Перекрывает время, пока активно.' },
+      commute: { label: 'Дорога', bpm: 108, energy: 'средне-высокая', dur: 35, wave: { ampMul: 1.10, speedMul: 1.05, energyBoost: .35, warm: .35 },
+        why: '<b>108 BPM</b>, средне-высокая энергия на 35 минут — под дорогу, держит в тонусе.' }
+    };
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function defaultCtx() { var h = new Date().getHours(); if (h >= 5 && h < 11) return 'morning'; if (h >= 11 && h < 17) return 'day'; if (h >= 17 && h < 23) return 'evening'; return 'night'; }
+    function isToday(ts) { if (!ts) return false; var a = new Date(ts), b = new Date(); return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+    function read() { try { return JSON.parse(localStorage.getItem(LS) || 'null'); } catch (e) { return null; } }
+    function write(o) { try { localStorage.setItem(LS, JSON.stringify(o)); } catch (e) {} }
+    function effective(state) {
+      if (state && state.activity && ACT[state.activity]) return { obj: ACT[state.activity], src: 'activity', time: state.ctx };
+      var ck = (state && state.ctx) || defaultCtx();
+      return { obj: CTX[ck] || CTX.morning, src: 'time', time: ck };
+    }
+    function applyWave(eff) { if (window.TwinrWave && window.TwinrWave.setContext) window.TwinrWave.setContext(eff.obj.wave); }
+    function reflectPlayer(eff) {            // opportunistic echo — overwritten by player on next track (C5)
+      var reason = $('player-track-reason'), span = reason && reason.querySelector('span');
+      if (span) { span.innerHTML = 'Контекст «' + esc(eff.obj.label) + '»: <b>' + eff.obj.bpm + ' BPM</b>, ' + esc(eff.obj.energy) + ', ~' + eff.obj.dur + ' мин'; }
+    }
+    function setWhy(eff) { var w = $('ctx-why'); if (w) w.innerHTML = 'Сейчас «' + esc(eff.obj.label) + '»: ' + eff.obj.why; }   // why = trusted literal with <b>BPM</b>
+    function paintChips(state) {
+      var eff = effective(state), sugg = defaultCtx(), fresh = !!(state && isToday(state.ts));
+      [].forEach.call(document.querySelectorAll('.ctx-chip[data-ctx]'), function (b) {
+        // pressed/active state ONLY when a choice is applied today — visible state must match the actually-driven wave (fidelity, C7)
+        var on = fresh && ((eff.src === 'time' && b.getAttribute('data-ctx') === eff.time) || (eff.src === 'activity' && b.getAttribute('data-ctx') === state.ctx));
+        b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.classList.toggle('is-on', !!on);
+        b.setAttribute('data-now', (!fresh && b.getAttribute('data-ctx') === sugg) ? '1' : '0');   // suggestion marker only — wave not driven until tap
+      });
+      [].forEach.call(document.querySelectorAll('.ctx-chip[data-act]'), function (b) {
+        var on = fresh && state.activity === b.getAttribute('data-act');
+        b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.classList.toggle('is-on', !!on);
+      });
+      var hint = $('ctx-hint');
+      if (hint) { hint.textContent = fresh ? '' : ('Сейчас ' + CTX[sugg].label.toLowerCase() + ' — предлагаю ' + CTX[sugg].bpm + ' BPM. Можно поменять.'); }
+    }
+    function render(state) { paintChips(state); setWhy(effective(state)); }
+    function chooseTime(key) { var s = read() || {}; s.ctx = key; s.ts = Date.now(); write(s); var eff = effective(s); applyWave(eff); reflectPlayer(eff); render(s); if (window.TwinrWave) window.TwinrWave.bump(); }
+    function toggleAct(key) { var s = read() || {}; s.activity = (s.activity === key) ? null : key; if (!s.ctx) s.ctx = defaultCtx(); s.ts = Date.now(); write(s); var eff = effective(s); applyWave(eff); reflectPlayer(eff); render(s); if (window.TwinrWave) window.TwinrWave.bump(); }
+    var wired = false;
+    function wire() {
+      if (wired) return; var strip = document.querySelector('.ctx-strip'); if (!strip) return;
+      strip.addEventListener('click', function (e) {
+        var t = e.target.closest('.ctx-chip'); if (!t) return;
+        if (t.hasAttribute('data-ctx')) chooseTime(t.getAttribute('data-ctx'));
+        else if (t.hasAttribute('data-act')) toggleAct(t.getAttribute('data-act'));
+      });
+      wired = true;
+    }
+    function onRoute() {
+      if ((location.hash || '') === '#/taste') {
+        wire(); var s = read(); render(s);
+        if (s && (s.activity || s.ctx) && isToday(s.ts)) { var eff = effective(s); setTimeout(function () { applyWave(eff); reflectPlayer(eff); }, 60); }
+      }
+    }
+    window.addEventListener('hashchange', onRoute);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
+    // public API (lets a future #/home pill — VARIANT B — suggest/apply without coupling)
+    window.GorodContext = { render: render, suggest: function () { var s = read() || {}; if (!isToday(s.ts)) s.ctx = defaultCtx(); write(s); render(s); }, apply: chooseTime };
   })();
   </script>
 
