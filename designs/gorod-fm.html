@@ -7188,7 +7188,11 @@
       html.setAttribute('data-hide-flow-map', 'true');
       try { localStorage.setItem('gorod-fm.theme', 'cinema'); localStorage.setItem('gorod-fm.hide-flow-map', 'true'); } catch (e) {}
       var h = location.hash || '';
-      if (h === '' || h === '#/map') location.hash = '#/home';
+      if (h === '' || h === '#/map') {
+        var onb = false, tst = false;
+        try { onb = !!localStorage.getItem('gorodfm_onboarded'); tst = !!localStorage.getItem('gorodfm_taste'); } catch (e) {}
+        location.hash = (!onb && !tst) ? '#/onboarding' : '#/home';  // cold-start → onboarding (ВОЛНА-0); returning → home
+      }
     }
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
