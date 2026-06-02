@@ -3134,6 +3134,14 @@
       .taste-ctrl:hover { background: var(--tint-blue-light-20); color: #fff; }
       .taste-ctrl:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
       .taste-foot { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-ter, var(--text-sec)); margin-top: 22px; text-align: center; opacity: 0.75; }
+      /* W1 — reject reflected in the editable vector (fidelity loop) */
+      .taste-row.is-rejected .taste-row-name { text-decoration: line-through; color: var(--text-sec); }
+      .taste-row.is-rejected .taste-bar-fill { background: rgba(255, 255, 255, 0.16); }
+      .taste-rej-card { grid-column: 1 / -1; }
+      .taste-rej-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+      .taste-rej-chip { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-sec); padding: 6px 12px; border-radius: var(--r-pill, 999px); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.10); text-decoration: line-through; }
+      .taste-rej-chip.is-matched { color: var(--accent-on-dark); border-color: rgba(81, 104, 252, 0.40); }
+      .taste-rej-cap { font-family: 'Onest', sans-serif; font-size: 12.5px; line-height: 1.5; color: var(--text-sec); margin: 0; }
 
       /* =====================================================================
          СПОНСОР ПО ВКУСУ (VISION #9) — taste-based advertising as a native,
@@ -13118,23 +13126,43 @@
       'Артисты': [{ n: 'Imagine Dragons', w: 90 }, { n: 'Егор Крид', w: 62 }, { n: 'twenty one pilots', w: 55 }, { n: 'OneRepublic', w: 44 }],
       'Эпохи': [{ n: '2010-е', w: 80 }, { n: '2020-е', w: 64 }, { n: '2000-е', w: 50 }, { n: '90-е', w: 30 }]
     };
-    var data, built = false;
-    var PIN = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 4h6l-1 7 3 2v2h-4v5l-1 1-1-1v-5H6v-2l3-2z"/></svg>';
+    var data, built = false, rejList = [];
+    var REJ_KEY = 'gorodfm_rejected';
+    var REJ_LABELS = { artist: 'Егор Крид', vocal: 'Тёплый поп-вокал', tempo: 'Темп ~95 BPM' };   // canon (same as GorodProfile/GorodRecap) — mirror of TwinrWhy REASONS id→label
+    var PIN ='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 4h6l-1 7 3 2v2h-4v5l-1 1-1-1v-5H6v-2l3-2z"/></svg>';
 
     function seed() {
       data = JSON.parse(JSON.stringify(DEFAULT));
       try {
         var picks = (JSON.parse(localStorage.getItem('gorodfm_taste') || '[]')).slice(0, 8);
-        picks.forEach(function (p) {
+        picks.forEach(function (p, i) {
           var grp = (p === p.toUpperCase()) ? 'Жанры' : 'Артисты';   // uppercase = genre
-          if (!data[grp].some(function (r) { return r.n === p; })) data[grp].unshift({ n: p, w: 84 + Math.floor(Math.random() * 12) });
+          // deterministic weight by pick order — same profile must render byte-identically (fidelity, no Math.random)
+          if (!data[grp].some(function (r) { return r.n === p; })) data[grp].unshift({ n: p, w: Math.max(72, 90 - i * 3) });
         });
       } catch (e) {}
       // keep each group readable
       Object.keys(data).forEach(function (g) { if (data[g].length > 6) data[g] = data[g].slice(0, 6); });
+      applyRejections();   // W1 — reflect player-rejections in the editable vector (close the fidelity loop)
+    }
+    // W1 (fidelity loop): GorodTaste now READS gorodfm_rejected (TwinrWhy writes it on «почему?»→«не моё»).
+    // A matching facet is struck + lowered with provenance; every rejection also surfaces in a dedicated card.
+    function applyRejections() {
+      rejList = [];
+      var rej; try { rej = JSON.parse(localStorage.getItem(REJ_KEY) || '[]'); } catch (e) { rej = []; }
+      (rej || []).forEach(function (id) {
+        var label = REJ_LABELS[id]; if (!label) return;
+        var matched = false;
+        Object.keys(data).forEach(function (g) {
+          data[g].forEach(function (r) {
+            if (r.n === label) { r.rej = true; r.rejFrom = r.w; r.w = Math.min(r.w, 12); matched = true; }
+          });
+        });
+        rejList.push({ id: id, label: label, matched: matched });
+      });
     }
     function rowHtml(r) {
-      return '<div class="taste-row' + (r.pinned ? ' is-pinned' : '') + '" data-tag="' + r.n + '">' +
+      return '<div class="taste-row' + (r.pinned ? ' is-pinned' : '') + (r.rej ? ' is-rejected' : '') + '" data-tag="' + r.n + '">' +
         '<button class="taste-pin' + (r.pinned ? ' is-on' : '') + '" type="button" data-act="pin" aria-label="Закрепить ' + r.n + '">' + PIN + '</button>' +
         '<span class="taste-row-name">' + r.n + '</span>' +
         '<div class="taste-bar"><div class="taste-bar-fill" style="width:' + r.w + '%"></div></div>' +
@@ -13168,6 +13196,15 @@
         });
         body.appendChild(card);
       });
+      if (rejList.length) {                                  // W1 — honest "you rejected these" card (every rejection visible)
+        var rc = document.createElement('div'); rc.className = 'taste-group taste-rej-card';
+        var chips = rejList.map(function (x) { return '<span class="taste-rej-chip' + (x.matched ? ' is-matched' : '') + '">' + x.label + '</span>'; }).join('');
+        var anyMatched = rejList.some(function (x) { return x.matched; });
+        rc.innerHTML = '<div class="taste-group-title">Отклонено в плеере <span>' + rejList.length + '</span></div>' +
+          '<div class="taste-rej-wrap">' + chips + '</div>' +
+          '<p class="taste-rej-cap">Эти причины ты убрал через «почему?» → «не моё» в плеере. Волна их избегает' + (anyMatched ? ', а совпавшие грани выше — понижены' : '') + '. Любую можно вернуть на плеере.</p>';
+        body.appendChild(rc);
+      }
       var share = document.getElementById('taste-share');
       if (share) share.addEventListener('click', function () {
         location.hash = '#/recap';                 // open the weekly recap (GOROD-050); router + GorodRecap take over
