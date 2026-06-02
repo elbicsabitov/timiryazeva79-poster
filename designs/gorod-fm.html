@@ -2073,10 +2073,7 @@
         margin-left: 3px;
       }
 
-      /* Player mini bar gets blue-tinted variant on #/home (Figma 2174:430) */
-      html[data-active-route="#/home"] .player-mini {
-        background: var(--tint-blue-light-20) !important;
-      }
+      /* (cont-11) home-only player-mini blue tint removed — flat bar, consistent across routes */
 
       /* Home is a dedicated dark-black screen (Figma 2174:422) — suppress the
          themed cinema/warm gradient layers so the whole viewport (incl. sidebar
@@ -2123,12 +2120,12 @@
       .home-radio-stage { position: relative; flex: 1 1 auto; display: flex; align-items: center; justify-content: center; min-height: 320px; }
       .home-wave { position: absolute; left: 0; right: 0; bottom: -8px; width: 100%; height: 46%; z-index: 0; pointer-events: none; opacity: 0.9; }
       .home-hero {
-        position: relative; z-index: 1; width: min(360px, 78vw); aspect-ratio: 1 / 1;
-        border: none; padding: 0; cursor: pointer; border-radius: 20px; overflow: hidden; background: #111318;
-        box-shadow: 0 24px 70px -16px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.06), 0 18px 60px -20px var(--home-np);
+        position: relative; z-index: 1; width: min(360px, 78vw, 42dvh); aspect-ratio: 1 / 1;
+        border: none; padding: 0; cursor: pointer; border-radius: var(--r-xl); overflow: hidden; background: var(--surface-0);
+        box-shadow: 0 12px 32px -12px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06);
         transition: transform var(--t-fast), box-shadow var(--t-fast);
       }
-      .home-hero:hover { transform: translateY(-2px); box-shadow: 0 30px 80px -16px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.10), 0 24px 70px -18px var(--home-np); }
+      .home-hero:hover { transform: translateY(-2px); box-shadow: 0 20px 48px -16px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.10); }
       .home-hero:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 4px; }
       .home-hero-art { width: 100%; height: 100%; object-fit: cover; display: block; }
       .home-hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 100%); pointer-events: none; }
@@ -2158,12 +2155,14 @@
       .home-radio-steer { padding: 0 24px; font-size: 15px; font-weight: 700; color: #fff; background: var(--tint-blue-light-20); border: 1px solid var(--brand-blue-light); }
       .home-radio-steer svg { width: 20px; height: 20px; }
       .home-radio-like:hover, .home-radio-steer:hover { transform: translateY(-1px); }
+      .home-radio-like:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.22); }
+      .home-radio-steer:hover { background: rgba(81,104,252,0.30); }
       .home-radio-like:focus-visible, .home-radio-steer:focus-visible, .home-radio-skip:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; }
       .home-radio-skip {
-        min-height: 44px; width: 44px; padding: 0; cursor: pointer; background: none; border: none; color: rgba(255,255,255,0.40);
+        min-height: 44px; width: 44px; padding: 0; cursor: pointer; background: none; border: none; color: rgba(255,255,255,0.55);
         display: inline-flex; align-items: center; justify-content: center; transition: color var(--t-fast);
       }
-      .home-radio-skip:hover { color: rgba(255,255,255,0.70); }
+      .home-radio-skip:hover { color: rgba(255,255,255,0.85); }
       .home-radio-skip svg { width: 20px; height: 20px; }
       @media (max-width: 560px) {
         .home-radio { padding: 16px 16px 32px; gap: 16px; }
