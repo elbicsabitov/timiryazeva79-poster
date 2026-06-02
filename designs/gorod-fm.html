@@ -4093,6 +4093,50 @@
       .discover-near-dist b { color: var(--brand-blue-light); }
       .discover-editorial-title { max-width: 1080px; margin: 30px auto 14px; padding: 0 clamp(16px, 4vw, 28px); font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: #fff; }
 
+      /* GOROD-046b — карта вкуса + distance-dial + редакторский ряд */
+      .discover-map-wrap { max-width: 1080px; margin: 20px auto 0; padding: 0 clamp(16px, 4vw, 28px); }
+      .discover-map-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .discover-map-title { font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: #fff; margin: 0; }
+      .discover-demo-tag { font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-on-dark); border: 1px solid rgba(81, 104, 252, 0.4); border-radius: var(--r-pill); padding: 3px 9px; }
+      .discover-dial { display: inline-flex; gap: 4px; margin-left: auto; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--r-pill); padding: 3px; }
+      .discover-dial-btn { min-height: 36px; padding: 0 14px; border: none; border-radius: var(--r-pill); background: none; color: var(--text-sec); font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: background var(--t-fast), color var(--t-fast); }
+      .discover-dial-btn:hover { color: #fff; }
+      .discover-dial-btn[aria-pressed="true"], .discover-dial-btn.is-on { background: var(--tint-blue-light-20); color: #fff; box-shadow: inset 0 0 0 1px rgba(81, 104, 252, 0.5); }
+      .discover-dial-btn:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .discover-dial-why { font-family: 'Onest', sans-serif; font-size: 13px; color: var(--text-sec); margin: 10px 0 0; max-width: 620px; }
+      .discover-map-stage { position: relative; width: 100%; height: clamp(280px, 42vw, 420px); margin-top: 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.07); overflow: hidden; }
+      .discover-map-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .discover-map-nodes { position: absolute; inset: 0; }
+      .discover-map-node { position: absolute; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 6px 12px 6px 8px; background: rgba(11, 12, 15, 0.72); border: 1px solid rgba(81, 104, 252, 0.45); border-radius: var(--r-pill); color: #fff; font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: transform var(--t-fast), border-color var(--t-fast), background var(--t-fast); }
+      .discover-map-node:hover { transform: translate(-50%, -50%) scale(1.05); border-color: var(--brand-blue-light); background: var(--tint-blue-light-20); }
+      .discover-map-node:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .discover-map-node-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-blue-light); flex: none; }
+      .discover-map-node.is-known { border-color: rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.03); color: var(--text-sec); cursor: default; }
+      .discover-map-node.is-known .discover-map-node-dot { background: rgba(128, 148, 255, 0.4); }
+      .discover-map-node.is-hit { border-color: var(--brand-blue-light); box-shadow: 0 0 0 2px rgba(81, 104, 252, 0.4), 0 6px 22px -8px var(--brand-blue-light); }
+      .discover-map-axis { position: absolute; font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: 0.03em; color: var(--text-quat); pointer-events: none; }
+      .discover-map-axis--y { top: 8px; left: 50%; transform: translateX(-50%); }
+      .discover-map-axis--x { bottom: 8px; left: 50%; transform: translateX(-50%); }
+      .discover-map-foot { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-quat); margin: 10px 0 0; }
+      .discover-editorial-row { max-width: 1080px; margin: 0 auto 8px; padding: 0 clamp(16px, 4vw, 28px); display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; }
+      .discover-editorial-row::-webkit-scrollbar { display: none; }
+      .discover-ed-card { flex: none; width: 268px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform var(--t-fast), border-color var(--t-fast); }
+      .discover-ed-card:hover { transform: translateY(-3px); border-color: var(--brand-blue-light); }
+      .discover-ed-card:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .discover-ed-title { font-family: 'Onest', sans-serif; font-size: 15.5px; font-weight: 800; color: #fff; }
+      .discover-ed-note { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); margin-top: 6px; line-height: 1.45; }
+      .discover-ed-curator { font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 700; color: var(--accent-on-dark); margin-top: 10px; }
+      @media (max-width: 560px) {
+        .discover-dial { margin-left: 0; width: 100%; justify-content: space-between; }
+        .discover-dial-btn { flex: 1 1 auto; }
+        .discover-map-node-label { display: none; }
+        .discover-map-node { min-width: 44px; padding: 0; justify-content: center; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .discover-map-node, .discover-ed-card, .discover-dial-btn { transition: none; }
+        .discover-map-node:hover, .discover-ed-card:hover { transform: translate(-50%, -50%); }
+      }
+
       /* Mobile 2-row gallery container */
       .podborki-gallery-mobile {
         display: none;
@@ -7850,6 +7894,27 @@
             </div>
           </div>
 
+          <!-- D1 карта вкуса + D2 distance-dial (GOROD-046b). Демо-данные. -->
+          <section class="discover-map-wrap" aria-labelledby="discover-map-h">
+            <div class="discover-map-head">
+              <h3 class="discover-map-title" id="discover-map-h">Карта твоего вкуса</h3>
+              <span class="discover-demo-tag">демо-карта</span>
+              <div class="discover-dial" role="group" aria-label="Насколько далеко открывать">
+                <button class="discover-dial-btn" type="button" data-dist="1" aria-pressed="false">Рядом</button>
+                <button class="discover-dial-btn" type="button" data-dist="2" aria-pressed="true">Смело</button>
+                <button class="discover-dial-btn" type="button" data-dist="3" aria-pressed="false">На краю</button>
+              </div>
+            </div>
+            <p class="discover-dial-why" id="discover-dial-why" aria-live="polite"></p>
+            <div class="discover-map-stage">
+              <canvas id="discover-map" class="discover-map-canvas" aria-hidden="true"></canvas>
+              <div class="discover-map-nodes" id="discover-map-nodes" role="list" aria-label="Соседи по вкусу — открой незнакомое"></div>
+              <span class="discover-map-axis discover-map-axis--y" aria-hidden="true">электро ↑ · ↓ органика</span>
+              <span class="discover-map-axis discover-map-axis--x" aria-hidden="true">плотно ← · → бодро</span>
+            </div>
+            <p class="discover-map-foot">Ты — в центре. Чем дальше узел, тем незнакомее. Известное затемнено.</p>
+          </section>
+
           <div class="discover-results" id="discover-results" hidden>
             <div class="discover-results-head">
               <span class="discover-results-title" id="discover-results-title"></span>
@@ -7864,6 +7929,7 @@
           </section>
 
           <h3 class="discover-editorial-title">От редакции</h3>
+          <div class="discover-editorial-row" id="discover-editorial-row" role="list" aria-label="Подборки от редакции — выбор человека, не алгоритма"></div>
 
           <!-- Chip row -->
           <div
@@ -13730,6 +13796,37 @@
       'ПОП': ['Синти-поп', 'Хайпер-поп'], 'ХИП-ХОП': ['Клауд-рэп', 'Трэп'], 'ДИСКО': ['Фанк', 'Ню-диско'],
       'РЭП': ['Грайм', 'Бумбап'], 'R&B': ['Нео-соул', 'Альт-R&B'], 'КЛАССИКА': ['Неоклассика', 'Саундтреки']
     };
+    /* ---- GOROD-046b — карта вкуса + distance-dial + attribute-delta (демо) ---- */
+    var DIST_WHY = {
+      1: 'Рядом: соседи в 1 шаге от твоего вкуса — знакомое настроение, новые имена.',
+      2: 'Смело: 2 шага в сторону — мостики к тому, что ты ещё не слушал.',
+      3: 'На краю: дальние узлы — осознанный выход из пузыря. Может не зайти — и это честно.'
+    };
+    var NODES = [
+      { label:'Дрим-поп', ring:1, ax:-0.35, ay: 0.30, genreId:'ИНДИ', vibe:'indie', why:'В 1 шаге от твоего инди — те же гитарные текстуры, но мягче и воздушнее.' },
+      { label:'Шугейз',   ring:1, ax:-0.55, ay: 0.15, genreId:'ИНДИ', vibe:'indie', why:'Сосед инди по плотности звука — стена гитар, которую ты ещё не слушал.' },
+      { label:'Пост-панк',ring:1, ax: 0.30, ay: 0.45, genreId:'РОК',  vibe:'dark',  why:'Рядом с роком по энергии, но холоднее и ритмичнее.' },
+      { label:'Краут-рок',ring:2, ax: 0.55, ay: 0.10, genreId:'ЭЛЕКТРО', vibe:'drive', why:'Мостик: тот же гипноз-ритм, что в электро, но живыми инструментами.' },
+      { label:'Колд-вейв',ring:2, ax: 0.10, ay:-0.40, genreId:'ПОП',  vibe:'dark',  why:'2 шага от пост-панка — синтезаторный холод, новый для тебя слой.' },
+      { label:'Трип-хоп', ring:2, ax:-0.45, ay:-0.30, genreId:'ХИП-ХОП', vibe:'calm', why:'Между хип-хопом и эмбиентом — медленный бит, которого нет в твоём архиве.' },
+      { label:'Эфиопский джаз', ring:3, ax: 0.70, ay:-0.65, genreId:'ДЖАЗ', vibe:'calm', why:'Край карты: незнакомая ритмика, далеко от всего, что ты слушал.' },
+      { label:'Дунгал',   ring:3, ax:-0.75, ay: 0.70, genreId:'КЛАССИКА', vibe:'calm', why:'Далеко от твоего центра — фолк-традиция, чистое открытие.' },
+      { label:'Витч-хаус',ring:3, ax: 0.40, ay:-0.80, genreId:'ЭЛЕКТРО', vibe:'drive', why:'На краю: тёмная электроника, противоположный конец оси от твоего дрим-попа.' }
+    ];
+    var EDITORIAL = [
+      { title:'Холодная волна Восточной Европы', curator:'собрал Илья, редакция', vibe:'dark',  note:'Не по твоему вектору — по нашему вкусу. 9 треков, которые мы любим этой осенью.' },
+      { title:'Джаз, который не на everynoise', curator:'собрала Аня, редакция', vibe:'calm',  note:'Алгоритм бы это не свёл. Ручной выбор: спиричуэл-джаз и фри-форма.' },
+      { title:'Гаражный звук 2026', curator:'собрал Илья, редакция', vibe:'indie', note:'Свежие релизы недели — то, что мы крутим в редакции, без оглядки на статистику.' }
+    ];
+    var DELTAS = [
+      { kw:['темнее','мрачнее','холоднее'], label:'темнее', dx:0.0, dy:-0.4 },
+      { kw:['светлее','теплее','мягче'],    label:'мягче',  dx:-0.3, dy:0.3 },
+      { kw:['быстрее','бодрее','энергичнее'],label:'быстрее',dx:0.4, dy:0.3 },
+      { kw:['медленнее','спокойнее','тише'], label:'медленнее',dx:-0.4,dy:-0.2 },
+      { kw:['жёстче','жестче','тяжелее','грубее'], label:'жёстче', dx:0.3, dy:0.4 },
+      { kw:['проще','чище','прозрачнее'],    label:'прозрачнее',dx:0.3,dy:-0.1 }
+    ];
+    var mapDist = 2, mapCtx = null, mapCanvas = null, mapWired = false, topbarWired = false, lastDelta = null;
     var inited = false, els = {};
     function $(id) { return document.getElementById(id); }
     function topTaste() {
@@ -13766,6 +13863,7 @@
       });
       els.results.hidden = false;
       els.results.scrollIntoView({ block: 'nearest' });
+      highlightFromQuery(q);   // GOROD-046b — подсветить узел attribute-delta на карте
     }
     function renderNear() {
       if (!els.near) return;
@@ -13789,6 +13887,93 @@
         });
       }
     }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function isKnownNode(n){
+      var tt = topTaste();
+      if (tt.indexOf(n.genreId) !== -1) return true;
+      for (var i=0;i<tt.length;i++){ var nb = NEAR[tt[i]]||[]; for (var j=0;j<nb.length;j++){ if (nb[j].toUpperCase()===n.label.toUpperCase()) return true; } }
+      return false;
+    }
+    function dialWhy(){ var w=$('discover-dial-why'); if(w) w.textContent = DIST_WHY[mapDist]||''; }
+    function drawMap(){
+      mapCanvas = mapCanvas || $('discover-map'); if(!mapCanvas) return;
+      mapCtx = mapCtx || mapCanvas.getContext('2d');
+      var rect = mapCanvas.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio||1, 2);
+      mapCanvas.width = Math.max(1, Math.round(rect.width*dpr)); mapCanvas.height = Math.max(1, Math.round(rect.height*dpr));
+      mapCtx.setTransform(dpr,0,0,dpr,0,0);
+      var W=rect.width, H=rect.height, cx=W/2, cy=H/2, R=Math.min(W,H)/2 - 26;
+      mapCtx.clearRect(0,0,W,H);
+      for (var r=1;r<=3;r++){ mapCtx.beginPath(); mapCtx.arc(cx,cy,R*r/3,0,Math.PI*2); mapCtx.strokeStyle='#5168FC'; mapCtx.globalAlpha=(r<=mapDist)?0.22:0.07; mapCtx.lineWidth=1; mapCtx.stroke(); }
+      mapCtx.globalAlpha=1;
+      mapCtx.beginPath(); mapCtx.arc(cx,cy,5,0,Math.PI*2); mapCtx.fillStyle='#8094ff'; mapCtx.fill();
+      NODES.forEach(function(n){
+        if (n.ring>mapDist) return;
+        var nx=cx+n.ax*R, ny=cy-n.ay*R, known=isKnownNode(n);
+        mapCtx.beginPath(); mapCtx.moveTo(cx,cy); mapCtx.lineTo(nx,ny); mapCtx.strokeStyle='#5168FC'; mapCtx.globalAlpha=known?0.06:0.16; mapCtx.lineWidth=1; mapCtx.stroke();
+        mapCtx.beginPath(); mapCtx.arc(nx,ny,4,0,Math.PI*2); mapCtx.fillStyle=known?'rgba(128,148,255,0.35)':'#5168FC'; mapCtx.globalAlpha=1; mapCtx.fill();
+      });
+      mapCtx.globalAlpha=1;
+    }
+    function renderNodes(){
+      var host=$('discover-map-nodes'); if(!host) return;
+      var rect=(mapCanvas||$('discover-map')).getBoundingClientRect();
+      var W=rect.width, H=rect.height, cx=W/2, cy=H/2, R=Math.min(W,H)/2 - 26;
+      host.innerHTML='';
+      NODES.forEach(function(n){
+        if (n.ring>mapDist) return;
+        var known=isKnownNode(n), nx=cx+n.ax*R, ny=cy-n.ay*R;
+        var b=document.createElement('button'); b.type='button'; b.className='discover-map-node'+(known?' is-known':''); b.setAttribute('role','listitem');
+        b.style.left=Math.round(nx)+'px'; b.style.top=Math.round(ny)+'px';
+        b.setAttribute('aria-label', n.label + (known?' — уже в твоём вкусе':'') + '. ' + n.why);
+        if (known) b.setAttribute('aria-disabled','true');
+        b.innerHTML='<span class="discover-map-node-dot" aria-hidden="true"></span><span class="discover-map-node-label">'+esc(n.label)+'</span>';
+        b.addEventListener('click', function(){
+          if (known){ if(window.TwinrRibbon) window.TwinrRibbon.show('<b>'+esc(n.label)+'</b> уже в твоём вкусе — <span class="ai-why">открой узел снаружи кольца</span>.'); return; }
+          run(n.label + (lastDelta? (' '+lastDelta):''));
+        });
+        host.appendChild(b);
+      });
+    }
+    function paintDial(){
+      [].forEach.call(document.querySelectorAll('.discover-dial-btn'), function(btn){
+        var on=(+btn.getAttribute('data-dist'))===mapDist; btn.setAttribute('aria-pressed', on?'true':'false'); btn.classList.toggle('is-on', on);
+      });
+    }
+    function renderMap(){ drawMap(); renderNodes(); paintDial(); dialWhy(); }
+    function setDist(d){ mapDist=d; renderMap(); if(window.TwinrRibbon) window.TwinrRibbon.show('Диапазон открытия: <b>'+(d===1?'Рядом':d===2?'Смело':'На краю')+'</b> — <span class="ai-why">'+esc((DIST_WHY[d]||'').split(':')[0])+'</span>.'); }
+    function parseDelta(q){
+      var low=(' '+q+' ').toLowerCase(), found=null;
+      for (var i=0;i<DELTAS.length;i++){ for (var j=0;j<DELTAS[i].kw.length;j++){ if(low.indexOf(DELTAS[i].kw[j])!==-1){ found=DELTAS[i]; break; } } if(found) break; }
+      return found;
+    }
+    function highlightFromQuery(q){
+      var d=parseDelta(q); lastDelta = d? d.label : null;
+      var host=$('discover-map-nodes'); if(!host) return;
+      var tx=d?d.dx:0, ty=d?d.dy:0, best=null, bestD=1e9;
+      NODES.forEach(function(n){ if(n.ring>mapDist||isKnownNode(n)) return; var dd=(n.ax-tx)*(n.ax-tx)+(n.ay-ty)*(n.ay-ty); if(dd<bestD){bestD=dd;best=n;} });
+      [].forEach.call(host.querySelectorAll('.discover-map-node'), function(b){ b.classList.toggle('is-hit', best && b.querySelector('.discover-map-node-label').textContent===best.label); });
+    }
+    function renderEditorial(){
+      var host=$('discover-editorial-row'); if(!host) return; host.innerHTML='';
+      EDITORIAL.forEach(function(ed){
+        var c=document.createElement('button'); c.type='button'; c.className='discover-ed-card'; c.setAttribute('role','listitem');
+        c.innerHTML='<div class="discover-ed-title"></div><div class="discover-ed-note"></div><div class="discover-ed-curator"></div>';
+        c.querySelector('.discover-ed-title').textContent=ed.title; c.querySelector('.discover-ed-note').textContent=ed.note; c.querySelector('.discover-ed-curator').textContent=ed.curator;
+        c.addEventListener('click', function(){ run(ed.title); });
+        host.appendChild(c);
+      });
+    }
+    function wireMap(){
+      if(mapWired) return;
+      [].forEach.call(document.querySelectorAll('.discover-dial-btn'), function(btn){ btn.addEventListener('click', function(){ setDist(+btn.getAttribute('data-dist')); }); });
+      window.addEventListener('resize', function(){ if(location.hash==='#/podborki') renderMap(); });
+      mapWired=true;
+    }
+    function wireTopbar(){
+      if(topbarWired) return; var tb=document.querySelector('.topbar-search'); if(!tb) return;
+      tb.addEventListener('click', function(){ if(location.hash!=='#/podborki') location.hash='#/podborki'; setTimeout(function(){ var inp=$('discover-input'); if(inp){ inp.focus(); inp.select(); } }, 80); });
+      topbarWired=true;
+    }
     function init() {
       if (inited) return;
       els.input = $('discover-input'); if (!els.input) return;
@@ -13804,11 +13989,12 @@
         window.location.hash = '#/home';
         if (window.TwinrRibbon) setTimeout(function () { window.TwinrRibbon.show('Запустил волну из «Открыть» — <span class="ai-why">по твоему запросу</span>.'); }, 400);
       });
+      wireMap(); wireTopbar(); renderEditorial();      // GOROD-046b
       inited = true;
     }
-    function onRoute() { if (location.hash === '#/podborki') { init(); renderNear(); } }
+    function onRoute() { if (location.hash === '#/podborki') { init(); renderNear(); setTimeout(renderMap, 40); } }
     window.addEventListener('hashchange', onRoute);
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ onRoute(); wireTopbar(); }); else { onRoute(); wireTopbar(); }
   })();
   </script>
 
