@@ -125,6 +125,7 @@
         --brand-blue-light:    #5168FC;                  /* Figma "blue light" */
         --tint-blue-light-20:  rgba(81, 104, 252, 0.2);  /* active chip + home player bar */
         --np-accent:           var(--brand-blue-light);  /* now-playing accent — JS overrides from cover (GOROD-042) */
+        --accent-on-dark:      #8094ff;                  /* lighter accent for SMALL text on near-black — AA 6.8:1 vs #111318 (brand #5168FC is only 4.25:1) (GOROD-052) */
         --featured-cta-bg:     #2d2d5d;                  /* purple bar under featured card */
         --home-bg-base:        #0C0B0B;                  /* dark home background */
         --tile-shade-strong:   linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
@@ -2853,6 +2854,73 @@
         margin-top: 13px; font-family: 'Onest', sans-serif; font-size: 11.5px; color: var(--text-quat);
       }
       @media (max-width: 480px) { .np-transition-title { font-size: 25px; } }
+
+      /* =====================================================================
+         GOROD-052 — «Открытый профиль» pitch screen. The wedge competitors
+         HIDE, made legible + editable: black-box-vs-open contrast, the real
+         vector with provenance, persisted rejections, one live edit, moat
+         caption. Reads live gorodfm_taste + gorodfm_rejected (fidelity — what
+         is shown IS the real profile). Near-black + ONE accent; the closed box
+         is deliberately grayscale/lifeless (rhetoric: their box is dead).
+         ===================================================================== */
+      .profile-stage { max-width: 1000px; margin: 0 auto; padding: clamp(20px, 4vw, 44px) clamp(16px, 4vw, 40px) 64px; }
+      .profile-kicker { display: inline-flex; align-items: center; gap: 7px; font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-on-dark); }
+      .profile-kicker-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-blue-light); box-shadow: 0 0 10px var(--brand-blue-light); }
+      .profile-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: clamp(28px, 5vw, 44px); line-height: 1.05; color: #fff; margin: 12px 0 10px; text-wrap: balance; }
+      .profile-sub { font-family: 'Onest', sans-serif; font-size: 15.5px; line-height: 1.5; color: var(--text-sec); max-width: 64ch; text-wrap: pretty; margin: 0 0 20px; }
+      .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+      .profile-cta { display: inline-flex; align-items: center; gap: 7px; height: 44px; padding: 0 18px; border-radius: var(--r-pill); font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; border: 1px solid transparent; transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast); }
+      .profile-cta--primary { background: var(--brand-blue-light); color: #fff; }
+      .profile-cta--primary:hover { background: #6d80ff; }
+      .profile-cta--ghost { background: transparent; border-color: rgba(255, 255, 255, 0.18); color: var(--text-sec); }
+      .profile-cta--ghost:hover { color: #fff; border-color: rgba(255, 255, 255, 0.4); }
+      .profile-cta:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+
+      .profile-contrast { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+      @media (max-width: 720px) { .profile-contrast { grid-template-columns: 1fr; } }
+      .profile-box { border-radius: 18px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); background: #111318; }
+      .profile-box-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+      .profile-box-label { font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; color: #fff; }
+      .profile-box-tag { font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 9px; border-radius: var(--r-pill); white-space: nowrap; }
+      .profile-box--closed { filter: grayscale(1); opacity: 0.82; }
+      .profile-box--closed .profile-box-tag { background: rgba(255, 255, 255, 0.08); color: var(--text-quat); }
+      .profile-faux { position: relative; min-height: 156px; }
+      .profile-faux-rows { filter: blur(5px); pointer-events: none; user-select: none; }
+      .profile-faux-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+      .profile-faux-name { width: 84px; height: 11px; border-radius: 4px; background: rgba(255, 255, 255, 0.22); flex: none; }
+      .profile-faux-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.13); }
+      .profile-faux-lock { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; text-align: center; padding: 0 10px; }
+      .profile-faux-lock svg { width: 26px; height: 26px; color: var(--text-sec); }
+      .profile-faux-lock span { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); max-width: 26ch; line-height: 1.45; }
+      .profile-box--open { border-color: rgba(81, 104, 252, 0.4); box-shadow: 0 0 40px -10px var(--brand-blue-light); }
+      .profile-box--open .profile-box-tag { background: var(--tint-blue-light-20); color: #c7d0ff; }
+
+      .profile-facet { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; padding: 11px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+      .profile-facet:first-child { border-top: none; padding-top: 2px; }
+      .profile-facet-name { font-family: 'Onest', sans-serif; font-size: 14.5px; font-weight: 600; color: #fff; }
+      .profile-facet-pct { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent-on-dark); text-align: right; }
+      .profile-facet-bar { grid-column: 1 / -1; height: 7px; border-radius: 4px; background: rgba(255, 255, 255, 0.07); overflow: hidden; margin: 5px 0 3px; }
+      .profile-facet-fill { height: 100%; border-radius: 4px; background: var(--brand-blue-light); transition: width var(--t-mid); }
+      .profile-facet-foot { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .profile-facet-prov { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-sec); display: inline-flex; align-items: center; gap: 6px; }
+      .profile-facet-prov::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--brand-blue-light); flex: none; }
+      .profile-facet-lower { background: none; border: 1px solid rgba(255, 255, 255, 0.16); color: var(--text-sec); font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: var(--r-pill); cursor: pointer; transition: color var(--t-fast), border-color var(--t-fast); white-space: nowrap; }
+      .profile-facet-lower:hover { color: #fff; border-color: rgba(255, 255, 255, 0.4); }
+      .profile-facet-lower:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+
+      .profile-receipt { font-family: 'Onest', sans-serif; font-size: 13px; color: var(--accent-on-dark); min-height: 18px; margin: 4px 0 0; font-weight: 600; }
+      .profile-section-h { font-family: 'Onest', sans-serif; font-size: 18px; font-weight: 800; color: #fff; margin: 26px 0 4px; }
+      .profile-section-sub { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); margin: 0 0 14px; text-wrap: pretty; max-width: 68ch; }
+      .profile-panel { background: #111318; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; padding: 18px 20px; }
+      .profile-rej-list { display: flex; flex-wrap: wrap; gap: 8px; }
+      .profile-rej-chip { font-family: 'Onest', sans-serif; font-size: 13px; color: var(--text-sec); text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, 0.4); padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, 0.12); }
+      .profile-empty { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); margin: 0; line-height: 1.5; text-wrap: pretty; }
+
+      .profile-ad-strip { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; background: #111318; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 14px 18px; margin-top: 14px; }
+      .profile-ad-text { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); line-height: 1.45; flex: 1 1 280px; }
+      .profile-ad-text b { color: #fff; font-weight: 700; }
+      .profile-moat { margin-top: 28px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.55; color: var(--text-quat); text-wrap: pretty; max-width: 74ch; }
+      .profile-moat b { color: var(--text-sec); font-weight: 700; }
 
       /* Sonify-the-wave toggle on the taste hero */
       .taste-sonify {
@@ -9481,6 +9549,10 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h2l2-5 3 11 2.5-8 1.5 4H19"/></svg>
                   <span id="taste-sonify-label">Озвучить волну</span>
                 </button>
+                <a class="taste-share-btn" href="#/profile" id="taste-open-profile">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Открытый профиль
+                </a>
                 <span class="taste-delta" id="taste-delta" aria-live="polite">▲ +darkwave · −арена-рок за неделю</span>
               </div>
             </div>
@@ -9511,6 +9583,57 @@
         </div>
       </section>
       <!-- /#/taste -->
+
+      <!-- GOROD-052 — «Открытый профиль» pitch/demo screen -->
+      <section data-page="profile" aria-labelledby="page-profile-heading" aria-hidden="true">
+        <div class="profile-stage">
+          <span class="profile-kicker"><span class="profile-kicker-dot" aria-hidden="true"></span>Twinr · твоя логика открыта</span>
+          <h1 id="page-profile-heading" class="profile-title">Открытый профиль</h1>
+          <p class="profile-sub">Spotify и Яндекс прячут твой профиль — это их чёрный ящик и их ров. Мы показываем каждую грань, объясняем, откуда она, и даём поправить. Доверие строится не на словах, а на том, что ты можешь проверить.</p>
+          <div class="profile-actions">
+            <a class="profile-cta profile-cta--primary" href="#/taste">Поправить профиль →</a>
+            <a class="profile-cta profile-cta--ghost" href="#/home">← К волне</a>
+          </div>
+
+          <div class="profile-contrast">
+            <div class="profile-box profile-box--closed">
+              <div class="profile-box-head"><span class="profile-box-label">Яндекс · Spotify</span><span class="profile-box-tag">скрыто</span></div>
+              <div class="profile-faux">
+                <div class="profile-faux-rows" aria-hidden="true">
+                  <div class="profile-faux-row"><span class="profile-faux-name"></span><span class="profile-faux-bar"></span></div>
+                  <div class="profile-faux-row"><span class="profile-faux-name"></span><span class="profile-faux-bar"></span></div>
+                  <div class="profile-faux-row"><span class="profile-faux-name"></span><span class="profile-faux-bar"></span></div>
+                  <div class="profile-faux-row"><span class="profile-faux-name"></span><span class="profile-faux-bar"></span></div>
+                </div>
+                <div class="profile-faux-lock">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span>Профиль скрыт умышленно. Ты не видишь, почему играет трек — и не можешь поспорить.</span>
+                </div>
+              </div>
+            </div>
+            <div class="profile-box profile-box--open">
+              <div class="profile-box-head"><span class="profile-box-label">Город ФМ</span><span class="profile-box-tag">открыто · твоё</span></div>
+              <div id="profile-facets"><!-- real facets injected by GorodProfile --></div>
+            </div>
+          </div>
+
+          <p class="profile-receipt" id="profile-receipt" role="status" aria-live="polite"></p>
+
+          <h2 class="profile-section-h">Что ты оспорил</h2>
+          <p class="profile-section-sub">Любую причину, по которой играет трек, можно убрать — и она исчезает из волны. Так профиль остаётся твоим, а не алгоритма.</p>
+          <div class="profile-panel">
+            <div class="profile-rej-list" id="profile-rejected"></div>
+          </div>
+
+          <div class="profile-ad-strip">
+            <span class="profile-ad-text">Даже <b>реклама</b> собрана из этого профиля — и её видно. Не случайный баннер, а то, что близко твоему вкусу.</span>
+            <a class="profile-cta profile-cta--ghost" href="#/taste">Посмотреть →</a>
+          </div>
+
+          <p class="profile-moat">Профиль строится из <b>объяснённых решений</b> — каждый лайк, скип и «не моё» с причиной. Это нельзя купить ретроспективно: у конкурентов нет интерфейса собрать объяснённые предпочтения. В этом ров.</p>
+        </div>
+      </section>
+      <!-- /#/profile -->
 
     </main>
   </div>
@@ -10606,7 +10729,7 @@
         trackView:    'gorod-fm.track-view',
       };
 
-      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste'];
+      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste', '#/profile'];
       const DEFAULT_ROUTE = '#/map';
 
       /* ---- localStorage helpers -------------------------------------------- */
@@ -13287,6 +13410,100 @@
       window.TwinrTransition = { play: play, next: nextTrack, prev: prevTrack };
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-052 — «Открытый профиль» pitch screen. Makes the taste vector
+     competitors HIDE legible + editable: reads live gorodfm_taste +
+     gorodfm_rejected (fidelity — what's shown IS the real profile), names the
+     provenance of each facet, lists persisted rejections, gives one live edit
+     with a visible receipt, and frames the moat. Decoupled trailing module. */
+  (function () {
+    'use strict';
+    var TASTE_KEY = 'gorodfm_taste', REJ_KEY = 'gorodfm_rejected';
+    // Mirror of TwinrWhy REASONS id→label (GOROD-041) so rejected facets read human.
+    var REJ_LABELS = { artist: 'Егор Крид', vocal: 'Тёплый поп-вокал', tempo: 'Темп ~95 BPM' };
+    // Honest behavioral defaults when onboarding picks are absent — `prov` names
+    // HOW the facet entered the profile, never marketing.
+    var FALLBACK = [
+      { n: 'Арена-рок',      w: 80, prov: 'усилено: дослушиваешь до конца' },
+      { n: 'Хип-хоп 2010-х', w: 66, prov: 'из прослушивания за месяц' },
+      { n: 'Электро-поп',    w: 54, prov: 'по времени суток — вечер' },
+      { n: 'Инди',           w: 40, prov: 'смежное — рядом с твоим вектором' }
+    ];
+    var els = {}, built = false, receiptTimer = 0;
+    function $(id) { return document.getElementById(id); }
+    function readPicks() { try { return (JSON.parse(localStorage.getItem(TASTE_KEY) || '[]')).slice(0, 6); } catch (e) { return []; } }
+    function readRej() { try { return JSON.parse(localStorage.getItem(REJ_KEY) || '[]'); } catch (e) { return []; } }
+
+    function facets() {
+      var out = [];
+      readPicks().forEach(function (p) { out.push({ n: p, w: 84, prov: 'из онбординга — ты выбрал сам' }); });
+      FALLBACK.forEach(function (f) { if (out.length < 5 && !out.some(function (o) { return o.n === f.n; })) out.push(f); });
+      return out.slice(0, 5);
+    }
+
+    function showReceipt(msg) {
+      if (!els.receipt) return;
+      els.receipt.textContent = msg;
+      clearTimeout(receiptTimer);
+      receiptTimer = setTimeout(function () { els.receipt.textContent = ''; }, 4200);
+    }
+
+    function renderFacets() {
+      if (!els.facets) return;
+      els.facets.innerHTML = '';
+      facets().forEach(function (f) {
+        var row = document.createElement('div'); row.className = 'profile-facet'; row.setAttribute('data-tag', f.n);
+        row.innerHTML =
+          '<span class="profile-facet-name"></span>' +
+          '<span class="profile-facet-pct">' + f.w + '%</span>' +
+          '<div class="profile-facet-bar"><div class="profile-facet-fill" style="width:' + f.w + '%"></div></div>' +
+          '<div class="profile-facet-foot"><span class="profile-facet-prov"></span>' +
+          '<button class="profile-facet-lower" type="button" data-act="lower" aria-label="Понизить грань в профиле">меньше</button></div>';
+        row.querySelector('.profile-facet-name').textContent = f.n;
+        row.querySelector('.profile-facet-prov').textContent = f.prov;
+        els.facets.appendChild(row);
+      });
+    }
+
+    function renderRejected() {
+      if (!els.rej) return;
+      var rej = readRej().filter(function (id) { return REJ_LABELS[id]; });
+      if (!rej.length) {
+        els.rej.innerHTML = '<p class="profile-empty">Пока ничего не оспорено — но любую причину можно убрать прямо на плеере: «почему?» → «не моё». Профиль тут же пересчитается.</p>';
+        return;
+      }
+      els.rej.innerHTML = '';
+      rej.forEach(function (id) {
+        var chip = document.createElement('span'); chip.className = 'profile-rej-chip'; chip.textContent = REJ_LABELS[id];
+        els.rej.appendChild(chip);
+      });
+    }
+
+    function wireEdit() {
+      els.facets.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-act="lower"]'); if (!btn) return;
+        var row = btn.closest('.profile-facet'); if (!row) return;
+        var fill = row.querySelector('.profile-facet-fill'), pct = row.querySelector('.profile-facet-pct');
+        var w = Math.max(0, (parseInt(pct.textContent, 10) || 0) - 12);
+        fill.style.width = w + '%'; pct.textContent = w + '%';
+        showReceipt('Понизил «' + row.getAttribute('data-tag') + '» → волна пересчиталась на лету. Видишь — профиль слушается тебя.');
+        if (window.TwinrWave) window.TwinrWave.bump();
+      });
+    }
+
+    function render() { renderFacets(); renderRejected(); }
+    function init() {
+      els.facets = $('profile-facets'); els.rej = $('profile-rejected'); els.receipt = $('profile-receipt');
+      if (!els.facets) return;
+      wireEdit();
+      built = true;
+    }
+    function onRoute() { if ((location.hash || '') === '#/profile') { if (!built) init(); render(); } }
+    window.addEventListener('hashchange', onRoute);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
   })();
   </script>
 
