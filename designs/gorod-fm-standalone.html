@@ -136,7 +136,7 @@
         /* — Layout geometry — */
         --sidebar-w:    240px;
         --topbar-h:     64px;
-        --player-mini-h: 84px;   /* +12 for the always-on «почему» reason line (GOROD-040) */
+        --player-mini-h: 72px;   /* calm now-playing bar: single «почему» caption + play/next (cont-11) */
         --tabbar-h:     64px;
 
         /* — Transitions — */
@@ -553,12 +553,12 @@
         z-index: 60;
         display: flex;
         align-items: center;
-        gap: 16px;
-        padding: 0 24px;
-        background: rgba(12, 11, 11, 0.85);
-        backdrop-filter: blur(40px) saturate(1.5);
-        -webkit-backdrop-filter: blur(40px) saturate(1.5);
-        border-top: 1px solid var(--surf-glass-12);
+        gap: 14px;
+        padding: 0 20px;
+        background: rgba(11, 12, 15, 0.72);
+        backdrop-filter: blur(28px) saturate(1.2);
+        -webkit-backdrop-filter: blur(28px) saturate(1.2);
+        border-top: 1px solid var(--hairline);
         cursor: pointer;
         transition: background var(--t-fast);
         /* Progress bar sits at very top of mini bar */
@@ -566,7 +566,15 @@
       }
 
       .player-mini:hover {
-        background: rgba(12, 11, 11, 0.92);
+        background: rgba(11, 12, 15, 0.80);
+      }
+
+      /* Opaque fallbacks: no backdrop-filter support + reduced-transparency pref */
+      @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        .player-mini { background: var(--surface-0); }
+      }
+      @media (prefers-reduced-transparency: reduce) {
+        .player-mini { background: var(--surface-0); backdrop-filter: none; -webkit-backdrop-filter: none; }
       }
 
       /* Thin progress bar at top edge of mini bar */
@@ -583,21 +591,20 @@
       .player-mini-progress-fill {
         height: 100%;
         width: 30%;
-        background: var(--brand-blue-light);   /* single blue accent — player neutral until real art */
+        background: var(--np-accent);   /* solid accent, tints from cover art (NowPlayingTint) */
         border-radius: var(--r-pill);
         transition: width var(--t-slow), background var(--t-slow);
       }
 
       /* Album art thumbnail — 60×60 real cover, glows in the cover's color */
       .player-mini-art {
-        width: 60px;
-        height: 60px;
-        border-radius: var(--r-base);
+        width: 48px;
+        height: 48px;
+        border-radius: var(--r-sm);
         background: var(--surf-glass-20);
         flex-shrink: 0;
         overflow: hidden;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
-        transition: box-shadow var(--t-slow);
       }
       .player-mini-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
@@ -631,8 +638,9 @@
       }
 
       .player-mini-title {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 600;
+        line-height: 1.15;
         color: var(--text-pri);
         white-space: nowrap;
         overflow: hidden;
@@ -642,20 +650,27 @@
       .player-mini-artist {
         font-size: 13px;
         font-weight: 400;
+        line-height: 1.15;
         color: var(--text-sec);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
-      /* GOROD-040 — always-on behavioral «почему» line (L1). The reason lives
-         ON the track, passively visible; tap the pill for L2 (Исправь причину). */
+      /* GOROD-040 — the ONE «почему» affordance: always-on behavioral reason as a
+         tappable CAPTION (the de-cluttered single entry point → L2 #why-pop reject
+         loop). Tier-1 CONTENT styling (not pill chrome) — the transparency wedge. */
       .player-mini-reason {
-        display: flex; align-items: center; gap: 5px; margin-top: 2px;
-        font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 500;
+        display: flex; align-items: center; gap: 5px; margin-top: 0;
+        background: none; border: none; padding: 0; text-align: left;
+        width: fit-content; max-width: 100%; cursor: pointer;
+        font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 500; line-height: 1.15;
         color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
-      .player-mini-reason svg { width: 11px; height: 11px; flex: none; color: var(--brand-blue-light); }
+      .player-mini-reason:hover b { color: #fff; }
+      .player-mini-reason:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 2px; border-radius: var(--r-sm); }
+      .player-mini-reason:focus:not(:focus-visible) { outline: none; }
+      .player-mini-reason svg { width: 11px; height: 11px; flex: none; color: var(--accent-on-dark); }
       .player-mini-reason b { color: #cdd4f5; font-weight: 600; }
 
       /* GOROD-041 — «Почему играет сейчас» L2 popover: explainable attributes,
@@ -701,10 +716,12 @@
         gap: 8px;
         flex-shrink: 0;
       }
+      /* gap kept at 8px: only 2 controls now (play+next); ::before keeps 44px targets */
 
       .player-ctrl-btn {
-        width: 44px;
-        height: 44px;
+        position: relative;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -714,14 +731,19 @@
         flex-shrink: 0;
       }
 
+      /* 44px hit target on the 32px visual disc (G7) */
+      .player-ctrl-btn::before { content: ''; position: absolute; inset: -6px; }
+
       .player-ctrl-btn:hover {
-        background: var(--surf-glass-12);
+        background: var(--surf-hover);
         color: var(--text-pri);
       }
+      .player-ctrl-btn:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 2px; }
+      .player-ctrl-btn:focus:not(:focus-visible) { outline: none; }
 
       .player-ctrl-btn svg {
-        width: 22px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
         stroke: currentColor;
         fill: none;
         stroke-width: 1.8;
@@ -729,17 +751,26 @@
         stroke-linejoin: round;
       }
 
-      .player-ctrl-btn--play svg {
-        fill: currentColor;
+      /* Play = the single accent: filled blue circle, distinct primacy */
+      .player-ctrl-btn--play {
+        background: var(--brand-blue-light);
+        color: #fff;
+        border-radius: 50%;
+      }
+      .player-ctrl-btn--play:hover { background: var(--brand-blue-hover); color: #fff; }
+      .player-ctrl-btn--play svg { fill: #fff; stroke: none; width: 16px; height: 16px; }
+
+      /* Stateful play/pause — glyph derived purely from aria-pressed; ONE isPlaying
+         state drives mini + full + track play buttons (fixes the desync bug). */
+      .js-play-toggle .ic { display: none; }
+      .js-play-toggle[aria-pressed="false"] .ic--play { display: block; }
+      .js-play-toggle[aria-pressed="true"]  .ic--pause { display: block; }
+      @media (prefers-reduced-motion: no-preference) {
+        .js-play-toggle .ic { transition: opacity var(--d-micro) var(--ease-standard); }
       }
 
-      /* Volume + Share area */
-      .player-mini-extras {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        flex-shrink: 0;
-      }
+      /* (cont-11) .player-mini-extras removed from the bar — share/volume/steer
+         relocated (share→full-player action row, steer→home/discover wave dials). */
 
       /* ---- Player full overlay ------------------------------------------- */
 
@@ -2953,36 +2984,10 @@
         .ai-launcher { right: 14px; }
       }
 
-      /* Native Twinr AI inside the player — explanation + steer (research 07/09) */
-      .player-why-pill {
-        display: inline-flex; align-items: center; gap: 6px;
-        height: 34px; padding: 0 12px 0 9px;
-        border-radius: var(--r-pill);
-        background: var(--tint-blue-light-20);
-        border: 1px solid rgba(81, 104, 252, 0.35);
-        color: #c7d0ff; cursor: pointer;
-        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600;
-        white-space: nowrap;
-        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
-      }
-      .player-why-pill:hover { background: rgba(81, 104, 252, 0.32); color: #fff; border-color: var(--brand-blue-light); }
-      .player-why-pill:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
-      .player-why-pill svg { width: 15px; height: 15px; flex-shrink: 0; }
-      .player-steer-btn {
-        width: 38px; height: 38px; border-radius: 50%; border: none; flex-shrink: 0;
-        background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark));
-        color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 4px 16px rgba(81, 104, 252, 0.45);
-        transition: transform var(--t-fast), box-shadow var(--t-fast);
-      }
-      .player-steer-btn:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(81, 104, 252, 0.6); }
-      .player-steer-btn:active { transform: scale(0.95); }
-      .player-steer-btn:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
-      .player-steer-btn svg { width: 19px; height: 19px; }
-      @media (max-width: 720px) {
-        .player-why-pill span { display: none; }
-        .player-why-pill { padding: 0 9px; }
-      }
+      /* (cont-11) .player-why-pill + .player-steer-btn removed from the mini bar —
+         de-cluttered to ONE «почему» caption (.player-mini-reason). Steering stays
+         reachable via home/discover wave dials; per-track share lives in the full
+         player action row. */
 
       /* Wave dials — lazy steering popover (Yandex «Моя волна» style, research 09) */
       .wave-dials {
@@ -7148,7 +7153,7 @@
     html[data-surface="web"] .mobile-tabbar     { display: none !important; }
     html[data-surface="web"] .app-shell         { grid-template-columns: var(--sidebar-w) 1fr !important; }
     html[data-surface="web"] #app               { grid-column: 2 !important; }
-    html[data-surface="web"] .player-mini       { display: flex !important; bottom: 0 !important; padding: 0 24px !important; }
+    html[data-surface="web"] .player-mini       { display: flex !important; bottom: 0 !important; padding: 0 20px !important; padding-bottom: max(0px, env(safe-area-inset-bottom)) !important; }
   </style>
 </head>
 
@@ -8673,12 +8678,16 @@
               </button>
 
               <button
-                class="player-transport-btn player-transport-btn--play"
+                class="player-transport-btn player-transport-btn--play js-play-toggle"
                 type="button"
                 id="track-page-play"
-                aria-label="Воспроизвести / Пауза"
+                aria-label="Пауза"
+                aria-pressed="true"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+                <svg class="ic ic--play" viewBox="0 0 24 24" aria-hidden="true">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <svg class="ic ic--pause" viewBox="0 0 24 24" aria-hidden="true">
                   <rect x="6" y="4" width="4" height="16"/>
                   <rect x="14" y="4" width="4" height="16"/>
                 </svg>
@@ -9912,7 +9921,7 @@
     class="player-mini"
     id="player-mini"
     role="region"
-    aria-label="Мини-плеер"
+    aria-label="Сейчас играет"
   >
     <!-- Thin progress bar at very top edge -->
     <div class="player-mini-progress-bar" aria-hidden="true">
@@ -9928,34 +9937,28 @@
     <div class="player-mini-meta">
       <div class="player-mini-title" id="player-track-title">Слеза</div>
       <div class="player-mini-artist" id="player-track-artist">Егор Крид</div>
-      <div class="player-mini-reason" id="player-track-reason">
+      <button class="player-mini-reason" id="player-track-reason" type="button" aria-label="Почему играет этот трек" onclick="event.stopPropagation()">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
         <span>Ты дослушал <b>Егора Крида</b> до конца 3 раза</span>
-      </div>
+      </button>
     </div>
 
     <!-- Transport controls — stop propagation so they don't trigger full overlay -->
     <div class="player-mini-controls" onclick="event.stopPropagation()">
+      <!-- Play = primary (filled blue), Next = ghost. Prev moved to full player. -->
       <button
-        class="player-ctrl-btn"
+        class="player-ctrl-btn player-ctrl-btn--play js-play-toggle"
         type="button"
-        aria-label="Предыдущий трек"
-        id="btn-prev"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <polygon points="19 20 9 12 19 4 19 20"/>
-          <line x1="5" y1="19" x2="5" y2="5"/>
-        </svg>
-      </button>
-
-      <button
-        class="player-ctrl-btn player-ctrl-btn--play"
-        type="button"
-        aria-label="Воспроизвести"
+        aria-label="Пауза"
+        aria-pressed="true"
         id="btn-play"
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="ic ic--play" viewBox="0 0 24 24" aria-hidden="true">
           <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <svg class="ic ic--pause" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="6" y="4" width="4" height="16"/>
+          <rect x="14" y="4" width="4" height="16"/>
         </svg>
       </button>
 
@@ -9972,44 +9975,8 @@
       </button>
     </div>
 
-    <!-- Volume + Share extras -->
-    <div class="player-mini-extras" onclick="event.stopPropagation()">
-      <!-- Native Twinr AI affordances — explanation + steer live ON the player -->
-      <button class="player-why-pill" type="button" id="player-why" aria-label="Почему играет этот трек">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
-        <span>почему?</span>
-      </button>
-      <button class="player-steer-btn" type="button" id="player-steer" aria-label="Twinr — сделать по-другому">
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3.5l2.5 7 4-14 2.5 7H21"/></svg>
-      </button>
-      <button
-        class="player-ctrl-btn"
-        type="button"
-        aria-label="Поделиться треком"
-        id="btn-share"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="18" cy="5" r="3"/>
-          <circle cx="6" cy="12" r="3"/>
-          <circle cx="18" cy="19" r="3"/>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-        </svg>
-      </button>
-
-      <button
-        class="player-ctrl-btn"
-        type="button"
-        aria-label="Громкость"
-        id="btn-volume"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-          <path d="M19.07 4.93a10 10 0 010 14.14"/>
-          <path d="M15.54 8.46a5 5 0 010 7.07"/>
-        </svg>
-      </button>
-    </div>
+    <!-- (cont-11) .player-mini-extras removed — share → full-player action row,
+         steer → home/discover wave dials, volume → OS/hardware. Bar stays minimal. -->
   </div>
 
   <!-- Wave dials — lazy steering surface (Yandex «Моя волна» style), opens from player ✨ -->
@@ -10451,12 +10418,16 @@
         </button>
 
         <button
-          class="player-transport-btn player-transport-btn--play"
+          class="player-transport-btn player-transport-btn--play js-play-toggle"
           type="button"
           id="player-full-play"
-          aria-label="Воспроизвести / Пауза"
+          aria-label="Пауза"
+          aria-pressed="true"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="ic ic--play" viewBox="0 0 24 24" aria-hidden="true">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <svg class="ic ic--pause" viewBox="0 0 24 24" aria-hidden="true">
             <rect x="6" y="4" width="4" height="16"/>
             <rect x="14" y="4" width="4" height="16"/>
           </svg>
@@ -11052,11 +11023,7 @@
           console.log('[track-page] prev clicked');
         });
       }
-      if (trackPlayBtn) {
-        trackPlayBtn.addEventListener('click', function () {
-          console.log('[track-page] play/pause clicked');
-        });
-      }
+      // play/pause for #track-page-play is owned by TwinrTransition (single isPlaying state)
       if (trackNextBtn) {
         trackNextBtn.addEventListener('click', function () {
           console.log('[track-page] next clicked');
@@ -12737,7 +12704,7 @@
       });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dock.classList.contains('is-open')) collapse(); });
       // Native AI: the player itself is the entry point (research 07 — "AI is a layer")
-      var pw = document.getElementById('player-why');
+      var pw = document.getElementById('player-track-reason');
       if (pw) pw.addEventListener('click', function (e) { e.stopPropagation(); if (window.TwinrWhy) window.TwinrWhy.open(); else ask('why', 'Почему именно этот трек?'); });
       var ps = document.getElementById('player-steer');
       if (ps) ps.addEventListener('click', function (e) { e.stopPropagation(); if (window.WaveDials) window.WaveDials.open(); else ask('different', '🔀 Сделай по-другому'); });
@@ -13716,6 +13683,19 @@
     function nextTrack() { step(1); }
     function prevTrack() { step(-1); }
 
+    // Single play/pause source of truth across mini + full + track surfaces (cont-11).
+    var playerState = { isPlaying: true };
+    var PLAY_TOGGLES = ['btn-play', 'player-full-play', 'track-page-play'];
+    function renderPlay() {
+      var p = playerState.isPlaying;
+      PLAY_TOGGLES.forEach(function (id) {
+        var b = document.getElementById(id);
+        if (b) b.setAttribute('aria-pressed', String(p));
+      });
+    }
+    function setPlaying(n) { if (playerState.isPlaying === n) return; playerState.isPlaying = n; renderPlay(); }
+    function togglePlay() { setPlaying(!playerState.isPlaying); }
+
     function init() {
       el = $('np-transition'); if (!el) return;
       card = $('np-transition-card'); titleEl = $('np-transition-title');
@@ -13727,10 +13707,15 @@
       ['btn-next', 'player-full-next'].forEach(function (id) {
         var b = $(id); if (b) b.addEventListener('click', function (e) { e.stopPropagation(); nextTrack(); });
       });
-      ['btn-prev', 'player-full-prev'].forEach(function (id) {
+      ['player-full-prev'].forEach(function (id) {
         var b = $(id); if (b) b.addEventListener('click', function (e) { e.stopPropagation(); prevTrack(); });
       });
-      window.TwinrTransition = { play: play, next: nextTrack, prev: prevTrack };
+      // Play/pause: ONE toggle drives every play button from a single isPlaying state.
+      PLAY_TOGGLES.forEach(function (id) {
+        var b = $(id); if (b) b.addEventListener('click', function (e) { e.stopPropagation(); togglePlay(); });
+      });
+      renderPlay();
+      window.TwinrTransition = { next: nextTrack, prev: prevTrack, toggle: togglePlay, setPlaying: setPlaying, isPlaying: function () { return playerState.isPlaying; } };
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   })();
