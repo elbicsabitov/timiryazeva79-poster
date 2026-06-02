@@ -27,8 +27,19 @@ cd designs && python -m http.server 8770
 - `docs/superpowers/specs/SPEC-*.md` — 7 build-спеков экранов + SPEC-00 orchestrator (build завершён по ним).
 - `docs/RESUME_PROMPT.md` cont-10 — выводы сессии.
 
+## 🎯 NEXT-SESSION PRIORITY #1 — нижняя закреплённая плашка (мини-плеер `.player-mini`)
+Эльбик отдельно флагнул (cont-10): **не доведена по UX/UI** — в cont-10 переделан только ПОЛНЫЙ плеер (§1A full), мини-бар отложен.
+**Текущее состояние (grounded, Read/JS-probe):** `position:fixed; bottom:0; height 84px` (`--player-mini-h:84px`), 44 child-узла, **перегружена** — в один бар втиснуто: `.player-mini-progress-bar/fill` (top-edge) + `.player-mini-art` (cover) + `.player-mini-meta` (title «Слеза» / artist «Егор Крид») + **`.player-mini-reason` always-on строка-причина «Ты дослушал Егора Крида…»** + 3× `.player-ctrl-btn` (prev/play/next) + **ДУБЛЬ «почему?»** (`.player-mini-extras` pill + `.player-why-pill`) + `.player-steer-btn` + volume + share.
+**Мандат:** сначала **Karpathy-уровня UX/UI ресёрч** мини-плеера / now-playing-bar (Apple Music mini-bar, premium mobile-first now-playing, что делает бар «спокойным» vs «перегруженным»), потом редизайн **по `AUDIT-apple-polish-plan.md` §1A «Mini bar»**:
+- height 72px (`--player-mini-h:72px`); **убрать always-on `.player-mini-reason`-строку** → ОДИН «почему?»-pill ИЛИ 12px-caption (не оба; снять дубль `.player-why-pill`);
+- material `rgba(11,12,15,.72)+blur(28)` + top `1px var(--hairline)`; art 48px `--r-sm` (glow уже убран в cont-10);
+- transport prev/play/next, **play = solid-blue 32px круг**, prev/next ghost; прогресс solid blue (уже);
+- steer = плоский single-color disc; share+volume = одинаковые ghost-иконки;
+- **stateful play/pause** синхронно с полным плеером (один `isPlaying`-стейт, mini+full+aria).
+- Принцип: research-first (см. memory `feedback_karpathy_tier_research_pattern`).
+
 ## REMAINING (backlog — продолжать по `AUDIT-apple-polish-plan.md` §3)
-Порядок: G6 → G7 → per-surface P0-остаток → P1 → P2.
+Порядок: **мини-плеер (приоритет #1, выше)** → G6 → G7 → per-surface P0-остаток → P1 → P2.
 - **G6 slop-sweep:** mini-art placeholders (`.player-mini-art-placeholder--1/2/3` ~L619-621 gradient), остаточные gradient-covers (home saved-rows, track-history, queue-covers), map thumbs.
 - **G7 global pass:** focus-visible → `--accent-on-dark` везде; `:active{scale(.98)}`; hit-targets ≥44px.
 - **Per-surface P1/P2:** discover (map axis-labels/nodes, секц-заголовки) · track (lyrics #545454→.32 контраст, hero-cover cap 360, eyebrow) · taste (радиусы→§0, 2 синих CTA → 1 primary, saved-rows реальные/убрать) · recap+profile (token-migration сырых hex/radii, кол-во колонок) · **map/lives под dev-gate уже скрыты**, но если разгейтить — #/lives dead cards (нет хендлера) + хардкод `#ff3b30` red.
