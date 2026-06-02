@@ -2469,7 +2469,7 @@
         padding: 0 18px 0 13px;
         border: none;
         border-radius: var(--r-pill);
-        background: linear-gradient(135deg, var(--brand-blue-light) 0%, #8b5cf6 100%);
+        background: linear-gradient(135deg, var(--brand-blue-light) 0%, var(--accent-on-dark) 100%);
         color: #fff;
         font-family: 'Onest', sans-serif;
         font-weight: 700;
@@ -2547,7 +2547,7 @@
       }
       .ai-dock-avatar {
         width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
-        background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6);
+        background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark));
         display: flex; align-items: center; justify-content: center;
       }
       .ai-dock-avatar svg { width: 20px; height: 20px; }
@@ -2603,7 +2603,7 @@
       @keyframes ai-msg-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
       .ai-msg-avatar {
         width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; margin-top: 2px;
-        background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6);
+        background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark));
         display: flex; align-items: center; justify-content: center;
       }
       .ai-msg-avatar svg { width: 14px; height: 14px; }
@@ -2631,7 +2631,7 @@
       }
       .ai-track-cover {
         width: 38px; height: 38px; border-radius: 7px; flex-shrink: 0;
-        background: linear-gradient(135deg, #5168fc, #8b5cf6); background-size: cover; background-position: center;
+        background: linear-gradient(135deg, #5168fc, var(--accent-on-dark)); background-size: cover; background-position: center;
         display: flex; align-items: center; justify-content: center;
       }
       .ai-track-cover svg { width: 16px; height: 16px; opacity: 0.85; }
@@ -2712,7 +2712,7 @@
       .player-why-pill svg { width: 15px; height: 15px; flex-shrink: 0; }
       .player-steer-btn {
         width: 38px; height: 38px; border-radius: 50%; border: none; flex-shrink: 0;
-        background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6);
+        background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark));
         color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
         box-shadow: 0 4px 16px rgba(81, 104, 252, 0.45);
         transition: transform var(--t-fast), box-shadow var(--t-fast);
@@ -2776,7 +2776,7 @@
         transition: opacity 0.3s ease, transform 0.4s cubic-bezier(.34, 1.4, .64, 1);
       }
       .ai-ribbon.is-show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
-      .ai-ribbon-spark { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6); display: flex; align-items: center; justify-content: center; }
+      .ai-ribbon-spark { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark)); display: flex; align-items: center; justify-content: center; }
       .ai-ribbon-spark svg { width: 14px; height: 14px; }
       .ai-ribbon-text { font-family: 'Onest', sans-serif; font-size: 13.5px; color: #eef0f6; line-height: 1.35; }
       .ai-ribbon-text b { color: #fff; font-weight: 700; }
@@ -3084,7 +3084,7 @@
       .taste-pin svg { width: 14px; height: 14px; }
       .taste-row-name { font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600; color: #eef0f6; flex-shrink: 0; width: 116px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .taste-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
-      .taste-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--brand-blue-light), #8b5cf6); transition: width 0.35s cubic-bezier(.34,1.4,.64,1); }
+      .taste-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--brand-blue-light), var(--accent-on-dark)); transition: width 0.35s cubic-bezier(.34,1.4,.64,1); }
       .taste-row-pct { font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 700; color: var(--text-sec); width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
       .taste-ctrls { display: flex; gap: 4px; flex-shrink: 0; }
       .taste-ctrl {
@@ -3117,7 +3117,7 @@
       .taste-sponsor-less:hover { color: #fff; }
       .taste-sponsor-less:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
       .taste-sponsor-main { display: flex; align-items: center; gap: 14px; }
-      .taste-sponsor-logo { flex: none; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Onest', sans-serif; font-weight: 800; font-size: 20px; color: #fff; background: linear-gradient(135deg, var(--brand-blue-light), #8b5cf6); }
+      .taste-sponsor-logo { flex: none; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Onest', sans-serif; font-weight: 800; font-size: 20px; color: #fff; background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark)); }
       .taste-sponsor-info { flex: 1 1 auto; min-width: 0; }
       .taste-sponsor-brand { font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
       .taste-sponsor-offer { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); line-height: 1.4; margin-top: 2px; }
@@ -12924,7 +12924,7 @@
     var audioCtx, analyser, freqData, audioMaster, audioOn = false, audioEnergy = 0, audioInit = false;
     var LAYERS = [
       { amp: 0.17, freq: 1.1, speed: 0.6, alpha: 0.55, color: '#5168FC', width: 2.5 },
-      { amp: 0.12, freq: 1.8, speed: -0.95, alpha: 0.42, color: '#8b5cf6', width: 2 },
+      { amp: 0.12, freq: 1.8, speed: -0.95, alpha: 0.42, color: '#8094ff', width: 2 },
       { amp: 0.08, freq: 2.7, speed: 1.35, alpha: 0.30, color: '#5168FC', width: 1.6 }
     ];
     function size() {
