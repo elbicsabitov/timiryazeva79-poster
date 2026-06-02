@@ -3379,7 +3379,7 @@
       .taste-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(255, 255, 255, 0.05); }
       .taste-row:first-of-type { border-top: none; }
       .taste-row.is-muted { opacity: 0.4; }
-      .taste-row.is-pinned .taste-row-name::after { content: ' 📌'; }
+      .taste-row.is-pinned { box-shadow: inset 2px 0 0 var(--brand-blue-light); }   /* pinned cue — no emoji */
       .taste-pin {
         width: 26px; height: 26px; border-radius: 7px; border: none; flex-shrink: 0;
         background: transparent; color: var(--text-sec); cursor: pointer;
@@ -4268,8 +4268,8 @@
       .discover-near-title { font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: #fff; margin: 0 0 14px; }
       .discover-near-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
       .discover-near-row::-webkit-scrollbar { display: none; }
-      .discover-near-card { flex: none; width: 220px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: linear-gradient(160deg, var(--tint-blue-light-20), rgba(255, 255, 255, 0.03)); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform var(--t-fast), border-color var(--t-fast); }
-      .discover-near-card:hover { transform: translateY(-3px); border-color: var(--brand-blue-light); }
+      .discover-near-card { flex: none; width: 220px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--hairline); transition: background var(--t-fast), border-color var(--t-fast); }
+      .discover-near-card:hover { background: var(--surf-hover); border-color: var(--border-strong); }
       .discover-near-card:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
       .discover-near-name { font-family: 'Onest', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
       .discover-near-dist { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); margin-top: 6px; }
