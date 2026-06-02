@@ -1,6 +1,25 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-10) — FULL-DESIGN BUILD 11/11 ЗАВЕРШЁН + APPLE-POLISH PASS (player+tweaks complaints RESOLVED). Всё локально (master), PUSH отложен
+## ⚡ LATEST (2026-06-03 cont-11) — НИЖНЯЯ ПЛАШКА (мини-плеер) ПЕРЕДЕЛАНА (PRIORITY #1 закрыт) + play/pause fidelity-баг ИСПРАВЛЕН. Локально (master `298010e`), PUSH отложен
+
+🎯 **Эльбик cont-10 флаг (×2): «плашка внизу как плеер — UX/UI ресёрч Карпати-уровня».** Сделано research-first.
+
+**Процесс:** grounded живой код (анкеры дрейфанули) → Karpathy-workflow `wa8ncwxs9` (4 параллельных best-practices-researcher: Apple Music mini / Spotify+YT+Яндекс «Моя волна» / иерархия-progressive-disclosure / web-impl-a11y → synthesis-спек → **adversarial critic verdict=revise с 8 fix-ами**, все вплавлены) → **AskUserQuestion: Эльбик выбрал Вариант A «минимум»** → билд atomic-splice (`.scratch/apply_minibar.py`, 21 замен, assert count==1) → Chrome-проба (JS computed-styles, не только скрин) + 0 console errors → коммит `298010e`.
+
+**Что сделано (мини-бар `.player-mini`, web — главная поверхность):**
+- 84→**72px**, материал `rgba(11,12,15,.72)+blur28 saturate1.2`+top `--hairline`; обложка 60→**48px** `--r-sm`; title 15→**14/600**, artist 13/400 (+line-height 1.15 — честный vertical-fit).
+- **Двойное «почему» → ОДНА строка-кнопка** `.player-mini-reason` (`<div>`→`<button>`, tier-1 content не pill-chrome; тап → существующий `#why-pop` reject-loop). **Wedge прозрачности СОХРАНЁН** (3 поверхности→1, не удалён). Critic подтвердил.
+- Транспорт = **play (залит синий 32px круг, ЛЕВЫЙ/главный) + next (ghost)**; **prev/steer/share/volume УБРАНЫ с бара** (не осиротели: prev→full-sheet, steer→home/discover dials, share→full-player action-row `data-tab="share"`, volume→OS). Apple-конвенция play-слева (отклонился от synthesis «play-rightmost» — обосновано).
+- 🐛 **play/pause fidelity-баг ИСПРАВЛЕН** (был: mini=▶triangle vs full=⏸bars, оба БЕЗ хендлера): ОДИН `playerState.isPlaying` → `renderPlay()` driver на `#btn-play`+`#player-full-play`+`#track-page-play` через `aria-pressed`+dual-glyph swap. Проверено: все 3 синхронны до/после клика. Bridge `{next,prev,toggle,setPlaying,isPlaying}` (убрал коллизию `play`=advance).
+- a11y: APG toggle (статичный label + aria-pressed), 44px hit через `::before{inset:-6px}`, focus-visible `--accent-on-dark`, `@supports`/`prefers-reduced-transparency` opaque-fallback, **web-scoped** `env(safe-area-inset-bottom)` (critic: не дабл-каунтить на mobile над tabbar).
+
+**Дисциплина/находки:** web-surface override `html[data-surface="web"] .player-mini` (L7156) перебивал base padding → правил отдельно (0 20px + safe-area). Mobile-surface `[data-surface="mobile"] .player-ctrl-btn` (вкл. pre-existing min-height:44 L6140) **НЕ применяется** даже с `!important` — глубокий pre-existing cascade-quirk в том блоке; но oval-проблемы НЕТ (min-height не берётся → кнопки 32px square + 44px hit через ::before). Не копал дальше (dev-only surface). Артефакты: `apply_minibar.py` (.scratch, gitignored), research-output в task `wa8ncwxs9`.
+
+**🎯 NEXT (по убыванию):** (1) **standalone пересобрать** (`designs/gorod-fm-standalone.html` сейчас СТАЛЫЙ — без мини-бара). (2) Продолжить backlog `AUDIT-apple-polish-plan.md` §3: G6 slop-sweep (mini-art placeholders L620-622 multi-hue gradient ОСТАЛИСЬ! + home/track/queue covers, map thumbs) · G7 global focus/active/44px · per-surface P1/P2 · DEFAULT_ROUTE cold-start→#/onboarding · G2 42 latent `--brand-cyan`→rename. (3) PUSH при `sync`. 🔒 Эльбик-gate: GOROD-029/030.
+
+---
+
+## ⚡ PREV (2026-06-02 cont-10) — FULL-DESIGN BUILD 11/11 ЗАВЕРШЁН + APPLE-POLISH PASS (player+tweaks complaints RESOLVED). Всё локально (master), PUSH отложен
 
 🎯 **Эльбик cont-10:** «делаем чисто дизайн всех экранов/структуры с ресёрчей» (→ доделал build 5 шагов), потом mid-session: **«сделай аудит всех модулей + карпати-ресёрч UI/UX, доведи каждую страницу до идеала, стандарт apple; плеер выглядит страшно; артефакт tweaks остался»**.
 
