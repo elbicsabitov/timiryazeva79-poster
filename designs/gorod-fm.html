@@ -3230,6 +3230,58 @@
       .taste-rej-chip.is-matched { color: var(--accent-on-dark); border-color: rgba(81, 104, 252, 0.40); }
       .taste-rej-cap { font-family: 'Onest', sans-serif; font-size: 12.5px; line-height: 1.5; color: var(--text-sec); margin: 0; }
 
+      /* ===== Saved archive + streak + AT-vector (SPEC-taste_saved) ========= */
+      .taste-streak {
+        display: flex; align-items: center; gap: 14px; margin: 4px 0 22px; padding: 14px 18px;
+        background: var(--bg-card, rgba(255,255,255,0.03)); border: 1px solid rgba(81, 104, 252, 0.22); border-radius: 14px;
+      }
+      .taste-streak-bloom {
+        width: 40px; height: 40px; flex: none; border-radius: 50%;
+        background: radial-gradient(circle at 50% 50%, var(--brand-blue-light) 0%, rgba(81,104,252,0.18) 55%, transparent 72%);
+        box-shadow: 0 0 0 1px rgba(81,104,252,0.20); animation: taste-streak-pulse 2.8s ease-in-out infinite;
+      }
+      @keyframes taste-streak-pulse { 0%,100%{transform:scale(1);opacity:.92} 50%{transform:scale(1.12);opacity:1} }
+      .taste-streak-txt { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; flex: 1; }
+      .taste-streak-n { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 26px; color: #fff; line-height: 1; font-variant-numeric: tabular-nums; }
+      .taste-streak-cap { font-family: 'Onest', sans-serif; font-size: 13.5px; font-weight: 600; color: var(--text-sec); }
+      .taste-streak-demo { font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 600; color: var(--accent-on-dark); opacity: .85; letter-spacing: .02em; }
+      .taste-saved { border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; background: var(--bg-card, rgba(255,255,255,0.03)); margin-bottom: 8px; overflow: hidden; }
+      .taste-saved[open] { border-color: rgba(81,104,252,0.22); }
+      .taste-saved-sum { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; -webkit-tap-highlight-color: transparent; min-height: 44px; }
+      .taste-saved-sum::-webkit-details-marker { display: none; }
+      .taste-saved-sum:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: -2px; border-radius: 14px; }
+      .taste-saved-sum-l { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+      .taste-saved-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 18px; color: #fff; letter-spacing: -0.01em; }
+      .taste-saved-count { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 13px; color: var(--brand-blue-light); }
+      .taste-saved-demo { font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 600; color: var(--accent-on-dark); opacity: .85; }
+      .taste-saved-chev { width: 20px; height: 20px; color: var(--text-sec); transition: transform var(--t-fast); flex: none; }
+      .taste-saved[open] .taste-saved-chev { transform: rotate(180deg); }
+      .taste-saved-body { padding: 0 18px 18px; }
+      .taste-saved-lead { font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.5; color: var(--text-sec); margin: 0 0 14px; }
+      .taste-saved-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+      .taste-saved-chip {
+        font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: .03em;
+        padding: 7px 13px; border-radius: var(--r-pill); cursor: pointer; min-height: 34px;
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); color: var(--text-sec);
+        transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+      }
+      .taste-saved-chip:hover { color: #fff; }
+      .taste-saved-chip[aria-pressed="true"] { background: var(--tint-blue-light-20); border-color: rgba(81,104,252,0.45); color: #fff; }
+      .taste-saved-chip:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .taste-saved-chip-n { color: var(--accent-on-dark); margin-left: 5px; font-weight: 800; }
+      .taste-saved-list { display: flex; flex-direction: column; gap: 8px; }
+      .taste-saved-row { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); }
+      .taste-saved-tint { width: 44px; height: 44px; flex: none; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-family: 'Onest', sans-serif; font-weight: 800; font-size: 16px; color: #fff; }
+      .taste-saved-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+      .taste-saved-name { font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; color: #eef0f6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .taste-saved-sub { font-family: 'Onest', sans-serif; font-size: 12px; color: var(--text-sec); }
+      .taste-saved-fed { font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 600; color: var(--accent-on-dark); display: inline-flex; align-items: center; gap: 5px; }
+      .taste-saved-fed::before { content: '↳'; opacity: .8; }
+      .taste-saved-badge { font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: .06em; color: var(--text-sec); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--r-pill); padding: 3px 8px; flex: none; }
+      .taste-saved-empty { font-family: 'Onest', sans-serif; font-size: 13px; color: var(--text-sec); padding: 12px 0; text-align: center; }
+      @media (max-width: 720px) { .taste-saved-fed { display: none; } }
+      @media (prefers-reduced-motion: reduce) { .taste-streak-bloom { animation: none; } }
+
       /* =====================================================================
          СПОНСОР ПО ВКУСУ (VISION #9) — taste-based advertising as a native,
          honest, EXPLAINABLE, steerable surface. Reads the live taste vector,
@@ -9789,6 +9841,7 @@
         <div class="taste-stage">
           <header class="taste-hero">
             <canvas class="taste-wave" id="taste-wave" aria-hidden="true"></canvas>
+            <p id="taste-vector-sr" class="visually-hidden" role="img" aria-label="Ваш вкусовой вектор">Ваш вкусовой вектор загружается…</p>
             <div class="taste-hero-glow" aria-hidden="true"></div>
             <div class="taste-hero-content">
               <span class="taste-kicker"><span class="taste-kicker-dot" aria-hidden="true"></span>Twinr · ваш вкус живой</span>
@@ -9869,6 +9922,33 @@
             </div>
             <p class="taste-sponsor-why"><span class="taste-sponsor-why-mark">Почему вам:</span> <span class="taste-sponsor-why-text" id="taste-sponsor-why"></span></p>
           </aside>
+
+          <!-- Стрик «дни роста модели» (053-lite, scripted, детерминир.) — SPEC-taste_saved -->
+          <div class="taste-streak" id="taste-streak" aria-live="polite">
+            <div class="taste-streak-bloom" id="taste-streak-bloom" aria-hidden="true"></div>
+            <div class="taste-streak-txt">
+              <span class="taste-streak-n" id="taste-streak-n">—</span>
+              <span class="taste-streak-cap">дней модель росла с твоих правок</span>
+            </div>
+            <span class="taste-streak-demo" aria-hidden="true">демо · логика роста = Ф1</span>
+          </div>
+
+          <!-- Сохранённое — единый архив (быв. Медиатека + Избранное), MERGE 046 — SPEC-taste_saved -->
+          <details class="taste-saved" id="taste-saved">
+            <summary class="taste-saved-sum">
+              <span class="taste-saved-sum-l">
+                <span class="taste-saved-title">Сохранённое</span>
+                <span class="taste-saved-count" id="taste-saved-count">0</span>
+                <span class="taste-saved-demo">демо-архив</span>
+              </span>
+              <svg class="taste-saved-chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="taste-saved-body">
+              <p class="taste-saved-lead">Что ты сохранил — и чем это кормит твою волну. Лайк здесь = сигнал в вектор, не просто закладка.</p>
+              <div class="taste-saved-filters" role="group" aria-label="Фильтр сохранённого по типу" id="taste-saved-filters"></div>
+              <div class="taste-saved-list" id="taste-saved-list" role="list" aria-label="Сохранённое"></div>
+            </div>
+          </details>
 
           <p class="taste-foot">Правки сохраняются в ваш Twinr-профиль. В проде — через подтверждение, чтобы «тренировочная» волна не переписала вкус навсегда.</p>
         </div>
@@ -13345,6 +13425,16 @@
           '<button class="taste-ctrl" type="button" data-act="plus" aria-label="Больше ' + r.n + '">+</button>' +
         '</div></div>';
     }
+    // §10.1 — текстовый вектор для screen-reader (canvas #taste-wave = aria-hidden декор)
+    function updateVectorSr() {
+      var el = document.getElementById('taste-vector-sr'); if (!el) return;
+      var parts = Object.keys(data).map(function (g) {
+        var top = data[g].filter(function (r) { return !r.rej; }).slice(0, 3).map(function (r) { return r.n + ' ' + r.w + '%'; }).join(', ');
+        return g + ': ' + top;
+      });
+      el.setAttribute('aria-label', 'Ваш вкусовой вектор. ' + parts.join('. ') + '.');
+      el.textContent = 'Вектор — ' + parts.join('; ') + '.';
+    }
     function render() {
       var body = document.getElementById('taste-body');
       if (!body) return;
@@ -13369,6 +13459,8 @@
         });
         body.appendChild(card);
       });
+      updateVectorSr();                                      // §10.1 AT-vector for screen-reader
+      if (window.GorodSaved) window.GorodSaved.refreshStreak();
       if (rejList.length) {                                  // W1 — honest "you rejected these" card (every rejection visible)
         var rc = document.createElement('div'); rc.className = 'taste-group taste-rej-card';
         var chips = rejList.map(function (x) { return '<span class="taste-rej-chip' + (x.matched ? ' is-matched' : '') + '">' + x.label + '</span>'; }).join('');
@@ -14427,6 +14519,63 @@
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ observePlayer(); onRoute(); });
     else { observePlayer(); onRoute(); }
     window.GorodHomeRadio = { setView:setView, refresh:refreshAll };
+  })();
+  </script>
+
+  <script>
+  /* ---- GorodSaved — единый архив «Сохранённое» (MERGE Медиатека+Избранное, 046) +
+     стрик «дни роста модели» (053-lite). Decoupled trailing-IIFE как 051/052.
+     Архив = ДЕМО-данные (микро-лейбл «демо-архив»). art-tint+монограмма, НЕ gradient.
+     Стрик = ДЕТЕРМИНИРОВАННЫЙ из gorodfm_taste (same storage → same N, фиделити). --- */
+  (function () {
+    'use strict';
+    var TASTE_KEY = 'gorodfm_taste';
+    var SAVED = [
+      { type: 'track',    name: 'Believer',                sub: 'Imagine Dragons · 03:38', fed: 'усилил Арена-рок' },
+      { type: 'track',    name: 'Stressed Out',            sub: 'twenty one pilots · 03:22', fed: 'добавил Меланхолию' },
+      { type: 'artist',   name: 'Молчат Дома',             sub: 'артист · 12 треков',       fed: 'открыл пост-панк' },
+      { type: 'artist',   name: 'OneRepublic',             sub: 'артист · 31 трек',         fed: 'поднял Электро-поп' },
+      { type: 'playlist', name: 'Город ФМ · Тёмный вечер', sub: 'плейлист · 24 трека',      fed: 'сместил к darkwave' },
+      { type: 'playlist', name: 'Дорога домой',            sub: 'плейлист · 18 треков',     fed: 'добавил 108 BPM' },
+      { type: 'station',  name: 'ГОРОД РОК',               sub: 'станция · 103.5 FM',       fed: 'закрепил Драйв' }
+    ];
+    var FILTERS = [ { k: 'all', label: 'ВСЕ' }, { k: 'track', label: 'ТРЕКИ' }, { k: 'artist', label: 'АРТИСТЫ' }, { k: 'playlist', label: 'ПЛЕЙЛИСТЫ' }, { k: 'station', label: 'СТАНЦИИ' } ];
+    var TYPE_BADGE = { track: 'ТРЕК', artist: 'АРТИСТ', playlist: 'ПЛЕЙЛИСТ', station: 'СТАНЦИЯ' };
+    var cur = 'all', wired = false;
+    function $(id) { return document.getElementById(id); }
+    function tint(name) { var h = 0; for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 36; var hue = 218 + h; return 'linear-gradient(135deg, hsl(' + hue + ',62%,30%), hsl(' + hue + ',70%,48%))'; }
+    function mono(name) { var s = name.replace(/^Город ФМ · /, '').trim(); return (s[0] || '?').toUpperCase(); }
+    function counts() { var c = { all: SAVED.length, track: 0, artist: 0, playlist: 0, station: 0 }; SAVED.forEach(function (x) { c[x.type] = (c[x.type] || 0) + 1; }); return c; }
+    function renderFilters() {
+      var wrap = $('taste-saved-filters'); if (!wrap) return; var c = counts();
+      wrap.innerHTML = FILTERS.map(function (f) { var n = c[f.k] || 0;
+        return '<button class="taste-saved-chip" type="button" data-f="' + f.k + '" aria-pressed="' + (f.k === cur) + '">' + f.label + (f.k === 'all' ? '' : ' <span class="taste-saved-chip-n">' + n + '</span>') + '</button>';
+      }).join('');
+    }
+    function rowHtml(x) {
+      return '<div class="taste-saved-row" role="listitem">' +
+        '<span class="taste-saved-tint" style="background:' + tint(x.name) + '" aria-hidden="true">' + mono(x.name) + '</span>' +
+        '<span class="taste-saved-meta"><span class="taste-saved-name">' + x.name + '</span><span class="taste-saved-sub">' + x.sub + '</span><span class="taste-saved-fed">' + x.fed + '</span></span>' +
+        '<span class="taste-saved-badge" aria-hidden="true">' + (TYPE_BADGE[x.type] || '') + '</span></div>';
+    }
+    function renderList() {
+      var list = $('taste-saved-list'); if (!list) return;
+      var items = SAVED.filter(function (x) { return cur === 'all' || x.type === cur; });
+      list.innerHTML = items.length ? items.map(rowHtml).join('') : '<p class="taste-saved-empty">В этой категории пока пусто.</p>';
+      var cnt = $('taste-saved-count'); if (cnt) cnt.textContent = SAVED.length;
+    }
+    function wire() {
+      if (wired) return; var filters = $('taste-saved-filters'); if (!filters) return;
+      filters.addEventListener('click', function (e) { var btn = e.target.closest('[data-f]'); if (!btn) return; cur = btn.getAttribute('data-f'); [].forEach.call(filters.querySelectorAll('[data-f]'), function (b) { b.setAttribute('aria-pressed', String(b === btn)); }); renderList(); });
+      wired = true;
+    }
+    function refreshStreak() { var n; try { n = 6 + (JSON.parse(localStorage.getItem(TASTE_KEY) || '[]') || []).length; } catch (e) { n = 6; } var el = $('taste-streak-n'); if (el) el.textContent = n; }
+    function build() { renderFilters(); renderList(); wire(); refreshStreak(); }
+    function onRoute() { if (location.hash === '#/taste') { if ($('taste-saved-list')) build(); } }
+    window.GorodSaved = { build: build, refreshStreak: refreshStreak };
+    window.addEventListener('hashchange', onRoute);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') onRoute();
+    else window.addEventListener('DOMContentLoaded', onRoute);
   })();
   </script>
 
