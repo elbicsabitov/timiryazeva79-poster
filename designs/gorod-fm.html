@@ -10422,7 +10422,7 @@
   </div>
 
   <!-- ======================================================================
-       MOBILE TABBAR — 5 icons
+       MOBILE TABBAR — 4 icons
        ====================================================================== -->
   <nav
     class="mobile-tabbar"
@@ -10460,21 +10460,8 @@
     <button
       class="tabbar-item"
       type="button"
-      data-route="#/library"
-      aria-label="Медиатека"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
-      </svg>
-      Медиа
-    </button>
-
-    <button
-      class="tabbar-item"
-      type="button"
-      data-route="#/artist"
-      aria-label="Избранное"
+      data-route="#/taste"
+      aria-label="Избранное — в Мой вкус"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
@@ -10720,6 +10707,9 @@
       /* ---- Hash router ------------------------------------------------------ */
 
       function routeFromHash(hash) {
+        // Integrate-A: legacy IA routes fold into «Мой вкус» (taste = дом роста модели).
+        // Kept in VALID_ROUTES for deep-link/boot-guard; surface-folded here, no dead-ends.
+        if (hash === '#/library' || hash === '#/favorites') return '#/taste';
         return VALID_ROUTES.includes(hash) ? hash : null;
       }
 
