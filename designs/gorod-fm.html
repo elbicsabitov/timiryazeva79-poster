@@ -4638,482 +4638,184 @@
       }
 
       /* =========================================================================
-         ARTIST PAGE — hero + tracks + albums + stations
+         ARTIST PAGE — deep-dive: art-tint hero + «почему» + tracks + stations
+         GOROD-047b · cyan retired → blue family · no SVG silhouette
          ========================================================================= */
+      [data-page="artist"] { padding-bottom: 80px; }
 
-      /* Page section wrapper */
-      [data-page="artist"] {
-        padding-bottom: 80px;
-      }
-
-      /* ---- Hero band --------------------------------------------------------- */
-
+      /* ---- Hero band -------------------------------------------------------- */
       .artist-hero {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 48px;
-        min-height: 360px;
-        padding: 48px 40px 48px;
+        display: flex; flex-direction: row; align-items: center; gap: 48px;
+        min-height: 320px; padding: 48px 40px;
         background: rgba(0,0,0,0.12);
         border-bottom: 1px solid var(--surf-glass-12);
-        margin-bottom: 48px;
+        margin-bottom: 40px;
       }
-
-      /* Round photo placeholder */
-      .artist-photo-wrap {
-        flex-shrink: 0;
-      }
-
+      /* art-tint avatar (NOT silhouette): flat blue-family tint + монограмма */
       .artist-photo {
-        width: 280px;
-        height: 280px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #3d0080 0%, #1a4fa0 40%, #56afd7 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: relative; width: 220px; height: 220px; border-radius: 50%;
+        flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         overflow: hidden;
-        flex-shrink: 0;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 3px rgba(86,175,215,0.25);
+        background: var(--np-accent);            /* content-derived hue (set by JS tintFor) */
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 3px rgba(81,104,252,0.30);
       }
-
-      .artist-photo-art {
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
+      /* tint wash so the flat fill reads as a surface, not a flat block */
+      .artist-photo::after {
+        content:""; position:absolute; inset:0; border-radius:50%;
+        background: radial-gradient(120% 120% at 30% 25%, rgba(255,255,255,0.18), rgba(0,0,0,0.28));
       }
-
-      /* Text block */
-      .artist-hero-text {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        max-width: 560px;
-        min-width: 0;
+      .artist-photo-mono {
+        position: relative; z-index: 1; font-family:'Onest',sans-serif;
+        font-size: 72px; font-weight: 900; letter-spacing: 0.02em; color: #fff;
+        line-height: 1; text-shadow: 0 2px 12px rgba(0,0,0,0.35);
       }
+      /* real-photo seam (Ф1+): when JS sets <img>, it covers the mono */
+      .artist-photo > img { position:absolute; inset:0; z-index:2; width:100%; height:100%; object-fit:cover; }
 
+      .artist-hero-text { display:flex; flex-direction:column; gap:14px; max-width:560px; min-width:0; }
       .artist-overline {
-        font-family: 'Onest', sans-serif;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.10em;
-        text-transform: uppercase;
-        color: var(--brand-cyan);
-        margin: 0;
-        line-height: 1;
+        font-family:'Onest',sans-serif; font-size:11px; font-weight:700;
+        letter-spacing:0.10em; text-transform:uppercase;
+        color: var(--accent-on-dark); margin:0; line-height:1;
       }
-
       .artist-name {
-        font-family: 'Onest', sans-serif;
-        font-size: 64px;
-        font-weight: 900;
-        letter-spacing: 0.04em;
-        line-height: 1.0;
-        color: var(--text-pri);
-        transform: scaleX(1.05);
-        transform-origin: left center;
-        display: inline-block;
-        text-wrap: balance;
-        margin: 0;
+        font-family:'Onest',sans-serif; font-size:56px; font-weight:900;
+        letter-spacing:0.03em; line-height:1.0; color:var(--text-pri);
+        text-wrap:balance; margin:0;
       }
+      .artist-stats { font-family:'Onest',sans-serif; font-size:16px; color:var(--text-sec); margin:0; line-height:1.4; }
 
-      .artist-stats {
-        font-family: 'Onest', sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        color: var(--text-sec);
-        margin: 0;
-        line-height: 1.4;
-      }
-
-      .artist-bio {
-        font-family: 'Onest', sans-serif;
-        font-size: 15px;
-        font-weight: 400;
-        color: var(--text-sec);
-        line-height: 1.55;
-        text-wrap: pretty;
-        margin: 0;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
-      /* Action buttons row */
-      .artist-action-row {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 4px;
-      }
-
+      .artist-action-row { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:4px; }
       .artist-action-primary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 28px;
-        min-height: 44px;
-        border-radius: var(--r-pill);
-        background: var(--brand-cyan);
-        color: #000;
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        cursor: pointer;
-        border: none;
-        transition: filter var(--t-fast), transform var(--t-fast);
-        white-space: nowrap;
+        display:inline-flex; align-items:center; justify-content:center;
+        padding:14px 28px; min-height:44px; border-radius:var(--r-pill);
+        background:var(--brand-blue-light); color:#fff;
+        font-family:'Onest',sans-serif; font-size:14px; font-weight:700;
+        letter-spacing:0.04em; cursor:pointer; border:none;
+        transition: filter var(--t-fast); white-space:nowrap;
       }
-
-      .artist-action-primary:hover {
-        filter: brightness(1.12);
-      }
-
-      .artist-action-primary:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 3px;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .artist-action-primary:hover {
-          transform: none;
-        }
-      }
+      .artist-action-primary:hover { filter:brightness(1.12); }
+      .artist-action-primary:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:3px; }
 
       .artist-action-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 14px 24px;
-        min-height: 44px;
-        border-radius: var(--r-pill);
-        background: var(--surf-glass-20);
-        color: var(--text-pri);
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        border: 1px solid rgba(255,255,255,0.15);
-        transition: background var(--t-fast), filter var(--t-fast);
-        white-space: nowrap;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        display:inline-flex; align-items:center; gap:8px; padding:14px 22px; min-height:44px;
+        border-radius:var(--r-pill); background:var(--surf-glass-12); color:var(--text-pri);
+        font-family:'Onest',sans-serif; font-size:14px; font-weight:500; cursor:pointer;
+        border:1px solid rgba(255,255,255,0.12); transition:background var(--t-fast); white-space:nowrap;
       }
+      .artist-action-secondary:hover { background:var(--surf-glass-20); }
+      .artist-action-secondary:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:3px; }
+      .artist-action-secondary svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; flex-shrink:0; }
+      .artist-action-secondary[aria-pressed="true"] { color:var(--accent-on-dark); border-color:rgba(81,104,252,0.45); }
+      .artist-action-secondary[aria-pressed="true"] svg { fill:var(--accent-on-dark); stroke:none; }
 
-      .artist-action-secondary:hover {
-        background: rgba(255,255,255,0.28);
-      }
-
-      .artist-action-secondary:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 3px;
-      }
-
-      .artist-action-secondary[aria-pressed="true"] svg path {
-        fill: var(--brand-cyan);
-        stroke: none;
-      }
-
-      .artist-action-secondary[aria-pressed="true"] {
-        color: var(--brand-cyan);
-      }
-
-      .artist-action-secondary svg {
-        width: 16px;
-        height: 16px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        flex-shrink: 0;
-      }
-
-      /* "Открыть весь список" secondary link */
-      .artist-open-all {
-        display: inline-flex;
-        align-items: center;
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--brand-cyan);
-        letter-spacing: 0.02em;
-        text-decoration: none;
-        padding: 6px 0;
-        min-height: 44px;
-        transition: opacity var(--t-fast);
-      }
-
-      .artist-open-all:hover {
-        opacity: 0.75;
-      }
-
-      .artist-open-all:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 2px;
-        border-radius: var(--r-base);
-      }
-
-      /* ---- Artist section wrapper ------------------------------------------- */
-
-      .artist-section {
-        padding: 0 40px 48px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
+      /* ---- Section wrapper -------------------------------------------------- */
+      .artist-section { padding:0 40px 40px; max-width:920px; margin:0 auto; }
       .artist-section-heading {
-        font-family: 'Onest', sans-serif;
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--text-pri);
-        text-wrap: balance;
-        margin: 0 0 20px;
+        font-family:'Onest',sans-serif; font-size:24px; font-weight:700;
+        color:var(--text-pri); text-wrap:balance; margin:0 0 16px;
       }
 
-      /* ---- Top tracks 2-col grid -------------------------------------------- */
-
-      .artist-tracks-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0 24px;
+      /* ---- «Почему тебе этот артист» ---------------------------------------- */
+      .artist-why { }
+      .artist-why-head { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+      .artist-why-head .artist-section-heading { margin:0; }
+      .artist-why-demo {
+        font-family:'Onest',sans-serif; font-size:10px; font-weight:700;
+        text-transform:uppercase; letter-spacing:0.06em; color:var(--accent-on-dark);
+        background:rgba(81,104,252,0.12); border:1px solid rgba(81,104,252,0.30);
+        padding:3px 8px; border-radius:var(--r-pill); cursor:default;
       }
+      .artist-why-l1 {
+        font-family:'Onest',sans-serif; font-size:17px; font-weight:500; line-height:1.5;
+        color:var(--text-pri); margin:0 0 14px; max-width:620px;
+      }
+      .artist-why-l1 b { color:var(--accent-on-dark); font-weight:800; }
+      .artist-why-toggle {
+        font-family:'Onest',sans-serif; font-size:14px; font-weight:600; color:var(--accent-on-dark);
+        background:none; border:none; padding:8px 0; min-height:44px; cursor:pointer;
+        text-align:left; transition:opacity var(--t-fast);
+      }
+      .artist-why-toggle:hover { opacity:0.78; }
+      .artist-why-toggle:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; border-radius:var(--r-base); }
 
+      .artist-why-list { list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+      .artist-why-list[hidden] { display:none; }   /* author display:flex defeats UA [hidden]; restore L1→L2 progressive disclosure */
+      .artist-why-item {
+        display:flex; align-items:flex-start; gap:12px; padding:12px 16px;
+        background:var(--surf-glass-12); border-radius:var(--r-base);
+        border:1px solid rgba(255,255,255,0.06);
+      }
+      .artist-why-dot { flex-shrink:0; width:8px; height:8px; margin-top:7px; border-radius:50%; background:var(--brand-blue-light); }
+      .artist-why-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+      .artist-why-text { font-family:'Onest',sans-serif; font-size:15px; font-weight:500; color:var(--text-pri); line-height:1.4; }
+      .artist-why-text b { color:var(--accent-on-dark); font-weight:800; }
+      .artist-why-prov { font-family:'Onest',sans-serif; font-size:12px; color:var(--text-quat); }
+      .artist-why-item.is-rejected { opacity:0.5; }
+      .artist-why-item.is-rejected .artist-why-text { text-decoration:line-through; }
+      .artist-why-reject {
+        flex-shrink:0; font-family:'Onest',sans-serif; font-size:12px; font-weight:600;
+        color:var(--text-quat); background:none; border:1px solid rgba(255,255,255,0.14);
+        border-radius:var(--r-pill); padding:6px 12px; min-height:32px; cursor:pointer;
+        transition:color var(--t-fast), border-color var(--t-fast);
+      }
+      .artist-why-reject:hover { color:var(--text-pri); border-color:rgba(255,255,255,0.30); }
+      .artist-why-reject:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
+
+      .artist-why-foot { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:18px; }
+      .artist-why-not {
+        font-family:'Onest',sans-serif; font-size:13px; font-weight:600; color:var(--text-sec);
+        background:none; border:1px solid rgba(255,255,255,0.14); border-radius:var(--r-pill);
+        padding:10px 18px; min-height:44px; cursor:pointer; transition:color var(--t-fast), border-color var(--t-fast);
+      }
+      .artist-why-not:hover { color:var(--text-pri); border-color:rgba(255,255,255,0.30); }
+      .artist-why-not[aria-pressed="true"] { color:var(--accent-on-dark); border-color:rgba(81,104,252,0.45); background:rgba(81,104,252,0.10); }
+      .artist-why-not:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
+      .artist-why-receipt { font-family:'Onest',sans-serif; font-size:13px; color:var(--accent-on-dark); margin:0; min-height:18px; flex:1; min-width:200px; }
+
+      /* ---- Top tracks (row, art-tint) --------------------------------------- */
+      .artist-tracks { display:flex; flex-direction:column; }
       .artist-track-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        min-height: 56px;
-        border-radius: var(--r-base);
-        border: none;
-        background: none;
-        cursor: pointer;
-        font: inherit;
-        color: inherit;
-        text-align: left;
-        width: 100%;
-        transition: background var(--t-fast);
+        display:flex; align-items:center; gap:14px; padding:10px 12px; min-height:56px;
+        border-radius:var(--r-base); border:none; background:none; cursor:pointer;
+        font:inherit; color:inherit; text-align:left; width:100%; transition:background var(--t-fast);
       }
-
-      .artist-track-row:hover {
-        background: var(--surf-glass-12);
-      }
-
-      .artist-track-row:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 2px;
-      }
-
+      .artist-track-row:hover { background:var(--surf-glass-12); }
+      .artist-track-row:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
       .artist-track-rank {
-        font-family: 'Onest', sans-serif;
-        font-size: 28px;
-        font-weight: 900;
-        color: var(--text-quat);
-        min-width: 36px;
-        text-align: right;
-        flex-shrink: 0;
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
+        font-family:'Onest',sans-serif; font-size:24px; font-weight:900; color:var(--text-quat);
+        min-width:30px; text-align:right; flex-shrink:0; line-height:1; font-variant-numeric:tabular-nums;
       }
-
+      /* art-tint cover + монограмма (NOT gradient placeholder) */
       .artist-track-cover {
-        width: 40px;
-        height: 40px;
-        border-radius: 6px;
-        flex-shrink: 0;
-        display: block;
+        position:relative; width:44px; height:44px; border-radius:8px; flex-shrink:0;
+        display:flex; align-items:center; justify-content:center; overflow:hidden;
+        background:var(--brand-blue-light);
       }
+      .artist-track-cover::after { content:""; position:absolute; inset:0; background:radial-gradient(110% 110% at 30% 25%, rgba(255,255,255,0.16), rgba(0,0,0,0.28)); }
+      .artist-track-mono { position:relative; z-index:1; font-family:'Onest',sans-serif; font-size:15px; font-weight:800; color:#fff; }
+      .artist-track-meta { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+      .artist-track-title { font-family:'Onest',sans-serif; font-size:15px; font-weight:600; color:var(--text-pri); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .artist-track-album { font-family:'Onest',sans-serif; font-size:13px; color:var(--text-quat); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .artist-track-dur { font-family:'Onest',sans-serif; font-size:13px; color:var(--text-quat); flex-shrink:0; font-variant-numeric:tabular-nums; }
 
-      .artist-track-meta {
-        flex: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
+      /* ---- Stations (on-brand радио) ---------------------------------------- */
+      .artist-stations-sub { font-family:'Onest',sans-serif; font-size:14px; color:var(--text-sec); margin:0 0 16px; line-height:1.45; }
+      .artist-stations { display:flex; flex-wrap:wrap; gap:12px; }
+      .artist-station-chip {
+        display:inline-flex; align-items:center; gap:12px; width:260px; min-height:56px;
+        padding:12px 18px; border-radius:var(--r-pill); background:var(--surf-glass-12);
+        border:1px solid rgba(255,255,255,0.12); color:var(--text-sec); font:inherit; cursor:pointer;
+        transition:background var(--t-fast), color var(--t-fast);
       }
-
-      .artist-track-title {
-        font-family: 'Onest', sans-serif;
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--text-pri);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .artist-track-album {
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--text-quat);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .artist-track-dur {
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--text-quat);
-        flex-shrink: 0;
-        font-variant-numeric: tabular-nums;
-      }
-
-      /* ---- Albums horizontal scroll ----------------------------------------- */
-
-      .artist-albums-row {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        padding-right: 24px;
-        padding-bottom: 4px;
-      }
-
-      .artist-albums-row::-webkit-scrollbar {
-        display: none;
-      }
-
-      .artist-album-card {
-        display: flex;
-        flex-direction: column;
-        width: 200px;
-        flex-shrink: 0;
-        scroll-snap-align: start;
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        font: inherit;
-        color: inherit;
-        text-align: left;
-        border-radius: var(--r-base);
-        transition: transform var(--t-fast);
-      }
-
-      .artist-album-card:hover {
-        transform: scale(1.03);
-      }
-
-      .artist-album-card:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 3px;
-        border-radius: var(--r-base);
-      }
+      .artist-station-chip:hover { background:var(--surf-glass-20); color:var(--text-pri); }
+      .artist-station-chip:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
+      .artist-station-eq { width:18px; height:14px; flex-shrink:0; color:var(--accent-on-dark); opacity:0.85; }
+      .artist-station-name { font-family:'Onest',sans-serif; font-size:15px; font-weight:600; color:var(--text-pri); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; }
+      .artist-station-freq { font-family:'Onest',sans-serif; font-size:13px; color:var(--text-quat); flex-shrink:0; }
 
       @media (prefers-reduced-motion: reduce) {
-        .artist-album-card:hover {
-          transform: none;
-        }
-      }
-
-      .artist-album-cover {
-        width: 200px;
-        height: 200px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        overflow: hidden;
-      }
-
-      .artist-album-meta {
-        padding: 10px 4px 4px;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .artist-album-name {
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-pri);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .artist-album-year {
-        font-family: 'Onest', sans-serif;
-        font-size: 12px;
-        font-weight: 400;
-        color: var(--text-quat);
-      }
-
-      /* ---- Station chips ----------------------------------------------------- */
-
-      .artist-stations {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .artist-station-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        width: 280px;
-        height: 60px;
-        padding: 14px 20px;
-        border-radius: var(--r-pill);
-        background: var(--surf-glass-20);
-        border: 1px solid rgba(255,255,255,0.14);
-        color: var(--text-sec);
-        font: inherit;
-        cursor: pointer;
-        transition: background var(--t-fast), color var(--t-fast);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-      }
-
-      .artist-station-chip:hover {
-        background: rgba(255,255,255,0.28);
-        color: var(--text-pri);
-      }
-
-      .artist-station-chip:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 2px;
-      }
-
-      .artist-station-eq {
-        width: 18px;
-        height: 14px;
-        flex-shrink: 0;
-        color: var(--brand-cyan);
-        opacity: 0.80;
-      }
-
-      .artist-station-name {
-        font-family: 'Onest', sans-serif;
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--text-pri);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex: 1;
-      }
-
-      .artist-station-freq {
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--text-quat);
-        flex-shrink: 0;
+        .artist-action-primary:hover, .artist-track-row:hover { transform:none; }
       }
 
       /* =========================================================================
@@ -6993,121 +6695,32 @@
       }
 
       /* ---- Artist page: responsive ------------------------------------------ */
-
-      @media (max-width: 1024px) {
-        .artist-hero {
-          padding: 36px 24px;
-          gap: 32px;
-        }
-        .artist-name {
-          font-size: 48px;
-        }
-        .artist-section {
-          padding-left: 24px;
-          padding-right: 24px;
-        }
+      @media (max-width: 920px) {
+        .artist-hero { gap:28px; padding:36px 24px; min-height:0; }
+        .artist-photo { width:150px; height:150px; }
+        .artist-photo-mono { font-size:52px; }
+        .artist-name { font-size:40px; }
+        .artist-section { padding:0 24px 36px; }
       }
-
-      @media (max-width: 768px) {
-        .artist-hero {
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          min-height: unset;
-          padding: 32px 20px;
-          gap: 24px;
-        }
-        .artist-photo {
-          width: 180px;
-          height: 180px;
-        }
-        .artist-hero-text {
-          align-items: center;
-        }
-        .artist-name {
-          font-size: 36px;
-          transform-origin: center center;
-        }
-        .artist-action-row {
-          justify-content: center;
-        }
-        .artist-tracks-grid {
-          grid-template-columns: 1fr;
-        }
-        .artist-section {
-          padding-left: 16px;
-          padding-right: 16px;
-        }
-        .artist-stations {
-          justify-content: center;
-        }
-        .artist-station-chip {
-          width: 100%;
-        }
+      @media (max-width: 560px) {
+        .artist-hero { flex-direction:column; align-items:flex-start; text-align:left; }
+        .artist-name { font-size:34px; }
+        .artist-station-chip { width:100%; }
+        .artist-why-foot { gap:10px; }
       }
-
-      /* Mobile surface (tweaks panel) */
-      [data-surface="mobile"] .artist-hero {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        min-height: unset;
-        padding: 24px 16px;
-        gap: 20px;
-      }
-      [data-surface="mobile"] .artist-photo {
-        width: 160px;
-        height: 160px;
-      }
-      [data-surface="mobile"] .artist-hero-text {
-        align-items: center;
-      }
-      [data-surface="mobile"] .artist-name {
-        font-size: 32px;
-        transform-origin: center;
-      }
-      [data-surface="mobile"] .artist-action-row {
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      [data-surface="mobile"] .artist-tracks-grid {
-        grid-template-columns: 1fr;
-      }
-      [data-surface="mobile"] .artist-section {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-      [data-surface="mobile"] .artist-station-chip {
-        width: 100%;
-      }
-
-      /* TV surface */
-      [data-surface="tv"] .artist-name {
-        font-size: 80px;
-      }
-      [data-surface="tv"] .artist-hero {
-        padding: 60px;
-        gap: 64px;
-        min-height: 440px;
-      }
-      [data-surface="tv"] .artist-photo {
-        width: 320px;
-        height: 320px;
-      }
+      [data-surface="mobile"] .artist-hero { flex-direction:column; align-items:flex-start; gap:24px; padding:28px 20px; }
+      [data-surface="mobile"] .artist-photo { width:140px; height:140px; }
+      [data-surface="mobile"] .artist-photo-mono { font-size:48px; }
+      [data-surface="mobile"] .artist-name { font-size:34px; }
+      [data-surface="mobile"] .artist-section { padding:0 20px 32px; }
+      [data-surface="mobile"] .artist-station-chip { width:100%; }
+      [data-surface="tv"] .artist-name { font-size:72px; }
+      [data-surface="tv"] .artist-hero { padding:64px 56px; gap:56px; }
+      [data-surface="tv"] .artist-photo { width:300px; height:300px; }
+      [data-surface="tv"] .artist-photo-mono { font-size:96px; }
       [data-surface="tv"] .artist-action-primary,
-      [data-surface="tv"] .artist-action-secondary {
-        min-height: 56px;
-        font-size: 16px;
-        padding: 16px 32px;
-      }
-      [data-surface="tv"] .artist-station-chip {
-        height: 72px;
-        font-size: 16px;
-      }
-      [data-surface="tv"] .artist-section {
-        padding-left: 60px;
-        padding-right: 60px;
-      }
+      [data-surface="tv"] .artist-action-secondary { font-size:18px; padding:18px 32px; min-height:56px; }
+      [data-surface="tv"] .artist-section { max-width:1200px; padding:0 56px 56px; }
 
       /* ---- Favorites page: responsive --------------------------------------- */
 
@@ -8579,318 +8192,74 @@
 
       </section>
 
-      <!-- Page: Артист (профайл) — #/artist -->
+      <!-- Page: Артист — deep-dive (#/artist) · GOROD-047b -->
       <section data-page="artist" aria-labelledby="page-artist-heading">
-        <h1 id="page-artist-heading" class="visually-hidden">Избранное — Артист</h1>
+        <h1 id="page-artist-heading" class="visually-hidden">Артист — Imagine Dragons</h1>
 
-        <!-- ---- Hero band ---------------------------------------------------- -->
+        <!-- ---- Hero band: art-tint + монограмма (НЕ силуэт) ---------------- -->
         <div class="artist-hero" aria-label="Профиль артиста">
-          <!-- Left: round photo placeholder -->
-          <div class="artist-photo-wrap" aria-hidden="true">
-            <div class="artist-photo">
-              <!-- Abstract SVG portrait silhouette -->
-              <svg class="artist-photo-art" viewBox="0 0 280 280" aria-hidden="true">
-                <!-- Head circle -->
-                <circle cx="140" cy="105" r="52" fill="rgba(255,255,255,0.18)"/>
-                <!-- Shoulders curve -->
-                <path d="M 40 260 Q 60 190 100 175 Q 120 168 140 168 Q 160 168 180 175 Q 220 190 240 260" fill="rgba(255,255,255,0.12)" stroke="none"/>
-                <!-- Hair highlights -->
-                <path d="M 100 80 Q 120 56 140 54 Q 160 56 180 80" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
-                <!-- Inner head -->
-                <circle cx="140" cy="105" r="28" fill="rgba(86,175,215,0.25)"/>
-              </svg>
-            </div>
+          <!-- art-tint avatar; data-artist-photo seam under real foto (Ф1+) -->
+          <div class="artist-photo" id="artist-photo" data-artist-photo="" aria-hidden="true">
+            <span class="artist-photo-mono" id="artist-photo-mono">ID</span>
           </div>
 
-          <!-- Right: text block -->
           <div class="artist-hero-text">
-            <p class="artist-overline" aria-hidden="true">АРТИСТ · ИЗБРАННОЕ</p>
+            <p class="artist-overline" aria-hidden="true">Артист · Город ФМ</p>
             <h2 class="artist-name" id="artist-name-heading">IMAGINE DRAGONS</h2>
-            <p class="artist-stats">47 треков · 8 альбомов · 12 плейлистов с этим артистом</p>
-            <p class="artist-bio">Американская рок-группа из Лас-Вегаса. Сочетают альт-рок, поп и электронику. На Город ФМ — частые гости в подборках ГОРОД РОК и ГОРОД ХИТ.</p>
+            <p class="artist-stats">Американский альт-рок · в твоей волне с весны</p>
 
-            <!-- Action buttons row -->
             <div class="artist-action-row" role="group" aria-label="Действия с артистом">
-              <button
-                class="artist-action-primary"
-                type="button"
-                id="artist-btn-radio"
-                aria-label="Слушать радио Imagine Dragons"
-              >Слушать радио артиста</button>
-
-              <button
-                class="artist-action-secondary"
-                type="button"
-                id="artist-btn-fav"
-                aria-pressed="true"
-                aria-label="Добавить артиста в избранное"
-              >
-                <!-- Heart icon -->
+              <button class="artist-action-primary" type="button" id="artist-btn-radio"
+                aria-label="Слушать радио Imagine Dragons">Слушать радио артиста</button>
+              <button class="artist-action-secondary" type="button" id="artist-btn-fav"
+                aria-pressed="false" aria-label="Добавить артиста в избранное">
                 <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/>
-                </svg>
-                В избранное
-              </button>
-
-              <button
-                class="artist-action-secondary"
-                type="button"
-                id="artist-btn-share"
-                aria-pressed="false"
-                aria-label="Поделиться артистом"
-              >
-                <!-- Share icon -->
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <circle cx="18" cy="5" r="3"/>
-                  <circle cx="6" cy="12" r="3"/>
-                  <circle cx="18" cy="19" r="3"/>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                </svg>
-                Поделиться
-              </button>
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>В избранное</button>
             </div>
-
-            <!-- Secondary link to full favorites list -->
-            <a
-              href="#/favorites"
-              class="artist-open-all"
-              id="artist-open-all"
-              aria-label="Открыть весь список избранного"
-            >Открыть весь список →</a>
           </div>
         </div>
         <!-- /.artist-hero -->
 
-        <!-- ---- Топ треков ---------------------------------------------------- -->
+        <!-- ---- Почему тебе этот артист (L1 → L2 + reject) ----------------- -->
+        <section class="artist-section artist-why" aria-labelledby="artist-why-h">
+          <div class="artist-why-head">
+            <h2 id="artist-why-h" class="artist-section-heading">Почему тебе этот артист</h2>
+            <span class="artist-why-demo" title="Вектор в прототипе — демонстрационный">демо-вектор</span>
+          </div>
+
+          <p class="artist-why-l1" id="artist-why-l1">Ты дослушал <b>12 треков</b> этого артиста до конца — больше, чем у 9 из 10 в твоей волне.</p>
+
+          <button class="artist-why-toggle" type="button" id="artist-why-toggle"
+            aria-expanded="false" aria-controls="artist-why-list">Показать, на чём это держится</button>
+
+          <ul class="artist-why-list" id="artist-why-list" hidden>
+            <!-- injected by GorodArtist.render() — поведение/attribute, never collaborative -->
+          </ul>
+
+          <div class="artist-why-foot">
+            <button class="artist-why-not" type="button" id="artist-why-not"
+              aria-pressed="false">Это не про меня</button>
+            <p class="artist-why-receipt" id="artist-why-receipt" role="status" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <!-- ---- Топ треков (row, art-tint) -------------------------------- -->
         <section class="artist-section" aria-labelledby="artist-tracks-heading">
           <h2 id="artist-tracks-heading" class="artist-section-heading">Топ треков</h2>
-          <div class="artist-tracks-grid" id="artist-tracks-grid" role="list" aria-label="Топ треков Imagine Dragons">
-
-            <!-- Track 1 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Believer" data-track-artist="IMAGINE DRAGONS" aria-label="Believer, 03:38">
-              <span class="artist-track-rank" aria-hidden="true">1</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#56afd7)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Believer</span>
-                <span class="artist-track-album">Night Visions</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:38">03:38</span>
-            </button>
-
-            <!-- Track 2 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Thunder" data-track-artist="IMAGINE DRAGONS" aria-label="Thunder, 03:08">
-              <span class="artist-track-rank" aria-hidden="true">2</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#2d1a6e,#c43a6e)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Thunder</span>
-                <span class="artist-track-album">Evolve</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:08">03:08</span>
-            </button>
-
-            <!-- Track 3 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Radioactive" data-track-artist="IMAGINE DRAGONS" aria-label="Radioactive, 03:07">
-              <span class="artist-track-rank" aria-hidden="true">3</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a5c30,#2ecc71)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Radioactive</span>
-                <span class="artist-track-album">Night Visions</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:07">03:07</span>
-            </button>
-
-            <!-- Track 4 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Demons" data-track-artist="IMAGINE DRAGONS" aria-label="Demons, 02:58">
-              <span class="artist-track-rank" aria-hidden="true">4</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#4a1a00,#d4662d)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Demons</span>
-                <span class="artist-track-album">Night Visions</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 02:58">02:58</span>
-            </button>
-
-            <!-- Track 5 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Whatever It Takes" data-track-artist="IMAGINE DRAGONS" aria-label="Whatever It Takes, 03:21">
-              <span class="artist-track-rank" aria-hidden="true">5</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#0d3d5c,#0ea8e8)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Whatever It Takes</span>
-                <span class="artist-track-album">Evolve</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:21">03:21</span>
-            </button>
-
-            <!-- Track 6 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Bones" data-track-artist="IMAGINE DRAGONS" aria-label="Bones, 02:45">
-              <span class="artist-track-rank" aria-hidden="true">6</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#3d0047,#9c27b0)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Bones</span>
-                <span class="artist-track-album">Mercury Acts 1</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 02:45">02:45</span>
-            </button>
-
-            <!-- Track 7 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Bad Liar" data-track-artist="IMAGINE DRAGONS" aria-label="Bad Liar, 04:21">
-              <span class="artist-track-rank" aria-hidden="true">7</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#6a3800,#d4780a)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Bad Liar</span>
-                <span class="artist-track-album">Origins</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 04:21">04:21</span>
-            </button>
-
-            <!-- Track 8 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Wrecked" data-track-artist="IMAGINE DRAGONS" aria-label="Wrecked, 03:30">
-              <span class="artist-track-rank" aria-hidden="true">8</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a1a4a,#2244aa)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Wrecked</span>
-                <span class="artist-track-album">Mercury Acts 1</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:30">03:30</span>
-            </button>
-
-            <!-- Track 9 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Sharks" data-track-artist="IMAGINE DRAGONS" aria-label="Sharks, 03:11">
-              <span class="artist-track-rank" aria-hidden="true">9</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#00352a,#00a676)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Sharks</span>
-                <span class="artist-track-album">Mercury Acts 2</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:11">03:11</span>
-            </button>
-
-            <!-- Track 10 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Enemy" data-track-artist="IMAGINE DRAGONS" aria-label="Enemy, 02:53">
-              <span class="artist-track-rank" aria-hidden="true">10</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#3d1547,#c43a8a)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Enemy</span>
-                <span class="artist-track-album">Loom</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 02:53">02:53</span>
-            </button>
-
+          <div class="artist-tracks" id="artist-tracks" role="list" aria-label="Топ треков Imagine Dragons">
+            <!-- 5 rows injected by GorodArtist.render() from TRACKS -->
           </div>
-          <!-- /.artist-tracks-grid -->
         </section>
 
-        <!-- ---- Альбомы ------------------------------------------------------- -->
-        <section class="artist-section" aria-labelledby="artist-albums-heading">
-          <h2 id="artist-albums-heading" class="artist-section-heading">Альбомы</h2>
-          <div class="artist-albums-row" role="list" aria-label="Альбомы Imagine Dragons">
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Night Visions" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Night Visions, 2012">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#1a3a6e,#56afd7)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <circle cx="24" cy="24" r="16" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-                  <circle cx="24" cy="24" r="8"  fill="rgba(255,255,255,0.18)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Night Visions</span>
-                <span class="artist-album-year">2012</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Smoke + Mirrors" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Smoke + Mirrors, 2015">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#2d1a6e,#7b3c8a)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <rect x="12" y="12" width="24" height="24" rx="4" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-                  <rect x="18" y="18" width="12" height="12" rx="2" fill="rgba(255,255,255,0.18)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Smoke + Mirrors</span>
-                <span class="artist-album-year">2015</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Evolve" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Evolve, 2017">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#0d3d5c,#0ea8e8)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <polygon points="24,8 40,38 8,38" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" fill="rgba(255,255,255,0.12)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Evolve</span>
-                <span class="artist-album-year">2017</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Origins" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Origins, 2018">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#3d2800,#b86600)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <circle cx="24" cy="24" r="14" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-                  <path d="M 16 32 Q 24 12 32 32" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Origins</span>
-                <span class="artist-album-year">2018</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Mercury Acts 1" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Mercury Acts 1, 2021">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#3d0047,#9c27b0)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <ellipse cx="24" cy="24" rx="16" ry="10" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-                  <line x1="24" y1="8" x2="24" y2="40" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Mercury Acts 1</span>
-                <span class="artist-album-year">2021</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Loom" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Loom, 2024">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#1a1a4a,#3c6ac4)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <path d="M 10 36 Q 20 14 28 20 Q 36 26 38 12" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
-                  <circle cx="38" cy="12" r="4" fill="rgba(255,255,255,0.22)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Loom</span>
-                <span class="artist-album-year">2024</span>
-              </div>
-            </button>
-
-          </div>
-          <!-- /.artist-albums-row -->
-        </section>
-
-        <!-- ---- Станции с этим артистом --------------------------------------- -->
+        <!-- ---- Станции с этим артистом (on-brand радио, НЕ каталог) ------ -->
         <section class="artist-section" aria-labelledby="artist-stations-heading">
           <h2 id="artist-stations-heading" class="artist-section-heading">Станции с этим артистом</h2>
+          <p class="artist-stations-sub">Где Imagine Dragons звучит чаще — это радио, не плейлист.</p>
           <div class="artist-stations" role="list" aria-label="Станции, играющие Imagine Dragons">
 
             <button class="artist-station-chip" type="button" role="listitem"
               data-station-id="rok" aria-label="ГОРОД РОК 103.5 FM">
-              <!-- EQ bar icon -->
               <svg class="artist-station-eq" aria-hidden="true" viewBox="0 0 18 14">
                 <rect x="1"  y="4" width="2.5" height="10" rx="1.25" fill="currentColor"/>
                 <rect x="5"  y="1" width="2.5" height="13" rx="1.25" fill="currentColor"/>
@@ -8938,7 +8307,6 @@
             </button>
 
           </div>
-          <!-- /.artist-stations -->
         </section>
 
       </section>
@@ -12148,109 +11516,8 @@
 
       /* ---- Артист page wiring ---------------------------------------------- */
 
-      (function initArtist() {
-
-        /* Helper: swap mini-bar + full-player meta + open player */
-        function openArtistPlayer(title, artist) {
-          var miniTitle  = document.getElementById('player-track-title');
-          var miniArtist = document.getElementById('player-track-artist');
-          if (miniTitle)  miniTitle.textContent  = title;
-          if (miniArtist) miniArtist.textContent = artist;
-          var fullTitle  = document.getElementById('player-full-title');
-          var fullArtist = document.getElementById('player-full-artist');
-          if (fullTitle)  fullTitle.textContent  = title;
-          if (fullArtist) fullArtist.textContent = artist;
-          openPlayer();
-        }
-
-        /* 1. Primary CTA — "Слушать радио артиста" */
-        var btnRadio = document.getElementById('artist-btn-radio');
-        if (btnRadio) {
-          btnRadio.addEventListener('click', function () {
-            openArtistPlayer('Радио IMAGINE DRAGONS', 'IMAGINE DRAGONS');
-          });
-        }
-
-        /* 2. Secondary buttons — toggle aria-pressed */
-        var btnFav   = document.getElementById('artist-btn-fav');
-        var btnShare = document.getElementById('artist-btn-share');
-
-        if (btnFav) {
-          btnFav.addEventListener('click', function () {
-            var pressed = btnFav.getAttribute('aria-pressed') === 'true';
-            btnFav.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-          });
-        }
-        if (btnShare) {
-          btnShare.addEventListener('click', function () {
-            var pressed = btnShare.getAttribute('aria-pressed') === 'true';
-            btnShare.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-            console.log('[Город ФМ] Artist share clicked');
-          });
-        }
-
-        /* 3. "Открыть весь список" link */
-        var openAll = document.getElementById('artist-open-all');
-        if (openAll) {
-          openAll.addEventListener('click', function (e) {
-            e.preventDefault();
-            navigate('#/favorites');
-          });
-        }
-
-        /* 4. Track row clicks */
-        var tracksGrid = document.getElementById('artist-tracks-grid');
-        if (tracksGrid) {
-          function handleTrackActivation(target) {
-            var row = target.closest('.artist-track-row');
-            if (!row) return;
-            openArtistPlayer(
-              row.getAttribute('data-track-title') || 'Трек',
-              row.getAttribute('data-track-artist') || 'IMAGINE DRAGONS'
-            );
-          }
-          tracksGrid.addEventListener('click', function (e) { handleTrackActivation(e.target); });
-          tracksGrid.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleTrackActivation(e.target);
-            }
-          });
-        }
-
-        /* 5. Album card clicks */
-        var albumsRow = document.querySelector('.artist-albums-row');
-        if (albumsRow) {
-          function handleAlbumActivation(target) {
-            var card = target.closest('.artist-album-card');
-            if (!card) return;
-            openArtistPlayer(
-              card.getAttribute('data-track-title') || 'Альбом',
-              card.getAttribute('data-track-artist') || 'IMAGINE DRAGONS'
-            );
-          }
-          albumsRow.addEventListener('click', function (e) { handleAlbumActivation(e.target); });
-          albumsRow.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleAlbumActivation(e.target);
-            }
-          });
-        }
-
-        /* 6. Station chip clicks — navigate to #/home */
-        var stationsDiv = document.querySelector('.artist-stations');
-        if (stationsDiv) {
-          stationsDiv.addEventListener('click', function (e) {
-            var chip = e.target.closest('.artist-station-chip');
-            if (!chip) return;
-            var stationId = chip.getAttribute('data-station-id') || 'rock';
-            console.log('[Город ФМ] Artist station chip:', stationId);
-            navigate('#/home');
-          });
-        }
-
-      })(); /* end initArtist */
+      /* GOROD-047b: Артист-wiring перенесён в trailing-модуль window.GorodArtist
+         (decoupled, как GorodContext/GorodTrack — единый паттерн, без дубль-listeners). */
 
       /* ---- Раздел Избранное page wiring ------------------------------------ */
 
@@ -14755,6 +14022,182 @@
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
     window.GorodTrack = { render: render };
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-047b — Артист deep-dive: «почему тебе этот артист» (поведенческое,
+     НЕ collaborative), reject в общий gorodfm_rejected corpus (тот же ров, что
+     TwinrWhy/GorodTaste/Profile/Recap), art-tint hero + монограмма (НЕ силуэт),
+     топ-треки row, станции (on-brand радио). Аддитивный trailing-модуль. */
+  (function () {
+    'use strict';
+    var REJ_KEY = 'gorodfm_rejected', TASTE_KEY = 'gorodfm_taste';
+    // Artist-level reject facets (prefix art_ — no collision with player-level artist/vocal/tempo).
+    // Human labels MUST also be mirrored into REJ_LABELS canon of GorodProfile/Recap/Taste (Integrate seam §10).
+    var ART_LABELS = { art_arena: 'Арена-рок', art_vocal_m: 'Мужской вокал' };
+
+    // «Почему» — каждый пункт = ПОВЕДЕНИЕ или ATTRIBUTE-MATCH, никогда collaborative.
+    var WHY = [
+      { id:null,          t:'12 треков дослушано до конца',                              prov:'твоё поведение за месяц' },
+      { id:'art_arena',   t:'Арена-рок — <b>80%</b> совпадает с твоим вектором',          prov:'грань твоего профиля' },
+      { id:'art_vocal_m', t:'Мужской вокал, мощный припев — совпадает с тем, что ты усиливал', prov:'ты поднимал эту грань' },
+      { id:null,          t:'Не пропустил ни один трек этого артиста на «Городе»',         prov:'0 скипов' }
+    ];
+    var TRACKS = [
+      { t:'Believer',          al:'Night Visions',   d:'03:38' },
+      { t:'Thunder',           al:'Evolve',          d:'03:08' },
+      { t:'Radioactive',       al:'Night Visions',   d:'03:07' },
+      { t:'Demons',            al:'Night Visions',   d:'02:58' },
+      { t:'Whatever It Takes', al:'Evolve',          d:'03:21' }
+    ];
+    var ARTIST = 'IMAGINE DRAGONS';
+
+    function $(id){ return document.getElementById(id); }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function getRej(){ try { return JSON.parse(localStorage.getItem(REJ_KEY)||'[]'); } catch(e){ return []; } }
+    function setRej(a){ try { localStorage.setItem(REJ_KEY, JSON.stringify(a)); } catch(e){} }
+    function mono(s){ var p=String(s||'').trim().split(/\s+/); return ((p[0]||' ')[0]+((p[1]||'')[0]||'')).toUpperCase().slice(0,2); }
+    // deterministic blue-family hue from name (no random) — for track-cover/hero tint variety within blue
+    function tintFor(s){ var h=0,i; for(i=0;i<String(s).length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } var hue=215+(h%40); return 'hsl('+hue+',62%,'+(34+(h%14))+'%)'; }
+
+    function renderWhy(){
+      var list=$('artist-why-list'); if(!list) return;
+      var rej=getRej();
+      list.innerHTML='';
+      WHY.forEach(function(w){
+        var li=document.createElement('li'); li.className='artist-why-item';
+        var isRej = w.id && rej.indexOf(w.id)!==-1;
+        if(isRej) li.classList.add('is-rejected');
+        var btn = w.id
+          ? '<button class="artist-why-reject" type="button" data-rej="'+esc(w.id)+'" aria-pressed="'+(isRej?'true':'false')+'">'+(isRej?'вернуть':'не моё')+'</button>'
+          : '';
+        li.innerHTML =
+          '<span class="artist-why-dot" aria-hidden="true"></span>'+
+          '<span class="artist-why-body"><span class="artist-why-text">'+w.t+'</span>'+
+          '<span class="artist-why-prov">'+esc(w.prov)+'</span></span>'+ btn;   // w.t = trusted literal with <b>%</b>
+        list.appendChild(li);
+      });
+    }
+    function renderTracks(){
+      var box=$('artist-tracks'); if(!box) return;
+      box.innerHTML='';
+      TRACKS.forEach(function(tr,i){
+        var b=document.createElement('button'); b.type='button'; b.className='artist-track-row'; b.setAttribute('role','listitem');
+        b.setAttribute('data-track-title', tr.t); b.setAttribute('data-track-artist', ARTIST);
+        b.setAttribute('aria-label', tr.t+', '+tr.d);
+        b.innerHTML =
+          '<span class="artist-track-rank" aria-hidden="true">'+(i+1)+'</span>'+
+          '<span class="artist-track-cover" aria-hidden="true" style="background:'+tintFor(tr.t)+'"><span class="artist-track-mono">'+esc(mono(tr.t))+'</span></span>'+
+          '<span class="artist-track-meta"><span class="artist-track-title">'+esc(tr.t)+'</span>'+
+          '<span class="artist-track-album">'+esc(tr.al)+'</span></span>'+
+          '<span class="artist-track-dur tabular" aria-label="длительность '+esc(tr.d)+'">'+esc(tr.d)+'</span>';
+        box.appendChild(b);
+      });
+    }
+    function paintNot(){
+      var btn=$('artist-why-not'); if(!btn) return;
+      var rej=getRej(), off = rej.indexOf('art_arena')!==-1 && rej.indexOf('art_vocal_m')!==-1;
+      btn.setAttribute('aria-pressed', off?'true':'false');
+      btn.textContent = off ? 'Артист скрыт — вернуть' : 'Это не про меня';
+    }
+    function setHeroTint(){
+      var ph=$('artist-photo'), m=$('artist-photo-mono'); if(!ph) return;
+      var url = ph.getAttribute('data-artist-photo');
+      if(url){ var img=new Image(); img.alt=''; img.onload=function(){ ph.appendChild(img); }; img.src=url; } // real-photo seam (Ф1+)
+      ph.style.background = tintFor(ARTIST);
+      if(m) m.textContent = mono(ARTIST);
+    }
+    function receipt(msg){ var r=$('artist-why-receipt'); if(r) r.textContent=msg; }
+
+    function rejectFacet(id){
+      if(!id) return;
+      var rej=getRej(), i=rej.indexOf(id), nowRej;
+      if(i===-1){ rej.push(id); nowRej=true; } else { rej.splice(i,1); nowRej=false; }
+      setRej(rej); renderWhy(); paintNot();
+      var label = ART_LABELS[id] || id;
+      receipt(nowRej
+        ? ('Убрал «'+label+'» — следующее радио артиста меньше опирается на эту грань.')
+        : ('Вернул «'+label+'» в основания.'));
+      if(window.TwinrWave) window.TwinrWave.bump();           // visible effect if wave present
+    }
+    function toggleArtist(){
+      var rej=getRej(), off = rej.indexOf('art_arena')!==-1 && rej.indexOf('art_vocal_m')!==-1;
+      ['art_arena','art_vocal_m'].forEach(function(id){
+        var k=rej.indexOf(id);
+        if(off){ if(k!==-1) rej.splice(k,1); }       // currently off → turn back on (remove rejects)
+        else  { if(k===-1) rej.push(id); }           // turn off (reject both)
+      });
+      setRej(rej); renderWhy(); paintNot();
+      receipt(off ? 'Вернул артиста в волну.' : 'Убрал «'+ARTIST+'» — реже в твоём радио. Можно вернуть.');
+      if(window.TwinrWave) window.TwinrWave.bump();
+    }
+
+    function render(){ setHeroTint(); renderWhy(); renderTracks(); paintNot(); }
+
+    var wired=false;
+    function wire(){
+      if(wired) return;
+      var sect=document.querySelector('[data-page="artist"]'); if(!sect) return;
+
+      var toggle=$('artist-why-toggle'), list=$('artist-why-list');
+      if(toggle && list){
+        toggle.addEventListener('click', function(){
+          var open = toggle.getAttribute('aria-expanded')==='true';
+          toggle.setAttribute('aria-expanded', open?'false':'true');
+          list.hidden = open;
+          toggle.textContent = open ? 'Показать, на чём это держится' : 'Свернуть основания';
+        });
+      }
+      var listEl=$('artist-why-list');
+      if(listEl){ listEl.addEventListener('click', function(e){
+        var b=e.target.closest('.artist-why-reject'); if(!b) return;
+        rejectFacet(b.getAttribute('data-rej'));
+      }); }
+      var notBtn=$('artist-why-not'); if(notBtn) notBtn.addEventListener('click', toggleArtist);
+
+      // radio CTA — honest now-playing meta + provenance line (reuses player chrome)
+      var radio=$('artist-btn-radio');
+      if(radio) radio.addEventListener('click', function(){
+        var t=$('player-track-title'), a=$('player-track-artist'),
+            ft=$('player-full-title'), fa=$('player-full-artist'),
+            rs=$('player-track-reason'), span=rs&&rs.querySelector('span');
+        if(t) t.textContent='Радио '+ARTIST; if(a) a.textContent=ARTIST;
+        if(ft) ft.textContent='Радио '+ARTIST; if(fa) fa.textContent=ARTIST;
+        if(span) span.innerHTML='Радио по артисту: <b>арена-рок + мужской вокал</b> — грани твоего вектора';
+        if(typeof openPlayer==='function') openPlayer();        // openPlayer in router scope (initArtist used it)
+      });
+
+      var fav=$('artist-btn-fav');
+      if(fav) fav.addEventListener('click', function(){
+        var p=fav.getAttribute('aria-pressed')==='true'; fav.setAttribute('aria-pressed', p?'false':'true');
+      });
+
+      // track rows (delegated) — open player; keyboard via native <button>
+      var tracks=$('artist-tracks');
+      if(tracks) tracks.addEventListener('click', function(e){
+        var row=e.target.closest('.artist-track-row'); if(!row) return;
+        var t=$('player-track-title'), a=$('player-track-artist'),
+            ft=$('player-full-title'), fa=$('player-full-artist');
+        var title=row.getAttribute('data-track-title')||'Трек';
+        if(t) t.textContent=title; if(a) a.textContent=ARTIST;
+        if(ft) ft.textContent=title; if(fa) fa.textContent=ARTIST;
+        if(typeof openPlayer==='function') openPlayer();
+      });
+
+      // stations → #/home (navigate in router scope)
+      var stations=document.querySelector('[data-page="artist"] .artist-stations');
+      if(stations) stations.addEventListener('click', function(e){
+        var chip=e.target.closest('.artist-station-chip'); if(!chip) return;
+        if(typeof navigate==='function') navigate('#/home');
+        else location.hash='#/home';
+      });
+      wired=true;
+    }
+    function onRoute(){ if((location.hash||'')==='#/artist'){ wire(); render(); } }
+    window.addEventListener('hashchange', onRoute);
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
+    window.GorodArtist = { render:render };
   })();
   </script>
 
