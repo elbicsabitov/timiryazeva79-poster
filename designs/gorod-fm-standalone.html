@@ -589,7 +589,7 @@
       .player-mini-progress-fill {
         height: 100%;
         width: 30%;
-        background: var(--np-accent);   /* solid accent, tints from cover art (NowPlayingTint) */
+        background: var(--brand-blue-light);   /* fixed single accent (color-from-art retired, cont-11) */
         border-radius: var(--r-pill);
         transition: width var(--t-slow), background var(--t-slow);
       }
@@ -3071,7 +3071,7 @@
         border-radius: 22px;
         padding: 26px 26px 22px;
         cursor: pointer;
-        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04), 0 0 44px -6px var(--np-accent);
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
         transform: scale(0.96); opacity: 0;
         transition: transform var(--t-mid), opacity var(--t-mid);
         text-align: left;
@@ -5581,7 +5581,7 @@
         --track-tint: var(--np-accent, var(--brand-blue-light));
         display: flex; align-items: center; justify-content: center;
         background: color-mix(in oklab, var(--track-tint) 22%, #111318) !important;
-        box-shadow: 0 40px 100px rgba(0,0,0,0.55), 0 0 64px -16px var(--track-tint);
+        box-shadow: 0 40px 100px rgba(0,0,0,0.55);
       }
       .track-cover-mono { font-family: 'Onest', sans-serif; font-weight: 800; font-size: clamp(72px, 16vw, 132px); line-height: 1; color: #fff; letter-spacing: -0.02em; text-shadow: 0 2px 24px rgba(0,0,0,0.35); }
       .track-stage-why { width: 100%; max-width: 620px; margin: 0 auto; padding: 8px 24px 0; box-sizing: border-box; }
@@ -13352,7 +13352,7 @@
     }
     function apply(img) {
       if (!img) return;
-      var go = function () { var c = sample(img); if (c) document.documentElement.style.setProperty('--np-accent', c); paintHero(); };
+      var go = function () { paintHero(); };  /* cont-11: color-from-art retired — --np-accent stays brand blue (calm / §0.5) */
       if (img.complete && img.naturalWidth) go(); else img.addEventListener('load', go);
     }
     function paintHero() {                                   // GOROD-045 — mirror player accent onto #/home hero (no-op without radio-home)
