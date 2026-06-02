@@ -1,17 +1,17 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-3) — AI-радио: audit + P0 + P1 done, дальше остаток P1
+## ⚡ LATEST (2026-06-02 cont-4) — AI-радио: P1 safe-остаток (048 transition-card · 049 edge-glow) DONE + visual-QA; дальше 045/047 (Эльбик-gate) или P2 loops
 
 📖 **READ FIRST: `docs/superpowers/HANDOFF-gorod-fm-cont-2026-06-02.md`** — полный хендофф (что построено, архитектура модулей, forward-план, gates, демо, constraints). Потом `AUDIT-gorod-fm-screens-and-service.md` §8 (план GOROD-040..057).
 
 🧭 **Эльбик-steer:** строить **AI-радио по VISION** (не legacy-completion). Доверие = fidelity (объяснение = реальный вектор). **«Почему» всегда поведенческая** («дослушал 3×»), не маркетинг. Визуально верифицировать каждый шаг (Chrome MCP).
 
-**Сделано (master, ВСЁ PUSHED, HEAD `7520cb2`):** standalone-opt 71→2.1 MB · resume→music flagship · #9 taste-ad · **6-агентный Karpathy АУДИТ** · **P0 5/5** (`040` always-on «почему» · `041` «Исправь причину» L2 · `042` цвет-от-обложки `NowPlayingTint` · `043` slop-kill+realign now-playing→Слеза/Егор Крид · `044` behavioral-copy) · **P1 `046` «Открыть» rebuild** (`GorodDiscover`: разговор+explained-results + taste-adjacency). VISION 1-9 + UX A-H все built.
+**Сделано (master; P0+046 pushed @ `797acd6`; **048/049 committed locally — PUSH pending Эльбик**):** standalone-opt 71→2.1 MB · resume→music flagship · #9 taste-ad · **6-агентный Karpathy АУДИТ** · **P0 5/5** (`040` always-on «почему» · `041` «Исправь причину» L2 · `042` цвет-от-обложки `NowPlayingTint` · `043` slop-kill+realign now-playing→Слеза/Егор Крид · `044` behavioral-copy) · **P1 `046` «Открыть» rebuild** (`GorodDiscover`: разговор+explained-results + taste-adjacency) · **P1 safe-остаток `048` transition-card (`TwinrTransition`: DJ-announce next + поведенческое «почему», accent от обложки) + `049` Twinr edge-glow (заменил always-on орб-пульс → светится только когда говорит) + motion-токены**. VISION 1-9 + UX A-H все built.
 
-**Next = остаток P1:**
-- 🟢 **Safe (бери сразу):** `GOROD-048` transition-card («DJ объявляет следующий + почему») · `GOROD-049` Twinr **edge-glow** (вместо орба) + motion-токены.
-- 🔒 **Gate/realign:** `GOROD-045` **Волна 3-зоны** (audit §3 — ломает pixel-perfect home, **решение Эльбика**) · `GOROD-047` Артист/Трек deep-dive + slop-kill (нужен realign на реал-ассеты как плеер, ИЛИ обложки от Эльбика).
-- Потом P2 loops (recap-карточка, контекст-старты, открытый-профиль, стрики) → P3 backend (reason_tag pipeline=moat, 🔒лицензии CC→MERLIN, B2B taste-ads).
+**Next:** P1 safe-остаток ВЫПОЛНЕН (`048`+`049`, visual-QA ✓). Осталось:
+- 🔒 **Gate/realign (нужен Эльбик):** `GOROD-045` **Волна 3-зоны** (audit §3 — ломает pixel-perfect home, **решение Эльбика «насколько ломать»**) · `GOROD-047` Артист/Трек deep-dive + slop-kill (нужен realign на реал-ассеты как плеер, ИЛИ обложки от Эльбика).
+- 🟢 **Можно брать автономно:** P2 loops `050-054` (weekly recap-карточка 9:16 · контекст-старты Утро/Работа/Вечер · открытый-профиль demo-экран для питча · стрики «Дней с Волной» + заморозка · cold-start импорт-seed) → P3 backend (`055` reason_tag pipeline = moat · 🔒`056` лицензии CC→MERLIN · `057` B2B taste-ads).
+- ⚠️ **Push pending:** `048`/`049` закоммичены локально, НЕ запушены (жду «гоу» Эльбика); standalone пересобрать вместе с push.
 
 **Эльбик-gates:** GOROD-029 позиционирование · GOROD-030 лицензии · IA/pixel-perfect (GOROD-045). **Asset wall:** прототип без per-track обложек → GOROD-047 нужен realign/ассеты.
 

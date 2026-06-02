@@ -140,6 +140,15 @@
         --t-fast:      180ms cubic-bezier(0.2, 0.8, 0.2, 1);
         --t-mid:       340ms cubic-bezier(0.2, 0.8, 0.2, 1);
         --t-slow:      600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+        /* — Motion system (GOROD-049) — named easings + shared beats so motion
+           reads as SIGNAL, not decoration. The --t-* above keep every existing
+           call-site; these add the vocabulary new components reuse. */
+        --ease-standard:   cubic-bezier(0.2, 0.8, 0.2, 1);    /* default in / out */
+        --ease-emphasized: cubic-bezier(0.34, 1.4, 0.64, 1);  /* gentle overshoot — arrivals */
+        --ease-exit:       cubic-bezier(0.4, 0, 1, 1);        /* accelerate away */
+        --dur-breathe:     1600ms;   /* Twinr edge-glow "breath" while it speaks */
+        --dur-announce:    1600ms;   /* between-track transition card total */
       }
 
       /* Warm theme: player accent switches to Monte Carlo amber */
@@ -2476,14 +2485,30 @@
         background: rgba(255, 255, 255, 0.22); border-radius: 50%;
       }
       .ai-launcher-spark svg { width: 16px; height: 16px; }
-      @media (prefers-reduced-motion: no-preference) {
-        .ai-launcher::after {
-          content: ''; position: absolute; inset: -4px; border-radius: inherit;
-          border: 2px solid var(--brand-blue-light); opacity: 0;
-          animation: ai-pulse 2.8s ease-out infinite;
-        }
+      /* GOROD-049 — Twinr "speaking" edge-glow. Replaces the old always-on orb
+         shimmer ring (audit §5: motion must MEAN something — orb-with-shimmer is
+         2023). The launcher / dock breathe ONLY while Twinr talks; calm when
+         silent. .is-speaking is toggled from TwinrChat aiSay + .pulse(). */
+      .ai-launcher.is-speaking::after {
+        content: ''; position: absolute; inset: -3px; border-radius: inherit;
+        pointer-events: none;
+        box-shadow: 0 0 0 2px rgba(81, 104, 252, 0.5), 0 0 30px 7px rgba(81, 104, 252, 0.55);
+        animation: twinr-breathe var(--dur-breathe) var(--ease-standard) infinite;
       }
-      @keyframes ai-pulse { 0% { opacity: 0.5; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.25); } }
+      .ai-dock.is-speaking {
+        animation: twinr-breathe-dock var(--dur-breathe) var(--ease-standard) infinite;
+      }
+      @keyframes twinr-breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.92; } }
+      @keyframes twinr-breathe-dock {
+        0%, 100% { box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(81, 104, 252, 0.3), 0 0 18px 1px rgba(81, 104, 252, 0.25); }
+        50%      { box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(81, 104, 252, 0.55), 0 0 34px 4px rgba(81, 104, 252, 0.55); }
+      }
+      /* Reduced motion: keep the signal as a STATIC glow (global rule kills the
+         breathing animation, so set the resting glow explicitly). */
+      @media (prefers-reduced-motion: reduce) {
+        .ai-launcher.is-speaking::after { opacity: 0.85; }
+        .ai-dock.is-speaking { box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(81, 104, 252, 0.5), 0 0 30px 3px rgba(81, 104, 252, 0.5); }
+      }
 
       .ai-dock {
         position: fixed;
@@ -2761,6 +2786,73 @@
       .ai-ribbon-close:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
       .ai-ribbon-close svg { width: 13px; height: 13px; }
       @media (max-width: 560px) { .ai-ribbon-why { display: none; } }
+
+      /* =====================================================================
+         GOROD-048 — Between-track transition card. The "DJ announces the next
+         track + why" beat (no dead spinner). Near-black + ONE content-derived
+         accent (--np-accent, set by NowPlayingTint); NO slop gradient or
+         mismatched cover — asset-wall honest. (audit §3 / §5)
+         ===================================================================== */
+      .np-transition {
+        position: fixed; inset: 0; z-index: 260;
+        display: flex; align-items: center; justify-content: center;
+        padding: 24px;
+        background: rgba(8, 9, 12, 0.72);
+        background: radial-gradient(120% 90% at 50% 42%, color-mix(in oklab, var(--np-accent) 16%, transparent) 0%, rgba(8, 9, 12, 0) 60%), rgba(8, 9, 12, 0.72);
+        -webkit-backdrop-filter: blur(14px) saturate(1.05);
+        backdrop-filter: blur(14px) saturate(1.05);
+        opacity: 0; pointer-events: none;
+        transition: opacity 400ms var(--ease-standard);
+      }
+      .np-transition.is-show { opacity: 1; pointer-events: auto; }
+      .np-transition-card {
+        position: relative;
+        width: min(440px, 100%);
+        background: #111318;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 22px;
+        padding: 26px 26px 22px;
+        cursor: pointer;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04), 0 0 44px -6px var(--np-accent);
+        transform: scale(0.96); opacity: 0;
+        transition: transform var(--t-mid), opacity var(--t-mid);
+        text-align: left;
+      }
+      .np-transition.is-show .np-transition-card { transform: scale(1); opacity: 1; }
+      .np-transition-overline {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 700;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--np-accent);
+        margin-bottom: 15px;
+      }
+      .np-transition-spark {
+        width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: rgba(81, 104, 252, 0.22);
+        background: color-mix(in oklab, var(--np-accent) 24%, transparent);
+      }
+      .np-transition-spark svg { width: 13px; height: 13px; }
+      .np-transition-title {
+        font-family: 'Onest', sans-serif; font-weight: 800; font-size: 30px; line-height: 1.1;
+        color: #fff; text-wrap: balance; margin: 0 0 4px;
+      }
+      .np-transition-artist {
+        font-family: 'Onest', sans-serif; font-weight: 500; font-size: 16px;
+        color: var(--text-sec); margin: 0 0 15px;
+      }
+      .np-transition-why {
+        display: flex; gap: 9px; align-items: flex-start;
+        font-family: 'Onest', sans-serif; font-size: 13.5px; line-height: 1.4;
+        color: #d7dae3; text-wrap: pretty;
+        padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .np-transition-why svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; color: var(--np-accent); }
+      .np-transition-why b { color: #fff; font-weight: 700; }
+      .np-transition-hint {
+        margin-top: 13px; font-family: 'Onest', sans-serif; font-size: 11.5px; color: var(--text-quat);
+      }
+      @media (max-width: 480px) { .np-transition-title { font-size: 25px; } }
 
       /* Sonify-the-wave toggle on the taste hero */
       .taste-sonify {
@@ -9838,6 +9930,23 @@
     </button>
   </div>
 
+  <!-- GOROD-048 — between-track transition card ("DJ announces next + why") -->
+  <div class="np-transition" id="np-transition" role="status" aria-live="polite" aria-hidden="true">
+    <div class="np-transition-card" id="np-transition-card" role="button" tabindex="-1" aria-label="Следующий трек — нажмите, чтобы перейти сразу">
+      <span class="np-transition-overline">
+        <span class="np-transition-spark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg></span>
+        Дальше в эфире
+      </span>
+      <div class="np-transition-title" id="np-transition-title">—</div>
+      <div class="np-transition-artist" id="np-transition-artist">—</div>
+      <div class="np-transition-why">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+        <span id="np-transition-why">—</span>
+      </div>
+      <div class="np-transition-hint" aria-hidden="true">нажмите, чтобы перейти сразу</div>
+    </div>
+  </div>
+
   <!-- ======================================================================
        PLAYER FULL OVERLAY — Monte Carlo style (Task #2)
        ====================================================================== -->
@@ -12369,6 +12478,18 @@
     var dock, launcher, msgs, chipsEl, profileTags, inputForm, input;
     var profile = ['Арена-рок', 'Хип-хоп 2010-х', 'Электро-поп'];
     var greeted = false;
+    var speakTimer = 0;
+
+    // GOROD-049 — edge-glow signal: launcher/dock "breathe" only while Twinr talks.
+    function setSpeaking(on) {
+      if (dock) dock.classList.toggle('is-speaking', !!on);
+      if (launcher) launcher.classList.toggle('is-speaking', !!on);
+    }
+    function pulse(ms) {
+      setSpeaking(true);
+      clearTimeout(speakTimer);
+      speakTimer = setTimeout(function () { setSpeaking(false); }, ms || 1600);
+    }
 
     function $(id) { return document.getElementById(id); }
     function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -12437,10 +12558,15 @@
     }
     function aiSay(html, delay) {
       return new Promise(function (res) {
+        setSpeaking(true);                       // Twinr "speaks" → edge-glow breathes (GOROD-049)
         var t = document.createElement('div'); t.className = 'ai-msg ai-msg--ai';
         t.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div><div class="ai-msg-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>';
         msgs.appendChild(t); scrollDown();
-        setTimeout(function () { t.remove(); addAI(html); res(); }, delay || 760);
+        setTimeout(function () {
+          t.remove(); addAI(html);
+          clearTimeout(speakTimer); speakTimer = setTimeout(function () { setSpeaking(false); }, 700);
+          res();
+        }, delay || 760);
       });
     }
     function track(title, artist) {
@@ -12542,7 +12668,7 @@
       if (intents[intent]) intents[intent]();
     }
 
-    window.TwinrChat = { open: open, greetFromOnboarding: greetFromOnboarding, ask: ask };
+    window.TwinrChat = { open: open, greetFromOnboarding: greetFromOnboarding, ask: ask, pulse: pulse };
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
@@ -13078,6 +13204,88 @@
     }
     function hide() { if (el) { el.classList.remove('is-show'); el.setAttribute('aria-hidden', 'true'); } clearTimeout(hideTimer); }
     window.TwinrRibbon = { show: show, hide: hide };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-048 — between-track transition card. On «next», Twinr ANNOUNCES
+     the upcoming track + a behavioral reason (the "DJ" beat), then commits the
+     now-playing swap. No dead spinner. Reasons are behavioral, never marketing
+     (audit §3 / §4). Asset-wall honest: the real cover stays, accent = colour
+     from art (--np-accent). Wires the previously no-op transport buttons. */
+  (function () {
+    'use strict';
+    // A short on-vector flow for the demo. Starts on canon (Слеза → Любимка,
+    // warm pop), every «почему» tied to a real listening behaviour, never a
+    // marketing claim. `pill` = the short mini-player reason line; `reason` =
+    // the fuller card line (may carry <b>).
+    var FLOW = [
+      { title: 'Любимка',            artist: 'Niletto',         reason: 'Тёплый поп ~95 BPM, как «Слеза» — её ты дослушал до конца <b>3 раза</b>', pill: 'Тёплый поп, как «Слеза»' },
+      { title: 'Я не могу без тебя', artist: 'ANNA ASTI',       reason: 'Тот же мягкий женский вокал — за месяц <b>7 раз</b> не пропустил такие вечером', pill: 'Мягкий вокал — твой вечер' },
+      { title: 'Прятки',            artist: 'HammAli & Navai',  reason: 'Меланхоличная грустинка в поп-форме — твой паттерн по пятницам', pill: 'Меланхоличный поп по пятницам' },
+      { title: 'Розовое вино',      artist: 'Элджей & Feduk',   reason: 'Держу тёплый вектор и ровный темп — так ты слушаешь под вечер', pill: 'Ровный тёплый темп' },
+      { title: 'Где ты, где я',     artist: 'jakone & Кравц',   reason: 'Соседний по вектору трек — ты лайкнул двум с похожим битом', pill: 'Сосед по вектору' }
+    ];
+    var idx = -1, el, card, titleEl, artistEl, whyEl, commitTimer = 0, pending = null;
+    function $(id) { return document.getElementById(id); }
+
+    function commit(t) {
+      // Update mini-player (title / artist / behavioral reason) + home hero band.
+      // Cover image stays (asset wall — no per-track art); accent keeps colour-from-art.
+      var set = function (id, v) { var n = $(id); if (n) n.textContent = v; };
+      set('player-track-title', t.title);
+      set('player-track-artist', t.artist);
+      var reason = $('player-track-reason'), rs = reason && reason.querySelector('span');
+      if (rs) rs.innerHTML = t.pill || t.reason;
+      set('home-track-title', t.title);
+      set('home-track-artist', t.artist);
+      if (window.NowPlayingTint) window.NowPlayingTint.refresh();
+    }
+
+    function finish() {
+      clearTimeout(commitTimer);
+      if (pending) { commit(pending); pending = null; }
+      if (el) { el.classList.remove('is-show'); el.setAttribute('aria-hidden', 'true'); }
+    }
+
+    function play(next) {
+      if (!el || !next) return;
+      // During onboarding don't interrupt with the card — just commit silently.
+      if ((window.location.hash || '') === '#/onboarding') { commit(next); return; }
+      pending = next;
+      titleEl.textContent = next.title;
+      artistEl.textContent = next.artist;
+      whyEl.innerHTML = next.reason;
+      el.classList.add('is-show'); el.setAttribute('aria-hidden', 'false');
+      if (window.TwinrChat && window.TwinrChat.pulse) window.TwinrChat.pulse(1700); // Twinr "speaks" → edge-glow
+      clearTimeout(commitTimer);
+      commitTimer = setTimeout(finish, 1600);
+    }
+
+    function step(dir) {
+      idx = (idx + dir + FLOW.length) % FLOW.length;
+      play(FLOW[idx]);
+    }
+    function nextTrack() { step(1); }
+    function prevTrack() { step(-1); }
+
+    function init() {
+      el = $('np-transition'); if (!el) return;
+      card = $('np-transition-card'); titleEl = $('np-transition-title');
+      artistEl = $('np-transition-artist'); whyEl = $('np-transition-why');
+      // Tap card or scrim → skip straight to the track.
+      card.addEventListener('click', function (e) { e.stopPropagation(); finish(); });
+      el.addEventListener('click', finish);
+      // Wire the (previously no-op) transport buttons across mini + full player.
+      ['btn-next', 'player-full-next'].forEach(function (id) {
+        var b = $(id); if (b) b.addEventListener('click', function (e) { e.stopPropagation(); nextTrack(); });
+      });
+      ['btn-prev', 'player-full-prev'].forEach(function (id) {
+        var b = $(id); if (b) b.addEventListener('click', function (e) { e.stopPropagation(); prevTrack(); });
+      });
+      window.TwinrTransition = { play: play, next: nextTrack, prev: prevTrack };
+    }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   })();
   </script>
