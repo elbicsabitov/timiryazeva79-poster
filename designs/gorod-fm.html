@@ -12998,6 +12998,42 @@
   })();
   </script>
 
+  <!-- ---- TwinrModel — ЕДИНЫЙ источник граней + reject-канон (W6 anti-fidelity dedup, blueprint §9-B).
+       REJ_LABELS дублировался в GorodTaste/GorodProfile/GorodRecap; теперь все читают канон ОТСЮДА →
+       reject новых поверхностей (track `mood` / artist `art_*`) виден везде, views не расходятся.
+       Стоит ПЕРЕД всеми потребителями (GorodTaste внутри wave-IIFE ниже тоже читает отсюда). ---- -->
+  <script>
+  (function () {
+    'use strict';
+    var TASTE_KEY = 'gorodfm_taste', REJ_KEY = 'gorodfm_rejected';
+    // canon id→label (mirror of TwinrWhy REASONS, GOROD-041) — единственная копия; расширен для track(047a)/artist(047b)
+    var REJ_LABELS = {
+      artist: 'Егор Крид', vocal: 'Тёплый поп-вокал', tempo: 'Темп ~95 BPM',
+      mood: 'Настроение «спокойно»', art_arena: 'Арена-рок', art_vocal_m: 'Мужской вокал'
+    };
+    var REJ_PROV = 'оспорено на плеере: «почему?» → «не моё»';
+    var FALLBACK = [
+      { n: 'Арена-рок',      w: 80, prov: 'усилено: дослушиваешь до конца' },
+      { n: 'Хип-хоп 2010-х', w: 66, prov: 'из прослушивания за месяц' },
+      { n: 'Электро-поп',    w: 54, prov: 'по времени суток — вечер' },
+      { n: 'Инди',           w: 40, prov: 'смежное — рядом с твоим вектором' }
+    ];
+    function readPicks() { try { return (JSON.parse(localStorage.getItem(TASTE_KEY) || '[]')).slice(0, 6); } catch (e) { return []; } }
+    function readRej() { try { return JSON.parse(localStorage.getItem(REJ_KEY) || '[]'); } catch (e) { return []; } }
+    function facets() {
+      var out = [];
+      readPicks().forEach(function (p) { out.push({ n: p, w: 84, prov: 'из онбординга — ты выбрал сам' }); });
+      FALLBACK.forEach(function (f) { if (out.length < 5 && !out.some(function (o) { return o.n === f.n; })) out.push(f); });
+      return out.slice(0, 5);
+    }
+    function hasRealSignal() { return readPicks().length > 0 || readRej().length > 0; }
+    window.TwinrModel = {
+      TASTE_KEY: TASTE_KEY, REJ_KEY: REJ_KEY, REJ_LABELS: REJ_LABELS, REJ_PROV: REJ_PROV,
+      FALLBACK: FALLBACK, readPicks: readPicks, readRej: readRej, facets: facets, hasRealSignal: hasRealSignal
+    };
+  })();
+  </script>
+
   <script>
   /* ---- Living Twinr wave (canvas) + «Мой вкус» editable profile --------- */
   (function () {
@@ -13129,7 +13165,7 @@
     };
     var data, built = false, rejList = [];
     var REJ_KEY = 'gorodfm_rejected';
-    var REJ_LABELS = { artist: 'Егор Крид', vocal: 'Тёплый поп-вокал', tempo: 'Темп ~95 BPM' };   // canon (same as GorodProfile/GorodRecap) — mirror of TwinrWhy REASONS id→label
+    var REJ_LABELS = window.TwinrModel.REJ_LABELS;   // canon (same as GorodProfile/GorodRecap) — mirror of TwinrWhy REASONS id→label
     var PIN ='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 4h6l-1 7 3 2v2h-4v5l-1 1-1-1v-5H6v-2l3-2z"/></svg>';
 
     function seed() {
@@ -13668,7 +13704,7 @@
     'use strict';
     var TASTE_KEY = 'gorodfm_taste', REJ_KEY = 'gorodfm_rejected';
     // Mirror of TwinrWhy REASONS id→label (GOROD-041) so rejected facets read human.
-    var REJ_LABELS = { artist: 'Егор Крид', vocal: 'Тёплый поп-вокал', tempo: 'Темп ~95 BPM' };
+    var REJ_LABELS = window.TwinrModel.REJ_LABELS;
     // Honest behavioral defaults when onboarding picks are absent — `prov` names
     // HOW the facet entered the profile, never marketing.
     var FALLBACK = [
@@ -13765,7 +13801,7 @@
 
     /* ---- shared data model (BYTE-IDENTICAL to GorodProfile) ---- */
     var TASTE_KEY = 'gorodfm_taste', REJ_KEY = 'gorodfm_rejected';
-    var REJ_LABELS = { artist: 'Егор Крид', vocal: 'Тёплый поп-вокал', tempo: 'Темп ~95 BPM' };
+    var REJ_LABELS = window.TwinrModel.REJ_LABELS;
     var FALLBACK = [
       { n: 'Арена-рок',      w: 80, prov: 'усилено: дослушиваешь до конца' },
       { n: 'Хип-хоп 2010-х', w: 66, prov: 'из прослушивания за месяц' },
