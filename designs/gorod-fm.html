@@ -623,9 +623,6 @@
         text-wrap: balance;
       }
 
-      .player-mini-art-placeholder--1 { background: linear-gradient(135deg, #1a4fa0, #5168FC); }
-      .player-mini-art-placeholder--2 { background: linear-gradient(135deg, #7b2d8b, #c43a6e); }
-      .player-mini-art-placeholder--3 { background: linear-gradient(135deg, #1a6b3a, #2ecc71); }
 
       /* Track meta */
       .player-mini-meta {
@@ -2830,7 +2827,7 @@
         display: flex; align-items: center; gap: 12px;
         padding: 14px 14px 14px 18px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: linear-gradient(135deg, rgba(81, 104, 252, 0.18), rgba(139, 92, 246, 0.10));
+        background: rgba(81, 104, 252, 0.14);
         flex-shrink: 0;
       }
       .ai-dock-avatar {
@@ -4980,7 +4977,7 @@
         display:flex; align-items:center; justify-content:center; overflow:hidden;
         background:var(--brand-blue-light);
       }
-      .artist-track-cover::after { content:""; position:absolute; inset:0; background:radial-gradient(110% 110% at 30% 25%, rgba(255,255,255,0.16), rgba(0,0,0,0.28)); }
+      .artist-track-cover::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 55%); }
       .artist-track-mono { position:relative; z-index:1; font-family:'Onest',sans-serif; font-size:15px; font-weight:800; color:#fff; }
       .artist-track-meta { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
       .artist-track-title { font-family:'Onest',sans-serif; font-size:15px; font-weight:600; color:var(--text-pri); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -8144,7 +8141,7 @@
                 data-tile-artist="Martin Garrix × Julian Jordan"
                 aria-label="Открыть альбом Glitch — Martin Garrix × Julian Jordan"
               >
-                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#0a2f70 0%,#0d74c4 45%,#1ecfe0 100%);">
+                <div class="library-tile-cover library-tile-cover--album" style="background:var(--surface-1);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
                     <circle cx="28" cy="28" r="12" stroke="rgba(30,207,224,0.90)" stroke-width="1.5"/>
@@ -8229,7 +8226,7 @@
                 data-tile-artist="Плейлист · 32 трека"
                 aria-label="Открыть плейлист Mood: Driving, 32 трека"
               >
-                <div class="library-tile-cover library-tile-cover--playlist" style="background:linear-gradient(135deg,#1a0456 0%,#3b1a9c 45%,#7b4be0 100%);">
+                <div class="library-tile-cover library-tile-cover--playlist" style="background:var(--surface-1);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <rect x="12" y="16" width="32" height="4" rx="2" fill="rgba(255,255,255,0.80)"/>
                     <rect x="12" y="26" width="24" height="4" rx="2" fill="rgba(255,255,255,0.60)"/>
@@ -8255,7 +8252,7 @@
                 data-tile-artist="Jeff Buckley"
                 aria-label="Открыть альбом Hallelujah — Jeff Buckley"
               >
-                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#1a3060 0%,#2e6bb0 50%,#5168FC 100%);">
+                <div class="library-tile-cover library-tile-cover--album" style="background:var(--surface-1);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
                     <circle cx="28" cy="28" r="12" stroke="rgba(81, 104, 252,0.90)" stroke-width="1.5"/>
@@ -8283,7 +8280,7 @@
                 data-tile-artist="Плейлист · 18 треков"
                 aria-label="Открыть плейлист Подборка ДИСКАЧ 90-Х, 18 треков"
               >
-                <div class="library-tile-cover library-tile-cover--playlist" style="background:linear-gradient(135deg,#5c1a00 0%,#b04a10 45%,#e8a030 100%);">
+                <div class="library-tile-cover library-tile-cover--playlist" style="background:var(--surface-1);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <rect x="12" y="16" width="32" height="4" rx="2" fill="rgba(255,255,255,0.80)"/>
                     <rect x="12" y="26" width="24" height="4" rx="2" fill="rgba(255,255,255,0.60)"/>
@@ -8309,7 +8306,7 @@
                 data-tile-artist="Сборник 2026"
                 aria-label="Открыть альбом Z. CITY SHOW — сборник 2026"
               >
-                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#001440 0%,#1a6bde 50%,#5168FC 100%);">
+                <div class="library-tile-cover library-tile-cover--album" style="background:var(--surface-1);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
                     <circle cx="28" cy="28" r="12" stroke="rgba(81, 104, 252,0.90)" stroke-width="1.5"/>
@@ -8337,7 +8334,7 @@
                 data-tile-artist="Подкаст · S1E3 · 28 мин"
                 aria-label="Открыть подкаст Город ФМ За кадром, сезон 1 эпизод 3, 28 минут"
               >
-                <div class="library-tile-cover library-tile-cover--podcast" style="background:linear-gradient(135deg,#3d1400 0%,#a03a10 45%,#d46030 100%);">
+                <div class="library-tile-cover library-tile-cover--podcast" style="background:var(--surface-1);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <rect x="20" y="10" width="16" height="24" rx="8" stroke="rgba(255,255,255,0.80)" stroke-width="2.5" fill="none"/>
                     <path d="M12 28 C12 36.84 19.16 44 28 44 C36.84 44 44 36.84 44 28" stroke="rgba(229,122,48,0.90)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
@@ -8772,7 +8769,7 @@
                 <div class="track-history-list" id="track-history-list">
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #2c3e50, #4a6fa5);" aria-hidden="true">LP</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">LP</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Roads Untraveled</div>
                       <div class="track-history-subtitle">
@@ -8786,7 +8783,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #e91e63, #ff5722);" aria-hidden="true">DG</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DG</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Baby Don't Hurt Me</div>
                       <div class="track-history-subtitle">
@@ -8800,7 +8797,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #bf360c, #e64a19);" aria-hidden="true">DG</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DG</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Stay (Don't Go Away)</div>
                       <div class="track-history-subtitle">
@@ -8814,7 +8811,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #ff4081, #9c27b0);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Dance The Night (Ayur Tyre…)</div>
                       <div class="track-history-subtitle">
@@ -8828,7 +8825,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #1565c0, #00bcd4);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Jana Schaefer</div>
                       <div class="track-history-subtitle">
@@ -8842,7 +8839,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #37474f, #78909c);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Pat Hauck MD</div>
                       <div class="track-history-subtitle">
@@ -8856,7 +8853,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #4a148c, #7b1fa2);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Lynda Kuhn</div>
                       <div class="track-history-subtitle">
@@ -8871,7 +8868,7 @@
 
                   <!-- Dimmed via CSS :last-child → opacity 0.6 on 10th item, so add explicit class -->
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #006064, #00897b);" aria-hidden="true">CH</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">CH</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Metro</div>
                       <div class="track-history-subtitle">
@@ -8899,7 +8896,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #5168FC, #1a6b3a);" aria-hidden="true">MG</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">MG</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Glitch</div>
                       <div class="track-history-subtitle">
@@ -9042,7 +9039,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Believer" data-fav-artist="IMAGINE DRAGONS"
             aria-label="Believer, трек, Imagine Dragons">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#5168FC)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Believer</span>
               <span class="favorites-row-sub">IMAGINE DRAGONS · 03:38</span>
@@ -9058,7 +9055,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="artist" data-fav-title="IMAGINE DRAGONS"
             aria-label="Imagine Dragons, артист, 47 треков">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a4fa0,#8b2da0)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">IMAGINE DRAGONS</span>
               <span class="favorites-row-sub">артист · 47 треков</span>
@@ -9074,7 +9071,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="playlist" data-fav-title="Город ФМ · Тёмный вечер"
             aria-label="Город ФМ Тёмный вечер, плейлист, 24 трека">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#2d0a5a,#5a1e8c)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Город ФМ · Тёмный вечер</span>
               <span class="favorites-row-sub">плейлист · 24 трека</span>
@@ -9090,7 +9087,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="station" data-fav-title="ГОРОД РОК"
             aria-label="ГОРОД РОК, станция, 103.5 FM">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#5168FC)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">ГОРОД РОК</span>
               <span class="favorites-row-sub">станция · 103.5 FM</span>
@@ -9106,7 +9103,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Glitch" data-fav-artist="MARTIN GARRIX × JULIAN JORDAN"
             aria-label="Glitch, трек, Martin Garrix">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#00352a,#00a676)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Glitch</span>
               <span class="favorites-row-sub">MARTIN GARRIX × JULIAN JORDAN · 04:00</span>
@@ -9122,7 +9119,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="playlist" data-fav-title="Mood: Driving"
             aria-label="Mood: Driving, плейлист, 32 трека">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#3d1547,#c43a6e)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Mood: Driving</span>
               <span class="favorites-row-sub">плейлист · 32 трека</span>
@@ -9138,7 +9135,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Hallelujah" data-fav-artist="JEFF BUCKLEY"
             aria-label="Hallelujah, трек, Jeff Buckley">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#4a3a00,#c4a000)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Hallelujah</span>
               <span class="favorites-row-sub">JEFF BUCKLEY · 06:55</span>
@@ -9154,7 +9151,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="artist" data-fav-title="LINKIN PARK"
             aria-label="Linkin Park, артист, 32 трека">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#6a0a00,#c42000)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">LINKIN PARK</span>
               <span class="favorites-row-sub">артист · 32 трека</span>
@@ -9170,7 +9167,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Roads Untraveled" data-fav-artist="LINKIN PARK"
             aria-label="Roads Untraveled, трек, Linkin Park">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a1a4a,#3c6ac4)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Roads Untraveled</span>
               <span class="favorites-row-sub">LINKIN PARK · 04:36</span>
@@ -9186,7 +9183,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="station" data-fav-title="DFM CHILL"
             aria-label="DFM CHILL, станция, 104.5 FM">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#001a45,#0d5fcf)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">DFM CHILL</span>
               <span class="favorites-row-sub">станция · 104.5 FM</span>
@@ -9202,7 +9199,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="playlist" data-fav-title="Подборка ДИСКАЧ 90-Х"
             aria-label="Подборка ДИСКАЧ 90-Х, плейлист, 18 треков">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#7a4600,#d4780a)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Подборка ДИСКАЧ 90-Х</span>
               <span class="favorites-row-sub">плейлист · 18 треков</span>
@@ -9218,7 +9215,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Dance The Night" data-fav-artist="DUA LIPA"
             aria-label="Dance The Night, трек, Dua Lipa">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#8b005d,#e0007a)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Dance The Night</span>
               <span class="favorites-row-sub">DUA LIPA · 02:56</span>
@@ -9234,7 +9231,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="artist" data-fav-title="JONY"
             aria-label="JONY, артист, 21 трек">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#004f6d,#0a8f8a)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">JONY</span>
               <span class="favorites-row-sub">артист · 21 трек</span>
@@ -9250,7 +9247,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="playlist" data-fav-title="Город ФМ · За кадром"
             aria-label="Город ФМ За кадром, плейлист, 14 эпизодов">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a0840,#3d1e8c)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Город ФМ · За кадром</span>
               <span class="favorites-row-sub">плейлист · 14 эпизодов</span>
@@ -9266,7 +9263,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Roads Untraveled (acoustic)" data-fav-artist="LINKIN PARK"
             aria-label="Roads Untraveled acoustic, трек, Linkin Park">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#2a1a5c,#5c3aa0)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Roads Untraveled (acoustic)</span>
               <span class="favorites-row-sub">LINKIN PARK · 04:20</span>
@@ -9282,7 +9279,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="station" data-fav-title="ГОРОД ХИТ"
             aria-label="ГОРОД ХИТ, станция, 89.0 FM">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#004d2e,#00cc7a)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">ГОРОД ХИТ</span>
               <span class="favorites-row-sub">станция · 89.0 FM</span>
@@ -14440,7 +14437,7 @@
     var TYPE_BADGE = { track: 'ТРЕК', artist: 'АРТИСТ', playlist: 'ПЛЕЙЛИСТ', station: 'СТАНЦИЯ' };
     var cur = 'all', wired = false;
     function $(id) { return document.getElementById(id); }
-    function tint(name) { var h = 0; for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 36; var hue = 218 + h; return 'linear-gradient(135deg, hsl(' + hue + ',62%,30%), hsl(' + hue + ',70%,48%))'; }
+    function tint(name) { var h = 0; for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 36; var hue = 218 + h; return 'hsl(' + hue + ',36%,30%)'; }
     function mono(name) { var s = name.replace(/^Город ФМ · /, '').trim(); return (s[0] || '?').toUpperCase(); }
     function counts() { var c = { all: SAVED.length, track: 0, artist: 0, playlist: 0, station: 0 }; SAVED.forEach(function (x) { c[x.type] = (c[x.type] || 0) + 1; }); return c; }
     function renderFilters() {
