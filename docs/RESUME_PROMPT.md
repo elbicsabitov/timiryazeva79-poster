@@ -1,6 +1,29 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-9) — FULL-DESIGN BUILD: 6/11 шагов DONE (3 главные вкладки + deep-dive Трек). Всё локально (master), PUSH отложен
+## ⚡ LATEST (2026-06-02 cont-10) — FULL-DESIGN BUILD 11/11 ЗАВЕРШЁН + APPLE-POLISH PASS (player+tweaks complaints RESOLVED). Всё локально (master), PUSH отложен
+
+🎯 **Эльбик cont-10:** «делаем чисто дизайн всех экранов/структуры с ресёрчей» (→ доделал build 5 шагов), потом mid-session: **«сделай аудит всех модулей + карпати-ресёрч UI/UX, доведи каждую страницу до идеала, стандарт apple; плеер выглядит страшно; артефакт tweaks остался»**.
+
+**A) BUILD 11/11 ЗАВЕРШЁН** (5 коммитов): artist `8607e9a` (#/artist deep-dive: art-tint hero+поведенч.«почему»+reject→общий corpus) · onboarding `ac4e053` (модель за N сигналов + import-seed) · recap+profile `e15612f` (R1 дельта-герой/R2 honest PNG Canvas-2D/R3 причинная CTA/P1 reject-провенанс) · Integrate-A `807f235` (#/library+#/favorites→#/taste redirect + tabbar 3-tab) · Integrate-B `59689be` (cyan 55→0, single accent). Каждый: 18-19 JS node--check ✓ + 0 console errors + Chrome-probe.
+
+**B) APPLE-POLISH PASS** (17-агентный workflow `wxpohqba5` → `docs/superpowers/AUDIT-apple-polish-plan.md` = build-ready Apple design-system §0 + per-surface P0/P1/P2 + execution order). Исполнено (7 коммитов + standalone):
+1. `08b2cf1` tokens §0 (type-scale/8pt/nested-radius/surfaces/shadow/motion, text-sec .70→.62, bg-base FLAT) + **warm theme RETIRED** (§G3) → убрал оранжевый «мир» плеера.
+2. `55709ac` **dev-gate §G4** — TWEAKS-панель + theme-toggle + internal #/map скрыты в проде; reveal `?dev=1` (sticky)/`?dev=0`/`Ctrl|Cmd+Shift+D`; дефолт-роут → #/home (не internal map); «Карта флоу» из nav убрана. **complaint #2 RESOLVED.**
+3. `cec1679` **player redesign §1A** — flat cover (был purple→magenta gradient), inset rounded window (был full-bleed + harsh .4 white border), blue scrubber (был orange/red), solid-blue 64px play, title/actions БЕЗ overlap, sentence-case artist. **complaint #1 «страшно» RESOLVED.**
+4. `8344ab1` P0 batch1 — nav active = blue left-rail · onboarding genre-bubbles flat (был full-hue gradient) · artist avatar circle+blue-ring→rounded-square+hairline, name 56/900/CAPS→48/700 mixed-case.
+5. `1004f0e` P0 batch2 — profile neon-glow→border · home white-orb halo→subtle brand radial · featured-CTA purple #2d2d5d→neutral.
+6. `cabe496` taste 📌-emoji→blue inset-accent · discover «Рядом» gradient cards→flat+hairline.
+7. `77db4d0` standalone 2.55 MB пересобран.
+
+**KEPT by design (override audit P0):** «демо-вектор/демо-карта/демо-архив» fidelity-лейблы — north-star (никогда не выдавать демо за реальное) > visual-declutter.
+
+**REMAINING (backlog, всё в `docs/superpowers/AUDIT-apple-polish-plan.md` §2):** G6 полный slop-sweep (mini-art placeholders L619-621, остаточные gradient-covers, map thumbs) · G7 global focus/active/44px pass · per-surface P1/P2 (discover map axis-labels/nodes, track lyrics-контраст #545454 + hero-cover cap, taste радиусы/2 синих CTA, recap/profile token-migration, **map/lives под dev-gate** — #/lives dead cards + #ff3b30 red, copy-register «вы») · **DEFAULT_ROUTE cold-start→#/onboarding** (ВОЛНА-0) · 42 latent `var(--brand-cyan)` alias-рефа (рендерят синим; G2 полный rename→0). Порядок: AUDIT-plan §3.
+
+**Дисциплина:** `?dev=1` для просмотра TWEAKS/map; re-grep якоря перед edit (дрейфуют); `?v=N` cache-bust; :8770 жив; PUSH отложен до `sync`; `gorodfm_*`/`gorod-fm.*` LS-ключи чистить после probe. START следующей сессии = этот блок + AUDIT-plan §2/§3.
+
+---
+
+## ⚡ PREV (2026-06-02 cont-9) — FULL-DESIGN BUILD: 6/11 шагов DONE (3 главные вкладки + deep-dive Трек). Всё локально (master), PUSH отложен
 
 🎯 **Директива Эльбика (таймер 1ч10м → автономный мультипоточный билд):** «делаем чисто дизайн всех экранов и всей структуры что с ресёрчей вернулась». Мультипоточный spec-workflow (`w7jr5nat0`) выдал 7 per-surface спеков + **`SPEC-00-foundation-and-integration.md`** (build-order orchestrator). Реализую ПОСЛЕДОВАТЕЛЬНО в main loop (single-file → нельзя параллельно писать) + Chrome MCP визуал-проверка каждого. Каждый верифицирован (node --check + 0 console errors + browser-probe) + атомарный коммит.
 
