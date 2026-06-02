@@ -1,6 +1,30 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-8) — БЛЮПРИНТ ДОВЕДЁН (ship) + de-purple + GOROD-051 + W1 fidelity-петля. Всё закоммичено локально (master), PUSH отложен
+## ⚡ LATEST (2026-06-02 cont-9) — FULL-DESIGN BUILD: 6/11 шагов DONE (3 главные вкладки + deep-dive Трек). Всё локально (master), PUSH отложен
+
+🎯 **Директива Эльбика (таймер 1ч10м → автономный мультипоточный билд):** «делаем чисто дизайн всех экранов и всей структуры что с ресёрчей вернулась». Мультипоточный spec-workflow (`w7jr5nat0`) выдал 7 per-surface спеков + **`SPEC-00-foundation-and-integration.md`** (build-order orchestrator). Реализую ПОСЛЕДОВАТЕЛЬНО в main loop (single-file → нельзя параллельно писать) + Chrome MCP визуал-проверка каждого. Каждый верифицирован (node --check + 0 console errors + browser-probe) + атомарный коммит.
+
+**✅ СДЕЛАНО (6/11, HEAD `9537540`):**
+1. Foundation `57b5b41` — cyan token-swap (`--brand-cyan`→#5168FC, 56 var-refs синие) + `window.openPlayer` мост.
+2. W6 `3769cc1` — `window.TwinrModel` единый REJ_LABELS-канон (6 ключей +mood/art_arena/art_vocal_m), 3 потребителя делегируют. **Вставлен РАНО (перед wave-IIFE)** — спека @13660 сломала бы GorodTaste.
+3. home 045 `6aff252` — 3-зонное РАДИО (контекст-карта + hero+ambient #home-wave + ❤/Steer primary/skip secondary); Figma-плитки в `.home-tiles[hidden]` через toggle (откат=1 LS).
+4. taste+saved `5b3b0f6` — Сохранённое-аккордеон (GorodSaved) + стрик (053-lite детерм.) + AT-вектор (§10.1).
+5. discover 046b `2e7c45a` — карта вкуса (canvas+узлы) + distance-dial (3/6/9) + topbar-search wire + редакторский ряд.
+6. track 047a `c62c451` — explainability: art-tint cover + «Почему играет» L2 (reject→общий gorodfm_rejected) + вектор bar-meter + attribute-соседи. **Оставил view-state «cover» (без рефактора контроллера).**
++ standalone `9537540` (2.52 MB, 0 violet).
+
+**⏳ ОСТАЛОСЬ (5 шагов, спеки готовы в `docs/superpowers/specs/`, порядок по SPEC-00 §5):**
+7. **artist 047b** (`SPEC-artist.md`) — REPLACE 3 диапазона + initArtist→stub + GorodArtist IIFE (самый большой diff; применять диапазоны СТРОГО сверху-вниз; зависит W6-канон art_arena/art_vocal_m уже готов + openPlayer мост готов).
+8. **onboarding** (`SPEC-onboarding.md`) — AUGMENT в GorodOnboarding (Model «7 треков» + Import) + overlay. RK-4: onContinue-handoff → goHome().
+9. **recap+profile finish** (`SPEC-recap_profile.md` R1-R3/P1) — дельта-герой + Canvas-2D PNG + provenance reject-чипам. TwinrModel уже стоит (W6).
+10. **Integrate-A** — redirect #/library+#/favorites→#/taste в `routeFromHash` (ПОСЛЕ taste — готово); retire tabbar «Медиа»; promo-cards→#/taste.
+11. **Integrate-B** — ручной свап выживших hardcoded cyan (home-promo 7298-7469, player, generic) + финальный Grep `#56afd7|rgba(86,175,215)`=0 на видимых.
+
+**ДИСЦИПЛИНА (BR-1/BR-2):** якоря в спеках ДРЕЙФУЮТ — ВСЕГДА re-grep живой файл перед edit, НЕ по номерам строк. Trailing-IIFE вставлять перед `</body>` (не по номеру). Демо-контент → обязательный лейбл «демо-X». Dev-сервер кеширует → `?v=N` cache-bust для визуал-проверки (сервер :8770 жив). PUSH отложен до `sync`. `gorodfm_*` тест-ключи чистить после probe.
+
+---
+
+## ⚡ PREV (2026-06-02 cont-8) — БЛЮПРИНТ ДОВЕДЁН (ship) + de-purple + GOROD-051 + W1 fidelity-петля. Всё закоммичено локально (master), PUSH отложен
 
 🎯 Резюм cont-7 → исполнение. **HEAD `d884221`, 5 коммитов локально на master; PUSH ждёт явного `sync`.** Всё верифицировано Chrome MCP (:8770) + 13/13 `node --check` + zero console errors.
 

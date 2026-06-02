@@ -1,6 +1,16 @@
-# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-8)
+# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-9)
 
-**Branch:** master — всё закоммичено локально, push отложен до явного `sync` (HEAD `d884221`).
+**Branch:** master — всё закоммичено локально, push отложен до явного `sync` (HEAD `9537540`).
+
+## cont-9 — FULL-DESIGN BUILD: 6/11 шагов DONE (autonomous, по таймеру)
+Директива: «чисто дизайн всех экранов + структуры с ресёрчей». Spec-workflow `w7jr5nat0` → 7 per-surface спеков + `docs/superpowers/specs/SPEC-00-foundation-and-integration.md` (build-order). Реализация ПОСЛЕДОВАТЕЛЬНАЯ в main loop (single-file) + Chrome MCP визуал-проверка + атомарные коммиты.
+- ✅ **6/11 DONE** (HEAD `9537540`): Foundation `57b5b41` (cyan retire+openPlayer мост) · W6 `3769cc1` (TwinrModel канон, вставлен РАНО) · home-045 `6aff252` (3-зонное радио, Figma→toggle) · taste+saved `5b3b0f6` (Сохранённое+стрик+AT-вектор) · discover-046b `2e7c45a` (карта вкуса+dial+редакция) · track-047a `c62c451` (explainability, оставил view «cover») · standalone `9537540` (2.52MB).
+- ⏳ **ОСТАЛОСЬ 5** (спеки готовы, порядок SPEC-00 §5): **artist-047b** (SPEC-artist, REPLACE 3 диапазона top-down, GorodArtist; W6-канон+мост готовы) → **onboarding** (SPEC-onboarding AUGMENT, RK-4 goHome) → **recap+profile finish** (R1-R3/P1, TwinrModel стоит) → **Integrate-A** (redirect library/favorites→taste, retire tabbar Медиа) → **Integrate-B** (ручной cyan-свап + Grep=0).
+- **ДИСЦИПЛИНА:** re-grep якоря перед каждым edit (дрейфуют); trailing-IIFE перед `</body>`; демо-лейблы; `?v=N` cache-bust (:8770 жив); PUSH при sync. Детали → `docs/RESUME_PROMPT.md` cont-9.
+
+---
+
+## cont-8 (предыдущий) — блюпринт доведён + de-purple + GOROD-051 + W1
 
 ## cont-8 — БЛЮПРИНТ ДОВЕДЁН (ship) + de-purple + GOROD-051 + W1 fidelity-петля
 **Резюм cont-7 → исполнение.** Всё верифицировано Chrome MCP (:8770) + 13/13 `node --check` + 0 console errors. 5 атомарных коммитов на master (НЕ запушено).
