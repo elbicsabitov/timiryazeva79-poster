@@ -85,7 +85,7 @@
       :root {
         /* — Cinema palette (Город ФМ primary) — */
         /* Slightly darkened vs original for WCAG AA compliance on white text */
-        --brand-cyan:      rgb(56, 140, 180);
+        --brand-cyan:      #5168FC;   /* RETIRED → blue family (one-accent); legacy alias so var(--brand-cyan) refs resolve blue */
         --brand-blue:      rgb(20, 80, 170);
         --brand-deep:      rgb(21, 82, 172);
         --brand-ink:       rgb(30, 27, 46);      /* overlay tint */
@@ -118,8 +118,8 @@
         --warm-text:   #EAF0FF;
         --warm-text-sec: rgba(255, 255, 255, 0.70);
 
-        /* — Player accent — cinema default (cyan); warm override below — */
-        --player-accent: var(--brand-cyan);
+        /* — Player accent — cinema default (blue, one-accent); warm override below — */
+        --player-accent: var(--brand-blue-light);
 
         /* — Figma 2174:422 Главная palette (dark variant) — */
         --brand-blue-light:    #5168FC;                  /* Figma "blue light" */
@@ -11057,6 +11057,7 @@
           btnPlayerClose.focus();
         }
       }
+      window.openPlayer = openPlayer;   // bridge for GorodHomeRadio (045) + GorodArtist (047b)
 
       function closePlayer() {
         // Restore previous theme
