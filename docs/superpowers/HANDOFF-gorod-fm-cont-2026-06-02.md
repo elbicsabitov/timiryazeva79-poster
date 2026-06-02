@@ -1,86 +1,96 @@
-# HANDOFF — Город ФМ (continuation session, 2026-06-02)
+# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-5)
 
-**Branch:** master — **ВСЁ ЗАКОММИЧЕНО И ЗАПУШЕНО** (`origin`, HEAD `7520cb2`).
-**Read-first order:** этот файл → `docs/superpowers/AUDIT-gorod-fm-screens-and-service.md` (forward-план GOROD-040..057) → `VISION-gorod-fm-ai-driven.md` (продуктовая визия).
-**Предшественник:** `HANDOFF-gorod-fm-ai-product.md` (AI-pivot session). **Session log:** `.claude-memory/session_2026_06_02_gorod_fm_resume_cont.md`.
+**Branch:** master — **ВСЁ ЗАКОММИЧЕНО И ЗАПУШЕНО** (`origin/master`, HEAD `c1a14b2`).
+**Read-first order:** этот файл → `docs/superpowers/AUDIT-gorod-fm-screens-and-service.md` §8 (forward-план GOROD-040..057) → `VISION-gorod-fm-ai-driven.md` (продуктовая визия).
+**Предшественник:** `HANDOFF-gorod-fm-ai-product.md` (AI-pivot). **Session log:** `.claude-memory/session_2026_06_02_gorod_fm_resume_cont.md` (содержит cont-2…cont-5).
 
 ---
 
 ## TL;DR
 
-Эта сессия: добил AI-radio до **рабочего wedge на каждой ключевой поверхности** + провёл **Karpathy-tier аудит всего сервиса** и начал его исполнять. North star (из аудита): *«ты видишь свою логику и можешь её поправить — даже реклама твоя»*; доверие = **fidelity** (объяснение = реальный вектор).
+AI-радио доведено до **рабочего wedge на каждой ключевой поверхности**, Karpathy-аудит сервиса исполняется по приоритетам. North star (из аудита): *«ты видишь свою логику и можешь её поправить — даже реклама твоя»*; доверие = **fidelity** (объяснение = реальный вектор).
 
-**🎯 Где остановились:** P0 quick-wins (5/5) + P1 «Открыть» — done+pushed+visual-QA. Дальше = остаток P1 (часть за Эльбик-gate).
+**🎯 Где остановились (cont-5):** P0 (5/5) + P1 «Открыть» + **P1 safe-остаток `048`/`049`** + **P2 `052` «Открытый профиль»** — все done, reviewer-verified, **pushed**. Дальше: 045/047 (Эльбик-gate) ИЛИ автономно P2 loops остаток (050/051/053/054).
 
 ---
 
-## Что построено в этой сессии (master, pushed)
+## Что построено (master, pushed) — арка 2026-06-02
 
 | Commit | Что |
 |--------|-----|
-| `14d0426` | **Standalone-оптимизация** — build-script downscale+WebP: 71 MB → **2.1 MB** (originals не тронуты). |
-| `2c07d3d`+`0ff6cda` | **Resume→music flagship (VISION #7)** — модалка drop/paste/пример → «AI читает» theater → explainable `deriveTaste` → seeds bubbles → handoff. +z-index фикс (была невидима за onboarding z-200). |
-| `b3be4db` | **#9 Taste-based sponsor-tile** — нативный explainable steerable ad на `#/taste` («Почему вам» + «Меньше рекламы»). |
-| `340882c` | **Karpathy-tier АУДИТ** — 6 параллельных best-practices-агентов + grounded current-state → `AUDIT-...md` (план GOROD-040..057). |
-| `783695c` | **P0: «почему»-строка (L1) + «Исправь причину» (L2)** — `TwinrWhy`. Always-on поведенческая причина на плеере; popover с rejectable-атрибутами (reject → strike+persist+wave.bump+ribbon). Категорийно-определяющая механика. |
-| `c6f1583` | **P0: цвет-от-обложки + slop-kill (плеер)** — `NowPlayingTint` (self-contained canvas-сэмплер). Now-playing realigned **Слеза/Егор Крид** (реал-обложка). |
-| `7520cb2` | **P1: «Открыть» rebuild** — `GorodDiscover`: разговорный поиск (→ explained results) + «Рядом с твоим вкусом» (taste-adjacency). Галерея → «От редакции». |
+| `14d0426` | Standalone-оптимизация (downscale+WebP): 71 MB → 2.1 MB. |
+| `2c07d3d`+`0ff6cda` | Resume→music flagship (VISION #7) + z-index фикс. |
+| `b3be4db` | #9 Taste-based sponsor-tile (explainable steerable ad на `#/taste`). |
+| `340882c` | **Karpathy-tier АУДИТ** (6 агентов) → `AUDIT-...md` (план GOROD-040..057). |
+| `783695c` | P0: always-on «почему» (L1) + «Исправь причину» (L2, `TwinrWhy`). |
+| `c6f1583` | P0: цвет-от-обложки (`NowPlayingTint`) + slop-kill now-playing→Слеза/Егор Крид. |
+| `7520cb2` | P1: «Открыть» rebuild (`GorodDiscover`: разговор + taste-adjacency). |
+| `188336e` | **P1 `048` transition-card + `049` edge-glow & motion-токены.** |
+| `e8da327` | docs: review-verdict 048/049 (ship-ready 7/7). |
+| `d9c4081` | **P2 `052` «Открытый профиль» pitch-экран (`#/profile`).** |
+| `c1a14b2` | **Standalone пересобран с 048/049/052 (2.36 MB, инвестор-ready).** |
 
-**VISION 1-9 + UX A-H — все построены.** Аудит — исполняется.
+**VISION 1-9 + UX A-H — все построены.** Аудит исполняется (P0✓, P1 «Открыть»✓ + safe✓, P2 «Открытый профиль»✓).
 
 ---
 
-## Состояние прототипа (`designs/gorod-fm.html`, single-file)
+## НОВОЕ в cont-4/cont-5 (детально)
+
+### `048` — between-track transition card (`TwinrTransition`)
+«DJ объявляет следующий трек + почему» вместо мёртвого спиннера. Раньше `#btn-next`/`#btn-prev`/`#player-full-next` = no-op — **теперь wired**. На next/prev → центр-карточка (overline «Дальше в эфире»+spark · крупный title · artist · поведенческая «почему» над hairline · «нажмите чтобы перейти сразу») → авто-commit now-playing (мини-плеер title/artist/reason + home hero) → fade ~1.6с; tap/scrim = перейти сразу. **Asset-wall честно:** near-black + ОДИН content-derived `--np-accent` (красный от обложки), НЕ slop-градиент/несоответствующая обложка; cover-картинка остаётся. `FLOW` стартует Любимка·Niletto (канон тёплый-поп), каждое «почему» = реальное поведение.
+
+### `049` — Twinr edge-glow + motion-токены
+Убран always-on `ai-pulse` shimmer-ринг лончера (audit §5: орб-с-shimmer = 2023). Заменён на state-driven **краевое свечение** `.is-speaking` (`@keyframes twinr-breathe`/`twinr-breathe-dock`, дыхание `--dur-breathe` 1.6с) на лончере+доке — горит ТОЛЬКО пока Twinr говорит (драйв из `aiSay` typing→message + `TwinrChat.pulse()` для transition-card). Тишина = спокойно. reduced-motion → статичный glow. Motion-токены добавлены **additively** (`--ease-standard/-emphasized/-exit`, `--dur-breathe/-announce`); `--t-fast/mid/slow` НЕ тронуты (0 регрессий).
+
+### `052` — «Открытый профиль» pitch-экран (`GorodProfile`, роут `#/profile`)
+Питч-аргумент против «Яндекс делает то же»: показываем то, что конкуренты прячут. Читает live `gorodfm_taste`+`gorodfm_rejected` (fidelity). Контент: **контраст** «чёрный ящик (Яндекс/Spotify — grayscale+blur+lock, мёртвый) vs открытый профиль (alive+accent)» · реальный вектор (5 граней) с **провенансом** по каждой · **1 live-правка** «меньше» → видимая квитанция + `TwinrWave.bump` · секция «Что ты оспорил» (rejected или empty-state→плеер) · «даже реклама — твоя» · moat-caption. Вход с `#/taste` («Открытый профиль →») + прямой URL. НЕ 4-я вкладка (3-tab IA цела). **WCAG-фикс:** токен `--accent-on-dark #8094ff` (~7:1) для мелкого accent-текста (бренд `#5168FC` = 4.25:1 < AA).
+
+---
+
+## Состояние прототипа (`designs/gorod-fm.html`, single-file, 13k строк)
 
 | Route | Состояние |
 |---|---|
-| `#/onboarding` | ✅ Пузыри + **резюме→музыка** flagship |
-| `#/home` Волна | ✅ AI-хаб. Плеер: реал-обложка + **цвет-от-обложки** + **always-on «почему»** + **«Исправь причину»** + steer. ⬜ Не переделан в 3-зоны (audit §3, 🔒 pixel-perfect gate) |
-| `#/taste` Мой вкус | ✅ Редактируемый вектор + волна + **taste-ad** |
-| `#/podborki` = Открыть | ✅ **Rebuilt**: разговор + taste-adjacency + «От редакции» |
-| `#/library`·`#/favorites`·`#/artist`·`#/track` | ⚠️ Legacy generic + slop (gradient-обложки / силуэт-аватар). Аудит: Медиатека+Избранное → впитать в «Мой вкус»; Артист/Трек → deep-dive (GOROD-047) |
+| `#/onboarding` | ✅ Пузыри + резюме→музыка flagship |
+| `#/home` Волна | ✅ AI-хаб. Плеер: реал-обложка + цвет-от-обложки + always-on «почему» + «Исправь причину» + steer + **next/prev → transition-card (048)**. ⬜ Не переделан в 3-зоны (`045`, 🔒 gate) |
+| `#/taste` Мой вкус | ✅ Редактируемый вектор + волна + taste-ad + **CTA «Открытый профиль →» (052)** |
+| `#/profile` **Открытый профиль** | ✅ **NEW (052)** — pitch-экран: контраст + вектор с провенансом + live-правка + moat |
+| `#/podborki` = Открыть | ✅ Rebuilt: разговор + taste-adjacency + «От редакции» |
+| `#/library`·`#/favorites`·`#/artist`·`#/track` | ⚠️ Legacy generic + slop. Аудит: Медиатека+Избранное → в «Мой вкус»; Артист/Трек → deep-dive (`047`, 🔒 нужны обложки/realign) |
 
 ---
 
 ## Архитектура (decoupled trailing-script модули — НЕ ломать)
 
 Каждый = свой `window.*` + route/event-hook, не трогает основной IIFE:
-- `GorodOnboarding` (пузыри) · **`onResumeDemo`→resume-модалка** (`deriveTaste`, 15 правил)
-- `TwinrChat` (чат, scripted intents) · `TwinrWave` (canvas-волна, `.bump()`) · `WaveDials` (steer-popover) · `TwinrRibbon` (between-track лента, budget 4)
-- **`TwinrWhy`** (NEW — L2 «Исправь причину» popover; `gorodfm_rejected`) · **`NowPlayingTint`** (NEW — canvas color-from-cover → `--np-accent`) · **`GorodDiscover`** (NEW — «Открыть» разговор+adjacency)
-- GorodTaste (#/taste вектор + sponsor `matchSponsor`)
+- `GorodOnboarding` (пузыри) · `onResumeDemo`→resume-модалка (`deriveTaste`)
+- `TwinrChat` (чат; **+`setSpeaking`/`pulse()` для edge-glow 049**) · `TwinrWave` (`.bump()`) · `WaveDials` (steer) · `TwinrRibbon` (between-track лента, budget 4)
+- `TwinrWhy` (L2 «Исправь причину»; `gorodfm_rejected`) · `NowPlayingTint` (canvas color→`--np-accent`) · `GorodDiscover` («Открыть»)
+- `GorodTaste` (#/taste вектор + `matchSponsor`)
+- **`TwinrTransition` (NEW 048** — between-track card; wires next/prev; `FLOW` playlist; commit now-playing**)**
+- **`GorodProfile` (NEW 052** — `#/profile`; reads `gorodfm_taste`+`gorodfm_rejected`; provenance + live-правка**)**
 
-**localStorage:** `gorodfm_taste` (вектор), `gorodfm_rejected` (отвергнутые причины), `gorodfm_ad_less` (меньше рекламы).
-**Токены:** Onest, near-black `#0B0C0F` + 1 акцент `#5168FC`; **`--np-accent`** = цвет-от-обложки (JS override). anti-slop.
-
-### Ключевые технические решения этой сессии
-1. **Now-playing realigned Believer/Imagine Dragons → Слеза/Егор Крид** — чтобы был РЕАЛ-cover (`home-featured-egor-krid.png`) для цвет-от-обложки + убить gradient-плейсхолдер. Обновлены now-playing-референсы в чате (greet/why/ribbon/backradio); **музыка-тур «Путь к Imagine Dragons» оставлен** как отдельный экскурс.
-2. **Color-from-art = self-contained canvas-сэмплер** (НЕ Vibrant.js) → работает и в standalone (data-URI не тейнтит canvas).
-3. **«Почему» всегда поведенческая** («ты дослушал 3×»), не маркетинг. Прогрессив: L1 строка → L2 popover (+reject) → L3 чат.
+**localStorage:** `gorodfm_taste` (вектор) · `gorodfm_rejected` (отвергнутые причины: ids `artist`/`vocal`/`tempo`) · `gorodfm_ad_less`.
+**Токены:** Onest · near-black `#0B0C0F` + 1 акцент `#5168FC`; `--np-accent` (цвет-от-обложки) · **`--accent-on-dark #8094ff`** (мелкий accent-текст на тёмном, AA) · motion: `--t-fast/mid/slow` + `--ease-standard/-emphasized/-exit` + `--dur-breathe/-announce`.
+**Edge-glow keyframes:** `twinr-breathe` (лончер ::after opacity) · `twinr-breathe-dock` (док box-shadow). Старый `ai-pulse` УДАЛЁН.
 
 ---
 
 ## Forward-план (AUDIT §8) — что дальше
 
-### P1 остаток — ДВА вида
-- **Safe (без gate, могу делать сразу):** `GOROD-048` transition-card («DJ объявляет следующий + почему») · `GOROD-049` Twinr **edge-glow** (вместо орба) + motion-токены.
-- **Нужен Эльбик-gate / realign:**
-  - `GOROD-045` **Волна 3-зоны** (audit §3: context-карусель / artwork+ambient-волна / «почему» / Стир) — **🔒 ломает pixel-perfect home, решение Эльбика «насколько ломать».**
-  - `GOROD-047` Артист/Трек **deep-dive + slop-kill + «почему тебе»** — нужен realign на реал-ассеты (как сделали плеер) ИЛИ реальные обложки от Эльбика.
+### 🔒 Эльбик-gate / realign (НЕ Claude — нужен ввод)
+- `GOROD-045` **Волна 3-зоны** (audit §3: context-карусель / artwork+ambient-волна / «почему» / Стир) — **ломает pixel-perfect home, решение Эльбика «насколько ломать».**
+- `GOROD-047` **Артист/Трек deep-dive + slop-kill + «почему тебе»** — нужен realign на реал-ассеты (как плеер) ИЛИ реальные обложки от Эльбика. **Asset-wall:** прототип без per-track обложек.
 
-### P2 — loops/identity (audit §6)
-`GOROD-050` weekly Twinr-recap shareable-карточка 9:16 · `GOROD-051` контекст-старты «Утро/Работа/Вечер» · `GOROD-052` «открытый профиль» demo-экран (питч) · `GOROD-053` стрики «Дней с Волной» + freeze · `GOROD-054` cold-start импорт-seed.
+### 🟢 Можно брать автономно (P2 loops остаток, audit §6)
+- `GOROD-050` weekly Twinr-recap shareable-карточка 9:16 · `GOROD-051` контекст-старты «Утро/Работа/Вечер» · `GOROD-053` стрики «Дней с Волной» + freeze · `GOROD-054` cold-start импорт-seed.
+- (`052` «открытый профиль» уже сделан.)
 
-### P3 — backend/бизнес (Ф1+, audit §7)
-`GOROD-055` **reason_tag pipeline** (= moat; лог `(track,reason,vector)`) · `GOROD-056` 🔒 лицензии CC→MERLIN→мажоры · `GOROD-057` B2B taste-segment pitch.
+### P3 — backend/бизнес (Ф1+)
+`GOROD-055` reason_tag pipeline (= moat) · `GOROD-056` 🔒 лицензии CC→MERLIN→мажоры · `GOROD-057` B2B taste-segment pitch.
 
----
-
-## 🔒 Эльбик-gate (НЕ Claude)
-- `GOROD-029` принять позиционирование (Москва, «музыка которая твоя»).
-- `GOROD-030/056` лицензирование (CC→MERLIN→мажоры + IP-юрист — узкое горло №1).
-- **IA / pixel-perfect:** насколько ломать legacy pixel-perfect home ради Волна-3-зоны (GOROD-045).
-- `GOROD-017` показ инвестору/клиенту (когда готов; standalone `designs/gorod-fm-standalone.html` = 2.3 MB, шерабельно).
+### Backlog TD
+- `TD-GOROD-CTA-AA` — primary-кнопка white-on-`#5168FC` = **4.43:1** (чуть <AA 4.5, 14px/700). Конвенция ВСЕХ кнопок (не введено в 052). Reviewer: accept-not-block. App-wide фикс: фон `#4A5FE8` (→~5.1:1) ИЛИ текст ≥18.66px.
 
 ---
 
@@ -89,19 +99,23 @@
 cd ~/Desktop/design-project/designs && python -m http.server 8765
 ```
 - `#/onboarding` → «Заполнить примером» → «Прочитать» → «Собрать радио» (резюме→музыка)
-- `#/home` → плеер: реал-обложка + красный (цвет-от-Слеза) прогресс + «почему»-строка; «почему?» → popover → «не моё» (Исправь причину)
-- `#/taste` → вектор + волна + спонсор-тайл (scroll вниз)
-- `#/podborki` (Открыть) → набери запрос / тапни чип → explained results; «Рядом с твоим вкусом»
+- `#/home` → плеер: реал-обложка + «почему» + «не моё»; **жми next (⏭) → transition-card «Дальше в эфире: Любимка…»** → now-playing меняется
+- открой Twinr-чат (✦ лончер) → **док «дышит» синим пока печатает** (edge-glow), спокоен в тишине
+- `#/taste` → вектор + волна + спонсор-тайл + **«Открытый профиль →»**
+- `#/profile` → **контраст чёрный-ящик-vs-открытый** + вектор с провенансом + жми «меньше» → квитанция
+- `#/podborki` (Открыть) → запрос/чип → explained results
 
-**Standalone:** `designs/gorod-fm-standalone.html` (self-contained 2.3 MB, для инвесторов).
+**Standalone:** `designs/gorod-fm-standalone.html` (self-contained 2.36 MB, для инвесторов; содержит 048/049/052).
 
 ---
 
 ## Известные нюансы / constraints
-- **Visual QA = Chrome MCP** (расширение Эльбика). Капризы: DPR/screenshot-масштаб (1512×807 vs viewport 1745×931 — мини-плеер у нижнего края не влезает в скрин, проверял computed-styles + zoom); вкладки Эльбик закрывает (бери `tabs_context_mcp` заново); сервер :8765 — его. design-implementation-reviewer agent доступен когда расширение подключено.
-- **Asset wall:** прототип НЕ имеет per-track обложек (только gradient-плейсхолдеры + несколько реал-фото плиток/featured). → цвет-от-обложки/slop-kill требуют realign на существующий реал-ассет (как плеер) ИЛИ реальные обложки. Это блокирует GOROD-047 до решения.
-- **node --check** всех `<script>` блоков = быстрый syntax-гейт (9 блоков). `deriveTaste`/`matchSponsor` юнит-тестируемы в node (чистые функции).
-- Standalone собирается `python tools/build_gorod_fm_standalone.py` (downscale+WebP, инлайнит 19 реф. ассетов).
+- **Visual QA = Chrome MCP** (расширение Эльбика; сервер `:8765` — его). Капризы: скрин-масштаб (док/мини-плеер у краёв клипятся в скрине — проверять computed-styles/JS-probe); window-resize в расширении НЕ ужимает CSS-viewport (mobile проверять через `@media`/matchMedia/`data-surface='mobile'`). Tweaks-панель может перекрывать правый край при скрине — это её открытое состояние, не баг.
+- **`node --check` всех `<script>` блоков** = быстрый syntax-гейт (**11 блоков** сейчас). Хелпер: `.scratch/check_scripts.py` (gitignored).
+- **Asset wall:** прототип без per-track обложек → 048 transition использует `--np-accent` (не fake-обложку); `047` блокирован до обложек/realign.
+- **`#/home` `#home-track-title`** может быть null на текущем home-варианте → 048 commit обновляет его guarded-но-op (мини-плеер = основная now-playing поверхность, обновляется корректно). Не баг.
+- Standalone собирается `python tools/build_gorod_fm_standalone.py` (downscale+WebP).
+- Remote origin = `github.com/elbicsabitov/timiryazeva79-poster.git` (так называется git-remote этого репо).
 
 ## Carry-over hygiene (Holy Grail)
-Onest only · near-black + 1 акцент `#5168FC` (или `--np-accent` от контента) · ≥44px · focus-visible 3px · `prefers-reduced-motion` · **«почему» всегда поведенческая, не маркетинг** · zero console errors (смоук каждый коммит) · atomic commits master-direct · **верифицировать визуально каждый шаг** (Эльбик это ценит) · anti-slop (❌ мульти-стоп градиент-фоны, ❌ orb-аватар, ❌ fake-волна не от FFT, ❌ gradient-плейсхолдеры вместо реал-контента).
+Onest only · near-black + 1 акцент `#5168FC` (или `--np-accent` от контента; мелкий accent-текст на тёмном → `--accent-on-dark`) · ≥44px · focus-visible 3px · `prefers-reduced-motion` · **«почему» всегда поведенческая, не маркетинг** · zero console errors (смоук каждый коммит) · **node --check 11 блоков** · atomic commits master-direct · **верифицировать визуально каждый шаг + design-implementation-reviewer (hard-gate для новых экранов)** · anti-slop (❌ мульти-стоп градиент-фоны, ❌ orb-аватар, ❌ fake-волна, ❌ gradient-плейсхолдеры вместо реал-контента, ❌ эмодзи-как-иконки).
