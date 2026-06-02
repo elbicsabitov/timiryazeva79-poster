@@ -1,6 +1,6 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-11) — НИЖНЯЯ ПЛАШКА (мини-плеер) ПЕРЕДЕЛАНА (PRIORITY #1 закрыт) + play/pause fidelity-баг ИСПРАВЛЕН + standalone пересобран. Локально (master `5a26459`, 3 коммита: feat `298010e`+docs+standalone `5a26459`), PUSH отложен
+## ⚡ LATEST (2026-06-03 cont-11) — МИНИ-ПЛЕЕР ПЕРЕДЕЛАН (PRIORITY #1) + play/pause fidelity-баг + **ВЕСЬ AUDIT-backlog ЗАКРЫТ** (G2/G6/G7/route + 8 per-surface волн) + standalone. Локально (master `e12a58b`, ~13 коммитов cont-11), PUSH отложен
 
 🎯 **Эльбик cont-10 флаг (×2): «плашка внизу как плеер — UX/UI ресёрч Карпати-уровня».** Сделано research-first.
 
@@ -15,7 +15,16 @@
 
 **Дисциплина/находки:** web-surface override `html[data-surface="web"] .player-mini` (L7156) перебивал base padding → правил отдельно (0 20px + safe-area). Mobile-surface `[data-surface="mobile"] .player-ctrl-btn` (вкл. pre-existing min-height:44 L6140) **НЕ применяется** даже с `!important` — глубокий pre-existing cascade-quirk в том блоке; но oval-проблемы НЕТ (min-height не берётся → кнопки 32px square + 44px hit через ::before). Не копал дальше (dev-only surface). Артефакты: `apply_minibar.py` (.scratch, gitignored), research-output в task `wa8ncwxs9`.
 
-**🎯 NEXT (по убыванию):** standalone ✅ ПЕРЕСОБРАН (`5a26459`, images остаются inline-webp; rebuild = `python .scratch/build_standalone.py` → ре-применяет `apply_minibar.REPLACEMENTS` к standalone in-place, т.к. правки кода не трогают img-рефы). (1) backlog `AUDIT-apple-polish-plan.md` §3: G6 slop-sweep (mini-art placeholders `.player-mini-art-placeholder--1/2/3` multi-hue gradient ОСТАЛИСЬ + home/track/queue covers, map thumbs) · G7 global focus/active/44px · per-surface P1/P2 · DEFAULT_ROUTE cold-start→#/onboarding · G2 42 latent `--brand-cyan`→rename. (2) PUSH при `sync`. 🔒 Эльбик-gate: GOROD-029/030.
+**✅ ВЕСЬ AUDIT-backlog ЗАКРЫТ** (директива «доделай все долги»). 13 атомар-коммитов, каждый node --check 0 + Chrome. Грунт-инвентарь: `docs/superpowers/REMAINING-cont11-debt-plan.md` (parallel-workflow `w9js8v96c`, 108 items → 12 волн). **Done:**
+- **G2** `--brand-cyan` 42→**0** (alias-токен удалён) — refs→`--brand-blue-light`, малый текст→`--accent-on-dark`.
+- **G7** все focus-rings→`--accent-on-dark` (3px blue-light 47→**0**, 62 unified, AA) + reduced-motion `:active{scale(.98)}` на интерактив-семьях + 44px hit-area (`::before{inset:-6px/-9px}`) на sub-44 (discover/ai/taste controls).
+- **G6** anti-slop: LIVE flat (taste saved-tint hsl 2-stop→flat · ai-dock violet→синий · artist row-orb→top-light · 9 track-history covers→flat `--np-accent`) + dead neutralized (16 favorites + 6 library thumbs, #1ecfe0 leak killed) + 3 mini-art placeholder gradients удалены. linear-gradient 86→50.
+- **DEFAULT_ROUTE** cold-start (нет onboarded&taste)→`#/onboarding`; returning→`#/home`; deep-links целы — 3 пути verified в Chrome.
+- **8 per-surface волн:** home (hero cover-glow→neutral, удалён home-only mini-bar tint, skip/Like/Steer hierarchy, hero token+dvh-clamp) · taste (2nd blue CTA «Открытый профиль»→ghost, streak-pulse off, delta green→neutral) · discover (ASCII ▶→SVG, ask-field hover/focus-ring, curator/section-title) · track (lyric `#545454`→`rgba(255,255,255,.45)`, cover-shimmer удалён) · artist (per-row tintFor→flat covers, AA metadata) · onboarding (neon-ring→clean, vec-fill solid, count AA) · recap/profile (`#6d80ff`→token, clear-player padding 120) · chrome (topbar `filter:brightness`→bg).
+- **standalone** пересобран со всеми волнами (`e12a58b`, 34 webp inline, cyan=0) — rebuild = `python .scratch/rebuild_standalone_full.py` (ре-применяет wave_*.py к standalone, retarget path).
+
+**Информированно отложено (low-value/risk, НЕ prod-visible):** `scaleX` ×12 = бренд-вордмарк ГОРОД.FM (intentional Actay-Wide-стретч, НЕ трогать) + dead hidden-tile/dev labels · chrome sidebar-row-geometry + tabbar split-indicator + topbar contextual-title (med-risk, низкая ценность) · recap glyph→SVG (✓▲−→) · P2 render-identical токенизации (raw hex == token value) · dead library/favorites CSS-rule блок-deletion (градиенты уже neutralized) · taste saved-rows interactivity (honesty — текст-claim можно убрать).
+**PUSH при `sync`.** 🔒 Эльбик-gate (НЕ Claude): GOROD-029 позиционирование · GOROD-030 лицензии.
 
 ---
 
