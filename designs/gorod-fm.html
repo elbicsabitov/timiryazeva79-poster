@@ -128,7 +128,7 @@
         --np-accent:           var(--brand-blue-light);  /* now-playing accent — JS overrides from cover (GOROD-042) */
         --accent-on-dark:      #8094ff;                  /* lighter accent for SMALL text on near-black — AA 6.8:1 vs #111318 (brand #5168FC is only 4.25:1) (GOROD-052) */
         --success:             #34d399;                  /* success/growth green — promoted from inline var() fallback to a real token (GOROD-050) */
-        --featured-cta-bg:     #2d2d5d;                  /* purple bar under featured card */
+        --featured-cta-bg:     rgba(11, 12, 15, 0.72);    /* neutral dark bar (retired purple #2d2d5d) */
         --home-bg-base:        #0C0B0B;                  /* dark home background */
         --tile-shade-strong:   linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
         --tile-darkening:      rgba(3, 3, 3, 0.35);      /* whole-row darken on home */
@@ -1937,8 +1937,8 @@
         max-width: calc(100% - 100px);
         top: 165px;
         height: 480px;
-        background: rgba(255, 255, 255, 0.28);
-        filter: blur(22.4px);
+        background: radial-gradient(50% 50% at 50% 45%, rgba(81, 104, 252, 0.07), transparent 72%);
+        filter: blur(24px);
         z-index: 3;
         pointer-events: none;
       }
@@ -3151,7 +3151,7 @@
       .profile-faux-lock { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; text-align: center; padding: 0 10px; }
       .profile-faux-lock svg { width: 26px; height: 26px; color: var(--text-sec); }
       .profile-faux-lock span { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); max-width: 26ch; line-height: 1.45; }
-      .profile-box--open { border-color: rgba(81, 104, 252, 0.4); box-shadow: 0 0 40px -10px var(--brand-blue-light); }
+      .profile-box--open { border-color: rgba(81, 104, 252, 0.35); box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 24px -16px rgba(0,0,0,0.6); }
       .profile-box--open .profile-box-tag { background: var(--tint-blue-light-20); color: #c7d0ff; }
 
       .profile-facet { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; padding: 11px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
