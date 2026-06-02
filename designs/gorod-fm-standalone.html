@@ -97,8 +97,9 @@
 
         /* — Text — */
         --text-pri:        #FFFFFF;
-        --text-sec:        rgba(255, 255, 255, 0.70);
-        --text-quat:       rgba(235, 235, 245, 0.60);  /* Apple secondary-dark */
+        --text-sec:        rgba(255, 255, 255, 0.62);  /* dropped .70->.62 so primary pops (polish §0.1) */
+        --text-ter:        rgba(255, 255, 255, 0.40);  /* tertiary/decorative; essential meta uses --text-sec */
+        --text-quat:       rgba(235, 235, 245, 0.60);  /* legacy alias (migrating to sec/ter per surface) */
 
         /* — Radii — */
         --r-base:          10px;
@@ -109,7 +110,7 @@
         /* Tech-modern restyle (2026-06-02): neutral near-black + ONE restrained
            brand glow instead of the saturated cyan/blue wash (anti-slop, research 10).
            Reads premium/technological (Linear/Arc/Vercel) and lets cover art carry colour. */
-        --bg-base:     radial-gradient(120% 82% at 50% -8%, rgba(81,104,252,0.12) 0%, rgba(81,104,252,0) 46%), #0B0C0F;
+        --bg-base:     #0B0C0F;   /* FLAT near-black (Apple deference); brand radial lives only behind now-playing cover */
         --bg-overlay:  linear-gradient(-88.75deg, rgba(10,11,15,0) 70%, rgba(10,11,15,0.35) 88%, rgba(10,11,15,0.6) 100%);
         --tile-shade:  linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
 
@@ -127,7 +128,7 @@
         --np-accent:           var(--brand-blue-light);  /* now-playing accent — JS overrides from cover (GOROD-042) */
         --accent-on-dark:      #8094ff;                  /* lighter accent for SMALL text on near-black — AA 6.8:1 vs #111318 (brand #5168FC is only 4.25:1) (GOROD-052) */
         --success:             #34d399;                  /* success/growth green — promoted from inline var() fallback to a real token (GOROD-050) */
-        --featured-cta-bg:     #2d2d5d;                  /* purple bar under featured card */
+        --featured-cta-bg:     rgba(11, 12, 15, 0.72);    /* neutral dark bar (retired purple #2d2d5d) */
         --home-bg-base:        #0C0B0B;                  /* dark home background */
         --tile-shade-strong:   linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
         --tile-darkening:      rgba(3, 3, 3, 0.35);      /* whole-row darken on home */
@@ -147,16 +148,36 @@
            reads as SIGNAL, not decoration. The --t-* above keep every existing
            call-site; these add the vocabulary new components reuse. */
         --ease-standard:   cubic-bezier(0.2, 0.8, 0.2, 1);    /* default in / out */
-        --ease-emphasized: cubic-bezier(0.34, 1.4, 0.64, 1);  /* gentle overshoot — arrivals */
+        --ease-emphasized: cubic-bezier(0.32, 0.72, 0, 1);    /* Apple decel for sheets/arrivals (no overshoot) */
         --ease-exit:       cubic-bezier(0.4, 0, 1, 1);        /* accelerate away */
         --dur-breathe:     1600ms;   /* Twinr edge-glow "breath" while it speaks */
         --dur-announce:    1600ms;   /* between-track transition card total */
+
+        /* ===== Apple-polish design system (AUDIT-apple-polish-plan §0) ===== */
+        /* Type scale — Onest 400/500/600/700; weight does hierarchy, not colour */
+        --lh-tight: 1.08; --lh-snug: 1.14; --lh-body: 1.45; --track-tight: -0.02em;
+        --fs-display: clamp(32px, 5vw, 44px); --fs-h1: 28px; --fs-h2: 21px; --fs-h3: 17px;
+        --fs-body: 15px; --fs-caption: 13px; --fs-micro: 11px;
+        /* Spacing — 8pt grid */
+        --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 40px; --s8: 48px; --s9: 64px; --s10: 80px;
+        /* Nested radius scale (--r-base/--r-pill kept) */
+        --r-xl: 20px; --r-lg: 14px; --r-md: 10px; --r-sm: 8px;
+        /* Surfaces / elevation / material */
+        --surface-0: #111318; --surface-1: #15171D; --surface-2: #1B1E26; --surface-3: #23262F;
+        --hairline: rgba(255,255,255,.08); --divider: rgba(255,255,255,.06); --border-strong: rgba(255,255,255,.14);
+        --inset-top: inset 0 1px 0 rgba(255,255,255,.05);
+        --surf-hover: rgba(255,255,255,.10); --surf-active: rgba(255,255,255,.16);
+        /* Shadow scale (ambient, not 'halloween' glows) */
+        --sh-1: 0 1px 2px rgba(0,0,0,.30);
+        --sh-2: 0 4px 12px rgba(0,0,0,.35);
+        --sh-3: 0 12px 32px -8px rgba(0,0,0,.45);
+        --sh-4: 0 24px 56px -16px rgba(0,0,0,.50);
+        /* Accent hover + motion durations */
+        --brand-blue-hover: #6477ff;
+        --d-micro: 120ms; --d-std: 220ms; --d-emph: 340ms;
       }
 
-      /* Warm theme: player accent switches to Monte Carlo amber */
-      [data-theme="warm"] {
-        --player-accent: #d19c4f;
-      }
+      /* Warm theme retired (Apple-polish §G3) — overlay keeps the cinema palette. */
     }
 
     /* =========================================================================
@@ -268,15 +289,7 @@
         transition: opacity var(--t-slow);
       }
 
-      /* Warm bg rises when player overlay is open */
-      body[data-player-expanded] .bg-warm {
-        opacity: 1;
-      }
-
-      /* Explicit warm theme override */
-      [data-theme="warm"] .bg-warm {
-        opacity: 1;
-      }
+      /* .bg-warm retired (Apple-polish §G3) — never rises; player overlay stays cinema near-black. */
 
       @media (prefers-reduced-motion: reduce) {
         .bg-cinema,
@@ -475,9 +488,10 @@
       }
 
       .sidebar-item[aria-current="page"] {
-        background: var(--surf-glass-20);
+        background: rgba(81, 104, 252, 0.12);
         color: var(--text-pri);
         font-weight: 600;
+        box-shadow: inset 3px 0 0 var(--brand-blue-light);
       }
 
       /* Sidebar footer — internal items + theme toggle */
@@ -569,7 +583,7 @@
       .player-mini-progress-fill {
         height: 100%;
         width: 30%;
-        background: var(--np-accent);   /* color-from-cover (GOROD-042) */
+        background: var(--brand-blue-light);   /* single blue accent — player neutral until real art */
         border-radius: var(--r-pill);
         transition: width var(--t-slow), background var(--t-slow);
       }
@@ -582,7 +596,7 @@
         background: var(--surf-glass-20);
         flex-shrink: 0;
         overflow: hidden;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 4px 20px -4px var(--np-accent);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
         transition: box-shadow var(--t-slow);
       }
       .player-mini-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -603,7 +617,7 @@
         text-wrap: balance;
       }
 
-      .player-mini-art-placeholder--1 { background: linear-gradient(135deg, #1a4fa0, #56afd7); }
+      .player-mini-art-placeholder--1 { background: linear-gradient(135deg, #1a4fa0, #5168FC); }
       .player-mini-art-placeholder--2 { background: linear-gradient(135deg, #7b2d8b, #c43a6e); }
       .player-mini-art-placeholder--3 { background: linear-gradient(135deg, #1a6b3a, #2ecc71); }
 
@@ -738,10 +752,10 @@
         align-items: center;
         justify-content: center;
         gap: 0;
-        background: rgba(12, 11, 11, 0.30);
-        backdrop-filter: blur(36px) saturate(1.3);
-        -webkit-backdrop-filter: blur(36px) saturate(1.3);
-        padding: 0;
+        background: rgba(11, 12, 15, 0.60);
+        backdrop-filter: blur(36px) saturate(1.2);
+        -webkit-backdrop-filter: blur(36px) saturate(1.2);
+        padding: 24px;
         overflow-y: auto;
         overflow-x: hidden;
       }
@@ -755,19 +769,24 @@
       .player-full-window {
         position: relative;
         width: 100%;
-        max-width: 736px;
-        min-height: 100dvh;
+        max-width: 720px;
+        max-height: min(880px, 92dvh);
+        margin: auto;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(36px);
-        -webkit-backdrop-filter: blur(36px);
-        background: rgba(0, 0, 0, 0.18);
-        border-radius: 16px;
-        overflow: hidden;
-        padding: 80px 40px 40px;
+        border: 1px solid var(--hairline);
+        background:
+          radial-gradient(120% 80% at 50% 0%, rgba(81,104,252,0.10), transparent 55%),
+          rgba(20, 22, 28, 0.70);
+        backdrop-filter: blur(28px) saturate(1.2);
+        -webkit-backdrop-filter: blur(28px) saturate(1.2);
+        border-radius: var(--r-xl);
+        box-shadow: var(--sh-4);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 56px 40px 32px;
         box-sizing: border-box;
       }
 
@@ -897,21 +916,22 @@
 
       /* Cover view: single large cover desktop */
       .player-full-cover-desktop {
-        width: 580px;
-        height: 580px;
-        border-radius: 24px;
+        width: min(360px, 72vmin);
+        height: min(360px, 72vmin);
+        border-radius: var(--r-lg);
         flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #1a4fa0 0%, #7b2d8b 60%, #c43a6e 100%);
-        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+        background: var(--surface-1);
+        border: 1px solid var(--hairline);
+        box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
       }
 
       .player-full-cover-desktop svg {
-        width: 80px;
-        height: 80px;
-        stroke: rgba(255, 255, 255, 0.5);
+        width: 56px;
+        height: 56px;
+        stroke: var(--text-ter);
         fill: none;
         stroke-width: 1.5;
       }
@@ -989,19 +1009,18 @@
       }
 
       .player-full-title {
-        font-size: 24px;
-        font-weight: 500;
-        color: #EAF0FF;
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--text-pri);
         text-wrap: balance;
         line-height: 1.2;
+        letter-spacing: -0.01em;
       }
 
       .player-full-artist {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 400;
-        color: rgba(255, 255, 255, 0.70);
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+        color: var(--text-sec);
         text-wrap: balance;
       }
 
@@ -1223,7 +1242,7 @@
       .player-progress-fill {
         height: 100%;
         width: 30%;
-        background: linear-gradient(90deg, var(--player-accent), var(--brand-cyan));
+        background: var(--brand-blue-light);
         border-radius: var(--r-pill);
         transition: width var(--t-slow);
       }
@@ -1233,7 +1252,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 60px;
+        gap: 28px;
+        max-width: 280px;
+        margin: 0 auto;
         flex-shrink: 0;
         padding: 12px 0;
       }
@@ -1245,18 +1266,19 @@
         align-items: center;
         justify-content: center;
         border-radius: var(--r-pill);
-        background: var(--surf-glass-12);
-        border: 1px solid rgba(255,255,255,0.1);
-        color: var(--text-pri);
+        background: none;
+        border: none;
+        color: var(--text-sec);
         cursor: pointer;
-        transition: background var(--t-fast), filter var(--t-fast);
+        transition: background var(--t-fast), color var(--t-fast);
         flex-shrink: 0;
         min-width: 44px;
         min-height: 44px;
       }
 
       .player-transport-btn:hover {
-        background: var(--surf-glass-20);
+        background: var(--surf-hover);
+        color: var(--text-pri);
       }
 
       .player-transport-btn svg {
@@ -1270,10 +1292,12 @@
       }
 
       .player-transport-btn--play {
-        width: 56px;
-        height: 56px;
-        background: rgba(255,255,255,0.22);
-        border-color: rgba(255,255,255,0.3);
+        width: 64px;
+        height: 64px;
+        background: var(--brand-blue-light);
+        border: none;
+        color: #fff;
+        box-shadow: 0 6px 20px -6px rgba(81, 104, 252, 0.5);
       }
 
       .player-transport-btn--play svg {
@@ -1283,7 +1307,7 @@
       }
 
       .player-transport-btn--play:hover {
-        background: rgba(255,255,255,0.32);
+        background: var(--brand-blue-hover);
       }
 
       /* ---- Mobile tabbar ------------------------------------------------- */
@@ -1324,7 +1348,7 @@
 
       .tabbar-item:hover,
       .tabbar-item[aria-current="page"] {
-        color: var(--brand-cyan);
+        color: var(--brand-blue-light);
       }
 
       .tabbar-item svg {
@@ -1339,6 +1363,11 @@
       }
 
       /* ---- Tweaks panel -------------------------------------------------- */
+
+      /* §G4 — dev chrome hidden in production; reveal with ?dev=1 (sticky) or Ctrl/Cmd+Shift+D */
+      html:not([data-dev="true"]) .tweaks,
+      html:not([data-dev="true"]) .tweaks-fab,
+      html:not([data-dev="true"]) .sidebar-theme-toggle { display: none !important; }
 
       .tweaks {
         position: fixed;
@@ -1547,7 +1576,7 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin-bottom: 20px;
-        border: 1px solid rgba(86, 175, 215, 0.25);
+        border: 1px solid rgba(81, 104, 252, 0.25);
       }
 
       .map-heading {
@@ -1908,8 +1937,8 @@
         max-width: calc(100% - 100px);
         top: 165px;
         height: 480px;
-        background: rgba(255, 255, 255, 0.28);
-        filter: blur(22.4px);
+        background: radial-gradient(50% 50% at 50% 45%, rgba(81, 104, 252, 0.07), transparent 72%);
+        filter: blur(24px);
         z-index: 3;
         pointer-events: none;
       }
@@ -2282,8 +2311,8 @@
       }
       /* genre bubbles: brand-tinted gradient by --hue */
       .onb-bubble--genre {
-        background:
-          radial-gradient(circle at 32% 28%, hsla(var(--hue,230),80%,68%,0.95), hsla(var(--hue,230),72%,42%,0.92) 70%);
+        background: radial-gradient(120% 120% at 30% 25%, #1b1d24, #121318);
+        border: 1px solid rgba(255,255,255,0.10);
       }
       /* artist bubbles: photo fill + dark wash for legibility */
       .onb-bubble--artist {
@@ -2537,6 +2566,148 @@
         .resume-title { font-size: 19px; }
         .resume-actions { flex-direction: column-reverse; align-items: stretch; }
         .resume-go, .resume-build { justify-content: center; }
+      }
+
+      /* =====================================================================
+         GOROD-ONB — экран «модель за N сигналов» + стриминг-import overlay.
+         Аддитивно поверх онбординга. Onest only, один акцент, art-tint логика.
+         ===================================================================== */
+      .onb-model {
+        position: fixed; inset: 0; z-index: 260;   /* above resume-modal (z-250) */
+        display: flex; align-items: center; justify-content: center; padding: 24px;
+        opacity: 0; pointer-events: none; transition: opacity 0.22s ease;
+      }
+      .onb-model.is-open { opacity: 1; pointer-events: auto; }
+      .onb-model-backdrop {
+        position: absolute; inset: 0; background: rgba(6, 7, 10, 0.72);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      }
+      .onb-model-panel {
+        position: relative; width: 560px; max-width: 100%;
+        max-height: calc(100vh - 48px); overflow-y: auto;
+        background: rgba(18, 18, 24, 0.97);
+        backdrop-filter: blur(26px) saturate(1.2); -webkit-backdrop-filter: blur(26px) saturate(1.2);
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 22px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62);
+        padding: 28px 28px 22px;
+        transform: translateY(14px) scale(0.98);
+        transition: transform 0.24s cubic-bezier(.34, 1.4, .64, 1);
+      }
+      .onb-model.is-open .onb-model-panel { transform: none; }
+
+      .onb-model-kicker {
+        display: inline-block; font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 700;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-on-dark); margin-bottom: 8px;
+      }
+      .onb-model-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.18; color: #fff; margin: 0 0 8px; }
+      .onb-model-title b { color: var(--brand-blue-light); font-weight: 800; }
+      .onb-model-sub { font-family: 'Onest', sans-serif; font-size: 14px; line-height: 1.5; color: var(--text-sec); margin: 0 0 18px; }
+
+      .onb-model-spark {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+        background: var(--tint-blue-light-20); color: var(--brand-blue-light);
+      }
+      .onb-model-spark svg { width: 22px; height: 22px; }
+      .onb-model-spark--spin svg { animation: resume-spin 1.4s linear infinite; }   /* reuse existing keyframe */
+
+      /* the editable mini-vector */
+      .onb-model-vec { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+      .onb-vec-row {
+        padding: 12px 14px; border-radius: 13px;
+        background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .onb-vec-main { display: flex; align-items: center; gap: 12px; }
+      .onb-vec-name { font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 700; color: #fff; flex: none; min-width: 116px; }
+      .onb-vec-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.10); overflow: hidden; }
+      .onb-vec-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--brand-blue-light), var(--accent-on-dark)); transition: width 0.32s cubic-bezier(.34,1.4,.64,1); }
+      .onb-vec-pct { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent-on-dark); flex: none; min-width: 38px; text-align: right; }
+      .onb-vec-ctrl { display: flex; gap: 6px; flex: none; }
+      .onb-vec-btn {
+        width: 44px; height: 44px; border-radius: 10px; cursor: pointer;
+        background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.12);
+        font-family: 'Onest', sans-serif; font-size: 18px; font-weight: 700; line-height: 1;
+        display: flex; align-items: center; justify-content: center;
+        transition: background var(--t-fast), border-color var(--t-fast);
+      }
+      .onb-vec-btn:hover { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); }
+      .onb-vec-btn:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .onb-vec-btn--x { color: var(--text-sec); font-size: 15px; }
+      .onb-vec-btn--x:hover { color: #fff; }
+      .onb-vec-why {
+        display: block; margin-top: 8px;
+        font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.45; color: var(--text-sec);
+      }
+      .onb-vec-why b { color: var(--accent-on-dark); font-weight: 700; }
+
+      .onb-model-receipt {
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--accent-on-dark);
+        min-height: 18px; margin: 14px 0 0;
+      }
+
+      .onb-model-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; }
+      .onb-model-ghost {
+        background: none; border: none; color: var(--text-sec);
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; padding: 12px 8px; border-radius: 6px;
+      }
+      .onb-model-ghost:hover { color: #fff; }
+      .onb-model-ghost:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .onb-model-go {
+        display: inline-flex; align-items: center; gap: 7px; height: 52px; padding: 0 26px;
+        border: none; border-radius: var(--r-pill); background: var(--brand-blue-light); color: #fff;
+        font-family: 'Onest', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer;
+        box-shadow: 0 10px 30px rgba(81, 104, 252, 0.4);
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+      }
+      .onb-model-go:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(81, 104, 252, 0.5); }
+      .onb-model-go:active { transform: translateY(0) scale(0.98); }
+      .onb-model-go:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+      .onb-model-go svg { width: 18px; height: 18px; }
+
+      /* import source picker */
+      .onb-src-row { display: flex; flex-direction: column; gap: 10px; }
+      .onb-src {
+        display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+        min-height: 56px; padding: 11px 16px; cursor: pointer; text-align: left;
+        background: rgba(255, 255, 255, 0.04); color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.10); border-radius: var(--r-base);
+        font-family: 'Onest', sans-serif;
+        transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+      }
+      .onb-src:hover { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); transform: translateY(-1px); }
+      .onb-src:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .onb-src-name { font-size: 15px; font-weight: 700; }
+      .onb-src-hint { font-size: 12px; font-weight: 600; color: var(--text-quat); }
+
+      /* import parsing log — reuse resume-log visual language */
+      .onb-model-log { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+      .onb-model-log li {
+        font-family: 'Onest', sans-serif; font-size: 14px; color: var(--text-sec);
+        display: flex; align-items: center; gap: 10px;
+        opacity: 0; transform: translateY(6px); animation: resume-in 0.3s ease forwards;   /* reuse */
+      }
+      .onb-model-log li::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--brand-blue-light); flex: none; }
+      .onb-model-log li.is-done { color: #fff; }
+
+      /* import entry link in footer — same family as .onb-alt */
+      .onb-alt--import { color: var(--accent-on-dark); }
+      .onb-alt--import:hover { color: #fff; }
+
+      @media (max-width: 760px) {
+        .onb-model-panel { padding: 22px 18px 18px; border-radius: 18px; width: 100%; }
+        .onb-model-title { font-size: 20px; }
+        .onb-vec-main { flex-wrap: wrap; }
+        .onb-vec-name { min-width: 0; flex: 1 1 100%; }
+        .onb-vec-ctrl { margin-left: auto; }
+        .onb-model-actions { flex-direction: column-reverse; align-items: stretch; }
+        .onb-model-go { justify-content: center; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .onb-model, .onb-model-panel { transition: none; }
+        .onb-model-spark--spin svg { animation: none; }
+        .onb-model-log li { animation: none; opacity: 1; transform: none; }
+        .onb-vec-fill { transition: none; }
+        .onb-src:hover, .onb-model-go:hover { transform: none; }
       }
 
       /* =====================================================================
@@ -2980,7 +3151,7 @@
       .profile-faux-lock { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; text-align: center; padding: 0 10px; }
       .profile-faux-lock svg { width: 26px; height: 26px; color: var(--text-sec); }
       .profile-faux-lock span { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); max-width: 26ch; line-height: 1.45; }
-      .profile-box--open { border-color: rgba(81, 104, 252, 0.4); box-shadow: 0 0 40px -10px var(--brand-blue-light); }
+      .profile-box--open { border-color: rgba(81, 104, 252, 0.35); box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 24px -16px rgba(0,0,0,0.6); }
       .profile-box--open .profile-box-tag { background: var(--tint-blue-light-20); color: #c7d0ff; }
 
       .profile-facet { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; padding: 11px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
@@ -3003,6 +3174,9 @@
       .profile-rej-list { display: flex; flex-wrap: wrap; gap: 8px; }
       .profile-rej-chip { font-family: 'Onest', sans-serif; font-size: 13px; color: var(--text-sec); text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, 0.4); padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, 0.12); }
       .profile-empty { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); margin: 0; line-height: 1.5; text-wrap: pretty; }
+      .profile-rej-item { display: inline-flex; flex-direction: column; gap: 3px; margin: 0 8px 10px 0; vertical-align: top; }
+      .profile-rej-prov { font-family: 'Onest', sans-serif; font-size: 11.5px; color: var(--text-quat); display: inline-flex; align-items: center; gap: 5px; }
+      .profile-rej-prov::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent-on-dark); flex: none; }
 
       .profile-ad-strip { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; background: #111318; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 14px 18px; margin-top: 14px; }
       .profile-ad-text { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); line-height: 1.45; flex: 1 1 280px; }
@@ -3036,6 +3210,10 @@
       .recap-card-bloom .bloom { width: 100%; height: auto; display: block; }
       .recap-card-delta { font-size: 14px; color: var(--text-sec); margin: 0 0 5px; }
       .recap-card-delta .grow { color: var(--success, #34d399); font-weight: 600; }
+      /* R1 — дельта = ПРИЧИННЫЙ герой (НЕ vanity-число): второй по весу под словом */
+      .recap-card-delta--hero { font-size: clamp(15px, 4.4vw, 18px); font-weight: 700; color: var(--text-pri); margin: 0 0 6%; line-height: 1.25; }
+      .recap-card-delta--hero .grow { color: var(--success, #34d399); }
+      .recap-card-delta--hero .fade { color: rgba(255, 255, 255, 0.55); }
       .recap-card-discovery { font-size: 13px; color: var(--text-quat); margin: 0 0 7px; line-height: 1.4; }
       .recap-card-defense { font-size: 12px; line-height: 1.45; color: var(--accent-on-dark); margin: 0; max-width: 32ch; }
       .recap-card-mark { margin-top: auto; padding-top: 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sec); opacity: 0.72; }
@@ -3049,6 +3227,11 @@
       .recap-btn--ghost:hover { color: var(--text-pri); border-color: rgba(255, 255, 255, 0.36); }
       .recap-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
       .recap-receipt { min-height: 1.2em; text-align: center; font-size: 13px; font-weight: 600; color: var(--success, #34d399); margin: 10px 0 0; }
+      .recap-btn--primary-alt { background: transparent; color: var(--text-pri); border: 1px solid var(--brand-blue-light); }
+      .recap-btn--primary-alt:hover { background: var(--tint-blue-light-20, rgba(81, 104, 252, 0.16)); }
+      .recap-cta-line { text-align: center; font-size: 13.5px; line-height: 1.45; color: var(--text-sec); margin: 12px 0 0; }
+      .recap-cta-line a { color: var(--accent-on-dark); font-weight: 700; text-decoration: none; }
+      .recap-cta-line a:hover { text-decoration: underline; }
 
       /* ── screen bloom + deltas + discovery ── */
       .recap-screen-bloom { margin: 0 auto; }
@@ -3196,7 +3379,7 @@
       .taste-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(255, 255, 255, 0.05); }
       .taste-row:first-of-type { border-top: none; }
       .taste-row.is-muted { opacity: 0.4; }
-      .taste-row.is-pinned .taste-row-name::after { content: ' 📌'; }
+      .taste-row.is-pinned { box-shadow: inset 2px 0 0 var(--brand-blue-light); }   /* pinned cue — no emoji */
       .taste-pin {
         width: 26px; height: 26px; border-radius: 7px; border: none; flex-shrink: 0;
         background: transparent; color: var(--text-sec); cursor: pointer;
@@ -3352,13 +3535,13 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        background: linear-gradient(135deg, #1a3a6e 0%, #2d6db5 35%, #56afd7 70%, #1a6bde 100%);
+        background: linear-gradient(135deg, #1a3a6e 0%, #2d6db5 35%, #5168FC 70%, #1a6bde 100%);
         box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.10);
         transition: box-shadow var(--t-mid);
       }
 
       .home-cover:hover {
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(86, 175, 215, 0.35);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(81, 104, 252, 0.35);
       }
 
       /* Abstract album art SVG inside cover */
@@ -3450,7 +3633,7 @@
       .home-station[data-active="true"] {
         outline: 2px solid var(--brand-cyan);
         outline-offset: -1px;
-        background: rgba(86, 175, 215, 0.12);
+        background: rgba(81, 104, 252, 0.12);
         border-color: transparent;
       }
 
@@ -3576,7 +3759,7 @@
         height: 96px;
         border-radius: 14px;
         flex-shrink: 0;
-        background: linear-gradient(135deg, #1a4fa0 0%, #2d6db5 50%, #56afd7 100%);
+        background: linear-gradient(135deg, #1a4fa0 0%, #2d6db5 50%, #5168FC 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -3732,7 +3915,7 @@
       }
 
       .home-tf-queue-item[data-active="true"] {
-        background: rgba(86, 175, 215, 0.08);
+        background: rgba(81, 104, 252, 0.08);
         margin: 0 -8px;
         padding-left: 8px;
         padding-right: 8px;
@@ -3840,8 +4023,8 @@
         font-size: 13px;
         font-weight: 600;
         color: var(--brand-cyan);
-        border-color: rgba(86, 175, 215, 0.30);
-        background: rgba(86, 175, 215, 0.10);
+        border-color: rgba(81, 104, 252, 0.30);
+        background: rgba(81, 104, 252, 0.10);
         white-space: nowrap;
         letter-spacing: 0.02em;
         height: 44px;
@@ -3850,7 +4033,7 @@
       }
 
       .home-tf-open-player:hover {
-        background: rgba(86, 175, 215, 0.20);
+        background: rgba(81, 104, 252, 0.20);
         color: var(--brand-cyan);
       }
 
@@ -4085,8 +4268,8 @@
       .discover-near-title { font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: #fff; margin: 0 0 14px; }
       .discover-near-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
       .discover-near-row::-webkit-scrollbar { display: none; }
-      .discover-near-card { flex: none; width: 220px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: linear-gradient(160deg, var(--tint-blue-light-20), rgba(255, 255, 255, 0.03)); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform var(--t-fast), border-color var(--t-fast); }
-      .discover-near-card:hover { transform: translateY(-3px); border-color: var(--brand-blue-light); }
+      .discover-near-card { flex: none; width: 220px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--hairline); transition: background var(--t-fast), border-color var(--t-fast); }
+      .discover-near-card:hover { background: var(--surf-hover); border-color: var(--border-strong); }
       .discover-near-card:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
       .discover-near-name { font-family: 'Onest', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
       .discover-near-dist { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); margin-top: 6px; }
@@ -4352,8 +4535,8 @@
       .library-chip[aria-pressed="true"] {
         background: rgba(255, 255, 255, 0.32);
         color: #ffffff;
-        border-color: rgba(86, 175, 215, 0.60);
-        box-shadow: 0 0 0 1px rgba(86, 175, 215, 0.30);
+        border-color: rgba(81, 104, 252, 0.60);
+        box-shadow: 0 0 0 1px rgba(81, 104, 252, 0.30);
       }
 
       .library-chip:focus-visible {
@@ -4420,8 +4603,8 @@
 
       /* Gradient palettes per tile type */
       .library-tile-cover--album {
-        background: linear-gradient(135deg, #0f2d6b 0%, #1a6bde 50%, #56afd7 100%);
-        box-shadow: 0 0 0 0 transparent, 0 4px 16px rgba(86, 175, 215, 0.25);
+        background: linear-gradient(135deg, #0f2d6b 0%, #1a6bde 50%, #5168FC 100%);
+        box-shadow: 0 0 0 0 transparent, 0 4px 16px rgba(81, 104, 252, 0.25);
       }
 
       .library-tile-cover--playlist {
@@ -4429,7 +4612,7 @@
       }
 
       .library-tile-cover--track {
-        background: linear-gradient(135deg, #0f1b4d 0%, #1553ac 50%, #56afd7 85%);
+        background: linear-gradient(135deg, #0f1b4d 0%, #1553ac 50%, #5168FC 85%);
       }
 
       .library-tile-cover--podcast {
@@ -4485,8 +4668,8 @@
         flex-shrink: 0;
         padding: 2px 7px;
         border-radius: var(--r-pill);
-        background: rgba(86, 175, 215, 0.18);
-        border: 1px solid rgba(86, 175, 215, 0.30);
+        background: rgba(81, 104, 252, 0.18);
+        border: 1px solid rgba(81, 104, 252, 0.30);
         font-family: 'Onest', sans-serif;
         font-size: 9px;
         font-weight: 700;
@@ -4516,7 +4699,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
-        background: linear-gradient(135deg, rgba(86, 175, 215, 0.18), rgba(21, 82, 172, 0.32));
+        background: linear-gradient(135deg, rgba(81, 104, 252, 0.18), rgba(21, 82, 172, 0.32));
         border: 1.5px dashed rgba(255, 255, 255, 0.20);
         border-radius: 14px;
         padding: 24px;
@@ -4531,7 +4714,7 @@
       }
 
       .library-ad-slot:hover {
-        box-shadow: 0 0 0 1px rgba(86, 175, 215, 0.25);
+        box-shadow: 0 0 0 1px rgba(81, 104, 252, 0.25);
       }
 
       .library-ad-label {
@@ -4638,482 +4821,185 @@
       }
 
       /* =========================================================================
-         ARTIST PAGE — hero + tracks + albums + stations
+         ARTIST PAGE — deep-dive: art-tint hero + «почему» + tracks + stations
+         GOROD-047b · cyan retired → blue family · no SVG silhouette
          ========================================================================= */
+      [data-page="artist"] { padding-bottom: 80px; }
 
-      /* Page section wrapper */
-      [data-page="artist"] {
-        padding-bottom: 80px;
-      }
-
-      /* ---- Hero band --------------------------------------------------------- */
-
+      /* ---- Hero band -------------------------------------------------------- */
       .artist-hero {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 48px;
-        min-height: 360px;
-        padding: 48px 40px 48px;
+        display: flex; flex-direction: row; align-items: center; gap: 48px;
+        min-height: 320px; padding: 48px 40px;
         background: rgba(0,0,0,0.12);
         border-bottom: 1px solid var(--surf-glass-12);
-        margin-bottom: 48px;
+        margin-bottom: 40px;
       }
-
-      /* Round photo placeholder */
-      .artist-photo-wrap {
-        flex-shrink: 0;
-      }
-
+      /* art-tint avatar (NOT silhouette): flat blue-family tint + монограмма */
       .artist-photo {
-        width: 280px;
-        height: 280px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #3d0080 0%, #1a4fa0 40%, #56afd7 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: relative; width: 200px; height: 200px; border-radius: var(--r-xl);
+        flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         overflow: hidden;
-        flex-shrink: 0;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 3px rgba(86,175,215,0.25);
+        background: var(--np-accent);            /* content-derived hue (set by JS tintFor) */
+        border: 1px solid var(--hairline);
+        box-shadow: 0 24px 48px -16px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06);
       }
-
-      .artist-photo-art {
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
+      /* tint wash so the flat fill reads as a surface, not a flat block */
+      .artist-photo::after {
+        content:""; position:absolute; inset:0; border-radius:var(--r-xl);
+        background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(0,0,0,0.22));
       }
-
-      /* Text block */
-      .artist-hero-text {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        max-width: 560px;
-        min-width: 0;
+      .artist-photo-mono {
+        position: relative; z-index: 1; font-family:'Onest',sans-serif;
+        font-size: 64px; font-weight: 800; letter-spacing: 0.02em; color: #fff;
+        line-height: 1; text-shadow: 0 2px 12px rgba(0,0,0,0.35);
       }
+      /* real-photo seam (Ф1+): when JS sets <img>, it covers the mono */
+      .artist-photo > img { position:absolute; inset:0; z-index:2; width:100%; height:100%; object-fit:cover; }
 
+      .artist-hero-text { display:flex; flex-direction:column; gap:14px; max-width:560px; min-width:0; }
       .artist-overline {
-        font-family: 'Onest', sans-serif;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.10em;
-        text-transform: uppercase;
-        color: var(--brand-cyan);
-        margin: 0;
-        line-height: 1;
+        font-family:'Onest',sans-serif; font-size:11px; font-weight:700;
+        letter-spacing:0.10em; text-transform:uppercase;
+        color: var(--accent-on-dark); margin:0; line-height:1;
       }
-
       .artist-name {
-        font-family: 'Onest', sans-serif;
-        font-size: 64px;
-        font-weight: 900;
-        letter-spacing: 0.04em;
-        line-height: 1.0;
-        color: var(--text-pri);
-        transform: scaleX(1.05);
-        transform-origin: left center;
-        display: inline-block;
-        text-wrap: balance;
-        margin: 0;
+        font-family:'Onest',sans-serif; font-size:48px; font-weight:700;
+        letter-spacing:-0.02em; line-height:1.05; color:var(--text-pri);
+        text-wrap:balance; margin:0;
       }
+      .artist-stats { font-family:'Onest',sans-serif; font-size:16px; color:var(--text-sec); margin:0; line-height:1.4; }
 
-      .artist-stats {
-        font-family: 'Onest', sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        color: var(--text-sec);
-        margin: 0;
-        line-height: 1.4;
-      }
-
-      .artist-bio {
-        font-family: 'Onest', sans-serif;
-        font-size: 15px;
-        font-weight: 400;
-        color: var(--text-sec);
-        line-height: 1.55;
-        text-wrap: pretty;
-        margin: 0;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
-      /* Action buttons row */
-      .artist-action-row {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 4px;
-      }
-
+      .artist-action-row { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:4px; }
       .artist-action-primary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 28px;
-        min-height: 44px;
-        border-radius: var(--r-pill);
-        background: var(--brand-cyan);
-        color: #000;
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        cursor: pointer;
-        border: none;
-        transition: filter var(--t-fast), transform var(--t-fast);
-        white-space: nowrap;
+        display:inline-flex; align-items:center; justify-content:center;
+        padding:14px 28px; min-height:44px; border-radius:var(--r-pill);
+        background:var(--brand-blue-light); color:#fff;
+        font-family:'Onest',sans-serif; font-size:14px; font-weight:700;
+        letter-spacing:0.04em; cursor:pointer; border:none;
+        transition: filter var(--t-fast); white-space:nowrap;
       }
-
-      .artist-action-primary:hover {
-        filter: brightness(1.12);
-      }
-
-      .artist-action-primary:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 3px;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .artist-action-primary:hover {
-          transform: none;
-        }
-      }
+      .artist-action-primary:hover { filter:brightness(1.12); }
+      .artist-action-primary:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:3px; }
 
       .artist-action-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 14px 24px;
-        min-height: 44px;
-        border-radius: var(--r-pill);
-        background: var(--surf-glass-20);
-        color: var(--text-pri);
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        border: 1px solid rgba(255,255,255,0.15);
-        transition: background var(--t-fast), filter var(--t-fast);
-        white-space: nowrap;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        display:inline-flex; align-items:center; gap:8px; padding:14px 22px; min-height:44px;
+        border-radius:var(--r-pill); background:var(--surf-glass-12); color:var(--text-pri);
+        font-family:'Onest',sans-serif; font-size:14px; font-weight:500; cursor:pointer;
+        border:1px solid rgba(255,255,255,0.12); transition:background var(--t-fast); white-space:nowrap;
       }
+      .artist-action-secondary:hover { background:var(--surf-glass-20); }
+      .artist-action-secondary:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:3px; }
+      .artist-action-secondary svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; flex-shrink:0; }
+      .artist-action-secondary[aria-pressed="true"] { color:var(--accent-on-dark); border-color:rgba(81,104,252,0.45); }
+      .artist-action-secondary[aria-pressed="true"] svg { fill:var(--accent-on-dark); stroke:none; }
 
-      .artist-action-secondary:hover {
-        background: rgba(255,255,255,0.28);
-      }
-
-      .artist-action-secondary:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 3px;
-      }
-
-      .artist-action-secondary[aria-pressed="true"] svg path {
-        fill: var(--brand-cyan);
-        stroke: none;
-      }
-
-      .artist-action-secondary[aria-pressed="true"] {
-        color: var(--brand-cyan);
-      }
-
-      .artist-action-secondary svg {
-        width: 16px;
-        height: 16px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        flex-shrink: 0;
-      }
-
-      /* "Открыть весь список" secondary link */
-      .artist-open-all {
-        display: inline-flex;
-        align-items: center;
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--brand-cyan);
-        letter-spacing: 0.02em;
-        text-decoration: none;
-        padding: 6px 0;
-        min-height: 44px;
-        transition: opacity var(--t-fast);
-      }
-
-      .artist-open-all:hover {
-        opacity: 0.75;
-      }
-
-      .artist-open-all:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 2px;
-        border-radius: var(--r-base);
-      }
-
-      /* ---- Artist section wrapper ------------------------------------------- */
-
-      .artist-section {
-        padding: 0 40px 48px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
+      /* ---- Section wrapper -------------------------------------------------- */
+      .artist-section { padding:0 40px 40px; max-width:920px; margin:0 auto; }
       .artist-section-heading {
-        font-family: 'Onest', sans-serif;
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--text-pri);
-        text-wrap: balance;
-        margin: 0 0 20px;
+        font-family:'Onest',sans-serif; font-size:24px; font-weight:700;
+        color:var(--text-pri); text-wrap:balance; margin:0 0 16px;
       }
 
-      /* ---- Top tracks 2-col grid -------------------------------------------- */
-
-      .artist-tracks-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0 24px;
+      /* ---- «Почему тебе этот артист» ---------------------------------------- */
+      .artist-why { }
+      .artist-why-head { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+      .artist-why-head .artist-section-heading { margin:0; }
+      .artist-why-demo {
+        font-family:'Onest',sans-serif; font-size:10px; font-weight:700;
+        text-transform:uppercase; letter-spacing:0.06em; color:var(--accent-on-dark);
+        background:rgba(81,104,252,0.12); border:1px solid rgba(81,104,252,0.30);
+        padding:3px 8px; border-radius:var(--r-pill); cursor:default;
       }
+      .artist-why-l1 {
+        font-family:'Onest',sans-serif; font-size:17px; font-weight:500; line-height:1.5;
+        color:var(--text-pri); margin:0 0 14px; max-width:620px;
+      }
+      .artist-why-l1 b { color:var(--accent-on-dark); font-weight:800; }
+      .artist-why-toggle {
+        font-family:'Onest',sans-serif; font-size:14px; font-weight:600; color:var(--accent-on-dark);
+        background:none; border:none; padding:8px 0; min-height:44px; cursor:pointer;
+        text-align:left; transition:opacity var(--t-fast);
+      }
+      .artist-why-toggle:hover { opacity:0.78; }
+      .artist-why-toggle:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; border-radius:var(--r-base); }
 
+      .artist-why-list { list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+      .artist-why-list[hidden] { display:none; }   /* author display:flex defeats UA [hidden]; restore L1→L2 progressive disclosure */
+      .artist-why-item {
+        display:flex; align-items:flex-start; gap:12px; padding:12px 16px;
+        background:var(--surf-glass-12); border-radius:var(--r-base);
+        border:1px solid rgba(255,255,255,0.06);
+      }
+      .artist-why-dot { flex-shrink:0; width:8px; height:8px; margin-top:7px; border-radius:50%; background:var(--brand-blue-light); }
+      .artist-why-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+      .artist-why-text { font-family:'Onest',sans-serif; font-size:15px; font-weight:500; color:var(--text-pri); line-height:1.4; }
+      .artist-why-text b { color:var(--accent-on-dark); font-weight:800; }
+      .artist-why-prov { font-family:'Onest',sans-serif; font-size:12px; color:var(--text-quat); }
+      .artist-why-item.is-rejected { opacity:0.5; }
+      .artist-why-item.is-rejected .artist-why-text { text-decoration:line-through; }
+      .artist-why-reject {
+        flex-shrink:0; font-family:'Onest',sans-serif; font-size:12px; font-weight:600;
+        color:var(--text-quat); background:none; border:1px solid rgba(255,255,255,0.14);
+        border-radius:var(--r-pill); padding:6px 12px; min-height:32px; cursor:pointer;
+        transition:color var(--t-fast), border-color var(--t-fast);
+      }
+      .artist-why-reject:hover { color:var(--text-pri); border-color:rgba(255,255,255,0.30); }
+      .artist-why-reject:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
+
+      .artist-why-foot { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:18px; }
+      .artist-why-not {
+        font-family:'Onest',sans-serif; font-size:13px; font-weight:600; color:var(--text-sec);
+        background:none; border:1px solid rgba(255,255,255,0.14); border-radius:var(--r-pill);
+        padding:10px 18px; min-height:44px; cursor:pointer; transition:color var(--t-fast), border-color var(--t-fast);
+      }
+      .artist-why-not:hover { color:var(--text-pri); border-color:rgba(255,255,255,0.30); }
+      .artist-why-not[aria-pressed="true"] { color:var(--accent-on-dark); border-color:rgba(81,104,252,0.45); background:rgba(81,104,252,0.10); }
+      .artist-why-not:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
+      .artist-why-receipt { font-family:'Onest',sans-serif; font-size:13px; color:var(--accent-on-dark); margin:0; min-height:18px; flex:1; min-width:200px; }
+
+      /* ---- Top tracks (row, art-tint) --------------------------------------- */
+      .artist-tracks { display:flex; flex-direction:column; }
       .artist-track-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        min-height: 56px;
-        border-radius: var(--r-base);
-        border: none;
-        background: none;
-        cursor: pointer;
-        font: inherit;
-        color: inherit;
-        text-align: left;
-        width: 100%;
-        transition: background var(--t-fast);
+        display:flex; align-items:center; gap:14px; padding:10px 12px; min-height:56px;
+        border-radius:var(--r-base); border:none; background:none; cursor:pointer;
+        font:inherit; color:inherit; text-align:left; width:100%; transition:background var(--t-fast);
       }
-
-      .artist-track-row:hover {
-        background: var(--surf-glass-12);
-      }
-
-      .artist-track-row:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 2px;
-      }
-
+      .artist-track-row:hover { background:var(--surf-glass-12); }
+      .artist-track-row:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
       .artist-track-rank {
-        font-family: 'Onest', sans-serif;
-        font-size: 28px;
-        font-weight: 900;
-        color: var(--text-quat);
-        min-width: 36px;
-        text-align: right;
-        flex-shrink: 0;
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
+        font-family:'Onest',sans-serif; font-size:24px; font-weight:900; color:var(--text-quat);
+        min-width:30px; text-align:right; flex-shrink:0; line-height:1; font-variant-numeric:tabular-nums;
       }
-
+      /* art-tint cover + монограмма (NOT gradient placeholder) */
       .artist-track-cover {
-        width: 40px;
-        height: 40px;
-        border-radius: 6px;
-        flex-shrink: 0;
-        display: block;
+        position:relative; width:44px; height:44px; border-radius:8px; flex-shrink:0;
+        display:flex; align-items:center; justify-content:center; overflow:hidden;
+        background:var(--brand-blue-light);
       }
+      .artist-track-cover::after { content:""; position:absolute; inset:0; background:radial-gradient(110% 110% at 30% 25%, rgba(255,255,255,0.16), rgba(0,0,0,0.28)); }
+      .artist-track-mono { position:relative; z-index:1; font-family:'Onest',sans-serif; font-size:15px; font-weight:800; color:#fff; }
+      .artist-track-meta { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+      .artist-track-title { font-family:'Onest',sans-serif; font-size:15px; font-weight:600; color:var(--text-pri); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .artist-track-album { font-family:'Onest',sans-serif; font-size:13px; color:var(--text-quat); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .artist-track-dur { font-family:'Onest',sans-serif; font-size:13px; color:var(--text-quat); flex-shrink:0; font-variant-numeric:tabular-nums; }
 
-      .artist-track-meta {
-        flex: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
+      /* ---- Stations (on-brand радио) ---------------------------------------- */
+      .artist-stations-sub { font-family:'Onest',sans-serif; font-size:14px; color:var(--text-sec); margin:0 0 16px; line-height:1.45; }
+      .artist-stations { display:flex; flex-wrap:wrap; gap:12px; }
+      .artist-station-chip {
+        display:inline-flex; align-items:center; gap:12px; width:260px; min-height:56px;
+        padding:12px 18px; border-radius:var(--r-pill); background:var(--surf-glass-12);
+        border:1px solid rgba(255,255,255,0.12); color:var(--text-sec); font:inherit; cursor:pointer;
+        transition:background var(--t-fast), color var(--t-fast);
       }
-
-      .artist-track-title {
-        font-family: 'Onest', sans-serif;
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--text-pri);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .artist-track-album {
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--text-quat);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .artist-track-dur {
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--text-quat);
-        flex-shrink: 0;
-        font-variant-numeric: tabular-nums;
-      }
-
-      /* ---- Albums horizontal scroll ----------------------------------------- */
-
-      .artist-albums-row {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        padding-right: 24px;
-        padding-bottom: 4px;
-      }
-
-      .artist-albums-row::-webkit-scrollbar {
-        display: none;
-      }
-
-      .artist-album-card {
-        display: flex;
-        flex-direction: column;
-        width: 200px;
-        flex-shrink: 0;
-        scroll-snap-align: start;
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        font: inherit;
-        color: inherit;
-        text-align: left;
-        border-radius: var(--r-base);
-        transition: transform var(--t-fast);
-      }
-
-      .artist-album-card:hover {
-        transform: scale(1.03);
-      }
-
-      .artist-album-card:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 3px;
-        border-radius: var(--r-base);
-      }
+      .artist-station-chip:hover { background:var(--surf-glass-20); color:var(--text-pri); }
+      .artist-station-chip:focus-visible { outline:3px solid var(--brand-blue-light); outline-offset:2px; }
+      .artist-station-eq { width:18px; height:14px; flex-shrink:0; color:var(--accent-on-dark); opacity:0.85; }
+      .artist-station-name { font-family:'Onest',sans-serif; font-size:15px; font-weight:600; color:var(--text-pri); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; }
+      .artist-station-freq { font-family:'Onest',sans-serif; font-size:13px; color:var(--text-quat); flex-shrink:0; }
 
       @media (prefers-reduced-motion: reduce) {
-        .artist-album-card:hover {
-          transform: none;
-        }
-      }
-
-      .artist-album-cover {
-        width: 200px;
-        height: 200px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        overflow: hidden;
-      }
-
-      .artist-album-meta {
-        padding: 10px 4px 4px;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .artist-album-name {
-        font-family: 'Onest', sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-pri);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .artist-album-year {
-        font-family: 'Onest', sans-serif;
-        font-size: 12px;
-        font-weight: 400;
-        color: var(--text-quat);
-      }
-
-      /* ---- Station chips ----------------------------------------------------- */
-
-      .artist-stations {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .artist-station-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        width: 280px;
-        height: 60px;
-        padding: 14px 20px;
-        border-radius: var(--r-pill);
-        background: var(--surf-glass-20);
-        border: 1px solid rgba(255,255,255,0.14);
-        color: var(--text-sec);
-        font: inherit;
-        cursor: pointer;
-        transition: background var(--t-fast), color var(--t-fast);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-      }
-
-      .artist-station-chip:hover {
-        background: rgba(255,255,255,0.28);
-        color: var(--text-pri);
-      }
-
-      .artist-station-chip:focus-visible {
-        outline: 3px solid var(--brand-cyan);
-        outline-offset: 2px;
-      }
-
-      .artist-station-eq {
-        width: 18px;
-        height: 14px;
-        flex-shrink: 0;
-        color: var(--brand-cyan);
-        opacity: 0.80;
-      }
-
-      .artist-station-name {
-        font-family: 'Onest', sans-serif;
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--text-pri);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex: 1;
-      }
-
-      .artist-station-freq {
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--text-quat);
-        flex-shrink: 0;
+        .artist-action-primary:hover, .artist-track-row:hover { transform:none; }
       }
 
       /* =========================================================================
@@ -5361,8 +5247,8 @@
       .favorites-chip[aria-pressed="true"] {
         background: rgba(255,255,255,0.32);
         color: #ffffff;
-        border-color: rgba(86,175,215,0.60);
-        box-shadow: 0 0 0 1px rgba(86,175,215,0.30);
+        border-color: rgba(81, 104, 252,0.60);
+        box-shadow: 0 0 0 1px rgba(81, 104, 252,0.30);
       }
 
       .favorites-chip:focus-visible {
@@ -5461,8 +5347,8 @@
       }
 
       .favorites-type-badge--track {
-        background: rgba(86,175,215,0.15);
-        border: 1px solid rgba(86,175,215,0.30);
+        background: rgba(81, 104, 252,0.15);
+        border: 1px solid rgba(81, 104, 252,0.30);
         color: var(--brand-cyan);
       }
 
@@ -5585,7 +5471,7 @@
         align-items: center;
         justify-content: center;
         background: linear-gradient(135deg, #1a4fa0 0%, #7b2d8b 60%, #c43a6e 100%);
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55), 0 0 80px rgba(86, 175, 215, 0.15);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55), 0 0 80px rgba(81, 104, 252, 0.15);
         position: relative;
         overflow: hidden;
       }
@@ -5603,7 +5489,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at 30% 25%, rgba(86,175,215,0.18) 0%, transparent 65%);
+        background: radial-gradient(ellipse at 30% 25%, rgba(81, 104, 252,0.18) 0%, transparent 65%);
         pointer-events: none;
       }
 
@@ -5819,7 +5705,7 @@
       }
 
       .track-up-next-card--current .track-up-next-cover {
-        box-shadow: 0 12px 40px rgba(86, 175, 215, 0.35);
+        box-shadow: 0 12px 40px rgba(81, 104, 252, 0.35);
         outline: 2px solid var(--brand-cyan);
         outline-offset: 2px;
       }
@@ -5977,7 +5863,7 @@
         width: 24px;
         height: 24px;
         border-radius: var(--r-pill);
-        background: rgba(86, 175, 215, 0.12);
+        background: rgba(81, 104, 252, 0.12);
         color: var(--player-accent);
         flex-shrink: 0;
         border: none;
@@ -5986,7 +5872,7 @@
       }
 
       .track-history-plus:hover {
-        background: rgba(86, 175, 215, 0.22);
+        background: rgba(81, 104, 252, 0.22);
       }
 
       .track-history-plus:focus-visible {
@@ -6993,121 +6879,32 @@
       }
 
       /* ---- Artist page: responsive ------------------------------------------ */
-
-      @media (max-width: 1024px) {
-        .artist-hero {
-          padding: 36px 24px;
-          gap: 32px;
-        }
-        .artist-name {
-          font-size: 48px;
-        }
-        .artist-section {
-          padding-left: 24px;
-          padding-right: 24px;
-        }
+      @media (max-width: 920px) {
+        .artist-hero { gap:28px; padding:36px 24px; min-height:0; }
+        .artist-photo { width:150px; height:150px; }
+        .artist-photo-mono { font-size:52px; }
+        .artist-name { font-size:40px; }
+        .artist-section { padding:0 24px 36px; }
       }
-
-      @media (max-width: 768px) {
-        .artist-hero {
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          min-height: unset;
-          padding: 32px 20px;
-          gap: 24px;
-        }
-        .artist-photo {
-          width: 180px;
-          height: 180px;
-        }
-        .artist-hero-text {
-          align-items: center;
-        }
-        .artist-name {
-          font-size: 36px;
-          transform-origin: center center;
-        }
-        .artist-action-row {
-          justify-content: center;
-        }
-        .artist-tracks-grid {
-          grid-template-columns: 1fr;
-        }
-        .artist-section {
-          padding-left: 16px;
-          padding-right: 16px;
-        }
-        .artist-stations {
-          justify-content: center;
-        }
-        .artist-station-chip {
-          width: 100%;
-        }
+      @media (max-width: 560px) {
+        .artist-hero { flex-direction:column; align-items:flex-start; text-align:left; }
+        .artist-name { font-size:34px; }
+        .artist-station-chip { width:100%; }
+        .artist-why-foot { gap:10px; }
       }
-
-      /* Mobile surface (tweaks panel) */
-      [data-surface="mobile"] .artist-hero {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        min-height: unset;
-        padding: 24px 16px;
-        gap: 20px;
-      }
-      [data-surface="mobile"] .artist-photo {
-        width: 160px;
-        height: 160px;
-      }
-      [data-surface="mobile"] .artist-hero-text {
-        align-items: center;
-      }
-      [data-surface="mobile"] .artist-name {
-        font-size: 32px;
-        transform-origin: center;
-      }
-      [data-surface="mobile"] .artist-action-row {
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      [data-surface="mobile"] .artist-tracks-grid {
-        grid-template-columns: 1fr;
-      }
-      [data-surface="mobile"] .artist-section {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-      [data-surface="mobile"] .artist-station-chip {
-        width: 100%;
-      }
-
-      /* TV surface */
-      [data-surface="tv"] .artist-name {
-        font-size: 80px;
-      }
-      [data-surface="tv"] .artist-hero {
-        padding: 60px;
-        gap: 64px;
-        min-height: 440px;
-      }
-      [data-surface="tv"] .artist-photo {
-        width: 320px;
-        height: 320px;
-      }
+      [data-surface="mobile"] .artist-hero { flex-direction:column; align-items:flex-start; gap:24px; padding:28px 20px; }
+      [data-surface="mobile"] .artist-photo { width:140px; height:140px; }
+      [data-surface="mobile"] .artist-photo-mono { font-size:48px; }
+      [data-surface="mobile"] .artist-name { font-size:34px; }
+      [data-surface="mobile"] .artist-section { padding:0 20px 32px; }
+      [data-surface="mobile"] .artist-station-chip { width:100%; }
+      [data-surface="tv"] .artist-name { font-size:72px; }
+      [data-surface="tv"] .artist-hero { padding:64px 56px; gap:56px; }
+      [data-surface="tv"] .artist-photo { width:300px; height:300px; }
+      [data-surface="tv"] .artist-photo-mono { font-size:96px; }
       [data-surface="tv"] .artist-action-primary,
-      [data-surface="tv"] .artist-action-secondary {
-        min-height: 56px;
-        font-size: 16px;
-        padding: 16px 32px;
-      }
-      [data-surface="tv"] .artist-station-chip {
-        height: 72px;
-        font-size: 16px;
-      }
-      [data-surface="tv"] .artist-section {
-        padding-left: 60px;
-        padding-right: 60px;
-      }
+      [data-surface="tv"] .artist-action-secondary { font-size:18px; padding:18px 32px; min-height:56px; }
+      [data-surface="tv"] .artist-section { max-width:1200px; padding:0 56px 56px; }
 
       /* ---- Favorites page: responsive --------------------------------------- */
 
@@ -7356,6 +7153,34 @@
 </head>
 
 <body>
+  <script>
+  /* §G4 dev-chrome gate — production hides TWEAKS/theme-toggle/internal-map; team reveals via
+     ?dev=1 (sticky) / ?dev=0 (clear) / Ctrl|Cmd+Shift+D. Forces canonical config when not dev. */
+  (function () {
+    'use strict';
+    var html = document.documentElement, q = null;
+    try { q = new URLSearchParams(location.search).get('dev'); } catch (e) {}
+    if (q === '1') { try { localStorage.setItem('gorod-fm.dev', '1'); } catch (e) {} }
+    if (q === '0') { try { localStorage.removeItem('gorod-fm.dev'); } catch (e) {} }
+    var dev = false; try { dev = localStorage.getItem('gorod-fm.dev') === '1'; } catch (e) {}
+    window.__GFM_DEV = dev;
+    html.setAttribute('data-dev', dev ? 'true' : 'false');
+    if (!dev) {
+      html.setAttribute('data-theme', 'cinema');
+      html.setAttribute('data-hide-flow-map', 'true');
+      try { localStorage.setItem('gorod-fm.theme', 'cinema'); localStorage.setItem('gorod-fm.hide-flow-map', 'true'); } catch (e) {}
+      var h = location.hash || '';
+      if (h === '' || h === '#/map') location.hash = '#/home';
+    }
+    document.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+        e.preventDefault();
+        try { localStorage.getItem('gorod-fm.dev') === '1' ? localStorage.removeItem('gorod-fm.dev') : localStorage.setItem('gorod-fm.dev', '1'); } catch (_) {}
+        location.reload();
+      }
+    });
+  })();
+  </script>
 
   <!-- ======================================================================
        BACKGROUND LAYERS
@@ -7513,7 +7338,7 @@
               role="listitem"
               aria-label="Открыть Главная"
             >
-              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(81, 104, 252) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
                 <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
                   <!-- 5 filter chips -->
                   <rect x="8" y="8" width="24" height="10" rx="5" fill="rgba(255,255,255,0.25)"/>
@@ -7526,7 +7351,7 @@
                   <rect x="51"  y="26" width="38" height="20" rx="4" fill="rgba(255,255,255,0.20)"/>
                   <rect x="94"  y="26" width="38" height="20" rx="4" fill="rgba(255,255,255,0.20)"/>
                   <rect x="8"   y="50" width="38" height="20" rx="4" fill="rgba(255,255,255,0.16)"/>
-                  <rect x="51"  y="50" width="38" height="20" rx="4" fill="rgba(86,175,215,0.5)"/>
+                  <rect x="51"  y="50" width="38" height="20" rx="4" fill="rgba(81, 104, 252,0.5)"/>
                   <rect x="94"  y="50" width="38" height="20" rx="4" fill="rgba(255,255,255,0.16)"/>
                   <rect x="8"   y="74" width="38" height="20" rx="4" fill="rgba(255,255,255,0.12)"/>
                   <rect x="51"  y="74" width="38" height="20" rx="4" fill="rgba(255,255,255,0.12)"/>
@@ -7546,12 +7371,12 @@
               role="listitem"
               aria-label="Открыть Подборки"
             >
-              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(81, 104, 252) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
                 <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
                   <!-- 5 tall vertical stripes with rotated labels -->
                   <rect x="4"   y="8" width="24" height="84" rx="6" fill="rgba(255,255,255,0.30)"/>
                   <rect x="33"  y="8" width="28" height="84" rx="6" fill="rgba(255,255,255,0.22)"/>
-                  <rect x="66"  y="8" width="30" height="84" rx="6" fill="rgba(86,175,215,0.55)"/>
+                  <rect x="66"  y="8" width="30" height="84" rx="6" fill="rgba(81, 104, 252,0.55)"/>
                   <rect x="101" y="8" width="26" height="84" rx="6" fill="rgba(255,255,255,0.22)"/>
                   <rect x="132" y="8" width="24" height="84" rx="6" fill="rgba(255,255,255,0.18)"/>
                   <!-- Rotated labels -->
@@ -7575,11 +7400,11 @@
               role="listitem"
               aria-label="Открыть Медиатека"
             >
-              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(81, 104, 252) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
                 <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
                   <!-- 2×2 album covers + ad slot right -->
                   <rect x="8"  y="12" width="44" height="32" rx="5" fill="rgba(255,255,255,0.28)"/>
-                  <rect x="57" y="12" width="44" height="32" rx="5" fill="rgba(86,175,215,0.45)"/>
+                  <rect x="57" y="12" width="44" height="32" rx="5" fill="rgba(81, 104, 252,0.45)"/>
                   <rect x="8"  y="50" width="44" height="32" rx="5" fill="rgba(255,255,255,0.22)"/>
                   <rect x="57" y="50" width="44" height="32" rx="5" fill="rgba(255,255,255,0.22)"/>
                   <!-- Ad slot right -->
@@ -7600,11 +7425,11 @@
               role="listitem"
               aria-label="Открыть Избранное — Артист"
             >
-              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(81, 104, 252) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
                 <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
                   <!-- Circle avatar -->
                   <circle cx="80" cy="36" r="24" fill="rgba(255,255,255,0.28)"/>
-                  <circle cx="80" cy="36" r="12" fill="rgba(86,175,215,0.5)"/>
+                  <circle cx="80" cy="36" r="12" fill="rgba(81, 104, 252,0.5)"/>
                   <!-- 3 track rows below -->
                   <rect x="24" y="68" width="112" height="8" rx="4" fill="rgba(255,255,255,0.25)"/>
                   <rect x="24" y="80" width="88"  height="8" rx="4" fill="rgba(255,255,255,0.18)"/>
@@ -7649,14 +7474,14 @@
               role="listitem"
               aria-label="Открыть Раздел Избранное"
             >
-              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(86,175,215) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
+              <div class="map-card-thumb" style="background: linear-gradient(-90deg, rgb(81, 104, 252) 0%, rgb(26,107,222) 50%, rgb(21,82,172) 100%);">
                 <svg width="160" height="100" viewBox="0 0 160 100" aria-hidden="true" fill="none">
                   <!-- 4 horizontal list rows with mini-cover + line -->
                   <rect x="8"  y="12" width="16" height="16" rx="3" fill="rgba(255,255,255,0.30)"/>
                   <rect x="30" y="14" width="80" height="6"  rx="3" fill="rgba(255,255,255,0.25)"/>
                   <rect x="30" y="24" width="52" height="4"  rx="2" fill="rgba(255,255,255,0.15)"/>
 
-                  <rect x="8"  y="36" width="16" height="16" rx="3" fill="rgba(86,175,215,0.45)"/>
+                  <rect x="8"  y="36" width="16" height="16" rx="3" fill="rgba(81, 104, 252,0.45)"/>
                   <rect x="30" y="38" width="88" height="6"  rx="3" fill="rgba(255,255,255,0.25)"/>
                   <rect x="30" y="48" width="60" height="4"  rx="2" fill="rgba(255,255,255,0.15)"/>
 
@@ -7697,7 +7522,7 @@
                   <polygon points="94,80 86,74 86,86" fill="rgba(255,255,255,0.55)"/>
                   <!-- Mini progress bar -->
                   <rect x="20" y="70" width="120" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
-                  <rect x="20" y="70" width="40"  height="3" rx="1.5" fill="rgba(86,175,215,0.85)"/>
+                  <rect x="20" y="70" width="40"  height="3" rx="1.5" fill="rgba(81, 104, 252,0.85)"/>
                 </svg>
                 <!-- Play badge -->
                 <div class="map-card-play-badge" aria-hidden="true">▶ Открыть</div>
@@ -8261,7 +8086,7 @@
                   <!-- Record / circle icon -->
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
-                    <circle cx="28" cy="28" r="12" stroke="rgba(86,175,215,0.90)" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="12" stroke="rgba(81, 104, 252,0.90)" stroke-width="1.5"/>
                     <circle cx="28" cy="28" r="4"  fill="rgba(255,255,255,0.80)"/>
                     <line x1="6" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
                     <line x1="34" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
@@ -8345,8 +8170,8 @@
                   <!-- Music note icon -->
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <path d="M22 38 L22 20 L40 16 L40 34" stroke="rgba(255,255,255,0.80)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    <circle cx="19" cy="38" r="4.5" fill="rgba(86,175,215,0.90)"/>
-                    <circle cx="37" cy="34" r="4.5" fill="rgba(86,175,215,0.70)"/>
+                    <circle cx="19" cy="38" r="4.5" fill="rgba(81, 104, 252,0.90)"/>
+                    <circle cx="37" cy="34" r="4.5" fill="rgba(81, 104, 252,0.70)"/>
                   </svg>
                 </div>
                 <div class="library-tile-meta">
@@ -8424,10 +8249,10 @@
                 data-tile-artist="Jeff Buckley"
                 aria-label="Открыть альбом Hallelujah — Jeff Buckley"
               >
-                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#1a3060 0%,#2e6bb0 50%,#56afd7 100%);">
+                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#1a3060 0%,#2e6bb0 50%,#5168FC 100%);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
-                    <circle cx="28" cy="28" r="12" stroke="rgba(86,175,215,0.90)" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="12" stroke="rgba(81, 104, 252,0.90)" stroke-width="1.5"/>
                     <circle cx="28" cy="28" r="4"  fill="rgba(255,255,255,0.80)"/>
                     <line x1="6" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
                     <line x1="34" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
@@ -8478,10 +8303,10 @@
                 data-tile-artist="Сборник 2026"
                 aria-label="Открыть альбом Z. CITY SHOW — сборник 2026"
               >
-                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#001440 0%,#1a6bde 50%,#56afd7 100%);">
+                <div class="library-tile-cover library-tile-cover--album" style="background:linear-gradient(135deg,#001440 0%,#1a6bde 50%,#5168FC 100%);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
                     <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.70)" stroke-width="2"/>
-                    <circle cx="28" cy="28" r="12" stroke="rgba(86,175,215,0.90)" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="12" stroke="rgba(81, 104, 252,0.90)" stroke-width="1.5"/>
                     <circle cx="28" cy="28" r="4"  fill="rgba(255,255,255,0.80)"/>
                     <line x1="6" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
                     <line x1="34" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
@@ -8541,12 +8366,12 @@
                     <!-- Megaphone body -->
                     <path d="M8 22 L8 42 L20 42 L20 22 Z" stroke="rgba(255,255,255,0.50)" stroke-width="2" stroke-linejoin="round" fill="rgba(255,255,255,0.08)"/>
                     <!-- Horn -->
-                    <path d="M20 20 L52 10 L52 54 L20 44 Z" stroke="rgba(255,255,255,0.50)" stroke-width="2" stroke-linejoin="round" fill="rgba(86,175,215,0.15)"/>
+                    <path d="M20 20 L52 10 L52 54 L20 44 Z" stroke="rgba(255,255,255,0.50)" stroke-width="2" stroke-linejoin="round" fill="rgba(81, 104, 252,0.15)"/>
                     <!-- Sound waves -->
-                    <path d="M56 24 Q62 32 56 40" stroke="rgba(86,175,215,0.70)" stroke-width="2" stroke-linecap="round" fill="none"/>
-                    <path d="M59 20 Q68 32 59 44" stroke="rgba(86,175,215,0.40)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    <path d="M56 24 Q62 32 56 40" stroke="rgba(81, 104, 252,0.70)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    <path d="M59 20 Q68 32 59 44" stroke="rgba(81, 104, 252,0.40)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
                     <!-- Sparkles -->
-                    <circle cx="34" cy="8" r="2" fill="rgba(86,175,215,0.60)"/>
+                    <circle cx="34" cy="8" r="2" fill="rgba(81, 104, 252,0.60)"/>
                     <circle cx="42" cy="5" r="1.5" fill="rgba(255,255,255,0.40)"/>
                     <circle cx="28" cy="6" r="1" fill="rgba(255,255,255,0.30)"/>
                   </svg>
@@ -8579,318 +8404,74 @@
 
       </section>
 
-      <!-- Page: Артист (профайл) — #/artist -->
+      <!-- Page: Артист — deep-dive (#/artist) · GOROD-047b -->
       <section data-page="artist" aria-labelledby="page-artist-heading">
-        <h1 id="page-artist-heading" class="visually-hidden">Избранное — Артист</h1>
+        <h1 id="page-artist-heading" class="visually-hidden">Артист — Imagine Dragons</h1>
 
-        <!-- ---- Hero band ---------------------------------------------------- -->
+        <!-- ---- Hero band: art-tint + монограмма (НЕ силуэт) ---------------- -->
         <div class="artist-hero" aria-label="Профиль артиста">
-          <!-- Left: round photo placeholder -->
-          <div class="artist-photo-wrap" aria-hidden="true">
-            <div class="artist-photo">
-              <!-- Abstract SVG portrait silhouette -->
-              <svg class="artist-photo-art" viewBox="0 0 280 280" aria-hidden="true">
-                <!-- Head circle -->
-                <circle cx="140" cy="105" r="52" fill="rgba(255,255,255,0.18)"/>
-                <!-- Shoulders curve -->
-                <path d="M 40 260 Q 60 190 100 175 Q 120 168 140 168 Q 160 168 180 175 Q 220 190 240 260" fill="rgba(255,255,255,0.12)" stroke="none"/>
-                <!-- Hair highlights -->
-                <path d="M 100 80 Q 120 56 140 54 Q 160 56 180 80" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
-                <!-- Inner head -->
-                <circle cx="140" cy="105" r="28" fill="rgba(86,175,215,0.25)"/>
-              </svg>
-            </div>
+          <!-- art-tint avatar; data-artist-photo seam under real foto (Ф1+) -->
+          <div class="artist-photo" id="artist-photo" data-artist-photo="" aria-hidden="true">
+            <span class="artist-photo-mono" id="artist-photo-mono">ID</span>
           </div>
 
-          <!-- Right: text block -->
           <div class="artist-hero-text">
-            <p class="artist-overline" aria-hidden="true">АРТИСТ · ИЗБРАННОЕ</p>
-            <h2 class="artist-name" id="artist-name-heading">IMAGINE DRAGONS</h2>
-            <p class="artist-stats">47 треков · 8 альбомов · 12 плейлистов с этим артистом</p>
-            <p class="artist-bio">Американская рок-группа из Лас-Вегаса. Сочетают альт-рок, поп и электронику. На Город ФМ — частые гости в подборках ГОРОД РОК и ГОРОД ХИТ.</p>
+            <p class="artist-overline" aria-hidden="true">Артист · Город ФМ</p>
+            <h2 class="artist-name" id="artist-name-heading">Imagine Dragons</h2>
+            <p class="artist-stats">Американский альт-рок · в твоей волне с весны</p>
 
-            <!-- Action buttons row -->
             <div class="artist-action-row" role="group" aria-label="Действия с артистом">
-              <button
-                class="artist-action-primary"
-                type="button"
-                id="artist-btn-radio"
-                aria-label="Слушать радио Imagine Dragons"
-              >Слушать радио артиста</button>
-
-              <button
-                class="artist-action-secondary"
-                type="button"
-                id="artist-btn-fav"
-                aria-pressed="true"
-                aria-label="Добавить артиста в избранное"
-              >
-                <!-- Heart icon -->
+              <button class="artist-action-primary" type="button" id="artist-btn-radio"
+                aria-label="Слушать радио Imagine Dragons">Слушать радио артиста</button>
+              <button class="artist-action-secondary" type="button" id="artist-btn-fav"
+                aria-pressed="false" aria-label="Добавить артиста в избранное">
                 <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/>
-                </svg>
-                В избранное
-              </button>
-
-              <button
-                class="artist-action-secondary"
-                type="button"
-                id="artist-btn-share"
-                aria-pressed="false"
-                aria-label="Поделиться артистом"
-              >
-                <!-- Share icon -->
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <circle cx="18" cy="5" r="3"/>
-                  <circle cx="6" cy="12" r="3"/>
-                  <circle cx="18" cy="19" r="3"/>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                </svg>
-                Поделиться
-              </button>
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>В избранное</button>
             </div>
-
-            <!-- Secondary link to full favorites list -->
-            <a
-              href="#/favorites"
-              class="artist-open-all"
-              id="artist-open-all"
-              aria-label="Открыть весь список избранного"
-            >Открыть весь список →</a>
           </div>
         </div>
         <!-- /.artist-hero -->
 
-        <!-- ---- Топ треков ---------------------------------------------------- -->
+        <!-- ---- Почему тебе этот артист (L1 → L2 + reject) ----------------- -->
+        <section class="artist-section artist-why" aria-labelledby="artist-why-h">
+          <div class="artist-why-head">
+            <h2 id="artist-why-h" class="artist-section-heading">Почему тебе этот артист</h2>
+            <span class="artist-why-demo" title="Вектор в прототипе — демонстрационный">демо-вектор</span>
+          </div>
+
+          <p class="artist-why-l1" id="artist-why-l1">Ты дослушал <b>12 треков</b> этого артиста до конца — больше, чем у 9 из 10 в твоей волне.</p>
+
+          <button class="artist-why-toggle" type="button" id="artist-why-toggle"
+            aria-expanded="false" aria-controls="artist-why-list">Показать, на чём это держится</button>
+
+          <ul class="artist-why-list" id="artist-why-list" hidden>
+            <!-- injected by GorodArtist.render() — поведение/attribute, never collaborative -->
+          </ul>
+
+          <div class="artist-why-foot">
+            <button class="artist-why-not" type="button" id="artist-why-not"
+              aria-pressed="false">Это не про меня</button>
+            <p class="artist-why-receipt" id="artist-why-receipt" role="status" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <!-- ---- Топ треков (row, art-tint) -------------------------------- -->
         <section class="artist-section" aria-labelledby="artist-tracks-heading">
           <h2 id="artist-tracks-heading" class="artist-section-heading">Топ треков</h2>
-          <div class="artist-tracks-grid" id="artist-tracks-grid" role="list" aria-label="Топ треков Imagine Dragons">
-
-            <!-- Track 1 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Believer" data-track-artist="IMAGINE DRAGONS" aria-label="Believer, 03:38">
-              <span class="artist-track-rank" aria-hidden="true">1</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#56afd7)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Believer</span>
-                <span class="artist-track-album">Night Visions</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:38">03:38</span>
-            </button>
-
-            <!-- Track 2 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Thunder" data-track-artist="IMAGINE DRAGONS" aria-label="Thunder, 03:08">
-              <span class="artist-track-rank" aria-hidden="true">2</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#2d1a6e,#c43a6e)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Thunder</span>
-                <span class="artist-track-album">Evolve</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:08">03:08</span>
-            </button>
-
-            <!-- Track 3 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Radioactive" data-track-artist="IMAGINE DRAGONS" aria-label="Radioactive, 03:07">
-              <span class="artist-track-rank" aria-hidden="true">3</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a5c30,#2ecc71)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Radioactive</span>
-                <span class="artist-track-album">Night Visions</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:07">03:07</span>
-            </button>
-
-            <!-- Track 4 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Demons" data-track-artist="IMAGINE DRAGONS" aria-label="Demons, 02:58">
-              <span class="artist-track-rank" aria-hidden="true">4</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#4a1a00,#d4662d)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Demons</span>
-                <span class="artist-track-album">Night Visions</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 02:58">02:58</span>
-            </button>
-
-            <!-- Track 5 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Whatever It Takes" data-track-artist="IMAGINE DRAGONS" aria-label="Whatever It Takes, 03:21">
-              <span class="artist-track-rank" aria-hidden="true">5</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#0d3d5c,#0ea8e8)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Whatever It Takes</span>
-                <span class="artist-track-album">Evolve</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:21">03:21</span>
-            </button>
-
-            <!-- Track 6 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Bones" data-track-artist="IMAGINE DRAGONS" aria-label="Bones, 02:45">
-              <span class="artist-track-rank" aria-hidden="true">6</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#3d0047,#9c27b0)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Bones</span>
-                <span class="artist-track-album">Mercury Acts 1</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 02:45">02:45</span>
-            </button>
-
-            <!-- Track 7 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Bad Liar" data-track-artist="IMAGINE DRAGONS" aria-label="Bad Liar, 04:21">
-              <span class="artist-track-rank" aria-hidden="true">7</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#6a3800,#d4780a)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Bad Liar</span>
-                <span class="artist-track-album">Origins</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 04:21">04:21</span>
-            </button>
-
-            <!-- Track 8 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Wrecked" data-track-artist="IMAGINE DRAGONS" aria-label="Wrecked, 03:30">
-              <span class="artist-track-rank" aria-hidden="true">8</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#1a1a4a,#2244aa)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Wrecked</span>
-                <span class="artist-track-album">Mercury Acts 1</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:30">03:30</span>
-            </button>
-
-            <!-- Track 9 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Sharks" data-track-artist="IMAGINE DRAGONS" aria-label="Sharks, 03:11">
-              <span class="artist-track-rank" aria-hidden="true">9</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#00352a,#00a676)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Sharks</span>
-                <span class="artist-track-album">Mercury Acts 2</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 03:11">03:11</span>
-            </button>
-
-            <!-- Track 10 -->
-            <button class="artist-track-row" type="button" role="listitem"
-              data-track-title="Enemy" data-track-artist="IMAGINE DRAGONS" aria-label="Enemy, 02:53">
-              <span class="artist-track-rank" aria-hidden="true">10</span>
-              <span class="artist-track-cover" aria-hidden="true" style="background:linear-gradient(135deg,#3d1547,#c43a8a)"></span>
-              <span class="artist-track-meta">
-                <span class="artist-track-title">Enemy</span>
-                <span class="artist-track-album">Loom</span>
-              </span>
-              <span class="artist-track-dur tabular" aria-label="длительность 02:53">02:53</span>
-            </button>
-
+          <div class="artist-tracks" id="artist-tracks" role="list" aria-label="Топ треков Imagine Dragons">
+            <!-- 5 rows injected by GorodArtist.render() from TRACKS -->
           </div>
-          <!-- /.artist-tracks-grid -->
         </section>
 
-        <!-- ---- Альбомы ------------------------------------------------------- -->
-        <section class="artist-section" aria-labelledby="artist-albums-heading">
-          <h2 id="artist-albums-heading" class="artist-section-heading">Альбомы</h2>
-          <div class="artist-albums-row" role="list" aria-label="Альбомы Imagine Dragons">
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Night Visions" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Night Visions, 2012">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#1a3a6e,#56afd7)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <circle cx="24" cy="24" r="16" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-                  <circle cx="24" cy="24" r="8"  fill="rgba(255,255,255,0.18)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Night Visions</span>
-                <span class="artist-album-year">2012</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Smoke + Mirrors" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Smoke + Mirrors, 2015">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#2d1a6e,#7b3c8a)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <rect x="12" y="12" width="24" height="24" rx="4" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-                  <rect x="18" y="18" width="12" height="12" rx="2" fill="rgba(255,255,255,0.18)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Smoke + Mirrors</span>
-                <span class="artist-album-year">2015</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Evolve" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Evolve, 2017">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#0d3d5c,#0ea8e8)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <polygon points="24,8 40,38 8,38" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" fill="rgba(255,255,255,0.12)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Evolve</span>
-                <span class="artist-album-year">2017</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Origins" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Origins, 2018">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#3d2800,#b86600)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <circle cx="24" cy="24" r="14" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-                  <path d="M 16 32 Q 24 12 32 32" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Origins</span>
-                <span class="artist-album-year">2018</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Mercury Acts 1" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Mercury Acts 1, 2021">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#3d0047,#9c27b0)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <ellipse cx="24" cy="24" rx="16" ry="10" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-                  <line x1="24" y1="8" x2="24" y2="40" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Mercury Acts 1</span>
-                <span class="artist-album-year">2021</span>
-              </div>
-            </button>
-
-            <button class="artist-album-card" type="button" role="listitem"
-              data-track-title="Loom" data-track-artist="IMAGINE DRAGONS" aria-label="Альбом Loom, 2024">
-              <div class="artist-album-cover" aria-hidden="true" style="background:linear-gradient(145deg,#1a1a4a,#3c6ac4)">
-                <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
-                  <path d="M 10 36 Q 20 14 28 20 Q 36 26 38 12" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
-                  <circle cx="38" cy="12" r="4" fill="rgba(255,255,255,0.22)"/>
-                </svg>
-              </div>
-              <div class="artist-album-meta">
-                <span class="artist-album-name">Loom</span>
-                <span class="artist-album-year">2024</span>
-              </div>
-            </button>
-
-          </div>
-          <!-- /.artist-albums-row -->
-        </section>
-
-        <!-- ---- Станции с этим артистом --------------------------------------- -->
+        <!-- ---- Станции с этим артистом (on-brand радио, НЕ каталог) ------ -->
         <section class="artist-section" aria-labelledby="artist-stations-heading">
           <h2 id="artist-stations-heading" class="artist-section-heading">Станции с этим артистом</h2>
+          <p class="artist-stations-sub">Где Imagine Dragons звучит чаще — это радио, не плейлист.</p>
           <div class="artist-stations" role="list" aria-label="Станции, играющие Imagine Dragons">
 
             <button class="artist-station-chip" type="button" role="listitem"
               data-station-id="rok" aria-label="ГОРОД РОК 103.5 FM">
-              <!-- EQ bar icon -->
               <svg class="artist-station-eq" aria-hidden="true" viewBox="0 0 18 14">
                 <rect x="1"  y="4" width="2.5" height="10" rx="1.25" fill="currentColor"/>
                 <rect x="5"  y="1" width="2.5" height="13" rx="1.25" fill="currentColor"/>
@@ -8938,7 +8519,6 @@
             </button>
 
           </div>
-          <!-- /.artist-stations -->
         </section>
 
       </section>
@@ -9295,7 +8875,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #1a4fa0, #7b2d8b, #c43a6e);" aria-hidden="true">ID</div>
+                    <div class="track-history-cover" style="background: var(--surface-1);" aria-hidden="true">ID</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Demons</div>
                       <div class="track-history-subtitle">
@@ -9309,7 +8889,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #56afd7, #1a6b3a);" aria-hidden="true">MG</div>
+                    <div class="track-history-cover" style="background: linear-gradient(135deg, #5168FC, #1a6b3a);" aria-hidden="true">MG</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Glitch</div>
                       <div class="track-history-subtitle">
@@ -9452,7 +9032,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Believer" data-fav-artist="IMAGINE DRAGONS"
             aria-label="Believer, трек, Imagine Dragons">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#56afd7)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#5168FC)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Believer</span>
               <span class="favorites-row-sub">IMAGINE DRAGONS · 03:38</span>
@@ -9500,7 +9080,7 @@
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="station" data-fav-title="ГОРОД РОК"
             aria-label="ГОРОД РОК, станция, 103.5 FM">
-            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#0ea8e8)"></div>
+            <div class="favorites-row-thumb" aria-hidden="true" style="background:linear-gradient(135deg,#1a3a6e,#5168FC)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">ГОРОД РОК</span>
               <span class="favorites-row-sub">станция · 103.5 FM</span>
@@ -9742,6 +9322,9 @@
             <button class="onb-alt" id="onb-alt" type="button">
               или загрузите резюме — подберём музыку по нему
             </button>
+            <button class="onb-alt onb-alt--import" id="onb-import" type="button">
+              или импортируй вкус из Last.fm · Яндекс · ВК
+            </button>
           </footer>
         </div>
       </section>
@@ -9811,6 +9394,55 @@
         </div>
       </div>
       <!-- /resume-modal -->
+
+      <!-- GOROD-ONB — «Модель за N сигналов» + стриминг-import (augment онбординга) -->
+      <div class="onb-model" id="onb-model" role="dialog" aria-modal="true" aria-labelledby="onb-model-title" aria-hidden="true">
+        <div class="onb-model-backdrop" id="onb-model-backdrop" aria-hidden="true"></div>
+        <div class="onb-model-panel" role="document">
+
+          <!-- STEP: import source picker (only via «импортируй») -->
+          <div class="onb-model-step" id="onb-import-pick" hidden>
+            <h2 class="onb-model-title">Откуда взять вкус?</h2>
+            <p class="onb-model-sub">Демо: реальная история не загружается — соберём правдоподобный пример из выбранного сервиса. Ты увидишь и поправишь каждый пункт.</p>
+            <div class="onb-src-row" role="group" aria-label="Сервис-источник">
+              <button class="onb-src" type="button" data-src="lastfm"><span class="onb-src-name">Last.fm</span><span class="onb-src-hint">scrobble-история</span></button>
+              <button class="onb-src" type="button" data-src="yandex"><span class="onb-src-name">Яндекс Музыка</span><span class="onb-src-hint">история прослушиваний</span></button>
+              <button class="onb-src" type="button" data-src="vk"><span class="onb-src-name">ВК Музыка</span><span class="onb-src-hint">твои аудиозаписи</span></button>
+            </div>
+            <div class="onb-model-actions"><button class="onb-model-ghost" id="onb-import-back" type="button">Назад к пузырям</button></div>
+          </div>
+
+          <!-- STEP: import parsing theatre (~3s «нашли вкус») -->
+          <div class="onb-model-step" id="onb-import-parse" hidden>
+            <span class="onb-model-spark onb-model-spark--spin" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+            </span>
+            <h2 class="onb-model-title">Читаю историю <span id="onb-import-svc">Last.fm</span>…</h2>
+            <ul class="onb-model-log" id="onb-import-log" aria-live="polite"></ul>
+          </div>
+
+          <!-- STEP: the model (shared destination of bubbles / resume / import) -->
+          <div class="onb-model-step" id="onb-model-main" hidden>
+            <span class="onb-model-kicker" id="onb-model-kicker">Вот как я тебя понял</span>
+            <h2 class="onb-model-title" id="onb-model-title">Твоя модель за <b id="onb-model-n">7</b> сигналов</h2>
+            <p class="onb-model-sub" id="onb-model-prov">Собрал из выбранных тобой сигналов — каждый пункт объяснён. Поправь прямо тут.</p>
+
+            <ul class="onb-model-vec" id="onb-model-vec" aria-label="Стартовый вектор вкуса — можно поправить"></ul>
+
+            <p class="onb-model-receipt" id="onb-model-receipt" role="status" aria-live="polite"></p>
+
+            <div class="onb-model-actions">
+              <button class="onb-model-ghost" id="onb-model-deeper" type="button">Открыть полный профиль</button>
+              <button class="onb-model-go" id="onb-model-go" type="button">
+                Собрать радио
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- /onb-model -->
 
       <!-- Page: Мой вкус — живой редактируемый Twinr-профиль (UX research 09/10) -->
       <section data-page="taste" aria-labelledby="page-taste-heading">
@@ -9998,8 +9630,8 @@
             <div class="recap-card-inner">
               <span class="recap-card-kicker">Город ФМ · неделя <span class="recap-card-week">22</span></span>
               <p class="recap-card-word" id="recap-card-word">Размах с битом</p>
+              <p class="recap-card-delta recap-card-delta--hero" id="recap-card-delta"></p>
               <div class="recap-card-bloom" id="recap-card-bloom" aria-hidden="true"></div>
-              <p class="recap-card-delta" id="recap-card-delta"></p>
               <p class="recap-card-discovery" id="recap-card-discovery"></p>
               <p class="recap-card-defense" id="recap-card-defense"></p>
               <span class="recap-card-mark">Город&nbsp;ФМ</span>
@@ -10007,9 +9639,12 @@
           </figure>
 
           <div class="recap-actions">
-            <button class="recap-btn recap-btn--primary" id="recap-copy" type="button">Скопировать карточку</button>
-            <a class="recap-btn recap-btn--ghost" href="#/taste">Поправить грань →</a>
+            <button class="recap-btn recap-btn--primary" id="recap-png" type="button">Сохранить картинку</button>
+            <button class="recap-btn recap-btn--primary-alt" id="recap-copy" type="button">Скопировать текст</button>
+            <a class="recap-btn recap-btn--ghost" id="recap-cta-link" href="#/taste">Поправить грань →</a>
           </div>
+          <a id="recap-png-dl" style="display:none" aria-hidden="true"></a>
+          <p class="recap-cta-line" id="recap-cta-line"></p>
           <p class="recap-receipt" id="recap-receipt" role="status" aria-live="polite"></p>
 
           <h2 class="recap-h2">Карта вкуса на эту неделю</h2>
@@ -10534,17 +10169,17 @@
           <!-- Mobile: 3-cover carousel -->
           <div class="player-full-carousel" aria-label="Карусель треков">
             <div class="player-full-carousel-item" aria-label="Предыдущий трек">
-              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: linear-gradient(135deg, #1a4fa0, #56afd7);">Moment Apart</div>
+              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: var(--surface-1);">Moment Apart</div>
               <div class="player-full-carousel-track-title">Moment Apart</div>
               <div class="player-full-carousel-track-artist">ODESZA</div>
             </div>
             <div class="player-full-carousel-item" aria-label="Текущий трек">
-              <div class="player-full-carousel-cover player-full-carousel-cover--center" style="background: linear-gradient(135deg, #1a4fa0, #7b2d8b, #c43a6e);">Believer</div>
+              <div class="player-full-carousel-cover player-full-carousel-cover--center" style="background: var(--surface-1);">Believer</div>
               <div class="player-full-carousel-track-title">Believer</div>
               <div class="player-full-carousel-track-artist">Imagine Dragons</div>
             </div>
             <div class="player-full-carousel-item" aria-label="Следующий трек">
-              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: linear-gradient(135deg, #1a6b3a, #2ecc71);">Shortwave</div>
+              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: var(--surface-1);">Shortwave</div>
               <div class="player-full-carousel-track-title">Shortwave</div>
               <div class="player-full-carousel-track-artist">Ryan Grigdry</div>
             </div>
@@ -10845,7 +10480,7 @@
   </div>
 
   <!-- ======================================================================
-       MOBILE TABBAR — 5 icons
+       MOBILE TABBAR — 4 icons
        ====================================================================== -->
   <nav
     class="mobile-tabbar"
@@ -10883,21 +10518,8 @@
     <button
       class="tabbar-item"
       type="button"
-      data-route="#/library"
-      aria-label="Медиатека"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
-      </svg>
-      Медиа
-    </button>
-
-    <button
-      class="tabbar-item"
-      type="button"
-      data-route="#/artist"
-      aria-label="Избранное"
+      data-route="#/taste"
+      aria-label="Избранное — в Мой вкус"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
@@ -11143,6 +10765,9 @@
       /* ---- Hash router ------------------------------------------------------ */
 
       function routeFromHash(hash) {
+        // Integrate-A: legacy IA routes fold into «Мой вкус» (taste = дом роста модели).
+        // Kept in VALID_ROUTES for deep-link/boot-guard; surface-folded here, no dead-ends.
+        if (hash === '#/library' || hash === '#/favorites') return '#/taste';
         return VALID_ROUTES.includes(hash) ? hash : null;
       }
 
@@ -11227,14 +10852,7 @@
       const btnPlayerBackMobile = document.getElementById('btn-player-back-mobile');
       const tabbarPlayerBtn = document.getElementById('tabbar-player-btn');
 
-      // Track theme before opening player so we can restore it on close
-      var _previousTheme = null;
-
       function openPlayer() {
-        // Save current theme and switch to warm
-        _previousTheme = document.documentElement.getAttribute('data-theme') || 'cinema';
-        applyTheme('warm');
-
         // Reset to cover view on every fresh open
         setPlayerView(lsGet(LS_KEYS.playerView, 'cover'));
 
@@ -11252,11 +10870,6 @@
       window.openPlayer = openPlayer;   // bridge for GorodHomeRadio (045) + GorodArtist (047b)
 
       function closePlayer() {
-        // Restore previous theme
-        if (_previousTheme) {
-          applyTheme(_previousTheme);
-          _previousTheme = null;
-        }
         document.body.removeAttribute('data-player-expanded');
         playerFull.setAttribute('aria-hidden', 'true');
         if (playerMini) playerMini.focus();
@@ -11698,7 +11311,7 @@
       };
 
       var QUEUE_TRACKS = [
-        { title: 'Thunder',        artist: 'Imagine Dragons', dur: '3:07', grad: 'linear-gradient(135deg, #1a3a6e, #56afd7)' },
+        { title: 'Thunder',        artist: 'Imagine Dragons', dur: '3:07', grad: 'linear-gradient(135deg, #1a3a6e, #5168FC)' },
         { title: 'Enemy',          artist: 'Imagine Dragons', dur: '2:54', grad: 'linear-gradient(135deg, #2d1547, #c43a6e)' },
         { title: 'Radioactive',    artist: 'Imagine Dragons', dur: '3:06', grad: 'linear-gradient(135deg, #1a5c30, #2ecc71)' },
         { title: 'Demons',         artist: 'Imagine Dragons', dur: '2:57', grad: 'linear-gradient(135deg, #4a1a00, #d4662d)' },
@@ -12148,109 +11761,8 @@
 
       /* ---- Артист page wiring ---------------------------------------------- */
 
-      (function initArtist() {
-
-        /* Helper: swap mini-bar + full-player meta + open player */
-        function openArtistPlayer(title, artist) {
-          var miniTitle  = document.getElementById('player-track-title');
-          var miniArtist = document.getElementById('player-track-artist');
-          if (miniTitle)  miniTitle.textContent  = title;
-          if (miniArtist) miniArtist.textContent = artist;
-          var fullTitle  = document.getElementById('player-full-title');
-          var fullArtist = document.getElementById('player-full-artist');
-          if (fullTitle)  fullTitle.textContent  = title;
-          if (fullArtist) fullArtist.textContent = artist;
-          openPlayer();
-        }
-
-        /* 1. Primary CTA — "Слушать радио артиста" */
-        var btnRadio = document.getElementById('artist-btn-radio');
-        if (btnRadio) {
-          btnRadio.addEventListener('click', function () {
-            openArtistPlayer('Радио IMAGINE DRAGONS', 'IMAGINE DRAGONS');
-          });
-        }
-
-        /* 2. Secondary buttons — toggle aria-pressed */
-        var btnFav   = document.getElementById('artist-btn-fav');
-        var btnShare = document.getElementById('artist-btn-share');
-
-        if (btnFav) {
-          btnFav.addEventListener('click', function () {
-            var pressed = btnFav.getAttribute('aria-pressed') === 'true';
-            btnFav.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-          });
-        }
-        if (btnShare) {
-          btnShare.addEventListener('click', function () {
-            var pressed = btnShare.getAttribute('aria-pressed') === 'true';
-            btnShare.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-            console.log('[Город ФМ] Artist share clicked');
-          });
-        }
-
-        /* 3. "Открыть весь список" link */
-        var openAll = document.getElementById('artist-open-all');
-        if (openAll) {
-          openAll.addEventListener('click', function (e) {
-            e.preventDefault();
-            navigate('#/favorites');
-          });
-        }
-
-        /* 4. Track row clicks */
-        var tracksGrid = document.getElementById('artist-tracks-grid');
-        if (tracksGrid) {
-          function handleTrackActivation(target) {
-            var row = target.closest('.artist-track-row');
-            if (!row) return;
-            openArtistPlayer(
-              row.getAttribute('data-track-title') || 'Трек',
-              row.getAttribute('data-track-artist') || 'IMAGINE DRAGONS'
-            );
-          }
-          tracksGrid.addEventListener('click', function (e) { handleTrackActivation(e.target); });
-          tracksGrid.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleTrackActivation(e.target);
-            }
-          });
-        }
-
-        /* 5. Album card clicks */
-        var albumsRow = document.querySelector('.artist-albums-row');
-        if (albumsRow) {
-          function handleAlbumActivation(target) {
-            var card = target.closest('.artist-album-card');
-            if (!card) return;
-            openArtistPlayer(
-              card.getAttribute('data-track-title') || 'Альбом',
-              card.getAttribute('data-track-artist') || 'IMAGINE DRAGONS'
-            );
-          }
-          albumsRow.addEventListener('click', function (e) { handleAlbumActivation(e.target); });
-          albumsRow.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleAlbumActivation(e.target);
-            }
-          });
-        }
-
-        /* 6. Station chip clicks — navigate to #/home */
-        var stationsDiv = document.querySelector('.artist-stations');
-        if (stationsDiv) {
-          stationsDiv.addEventListener('click', function (e) {
-            var chip = e.target.closest('.artist-station-chip');
-            if (!chip) return;
-            var stationId = chip.getAttribute('data-station-id') || 'rock';
-            console.log('[Город ФМ] Artist station chip:', stationId);
-            navigate('#/home');
-          });
-        }
-
-      })(); /* end initArtist */
+      /* GOROD-047b: Артист-wiring перенесён в trailing-модуль window.GorodArtist
+         (decoupled, как GorodContext/GorodTrack — единый паттерн, без дубль-listeners). */
 
       /* ---- Раздел Избранное page wiring ------------------------------------ */
 
@@ -12624,6 +12136,8 @@
 
       if (cta) cta.addEventListener('click', onContinue);
       if (alt) alt.addEventListener('click', onResumeDemo);
+      var imp = document.getElementById('onb-import');
+      if (imp) imp.addEventListener('click', function () { Import.open(); });
       window.addEventListener('resize', onResize);
 
       if (REDUCE) field.classList.add('is-static');
@@ -12886,7 +12400,7 @@
       if (sample) sample.addEventListener('click', function () { if (R.text) { R.text.value = RESUME_SAMPLE; R.text.focus(); } });
       if (R.go) R.go.addEventListener('click', function () { runParse(typedOrSample()); });
       if (edit) edit.addEventListener('click', function () { applyDerived(); closeResume(); });
-      if (build) build.addEventListener('click', function () { applyDerived(); closeResume(); onContinue(); });
+      if (build) build.addEventListener('click', function () { applyDerived(); closeResume(); saveTaste(); Model.show('resume'); });
       if (R.drop) {
         R.drop.setAttribute('tabindex', '0');
         R.drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (R.file) R.file.click(); } });
@@ -12902,15 +12416,213 @@
     }
     function onResumeDemo() { openResume(); }
 
-    function onContinue() {
+    function onContinue() {           // bubbles door → show model first (no longer jumps home)
       if (cta && cta.disabled) return;
       saveTaste();
-      // hand off to the app + let Twinr AI greet with the fresh profile
+      Model.show('bubbles');
+    }
+    function goHome() {               // model «Собрать радио» → the real handoff (was inside onContinue)
+      saveTaste();
+      try { localStorage.setItem('gorodfm_onboarded', '1'); } catch (e) {}   // C7 — durable cold-start flag (W0)
       window.location.hash = '#/home';
       if (window.TwinrChat && window.TwinrChat.greetFromOnboarding) {
         setTimeout(function () { window.TwinrChat.greetFromOnboarding(selectedNames()); }, 450);
       }
     }
+
+    /* ---- GOROD-ONB: экран «модель за N сигналов» (видимый редакт. вектор) ---- */
+    var Model = (function () {
+      var M = {}, wired = false, vec = [], source = 'bubbles';
+      var GENRE_LC = { 'ПОП':'поп','РОК':'рок','ХИП-ХОП':'хип-хоп','ДИСКО':'диско','ЭЛЕКТРО':'электронику',
+        'ЛОФАЙ':'лофай','ИНДИ':'инди','ДЖАЗ':'джаз','РЭП':'рэп','R&B':'r&b','МЕТАЛЛ':'тяжёлое','КЛАССИКА':'классику' };
+      var MOOD = [
+        { any:['РОК','МЕТАЛЛ','Linkin Park'], name:'Энергичное', why:'рок и тяжёлое в выборе → энергичный профиль' },
+        { any:['ХИП-ХОП','ЭЛЕКТРО','ДИСКО','РЭП'], name:'Драйв', why:'хип-хоп и электро в выборе → ритм и драйв' },
+        { any:['ЛОФАЙ','ДЖАЗ','КЛАССИКА','ИНДИ'], name:'Спокойное', why:'инди и лофай в выборе → спокойный профиль' }
+      ];
+      function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+      function weightFor(i){ return Math.max(58, 88 - i * 4); }
+      function lc(g){ return GENRE_LC[g] || (g ? g.toLowerCase() : ''); }
+      function isGenre(name){ return name === String(name).toUpperCase() && /[А-ЯA-Z]/.test(name); }
+
+      // Build vec from current selected bubbles (deterministic, by selection order)
+      function fromBubbles(){
+        var picked = bubbles.filter(function(b){ return b.sel; });
+        var rows = [], seen = {}, i = 0;
+        picked.forEach(function(b){
+          var nm = b.d.t;
+          if (isGenre(nm)) {
+            if (seen[nm]) return; seen[nm]=1;
+            rows.push({ name: cap(nm), weight: weightFor(i++), kind:'genre',
+              why: 'выбрал <b>'+esc(nm)+'</b> — поставил '+lc(nm)+' в центр вектора.' });
+          } else {
+            if (seen[nm]) return; seen[nm]=1;
+            var g = b.genre || '';
+            rows.push({ name: nm, weight: weightFor(i++), kind:'artist',
+              why: 'тапнул <b>'+esc(nm)+'</b>'+(g?' → подтянул '+lc(g)+' и похожих.':'.') });
+          }
+        });
+        // 1 mood derived from genre mix (moods are not bubbles — honest derivation)
+        var names = picked.map(function(b){ return b.d.t; });
+        for (var m=0;m<MOOD.length;m++){
+          if (MOOD[m].any.some(function(x){ return names.indexOf(x)!==-1; })){
+            rows.push({ name: MOOD[m].name, weight: 64, kind:'mood', why: MOOD[m].why }); break;
+          }
+        }
+        return rows;
+      }
+      function cap(s){ s=String(s).toLowerCase(); return s.charAt(0).toUpperCase()+s.slice(1); }
+
+      // Build vec from resume rDerived ({name, why}) — provenance already explained
+      function fromDerived(items){
+        return (items||[]).map(function(it,i){
+          return { name: cap(it.name), weight: weightFor(i), kind:'genre',
+            why: esc(it.why) }; });
+      }
+      // Build vec from import seed (set by Import module)
+      function fromImport(items){
+        return (items||[]).map(function(it,i){
+          return { name: it.disp, weight: weightFor(i), kind: it.kind,
+            why: it.why }; });   // why already a trusted literal from Import
+      }
+
+      function refs(){
+        if (M.root) return;
+        M.root=document.getElementById('onb-model'); M.back=document.getElementById('onb-model-backdrop');
+        M.main=document.getElementById('onb-model-main'); M.vecEl=document.getElementById('onb-model-vec');
+        M.n=document.getElementById('onb-model-n'); M.prov=document.getElementById('onb-model-prov');
+        M.kicker=document.getElementById('onb-model-kicker'); M.receipt=document.getElementById('onb-model-receipt');
+        M.go=document.getElementById('onb-model-go'); M.deeper=document.getElementById('onb-model-deeper');
+      }
+      function pickedCount(){ return vec.filter(function(r){ return r.kind!=='mood'; }).length; }  // mood = derived, not a chosen signal (fidelity)
+      function render(){
+        if (!M.vecEl) return;
+        if (M.n) M.n.textContent = pickedCount();
+        M.vecEl.innerHTML = vec.map(function(r){
+          return '<li class="onb-vec-row" data-name="'+esc(r.name)+'">'+
+            '<div class="onb-vec-main">'+
+              '<span class="onb-vec-name">'+esc(r.name)+'</span>'+
+              '<div class="onb-vec-bar"><div class="onb-vec-fill" style="width:'+r.weight+'%"></div></div>'+
+              '<span class="onb-vec-pct">'+r.weight+'%</span>'+
+              '<div class="onb-vec-ctrl">'+
+                '<button class="onb-vec-btn" type="button" data-act="down" aria-label="Меньше: '+esc(r.name)+'">–</button>'+
+                '<button class="onb-vec-btn" type="button" data-act="up" aria-label="Больше: '+esc(r.name)+'">+</button>'+
+                '<button class="onb-vec-btn onb-vec-btn--x" type="button" data-act="remove" aria-label="Убрать: '+esc(r.name)+'">✕</button>'+
+              '</div>'+
+            '</div>'+
+            '<span class="onb-vec-why">'+r.why+'</span>'+   // why = trusted literal (<b>signal</b>), module-built
+          '</li>'; }).join('');
+      }
+      function provText(){
+        if (source==='resume') return 'Собрал из твоего резюме — каждый пункт объяснён. Поправь прямо тут.';
+        if (source==='import') return 'Вытащил из истории '+esc(Import.svcLabel())+' — каждый пункт объяснён. Поправь прямо тут.';
+        return 'Собрал из '+pickedCount()+' выбранных тобой сигналов — каждый пункт объяснён. Поправь прямо тут.';
+      }
+      function announce(t){ if (M.receipt) M.receipt.textContent=t; }
+      function wire(){
+        if (wired) return; refs(); if (!M.root) return;
+        M.vecEl.addEventListener('click', function(e){
+          var btn=e.target.closest('.onb-vec-btn'); if(!btn) return;
+          var li=btn.closest('.onb-vec-row'); var nm=li&&li.getAttribute('data-name');
+          var i=vec.map(function(r){return r.name;}).indexOf(nm); if(i<0) return;
+          var act=btn.getAttribute('data-act'), r=vec[i];
+          if(act==='up'){ var ow=r.weight; r.weight=Math.min(100,r.weight+6); render(); announce(esc(r.name)+' '+ow+' → '+r.weight+' % — пересчитал.'); }
+          else if(act==='down'){ var ow2=r.weight; r.weight=Math.max(4,r.weight-6); render(); announce(esc(r.name)+' '+ow2+' → '+r.weight+' % — пересчитал.'); }
+          else if(act==='remove'){ vec.splice(i,1); render(); announce('Убрал '+esc(nm)+' — больше не в стартовом векторе.'); }
+          syncTaste();
+        });
+        if (M.go) M.go.addEventListener('click', function(){ syncTaste(); hide(); goHome(); });
+        if (M.deeper) M.deeper.addEventListener('click', function(){ syncTaste();
+          try{ localStorage.setItem('gorodfm_onboarded','1'); }catch(e){}
+          hide(); window.location.hash='#/taste'; });
+        // Esc on the model step does NOT cancel onboarding (mandatory); only import steps escape (handled by Import)
+        wired=true;
+      }
+      // write the edited vector back to gorodfm_taste as a name-array (same format GorodTaste reads)
+      function syncTaste(){
+        try { localStorage.setItem('gorodfm_taste',
+          JSON.stringify(vec.map(function(r){ return r.kind==='genre' ? r.name.toUpperCase() : r.name; }).slice(0,8))); } catch(e){}
+      }
+      function show(src){
+        refs(); wire(); if(!M.root) return;
+        source = src || 'bubbles';
+        vec = (src==='resume') ? fromDerived(rDerived && rDerived.items) :
+              (src==='import') ? fromImport(Import.seed()) : fromBubbles();
+        if (!vec.length) vec = fromDerived(RESUME_FALLBACK.map(function(f){return {name:f.name,why:f.why};}));
+        if (window.GorodOnboarding) stop();      // freeze bubble physics behind overlay
+        Import.hideSteps();
+        if (M.main) M.main.hidden=false;
+        if (M.kicker) M.kicker.textContent = (src==='resume'?'Вот что я прочитал':'Вот как я тебя понял');
+        if (M.prov) M.prov.innerHTML = provText();
+        render(); announce('');
+        M.root.classList.add('is-open'); M.root.setAttribute('aria-hidden','false');
+        setTimeout(function(){ if(M.go) M.go.focus(); }, 60);
+      }
+      function hide(){ if(!M.root) return; M.root.classList.remove('is-open'); M.root.setAttribute('aria-hidden','true'); }
+      return { show: show, hide: hide, refs: refs };
+    })();
+
+    /* ---- GOROD-ONB: стриминг-import-seed (fake, opt-in, on-device) ---- */
+    var Import = (function () {
+      var I = {}, wired = false, current = 'lastfm';
+      var SRC = {
+        lastfm: { label:'Last.fm', seed:[
+          { disp:'Инди',  kind:'genre',  why:'прослушал <b>214×</b> в Last.fm — добавил в стартовый вкус.' },
+          { disp:'Рок',   kind:'genre',  why:'прослушал <b>180×</b> в Last.fm — добавил в стартовый вкус.' },
+          { disp:'Электро',kind:'genre', why:'прослушал <b>96×</b> в Last.fm — добавил в стартовый вкус.' },
+          { disp:'Arctic Monkeys', kind:'artist', why:'часто слушал <b>Arctic Monkeys</b> в Last.fm.' },
+          { disp:'Tame Impala',    kind:'artist', why:'часто слушал <b>Tame Impala</b> в Last.fm.' } ] },
+        yandex: { label:'Яндекс Музыка', seed:[
+          { disp:'Поп',     kind:'genre',  why:'много в истории <b>Яндекс Музыки</b> — добавил в вкус.' },
+          { disp:'Хип-хоп', kind:'genre',  why:'значимая доля в <b>Яндекс Музыке</b> — добавил.' },
+          { disp:'Электро', kind:'genre',  why:'средне в истории <b>Яндекс Музыки</b>.' },
+          { disp:'Егор Крид', kind:'artist', why:'часто слушал <b>Егора Крида</b> в Яндекс Музыке.' },
+          { disp:'Macan',     kind:'artist', why:'часто слушал <b>Macan</b> в Яндекс Музыке.' } ] },
+        vk: { label:'ВК Музыка', seed:[
+          { disp:'Хип-хоп', kind:'genre', why:'основа аудиозаписей <b>ВК</b> — добавил в вкус.' },
+          { disp:'Рэп',     kind:'genre', why:'много рэпа в <b>ВК Музыке</b> — добавил.' },
+          { disp:'Поп',     kind:'genre', why:'заметная доля в <b>ВК</b>.' },
+          { disp:'Макс Корж',  kind:'artist', why:'часто слушал <b>Макса Коржа</b> в ВК.' },
+          { disp:'Скриптонит', kind:'artist', why:'часто слушал <b>Скриптонита</b> в ВК.' } ] }
+      };
+      function refs(){
+        if (I.root) return;
+        I.root=document.getElementById('onb-model');
+        I.pick=document.getElementById('onb-import-pick'); I.parse=document.getElementById('onb-import-parse');
+        I.log=document.getElementById('onb-import-log'); I.svc=document.getElementById('onb-import-svc');
+        I.back=document.getElementById('onb-import-back'); I.backdrop=document.getElementById('onb-model-backdrop');
+      }
+      function hideSteps(){ [I.pick,I.parse].forEach(function(el){ if(el) el.hidden=true; }); var m=document.getElementById('onb-model-main'); if(m) m.hidden=true; }
+      function open(){
+        refs(); wire(); if(!I.root) return;
+        if (window.GorodOnboarding) stop();
+        hideSteps(); if(I.pick) I.pick.hidden=false;
+        I.root.classList.add('is-open'); I.root.setAttribute('aria-hidden','false');
+        setTimeout(function(){ var b=I.pick&&I.pick.querySelector('.onb-src'); if(b) b.focus(); }, 60);
+      }
+      function close(){ if(I.root){ I.root.classList.remove('is-open'); I.root.setAttribute('aria-hidden','true'); } }
+      function run(src){
+        current = SRC[src] ? src : 'lastfm';
+        if (I.svc) I.svc.textContent = SRC[current].label;
+        hideSteps(); if(I.parse) I.parse.hidden=false; if(I.log) I.log.innerHTML='';
+        var lines=['Подключаюсь к '+SRC[current].label+'…','Читаю историю прослушиваний…','Нахожу повторы и фаворитов…','Собираю стартовый вкус…'];
+        if (REDUCE){ Model.show('import'); return; }
+        var i=0;(function n(){ if(i>=lines.length){ setTimeout(function(){ Model.show('import'); },300); return; }
+          var li=document.createElement('li'); li.textContent=lines[i];
+          if(I.log){ if(I.log.lastChild) I.log.lastChild.classList.add('is-done'); I.log.appendChild(li); }
+          i++; setTimeout(n,520); })();
+      }
+      function wire(){
+        if (wired) return; refs(); if(!I.root) return;
+        if (I.pick) I.pick.addEventListener('click', function(e){ var b=e.target.closest('.onb-src'); if(b) run(b.getAttribute('data-src')); });
+        if (I.back) I.back.addEventListener('click', function(){ close(); if (window.GorodOnboarding) start(); });
+        document.addEventListener('keydown', function(e){
+          if(e.key==='Escape' && I.root && I.root.classList.contains('is-open') && I.pick && !I.pick.hidden){ close(); if(window.GorodOnboarding) start(); }
+        });
+        wired=true;
+      }
+      return { open:open, hideSteps:hideSteps, seed:function(){ return SRC[current].seed; }, svcLabel:function(){ return SRC[current].label; } };
+    })();
 
     function start() {
       if (!built && !build()) return;
@@ -14088,8 +13800,11 @@
       }
       els.rej.innerHTML = '';
       rej.forEach(function (id) {
+        var wrap = document.createElement('div'); wrap.className = 'profile-rej-item';
         var chip = document.createElement('span'); chip.className = 'profile-rej-chip'; chip.textContent = REJ_LABELS[id];
-        els.rej.appendChild(chip);
+        var prov = document.createElement('span'); prov.className = 'profile-rej-prov'; prov.textContent = window.TwinrModel.REJ_PROV;
+        wrap.appendChild(chip); wrap.appendChild(prov);
+        els.rej.appendChild(wrap);
       });
     }
 
@@ -14227,8 +13942,8 @@
     function cardDeltaHTML(d) {
       if (!d.plus) return '';
       var s = '<span class="grow">▲ +' + esc(d.plus.n) + '</span>';
-      if (d.minus) s += ' · −' + esc(d.minus.label);
-      return s + ' за неделю';
+      if (d.minus) s += ' <span class="fade">· −' + esc(d.minus.label) + '</span>';
+      return s + ' <span class="recap-card-delta-tail">за неделю</span>';
     }
     function deltaText(d) {
       if (!d.plus) return '';
@@ -14351,6 +14066,97 @@
       } catch (e) {}
     }
 
+    /* ---- honest PNG 1080×1920. Primary: Canvas-2D рендер из ТОЙ ЖЕ модели
+       (buildIdentity/buildDeltas/buildDiscovery/buildPetals) — детерминированный,
+       0 зависимостей, honest. html2canvas НЕ грузим с CDN (self-contained офлайн);
+       если кто-то подключил window.html2canvas — используем как progressive-enhance.
+       Никогда не рендерим пустоту: тот же honesty-floor, что и copySummary. ---- */
+    var PNG_W = 1080, PNG_H = 1920;
+    function withFont(px, weight) { return (weight || 700) + ' ' + px + "px Onest, 'Segoe UI', sans-serif"; }
+    function wrapLines(ctx, text, maxW) {
+      var words = String(text).split(' '), lines = [], cur = '';
+      for (var i = 0; i < words.length; i++) {
+        var t = cur ? cur + ' ' + words[i] : words[i];
+        if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = words[i]; } else cur = t;
+      }
+      if (cur) lines.push(cur);
+      return lines;
+    }
+    function drawCanvasPNG() {
+      var c = document.createElement('canvas'); c.width = PNG_W; c.height = PNG_H;
+      var ctx = c.getContext('2d');
+      // honest near-black + brand-glow вручную (--bg-base = radial-gradient, html2canvas её не возьмёт)
+      ctx.fillStyle = '#0B0C0F'; ctx.fillRect(0, 0, PNG_W, PNG_H);
+      var g = ctx.createRadialGradient(PNG_W / 2, -150, 0, PNG_W / 2, -150, PNG_W * 0.95);
+      g.addColorStop(0, 'rgba(81,104,252,0.16)'); g.addColorStop(1, 'rgba(81,104,252,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, PNG_W, PNG_H);
+      var id = buildIdentity(), d = buildDeltas(), disc = buildDiscovery(), fs = facets();
+      var cx = PNG_W / 2, y = 150, pad = 96, maxW = PNG_W - pad * 2;
+      ctx.textAlign = 'center';
+      // kicker
+      ctx.fillStyle = '#8094ff'; ctx.font = withFont(30, 700);
+      ctx.fillText('ГОРОД ФМ · НЕДЕЛЯ ' + isoWeek(), cx, y); y += 120;
+      // hero word (identity)
+      ctx.fillStyle = '#ffffff'; ctx.font = withFont(76, 800);
+      wrapLines(ctx, id.phrase, maxW).forEach(function (ln) { ctx.fillText(ln, cx, y); y += 92; });
+      y += 18;
+      // R1 дельта-герой (причинный сдвиг)
+      ctx.font = withFont(42, 700);
+      if (d.plus) {
+        ctx.fillStyle = '#34d399'; ctx.fillText('▲ +' + d.plus.n, cx, y); y += 60;
+        if (d.minus) { ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fillText('− ' + d.minus.label, cx, y); y += 60; }
+      }
+      y += 24;
+      // bloom (тот же векторный buildPetals → рисуем path'ы на canvas)
+      drawBloomCanvas(ctx, fs, cx, y + 230, 1.35); y += 540;
+      // discovery
+      if (disc) { ctx.fillStyle = 'rgba(235,235,245,0.60)'; ctx.font = withFont(30, 600);
+        wrapLines(ctx, 'Открытие: ' + disc.line, maxW).forEach(function (ln) { ctx.fillText(ln, cx, y); y += 42; }); y += 20; }
+      // defense (provenance — fidelity)
+      ctx.fillStyle = '#8094ff'; ctx.font = withFont(27, 500);
+      wrapLines(ctx, id.defense, maxW - 60).forEach(function (ln) { ctx.fillText(ln, cx, y); y += 38; });
+      // mark
+      ctx.fillStyle = 'rgba(235,235,245,0.55)'; ctx.font = withFont(30, 700);
+      ctx.fillText('Город ФМ', cx, PNG_H - 90);
+      return c;
+    }
+    // bloom на canvas: переиспользуем buildPetals (viewBox 320×320, центр 160,160) → масштаб
+    function drawBloomCanvas(ctx, fs, ox, oy, scale) {
+      var petals = buildPetals(fs);
+      function X(x) { return ox + (x - 160) * scale; }
+      function Y(yv) { return oy + (yv - 160) * scale; }
+      petals.forEach(function (p) {
+        ctx.beginPath();
+        // path d = "M160 160 Qax ay nx ny Qbx by 160 160 Z" → парсим числа
+        var n = p.d.match(/-?\d+(\.\d+)?/g).map(Number);
+        ctx.moveTo(X(n[0]), Y(n[1]));
+        ctx.quadraticCurveTo(X(n[2]), Y(n[3]), X(n[4]), Y(n[5]));
+        ctx.quadraticCurveTo(X(n[6]), Y(n[7]), X(n[8]), Y(n[9]));
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(128,148,255,' + p.bladeOp + ')'; ctx.fill();
+        ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(81,104,252,' + p.stemOp + ')'; ctx.stroke();
+        ctx.beginPath(); ctx.arc(X(p.nx), Y(p.ny), parseFloat(p.nodeR) * scale, 0, 6.2832);
+        ctx.fillStyle = p.dom ? '#ffffff' : '#8094ff'; ctx.fill();
+      });
+    }
+    function downloadCanvas(c) {
+      try {
+        var url = c.toDataURL('image/png');
+        var a = $('recap-png-dl') || document.body.appendChild(document.createElement('a'));
+        a.href = url; a.download = 'gorod-fm-nedelya-' + isoWeek() + '.png'; a.click();
+        showReceipt('✓ Картинка сохранена — выложи в сторис'); if (window.TwinrWave) window.TwinrWave.bump();
+      } catch (e) { showReceipt('Не удалось сохранить картинку — скопируй текст.'); }
+    }
+    function renderPNG() {
+      if (!hasRealSignal()) { showReceipt('Профиль пуст — собери вкус, и картинку будет из чего собрать.'); return; }
+      // progressive-enhance: пиксель-точный html2canvas, ЕСЛИ подключён; иначе honest Canvas-2D
+      if (window.html2canvas) {
+        var card = $('recap-card');
+        window.html2canvas(card, { backgroundColor: '#0B0C0F', width: card.offsetWidth, height: card.offsetHeight, scale: PNG_W / card.offsetWidth })
+          .then(downloadCanvas).catch(function () { downloadCanvas(drawCanvasPNG()); });
+      } else { downloadCanvas(drawCanvasPNG()); }
+    }
+
     /* ---- DOM glue ---- */
     function $(id) { return document.getElementById(id); }
     function setText(id, t) { var el = $(id); if (el) el.textContent = t; }
@@ -14394,6 +14200,7 @@
         setText('recap-card-word', 'Здесь будет твоё слово недели');
         setText('recap-card-defense', 'Послушай волну и собери вкус — Twinr соберёт из реальных действий одно честное слово про твою неделю. Ничего выдуманного.');
         setHTML('recap-card-delta', ''); setText('recap-card-discovery', '');
+        setHTML('recap-cta-line', '');
         setHTML('recap-card-bloom', '');
         var sbE = $('recap-screen-bloom'); if (sbE) { sbE.innerHTML = ''; sbE.removeAttribute('aria-label'); }
         setHTML('recap-deltas', '<li class="recap-delta-row"><span class="recap-delta-why">Вектор пустой — соберёшь вкус, и тут появится, что сдвинулось за неделю.</span></li>');
@@ -14406,6 +14213,10 @@
       setText('recap-card-defense', id.defense);
       setHTML('recap-card-delta', cardDeltaHTML(d));
       setText('recap-card-discovery', disc ? ('Открытие: ' + disc.line) : '');
+      var minus = d.minus;
+      setHTML('recap-cta-line', minus
+        ? 'Не согласен, что ушло «' + esc(minus.label) + '»? <a href="#/taste">Верни грань →</a> — пересчитается.'
+        : 'Слово собрано из реального вектора. Что-то не так? <a href="#/taste">Поправь грань →</a>');
 
       var plusIdx = d.plus ? indexOfFacet(fs, d.plus.n) : -1;
       var aria = bloomAria(fs);
@@ -14417,7 +14228,11 @@
       setHTML('recap-discovery-line', disc ? ('<b>' + esc(disc.who) + '</b> — потому что ' + esc(disc.why)) : 'Пока без открытий — слушай волну, и здесь появится неожиданное.');
     }
 
-    function init() { var btn = $('recap-copy'); if (btn) btn.addEventListener('click', copySummary); built = true; }
+    function init() {
+      var bc = $('recap-copy'); if (bc) bc.addEventListener('click', copySummary);
+      var bp = $('recap-png'); if (bp) bp.addEventListener('click', renderPNG);
+      built = true;
+    }
     function onRoute() { if ((location.hash || '') === '#/recap') { if (!built) init(); render(); } }
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
@@ -14755,6 +14570,182 @@
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
     window.GorodTrack = { render: render };
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-047b — Артист deep-dive: «почему тебе этот артист» (поведенческое,
+     НЕ collaborative), reject в общий gorodfm_rejected corpus (тот же ров, что
+     TwinrWhy/GorodTaste/Profile/Recap), art-tint hero + монограмма (НЕ силуэт),
+     топ-треки row, станции (on-brand радио). Аддитивный trailing-модуль. */
+  (function () {
+    'use strict';
+    var REJ_KEY = 'gorodfm_rejected', TASTE_KEY = 'gorodfm_taste';
+    // Artist-level reject facets (prefix art_ — no collision with player-level artist/vocal/tempo).
+    // Human labels MUST also be mirrored into REJ_LABELS canon of GorodProfile/Recap/Taste (Integrate seam §10).
+    var ART_LABELS = { art_arena: 'Арена-рок', art_vocal_m: 'Мужской вокал' };
+
+    // «Почему» — каждый пункт = ПОВЕДЕНИЕ или ATTRIBUTE-MATCH, никогда collaborative.
+    var WHY = [
+      { id:null,          t:'12 треков дослушано до конца',                              prov:'твоё поведение за месяц' },
+      { id:'art_arena',   t:'Арена-рок — <b>80%</b> совпадает с твоим вектором',          prov:'грань твоего профиля' },
+      { id:'art_vocal_m', t:'Мужской вокал, мощный припев — совпадает с тем, что ты усиливал', prov:'ты поднимал эту грань' },
+      { id:null,          t:'Не пропустил ни один трек этого артиста на «Городе»',         prov:'0 скипов' }
+    ];
+    var TRACKS = [
+      { t:'Believer',          al:'Night Visions',   d:'03:38' },
+      { t:'Thunder',           al:'Evolve',          d:'03:08' },
+      { t:'Radioactive',       al:'Night Visions',   d:'03:07' },
+      { t:'Demons',            al:'Night Visions',   d:'02:58' },
+      { t:'Whatever It Takes', al:'Evolve',          d:'03:21' }
+    ];
+    var ARTIST = 'IMAGINE DRAGONS';
+
+    function $(id){ return document.getElementById(id); }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function getRej(){ try { return JSON.parse(localStorage.getItem(REJ_KEY)||'[]'); } catch(e){ return []; } }
+    function setRej(a){ try { localStorage.setItem(REJ_KEY, JSON.stringify(a)); } catch(e){} }
+    function mono(s){ var p=String(s||'').trim().split(/\s+/); return ((p[0]||' ')[0]+((p[1]||'')[0]||'')).toUpperCase().slice(0,2); }
+    // deterministic blue-family hue from name (no random) — for track-cover/hero tint variety within blue
+    function tintFor(s){ var h=0,i; for(i=0;i<String(s).length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } var hue=215+(h%40); return 'hsl('+hue+',40%,'+(30+(h%12))+'%)'; }
+
+    function renderWhy(){
+      var list=$('artist-why-list'); if(!list) return;
+      var rej=getRej();
+      list.innerHTML='';
+      WHY.forEach(function(w){
+        var li=document.createElement('li'); li.className='artist-why-item';
+        var isRej = w.id && rej.indexOf(w.id)!==-1;
+        if(isRej) li.classList.add('is-rejected');
+        var btn = w.id
+          ? '<button class="artist-why-reject" type="button" data-rej="'+esc(w.id)+'" aria-pressed="'+(isRej?'true':'false')+'">'+(isRej?'вернуть':'не моё')+'</button>'
+          : '';
+        li.innerHTML =
+          '<span class="artist-why-dot" aria-hidden="true"></span>'+
+          '<span class="artist-why-body"><span class="artist-why-text">'+w.t+'</span>'+
+          '<span class="artist-why-prov">'+esc(w.prov)+'</span></span>'+ btn;   // w.t = trusted literal with <b>%</b>
+        list.appendChild(li);
+      });
+    }
+    function renderTracks(){
+      var box=$('artist-tracks'); if(!box) return;
+      box.innerHTML='';
+      TRACKS.forEach(function(tr,i){
+        var b=document.createElement('button'); b.type='button'; b.className='artist-track-row'; b.setAttribute('role','listitem');
+        b.setAttribute('data-track-title', tr.t); b.setAttribute('data-track-artist', ARTIST);
+        b.setAttribute('aria-label', tr.t+', '+tr.d);
+        b.innerHTML =
+          '<span class="artist-track-rank" aria-hidden="true">'+(i+1)+'</span>'+
+          '<span class="artist-track-cover" aria-hidden="true" style="background:'+tintFor(tr.t)+'"><span class="artist-track-mono">'+esc(mono(tr.t))+'</span></span>'+
+          '<span class="artist-track-meta"><span class="artist-track-title">'+esc(tr.t)+'</span>'+
+          '<span class="artist-track-album">'+esc(tr.al)+'</span></span>'+
+          '<span class="artist-track-dur tabular" aria-label="длительность '+esc(tr.d)+'">'+esc(tr.d)+'</span>';
+        box.appendChild(b);
+      });
+    }
+    function paintNot(){
+      var btn=$('artist-why-not'); if(!btn) return;
+      var rej=getRej(), off = rej.indexOf('art_arena')!==-1 && rej.indexOf('art_vocal_m')!==-1;
+      btn.setAttribute('aria-pressed', off?'true':'false');
+      btn.textContent = off ? 'Артист скрыт — вернуть' : 'Это не про меня';
+    }
+    function setHeroTint(){
+      var ph=$('artist-photo'), m=$('artist-photo-mono'); if(!ph) return;
+      var url = ph.getAttribute('data-artist-photo');
+      if(url){ var img=new Image(); img.alt=''; img.onload=function(){ ph.appendChild(img); }; img.src=url; } // real-photo seam (Ф1+)
+      ph.style.background = tintFor(ARTIST);
+      if(m) m.textContent = mono(ARTIST);
+    }
+    function receipt(msg){ var r=$('artist-why-receipt'); if(r) r.textContent=msg; }
+
+    function rejectFacet(id){
+      if(!id) return;
+      var rej=getRej(), i=rej.indexOf(id), nowRej;
+      if(i===-1){ rej.push(id); nowRej=true; } else { rej.splice(i,1); nowRej=false; }
+      setRej(rej); renderWhy(); paintNot();
+      var label = ART_LABELS[id] || id;
+      receipt(nowRej
+        ? ('Убрал «'+label+'» — следующее радио артиста меньше опирается на эту грань.')
+        : ('Вернул «'+label+'» в основания.'));
+      if(window.TwinrWave) window.TwinrWave.bump();           // visible effect if wave present
+    }
+    function toggleArtist(){
+      var rej=getRej(), off = rej.indexOf('art_arena')!==-1 && rej.indexOf('art_vocal_m')!==-1;
+      ['art_arena','art_vocal_m'].forEach(function(id){
+        var k=rej.indexOf(id);
+        if(off){ if(k!==-1) rej.splice(k,1); }       // currently off → turn back on (remove rejects)
+        else  { if(k===-1) rej.push(id); }           // turn off (reject both)
+      });
+      setRej(rej); renderWhy(); paintNot();
+      receipt(off ? 'Вернул артиста в волну.' : 'Убрал «'+ARTIST+'» — реже в твоём радио. Можно вернуть.');
+      if(window.TwinrWave) window.TwinrWave.bump();
+    }
+
+    function render(){ setHeroTint(); renderWhy(); renderTracks(); paintNot(); }
+
+    var wired=false;
+    function wire(){
+      if(wired) return;
+      var sect=document.querySelector('[data-page="artist"]'); if(!sect) return;
+
+      var toggle=$('artist-why-toggle'), list=$('artist-why-list');
+      if(toggle && list){
+        toggle.addEventListener('click', function(){
+          var open = toggle.getAttribute('aria-expanded')==='true';
+          toggle.setAttribute('aria-expanded', open?'false':'true');
+          list.hidden = open;
+          toggle.textContent = open ? 'Показать, на чём это держится' : 'Свернуть основания';
+        });
+      }
+      var listEl=$('artist-why-list');
+      if(listEl){ listEl.addEventListener('click', function(e){
+        var b=e.target.closest('.artist-why-reject'); if(!b) return;
+        rejectFacet(b.getAttribute('data-rej'));
+      }); }
+      var notBtn=$('artist-why-not'); if(notBtn) notBtn.addEventListener('click', toggleArtist);
+
+      // radio CTA — honest now-playing meta + provenance line (reuses player chrome)
+      var radio=$('artist-btn-radio');
+      if(radio) radio.addEventListener('click', function(){
+        var t=$('player-track-title'), a=$('player-track-artist'),
+            ft=$('player-full-title'), fa=$('player-full-artist'),
+            rs=$('player-track-reason'), span=rs&&rs.querySelector('span');
+        if(t) t.textContent='Радио '+ARTIST; if(a) a.textContent=ARTIST;
+        if(ft) ft.textContent='Радио '+ARTIST; if(fa) fa.textContent=ARTIST;
+        if(span) span.innerHTML='Радио по артисту: <b>арена-рок + мужской вокал</b> — грани твоего вектора';
+        if(typeof openPlayer==='function') openPlayer();        // openPlayer in router scope (initArtist used it)
+      });
+
+      var fav=$('artist-btn-fav');
+      if(fav) fav.addEventListener('click', function(){
+        var p=fav.getAttribute('aria-pressed')==='true'; fav.setAttribute('aria-pressed', p?'false':'true');
+      });
+
+      // track rows (delegated) — open player; keyboard via native <button>
+      var tracks=$('artist-tracks');
+      if(tracks) tracks.addEventListener('click', function(e){
+        var row=e.target.closest('.artist-track-row'); if(!row) return;
+        var t=$('player-track-title'), a=$('player-track-artist'),
+            ft=$('player-full-title'), fa=$('player-full-artist');
+        var title=row.getAttribute('data-track-title')||'Трек';
+        if(t) t.textContent=title; if(a) a.textContent=ARTIST;
+        if(ft) ft.textContent=title; if(fa) fa.textContent=ARTIST;
+        if(typeof openPlayer==='function') openPlayer();
+      });
+
+      // stations → #/home (navigate in router scope)
+      var stations=document.querySelector('[data-page="artist"] .artist-stations');
+      if(stations) stations.addEventListener('click', function(e){
+        var chip=e.target.closest('.artist-station-chip'); if(!chip) return;
+        if(typeof navigate==='function') navigate('#/home');
+        else location.hash='#/home';
+      });
+      wired=true;
+    }
+    function onRoute(){ if((location.hash||'')==='#/artist'){ wire(); render(); } }
+    window.addEventListener('hashchange', onRoute);
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
+    window.GorodArtist = { render:render };
   })();
   </script>
 
