@@ -1078,7 +1078,7 @@
       .player-lyric-line {
         font-size: 38px;
         font-weight: 700;
-        color: #545454;
+        color: rgba(255, 255, 255, 0.45);
         line-height: 1.4;
         padding: 4px 0;
         transition: color var(--t-fast);
@@ -5488,14 +5488,7 @@
         stroke-width: 1.5;
       }
 
-      /* Subtle radial shimmer on cover — not backdrop-filter (page rule) */
-      .track-cover::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at 30% 25%, rgba(81, 104, 252,0.18) 0%, transparent 65%);
-        pointer-events: none;
-      }
+      /* (cont-11) track-cover ::after radial shimmer removed — anti-slop, flat cover */
 
       .track-title {
         font-family: 'Onest', sans-serif;
@@ -5769,7 +5762,7 @@
         font-family: 'Onest', sans-serif;
         font-size: 36px;
         font-weight: 700;
-        color: #545454;
+        color: rgba(255, 255, 255, 0.45);
         line-height: 1.4;
         padding: 4px 0;
         text-align: center;
