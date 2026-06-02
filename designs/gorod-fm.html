@@ -3145,6 +3145,9 @@
       .profile-rej-list { display: flex; flex-wrap: wrap; gap: 8px; }
       .profile-rej-chip { font-family: 'Onest', sans-serif; font-size: 13px; color: var(--text-sec); text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, 0.4); padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, 0.12); }
       .profile-empty { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); margin: 0; line-height: 1.5; text-wrap: pretty; }
+      .profile-rej-item { display: inline-flex; flex-direction: column; gap: 3px; margin: 0 8px 10px 0; vertical-align: top; }
+      .profile-rej-prov { font-family: 'Onest', sans-serif; font-size: 11.5px; color: var(--text-quat); display: inline-flex; align-items: center; gap: 5px; }
+      .profile-rej-prov::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent-on-dark); flex: none; }
 
       .profile-ad-strip { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; background: #111318; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 14px 18px; margin-top: 14px; }
       .profile-ad-text { font-family: 'Onest', sans-serif; font-size: 13.5px; color: var(--text-sec); line-height: 1.45; flex: 1 1 280px; }
@@ -3178,6 +3181,10 @@
       .recap-card-bloom .bloom { width: 100%; height: auto; display: block; }
       .recap-card-delta { font-size: 14px; color: var(--text-sec); margin: 0 0 5px; }
       .recap-card-delta .grow { color: var(--success, #34d399); font-weight: 600; }
+      /* R1 — дельта = ПРИЧИННЫЙ герой (НЕ vanity-число): второй по весу под словом */
+      .recap-card-delta--hero { font-size: clamp(15px, 4.4vw, 18px); font-weight: 700; color: var(--text-pri); margin: 0 0 6%; line-height: 1.25; }
+      .recap-card-delta--hero .grow { color: var(--success, #34d399); }
+      .recap-card-delta--hero .fade { color: rgba(255, 255, 255, 0.55); }
       .recap-card-discovery { font-size: 13px; color: var(--text-quat); margin: 0 0 7px; line-height: 1.4; }
       .recap-card-defense { font-size: 12px; line-height: 1.45; color: var(--accent-on-dark); margin: 0; max-width: 32ch; }
       .recap-card-mark { margin-top: auto; padding-top: 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sec); opacity: 0.72; }
@@ -3191,6 +3198,11 @@
       .recap-btn--ghost:hover { color: var(--text-pri); border-color: rgba(255, 255, 255, 0.36); }
       .recap-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
       .recap-receipt { min-height: 1.2em; text-align: center; font-size: 13px; font-weight: 600; color: var(--success, #34d399); margin: 10px 0 0; }
+      .recap-btn--primary-alt { background: transparent; color: var(--text-pri); border: 1px solid var(--brand-blue-light); }
+      .recap-btn--primary-alt:hover { background: var(--tint-blue-light-20, rgba(81, 104, 252, 0.16)); }
+      .recap-cta-line { text-align: center; font-size: 13.5px; line-height: 1.45; color: var(--text-sec); margin: 12px 0 0; }
+      .recap-cta-line a { color: var(--accent-on-dark); font-weight: 700; text-decoration: none; }
+      .recap-cta-line a:hover { text-decoration: underline; }
 
       /* ── screen bloom + deltas + discovery ── */
       .recap-screen-bloom { margin: 0 auto; }
@@ -9560,8 +9572,8 @@
             <div class="recap-card-inner">
               <span class="recap-card-kicker">Город ФМ · неделя <span class="recap-card-week">22</span></span>
               <p class="recap-card-word" id="recap-card-word">Размах с битом</p>
+              <p class="recap-card-delta recap-card-delta--hero" id="recap-card-delta"></p>
               <div class="recap-card-bloom" id="recap-card-bloom" aria-hidden="true"></div>
-              <p class="recap-card-delta" id="recap-card-delta"></p>
               <p class="recap-card-discovery" id="recap-card-discovery"></p>
               <p class="recap-card-defense" id="recap-card-defense"></p>
               <span class="recap-card-mark">Город&nbsp;ФМ</span>
@@ -9569,9 +9581,12 @@
           </figure>
 
           <div class="recap-actions">
-            <button class="recap-btn recap-btn--primary" id="recap-copy" type="button">Скопировать карточку</button>
-            <a class="recap-btn recap-btn--ghost" href="#/taste">Поправить грань →</a>
+            <button class="recap-btn recap-btn--primary" id="recap-png" type="button">Сохранить картинку</button>
+            <button class="recap-btn recap-btn--primary-alt" id="recap-copy" type="button">Скопировать текст</button>
+            <a class="recap-btn recap-btn--ghost" id="recap-cta-link" href="#/taste">Поправить грань →</a>
           </div>
+          <a id="recap-png-dl" style="display:none" aria-hidden="true"></a>
+          <p class="recap-cta-line" id="recap-cta-line"></p>
           <p class="recap-receipt" id="recap-receipt" role="status" aria-live="polite"></p>
 
           <h2 class="recap-h2">Карта вкуса на эту неделю</h2>
@@ -13749,8 +13764,11 @@
       }
       els.rej.innerHTML = '';
       rej.forEach(function (id) {
+        var wrap = document.createElement('div'); wrap.className = 'profile-rej-item';
         var chip = document.createElement('span'); chip.className = 'profile-rej-chip'; chip.textContent = REJ_LABELS[id];
-        els.rej.appendChild(chip);
+        var prov = document.createElement('span'); prov.className = 'profile-rej-prov'; prov.textContent = window.TwinrModel.REJ_PROV;
+        wrap.appendChild(chip); wrap.appendChild(prov);
+        els.rej.appendChild(wrap);
       });
     }
 
@@ -13888,8 +13906,8 @@
     function cardDeltaHTML(d) {
       if (!d.plus) return '';
       var s = '<span class="grow">▲ +' + esc(d.plus.n) + '</span>';
-      if (d.minus) s += ' · −' + esc(d.minus.label);
-      return s + ' за неделю';
+      if (d.minus) s += ' <span class="fade">· −' + esc(d.minus.label) + '</span>';
+      return s + ' <span class="recap-card-delta-tail">за неделю</span>';
     }
     function deltaText(d) {
       if (!d.plus) return '';
@@ -14012,6 +14030,97 @@
       } catch (e) {}
     }
 
+    /* ---- honest PNG 1080×1920. Primary: Canvas-2D рендер из ТОЙ ЖЕ модели
+       (buildIdentity/buildDeltas/buildDiscovery/buildPetals) — детерминированный,
+       0 зависимостей, honest. html2canvas НЕ грузим с CDN (self-contained офлайн);
+       если кто-то подключил window.html2canvas — используем как progressive-enhance.
+       Никогда не рендерим пустоту: тот же honesty-floor, что и copySummary. ---- */
+    var PNG_W = 1080, PNG_H = 1920;
+    function withFont(px, weight) { return (weight || 700) + ' ' + px + "px Onest, 'Segoe UI', sans-serif"; }
+    function wrapLines(ctx, text, maxW) {
+      var words = String(text).split(' '), lines = [], cur = '';
+      for (var i = 0; i < words.length; i++) {
+        var t = cur ? cur + ' ' + words[i] : words[i];
+        if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = words[i]; } else cur = t;
+      }
+      if (cur) lines.push(cur);
+      return lines;
+    }
+    function drawCanvasPNG() {
+      var c = document.createElement('canvas'); c.width = PNG_W; c.height = PNG_H;
+      var ctx = c.getContext('2d');
+      // honest near-black + brand-glow вручную (--bg-base = radial-gradient, html2canvas её не возьмёт)
+      ctx.fillStyle = '#0B0C0F'; ctx.fillRect(0, 0, PNG_W, PNG_H);
+      var g = ctx.createRadialGradient(PNG_W / 2, -150, 0, PNG_W / 2, -150, PNG_W * 0.95);
+      g.addColorStop(0, 'rgba(81,104,252,0.16)'); g.addColorStop(1, 'rgba(81,104,252,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, PNG_W, PNG_H);
+      var id = buildIdentity(), d = buildDeltas(), disc = buildDiscovery(), fs = facets();
+      var cx = PNG_W / 2, y = 150, pad = 96, maxW = PNG_W - pad * 2;
+      ctx.textAlign = 'center';
+      // kicker
+      ctx.fillStyle = '#8094ff'; ctx.font = withFont(30, 700);
+      ctx.fillText('ГОРОД ФМ · НЕДЕЛЯ ' + isoWeek(), cx, y); y += 120;
+      // hero word (identity)
+      ctx.fillStyle = '#ffffff'; ctx.font = withFont(76, 800);
+      wrapLines(ctx, id.phrase, maxW).forEach(function (ln) { ctx.fillText(ln, cx, y); y += 92; });
+      y += 18;
+      // R1 дельта-герой (причинный сдвиг)
+      ctx.font = withFont(42, 700);
+      if (d.plus) {
+        ctx.fillStyle = '#34d399'; ctx.fillText('▲ +' + d.plus.n, cx, y); y += 60;
+        if (d.minus) { ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fillText('− ' + d.minus.label, cx, y); y += 60; }
+      }
+      y += 24;
+      // bloom (тот же векторный buildPetals → рисуем path'ы на canvas)
+      drawBloomCanvas(ctx, fs, cx, y + 230, 1.35); y += 540;
+      // discovery
+      if (disc) { ctx.fillStyle = 'rgba(235,235,245,0.60)'; ctx.font = withFont(30, 600);
+        wrapLines(ctx, 'Открытие: ' + disc.line, maxW).forEach(function (ln) { ctx.fillText(ln, cx, y); y += 42; }); y += 20; }
+      // defense (provenance — fidelity)
+      ctx.fillStyle = '#8094ff'; ctx.font = withFont(27, 500);
+      wrapLines(ctx, id.defense, maxW - 60).forEach(function (ln) { ctx.fillText(ln, cx, y); y += 38; });
+      // mark
+      ctx.fillStyle = 'rgba(235,235,245,0.55)'; ctx.font = withFont(30, 700);
+      ctx.fillText('Город ФМ', cx, PNG_H - 90);
+      return c;
+    }
+    // bloom на canvas: переиспользуем buildPetals (viewBox 320×320, центр 160,160) → масштаб
+    function drawBloomCanvas(ctx, fs, ox, oy, scale) {
+      var petals = buildPetals(fs);
+      function X(x) { return ox + (x - 160) * scale; }
+      function Y(yv) { return oy + (yv - 160) * scale; }
+      petals.forEach(function (p) {
+        ctx.beginPath();
+        // path d = "M160 160 Qax ay nx ny Qbx by 160 160 Z" → парсим числа
+        var n = p.d.match(/-?\d+(\.\d+)?/g).map(Number);
+        ctx.moveTo(X(n[0]), Y(n[1]));
+        ctx.quadraticCurveTo(X(n[2]), Y(n[3]), X(n[4]), Y(n[5]));
+        ctx.quadraticCurveTo(X(n[6]), Y(n[7]), X(n[8]), Y(n[9]));
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(128,148,255,' + p.bladeOp + ')'; ctx.fill();
+        ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(81,104,252,' + p.stemOp + ')'; ctx.stroke();
+        ctx.beginPath(); ctx.arc(X(p.nx), Y(p.ny), parseFloat(p.nodeR) * scale, 0, 6.2832);
+        ctx.fillStyle = p.dom ? '#ffffff' : '#8094ff'; ctx.fill();
+      });
+    }
+    function downloadCanvas(c) {
+      try {
+        var url = c.toDataURL('image/png');
+        var a = $('recap-png-dl') || document.body.appendChild(document.createElement('a'));
+        a.href = url; a.download = 'gorod-fm-nedelya-' + isoWeek() + '.png'; a.click();
+        showReceipt('✓ Картинка сохранена — выложи в сторис'); if (window.TwinrWave) window.TwinrWave.bump();
+      } catch (e) { showReceipt('Не удалось сохранить картинку — скопируй текст.'); }
+    }
+    function renderPNG() {
+      if (!hasRealSignal()) { showReceipt('Профиль пуст — собери вкус, и картинку будет из чего собрать.'); return; }
+      // progressive-enhance: пиксель-точный html2canvas, ЕСЛИ подключён; иначе honest Canvas-2D
+      if (window.html2canvas) {
+        var card = $('recap-card');
+        window.html2canvas(card, { backgroundColor: '#0B0C0F', width: card.offsetWidth, height: card.offsetHeight, scale: PNG_W / card.offsetWidth })
+          .then(downloadCanvas).catch(function () { downloadCanvas(drawCanvasPNG()); });
+      } else { downloadCanvas(drawCanvasPNG()); }
+    }
+
     /* ---- DOM glue ---- */
     function $(id) { return document.getElementById(id); }
     function setText(id, t) { var el = $(id); if (el) el.textContent = t; }
@@ -14055,6 +14164,7 @@
         setText('recap-card-word', 'Здесь будет твоё слово недели');
         setText('recap-card-defense', 'Послушай волну и собери вкус — Twinr соберёт из реальных действий одно честное слово про твою неделю. Ничего выдуманного.');
         setHTML('recap-card-delta', ''); setText('recap-card-discovery', '');
+        setHTML('recap-cta-line', '');
         setHTML('recap-card-bloom', '');
         var sbE = $('recap-screen-bloom'); if (sbE) { sbE.innerHTML = ''; sbE.removeAttribute('aria-label'); }
         setHTML('recap-deltas', '<li class="recap-delta-row"><span class="recap-delta-why">Вектор пустой — соберёшь вкус, и тут появится, что сдвинулось за неделю.</span></li>');
@@ -14067,6 +14177,10 @@
       setText('recap-card-defense', id.defense);
       setHTML('recap-card-delta', cardDeltaHTML(d));
       setText('recap-card-discovery', disc ? ('Открытие: ' + disc.line) : '');
+      var minus = d.minus;
+      setHTML('recap-cta-line', minus
+        ? 'Не согласен, что ушло «' + esc(minus.label) + '»? <a href="#/taste">Верни грань →</a> — пересчитается.'
+        : 'Слово собрано из реального вектора. Что-то не так? <a href="#/taste">Поправь грань →</a>');
 
       var plusIdx = d.plus ? indexOfFacet(fs, d.plus.n) : -1;
       var aria = bloomAria(fs);
@@ -14078,7 +14192,11 @@
       setHTML('recap-discovery-line', disc ? ('<b>' + esc(disc.who) + '</b> — потому что ' + esc(disc.why)) : 'Пока без открытий — слушай волну, и здесь появится неожиданное.');
     }
 
-    function init() { var btn = $('recap-copy'); if (btn) btn.addEventListener('click', copySummary); built = true; }
+    function init() {
+      var bc = $('recap-copy'); if (bc) bc.addEventListener('click', copySummary);
+      var bp = $('recap-png'); if (bp) bp.addEventListener('click', renderPNG);
+      built = true;
+    }
     function onRoute() { if ((location.hash || '') === '#/recap') { if (!built) init(); render(); } }
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
