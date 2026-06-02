@@ -1353,6 +1353,11 @@
 
       /* ---- Tweaks panel -------------------------------------------------- */
 
+      /* §G4 — dev chrome hidden in production; reveal with ?dev=1 (sticky) or Ctrl/Cmd+Shift+D */
+      html:not([data-dev="true"]) .tweaks,
+      html:not([data-dev="true"]) .tweaks-fab,
+      html:not([data-dev="true"]) .sidebar-theme-toggle { display: none !important; }
+
       .tweaks {
         position: fixed;
         bottom: calc(var(--player-mini-h) + 16px);
@@ -7136,6 +7141,34 @@
 </head>
 
 <body>
+  <script>
+  /* §G4 dev-chrome gate — production hides TWEAKS/theme-toggle/internal-map; team reveals via
+     ?dev=1 (sticky) / ?dev=0 (clear) / Ctrl|Cmd+Shift+D. Forces canonical config when not dev. */
+  (function () {
+    'use strict';
+    var html = document.documentElement, q = null;
+    try { q = new URLSearchParams(location.search).get('dev'); } catch (e) {}
+    if (q === '1') { try { localStorage.setItem('gorod-fm.dev', '1'); } catch (e) {} }
+    if (q === '0') { try { localStorage.removeItem('gorod-fm.dev'); } catch (e) {} }
+    var dev = false; try { dev = localStorage.getItem('gorod-fm.dev') === '1'; } catch (e) {}
+    window.__GFM_DEV = dev;
+    html.setAttribute('data-dev', dev ? 'true' : 'false');
+    if (!dev) {
+      html.setAttribute('data-theme', 'cinema');
+      html.setAttribute('data-hide-flow-map', 'true');
+      try { localStorage.setItem('gorod-fm.theme', 'cinema'); localStorage.setItem('gorod-fm.hide-flow-map', 'true'); } catch (e) {}
+      var h = location.hash || '';
+      if (h === '' || h === '#/map') location.hash = '#/home';
+    }
+    document.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+        e.preventDefault();
+        try { localStorage.getItem('gorod-fm.dev') === '1' ? localStorage.removeItem('gorod-fm.dev') : localStorage.setItem('gorod-fm.dev', '1'); } catch (_) {}
+        location.reload();
+      }
+    });
+  })();
+  </script>
 
   <!-- ======================================================================
        BACKGROUND LAYERS
