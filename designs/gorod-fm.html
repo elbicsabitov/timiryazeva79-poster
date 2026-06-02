@@ -3319,13 +3319,16 @@
         height: 42px; padding: 0 18px; border: none; border-radius: var(--r-pill);
         background: var(--brand-blue-light); color: #fff; cursor: pointer;
         font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700;
-        box-shadow: 0 8px 24px rgba(81, 104, 252, 0.4);
+        box-shadow: 0 6px 18px rgba(81, 104, 252, 0.28);
         transition: transform var(--t-fast), box-shadow var(--t-fast);
       }
-      .taste-share-btn:hover { transform: translateY(-2px); }
+      .taste-share-btn:hover { transform: translateY(-2px); background: var(--brand-blue-hover); }
       .taste-share-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
       .taste-share-btn svg { stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-      .taste-delta { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--success, #34d399); }
+      .taste-share-btn--ghost { background: transparent; border: 1px solid var(--border-strong); color: var(--text-pri); box-shadow: none; }
+      .taste-share-btn--ghost:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.22); }
+      .taste-share-btn--ghost svg { stroke: var(--text-pri); }
+      .taste-delta { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-sec); }
 
       /* ---- GOROD-051 — контекстный старт (на #/taste, аддитивно, single-hue) ---- */
       .ctx-strip { margin: 0 0 28px; }
@@ -3421,7 +3424,7 @@
       .taste-streak-bloom {
         width: 40px; height: 40px; flex: none; border-radius: 50%;
         background: radial-gradient(circle at 50% 50%, var(--brand-blue-light) 0%, rgba(81,104,252,0.18) 55%, transparent 72%);
-        box-shadow: 0 0 0 1px rgba(81,104,252,0.20); animation: taste-streak-pulse 2.8s ease-in-out infinite;
+        box-shadow: 0 0 0 1px rgba(81,104,252,0.20);
       }
       @keyframes taste-streak-pulse { 0%,100%{transform:scale(1);opacity:.92} 50%{transform:scale(1.12);opacity:1} }
       .taste-streak-txt { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; flex: 1; }
@@ -9489,7 +9492,7 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h2l2-5 3 11 2.5-8 1.5 4H19"/></svg>
                   <span id="taste-sonify-label">Озвучить волну</span>
                 </button>
-                <a class="taste-share-btn" href="#/profile" id="taste-open-profile">
+                <a class="taste-share-btn taste-share-btn--ghost" href="#/profile" id="taste-open-profile">
                   <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
                   Открытый профиль
                 </a>
