@@ -488,9 +488,10 @@
       }
 
       .sidebar-item[aria-current="page"] {
-        background: var(--surf-glass-20);
+        background: rgba(81, 104, 252, 0.12);
         color: var(--text-pri);
         font-weight: 600;
+        box-shadow: inset 3px 0 0 var(--brand-blue-light);
       }
 
       /* Sidebar footer — internal items + theme toggle */
@@ -1347,7 +1348,7 @@
 
       .tabbar-item:hover,
       .tabbar-item[aria-current="page"] {
-        color: var(--brand-cyan);
+        color: var(--brand-blue-light);
       }
 
       .tabbar-item svg {
@@ -2310,8 +2311,8 @@
       }
       /* genre bubbles: brand-tinted gradient by --hue */
       .onb-bubble--genre {
-        background:
-          radial-gradient(circle at 32% 28%, hsla(var(--hue,230),80%,68%,0.95), hsla(var(--hue,230),72%,42%,0.92) 70%);
+        background: radial-gradient(120% 120% at 30% 25%, #1b1d24, #121318);
+        border: 1px solid rgba(255,255,255,0.10);
       }
       /* artist bubbles: photo fill + dark wash for legibility */
       .onb-bubble--artist {
@@ -4835,20 +4836,21 @@
       }
       /* art-tint avatar (NOT silhouette): flat blue-family tint + монограмма */
       .artist-photo {
-        position: relative; width: 220px; height: 220px; border-radius: 50%;
+        position: relative; width: 200px; height: 200px; border-radius: var(--r-xl);
         flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         overflow: hidden;
         background: var(--np-accent);            /* content-derived hue (set by JS tintFor) */
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 3px rgba(81,104,252,0.30);
+        border: 1px solid var(--hairline);
+        box-shadow: 0 24px 48px -16px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06);
       }
       /* tint wash so the flat fill reads as a surface, not a flat block */
       .artist-photo::after {
-        content:""; position:absolute; inset:0; border-radius:50%;
-        background: radial-gradient(120% 120% at 30% 25%, rgba(255,255,255,0.18), rgba(0,0,0,0.28));
+        content:""; position:absolute; inset:0; border-radius:var(--r-xl);
+        background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(0,0,0,0.22));
       }
       .artist-photo-mono {
         position: relative; z-index: 1; font-family:'Onest',sans-serif;
-        font-size: 72px; font-weight: 900; letter-spacing: 0.02em; color: #fff;
+        font-size: 64px; font-weight: 800; letter-spacing: 0.02em; color: #fff;
         line-height: 1; text-shadow: 0 2px 12px rgba(0,0,0,0.35);
       }
       /* real-photo seam (Ф1+): when JS sets <img>, it covers the mono */
@@ -4861,8 +4863,8 @@
         color: var(--accent-on-dark); margin:0; line-height:1;
       }
       .artist-name {
-        font-family:'Onest',sans-serif; font-size:56px; font-weight:900;
-        letter-spacing:0.03em; line-height:1.0; color:var(--text-pri);
+        font-family:'Onest',sans-serif; font-size:48px; font-weight:700;
+        letter-spacing:-0.02em; line-height:1.05; color:var(--text-pri);
         text-wrap:balance; margin:0;
       }
       .artist-stats { font-family:'Onest',sans-serif; font-size:16px; color:var(--text-sec); margin:0; line-height:1.4; }
@@ -8415,7 +8417,7 @@
 
           <div class="artist-hero-text">
             <p class="artist-overline" aria-hidden="true">Артист · Город ФМ</p>
-            <h2 class="artist-name" id="artist-name-heading">IMAGINE DRAGONS</h2>
+            <h2 class="artist-name" id="artist-name-heading">Imagine Dragons</h2>
             <p class="artist-stats">Американский альт-рок · в твоей волне с весны</p>
 
             <div class="artist-action-row" role="group" aria-label="Действия с артистом">
@@ -14605,7 +14607,7 @@
     function setRej(a){ try { localStorage.setItem(REJ_KEY, JSON.stringify(a)); } catch(e){} }
     function mono(s){ var p=String(s||'').trim().split(/\s+/); return ((p[0]||' ')[0]+((p[1]||'')[0]||'')).toUpperCase().slice(0,2); }
     // deterministic blue-family hue from name (no random) — for track-cover/hero tint variety within blue
-    function tintFor(s){ var h=0,i; for(i=0;i<String(s).length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } var hue=215+(h%40); return 'hsl('+hue+',62%,'+(34+(h%14))+'%)'; }
+    function tintFor(s){ var h=0,i; for(i=0;i<String(s).length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } var hue=215+(h%40); return 'hsl('+hue+',40%,'+(30+(h%12))+'%)'; }
 
     function renderWhy(){
       var list=$('artist-why-list'); if(!list) return;
