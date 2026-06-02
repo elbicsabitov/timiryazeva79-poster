@@ -1,6 +1,6 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-11) — НИЖНЯЯ ПЛАШКА (мини-плеер) ПЕРЕДЕЛАНА (PRIORITY #1 закрыт) + play/pause fidelity-баг ИСПРАВЛЕН. Локально (master `298010e`), PUSH отложен
+## ⚡ LATEST (2026-06-03 cont-11) — НИЖНЯЯ ПЛАШКА (мини-плеер) ПЕРЕДЕЛАНА (PRIORITY #1 закрыт) + play/pause fidelity-баг ИСПРАВЛЕН + standalone пересобран. Локально (master `5a26459`, 3 коммита: feat `298010e`+docs+standalone `5a26459`), PUSH отложен
 
 🎯 **Эльбик cont-10 флаг (×2): «плашка внизу как плеер — UX/UI ресёрч Карпати-уровня».** Сделано research-first.
 
@@ -15,7 +15,7 @@
 
 **Дисциплина/находки:** web-surface override `html[data-surface="web"] .player-mini` (L7156) перебивал base padding → правил отдельно (0 20px + safe-area). Mobile-surface `[data-surface="mobile"] .player-ctrl-btn` (вкл. pre-existing min-height:44 L6140) **НЕ применяется** даже с `!important` — глубокий pre-existing cascade-quirk в том блоке; но oval-проблемы НЕТ (min-height не берётся → кнопки 32px square + 44px hit через ::before). Не копал дальше (dev-only surface). Артефакты: `apply_minibar.py` (.scratch, gitignored), research-output в task `wa8ncwxs9`.
 
-**🎯 NEXT (по убыванию):** (1) **standalone пересобрать** (`designs/gorod-fm-standalone.html` сейчас СТАЛЫЙ — без мини-бара). (2) Продолжить backlog `AUDIT-apple-polish-plan.md` §3: G6 slop-sweep (mini-art placeholders L620-622 multi-hue gradient ОСТАЛИСЬ! + home/track/queue covers, map thumbs) · G7 global focus/active/44px · per-surface P1/P2 · DEFAULT_ROUTE cold-start→#/onboarding · G2 42 latent `--brand-cyan`→rename. (3) PUSH при `sync`. 🔒 Эльбик-gate: GOROD-029/030.
+**🎯 NEXT (по убыванию):** standalone ✅ ПЕРЕСОБРАН (`5a26459`, images остаются inline-webp; rebuild = `python .scratch/build_standalone.py` → ре-применяет `apply_minibar.REPLACEMENTS` к standalone in-place, т.к. правки кода не трогают img-рефы). (1) backlog `AUDIT-apple-polish-plan.md` §3: G6 slop-sweep (mini-art placeholders `.player-mini-art-placeholder--1/2/3` multi-hue gradient ОСТАЛИСЬ + home/track/queue covers, map thumbs) · G7 global focus/active/44px · per-surface P1/P2 · DEFAULT_ROUTE cold-start→#/onboarding · G2 42 latent `--brand-cyan`→rename. (2) PUSH при `sync`. 🔒 Эльбик-gate: GOROD-029/030.
 
 ---
 
