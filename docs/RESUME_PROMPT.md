@@ -1,6 +1,6 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-11) — МИНИ-ПЛЕЕР ПЕРЕДЕЛАН (PRIORITY #1) + play/pause fidelity-баг + **ВЕСЬ AUDIT-backlog ЗАКРЫТ** (G2/G6/G7/route + 8 per-surface волн) + standalone. Локально (master `e12a58b`, ~13 коммитов cont-11), PUSH отложен
+## ⚡ LATEST (2026-06-03 cont-11) — МИНИ-ПЛЕЕР ПЕРЕДЕЛАН (PRIORITY #1) + play/pause fidelity-баг + **ВЕСЬ AUDIT-backlog ЗАКРЫТ** (G2/G6/G7/route + 8 per-surface волн) + **плеер locked calm-blue (Variant A — color-from-art retired)** + standalone. **ЗАПУШЕНО origin/master** (~15 коммитов cont-11, HEAD `42d1902`+)
 
 🎯 **Эльбик cont-10 флаг (×2): «плашка внизу как плеер — UX/UI ресёрч Карпати-уровня».** Сделано research-first.
 
@@ -22,6 +22,7 @@
 - **DEFAULT_ROUTE** cold-start (нет onboarded&taste)→`#/onboarding`; returning→`#/home`; deep-links целы — 3 пути verified в Chrome.
 - **8 per-surface волн:** home (hero cover-glow→neutral, удалён home-only mini-bar tint, skip/Like/Steer hierarchy, hero token+dvh-clamp) · taste (2nd blue CTA «Открытый профиль»→ghost, streak-pulse off, delta green→neutral) · discover (ASCII ▶→SVG, ask-field hover/focus-ring, curator/section-title) · track (lyric `#545454`→`rgba(255,255,255,.45)`, cover-shimmer удалён) · artist (per-row tintFor→flat covers, AA metadata) · onboarding (neon-ring→clean, vec-fill solid, count AA) · recap/profile (`#6d80ff`→token, clear-player padding 120) · chrome (topbar `filter:brightness`→bg).
 - **standalone** пересобран со всеми волнами (`e12a58b`, 34 webp inline, cyan=0) — rebuild = `python .scratch/rebuild_standalone_full.py` (ре-применяет wave_*.py к standalone, retarget path).
+- **🎨 Wave M — плеер locked calm-blue** (`42d1902`, Эльбик Variant A): «цвет-от-обложки» (--np-accent/GOROD-042) сэмплил красный с обложки Крида → красный progress + red glow-ореол на #/track. Локнул `--np-accent`=#5168FC (стоп сэмплинг), убрал цветные glow-ореолы (track cover + np-transition, §0.5), progress=фикс синий. **0 красного, один синий акцент.** dev + standalone.
 
 **Информированно отложено (low-value/risk, НЕ prod-visible):** `scaleX` ×12 = бренд-вордмарк ГОРОД.FM (intentional Actay-Wide-стретч, НЕ трогать) + dead hidden-tile/dev labels · chrome sidebar-row-geometry + tabbar split-indicator + topbar contextual-title (med-risk, низкая ценность) · recap glyph→SVG (✓▲−→) · P2 render-identical токенизации (raw hex == token value) · dead library/favorites CSS-rule блок-deletion (градиенты уже neutralized) · taste saved-rows interactivity (honesty — текст-claim можно убрать).
 **PUSH при `sync`.** 🔒 Эльбик-gate (НЕ Claude): GOROD-029 позиционирование · GOROD-030 лицензии.
