@@ -582,7 +582,7 @@
       .player-mini-progress-fill {
         height: 100%;
         width: 30%;
-        background: var(--np-accent);   /* color-from-cover (GOROD-042) */
+        background: var(--brand-blue-light);   /* single blue accent — player neutral until real art */
         border-radius: var(--r-pill);
         transition: width var(--t-slow), background var(--t-slow);
       }
@@ -595,7 +595,7 @@
         background: var(--surf-glass-20);
         flex-shrink: 0;
         overflow: hidden;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 4px 20px -4px var(--np-accent);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
         transition: box-shadow var(--t-slow);
       }
       .player-mini-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -751,10 +751,10 @@
         align-items: center;
         justify-content: center;
         gap: 0;
-        background: rgba(12, 11, 11, 0.30);
-        backdrop-filter: blur(36px) saturate(1.3);
-        -webkit-backdrop-filter: blur(36px) saturate(1.3);
-        padding: 0;
+        background: rgba(11, 12, 15, 0.60);
+        backdrop-filter: blur(36px) saturate(1.2);
+        -webkit-backdrop-filter: blur(36px) saturate(1.2);
+        padding: 24px;
         overflow-y: auto;
         overflow-x: hidden;
       }
@@ -768,19 +768,24 @@
       .player-full-window {
         position: relative;
         width: 100%;
-        max-width: 736px;
-        min-height: 100dvh;
+        max-width: 720px;
+        max-height: min(880px, 92dvh);
+        margin: auto;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(36px);
-        -webkit-backdrop-filter: blur(36px);
-        background: rgba(0, 0, 0, 0.18);
-        border-radius: 16px;
-        overflow: hidden;
-        padding: 80px 40px 40px;
+        border: 1px solid var(--hairline);
+        background:
+          radial-gradient(120% 80% at 50% 0%, rgba(81,104,252,0.10), transparent 55%),
+          rgba(20, 22, 28, 0.70);
+        backdrop-filter: blur(28px) saturate(1.2);
+        -webkit-backdrop-filter: blur(28px) saturate(1.2);
+        border-radius: var(--r-xl);
+        box-shadow: var(--sh-4);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 56px 40px 32px;
         box-sizing: border-box;
       }
 
@@ -910,21 +915,22 @@
 
       /* Cover view: single large cover desktop */
       .player-full-cover-desktop {
-        width: 580px;
-        height: 580px;
-        border-radius: 24px;
+        width: min(360px, 72vmin);
+        height: min(360px, 72vmin);
+        border-radius: var(--r-lg);
         flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #1a4fa0 0%, #7b2d8b 60%, #c43a6e 100%);
-        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+        background: var(--surface-1);
+        border: 1px solid var(--hairline);
+        box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
       }
 
       .player-full-cover-desktop svg {
-        width: 80px;
-        height: 80px;
-        stroke: rgba(255, 255, 255, 0.5);
+        width: 56px;
+        height: 56px;
+        stroke: var(--text-ter);
         fill: none;
         stroke-width: 1.5;
       }
@@ -1002,19 +1008,18 @@
       }
 
       .player-full-title {
-        font-size: 24px;
-        font-weight: 500;
-        color: #EAF0FF;
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--text-pri);
         text-wrap: balance;
         line-height: 1.2;
+        letter-spacing: -0.01em;
       }
 
       .player-full-artist {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 400;
-        color: rgba(255, 255, 255, 0.70);
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+        color: var(--text-sec);
         text-wrap: balance;
       }
 
@@ -1236,7 +1241,7 @@
       .player-progress-fill {
         height: 100%;
         width: 30%;
-        background: linear-gradient(90deg, var(--player-accent), var(--brand-cyan));
+        background: var(--brand-blue-light);
         border-radius: var(--r-pill);
         transition: width var(--t-slow);
       }
@@ -1246,7 +1251,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 60px;
+        gap: 28px;
+        max-width: 280px;
+        margin: 0 auto;
         flex-shrink: 0;
         padding: 12px 0;
       }
@@ -1258,18 +1265,19 @@
         align-items: center;
         justify-content: center;
         border-radius: var(--r-pill);
-        background: var(--surf-glass-12);
-        border: 1px solid rgba(255,255,255,0.1);
-        color: var(--text-pri);
+        background: none;
+        border: none;
+        color: var(--text-sec);
         cursor: pointer;
-        transition: background var(--t-fast), filter var(--t-fast);
+        transition: background var(--t-fast), color var(--t-fast);
         flex-shrink: 0;
         min-width: 44px;
         min-height: 44px;
       }
 
       .player-transport-btn:hover {
-        background: var(--surf-glass-20);
+        background: var(--surf-hover);
+        color: var(--text-pri);
       }
 
       .player-transport-btn svg {
@@ -1283,10 +1291,12 @@
       }
 
       .player-transport-btn--play {
-        width: 56px;
-        height: 56px;
-        background: rgba(255,255,255,0.22);
-        border-color: rgba(255,255,255,0.3);
+        width: 64px;
+        height: 64px;
+        background: var(--brand-blue-light);
+        border: none;
+        color: #fff;
+        box-shadow: 0 6px 20px -6px rgba(81, 104, 252, 0.5);
       }
 
       .player-transport-btn--play svg {
@@ -1296,7 +1306,7 @@
       }
 
       .player-transport-btn--play:hover {
-        background: rgba(255,255,255,0.32);
+        background: var(--brand-blue-hover);
       }
 
       /* ---- Mobile tabbar ------------------------------------------------- */
@@ -8863,7 +8873,7 @@
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: linear-gradient(135deg, #1a4fa0, #7b2d8b, #c43a6e);" aria-hidden="true">ID</div>
+                    <div class="track-history-cover" style="background: var(--surface-1);" aria-hidden="true">ID</div>
                     <div class="track-history-meta">
                       <div class="track-history-title">Demons</div>
                       <div class="track-history-subtitle">
@@ -10157,17 +10167,17 @@
           <!-- Mobile: 3-cover carousel -->
           <div class="player-full-carousel" aria-label="Карусель треков">
             <div class="player-full-carousel-item" aria-label="Предыдущий трек">
-              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: linear-gradient(135deg, #1a4fa0, #5168FC);">Moment Apart</div>
+              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: var(--surface-1);">Moment Apart</div>
               <div class="player-full-carousel-track-title">Moment Apart</div>
               <div class="player-full-carousel-track-artist">ODESZA</div>
             </div>
             <div class="player-full-carousel-item" aria-label="Текущий трек">
-              <div class="player-full-carousel-cover player-full-carousel-cover--center" style="background: linear-gradient(135deg, #1a4fa0, #7b2d8b, #c43a6e);">Believer</div>
+              <div class="player-full-carousel-cover player-full-carousel-cover--center" style="background: var(--surface-1);">Believer</div>
               <div class="player-full-carousel-track-title">Believer</div>
               <div class="player-full-carousel-track-artist">Imagine Dragons</div>
             </div>
             <div class="player-full-carousel-item" aria-label="Следующий трек">
-              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: linear-gradient(135deg, #1a6b3a, #2ecc71);">Shortwave</div>
+              <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: var(--surface-1);">Shortwave</div>
               <div class="player-full-carousel-track-title">Shortwave</div>
               <div class="player-full-carousel-track-artist">Ryan Grigdry</div>
             </div>
