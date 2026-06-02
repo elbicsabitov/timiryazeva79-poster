@@ -5695,6 +5695,54 @@
       [data-track-view="lyrics"] .track-stage-lyrics  { display: flex; }
       [data-track-view="история"] .track-stage-history { display: flex; }
 
+      /* ===== GOROD-047a — Трек explainability (cover override + why + vector + neighbors) ===== */
+      .track-cover {
+        --track-tint: var(--np-accent, var(--brand-blue-light));
+        display: flex; align-items: center; justify-content: center;
+        background: color-mix(in oklab, var(--track-tint) 22%, #111318) !important;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.55), 0 0 64px -16px var(--track-tint);
+      }
+      .track-cover-mono { font-family: 'Onest', sans-serif; font-weight: 800; font-size: clamp(72px, 16vw, 132px); line-height: 1; color: #fff; letter-spacing: -0.02em; text-shadow: 0 2px 24px rgba(0,0,0,0.35); }
+      .track-stage-why { width: 100%; max-width: 620px; margin: 0 auto; padding: 8px 24px 0; box-sizing: border-box; }
+      .track-why { margin: 0 0 28px; }
+      .track-why-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 20px; color: #fff; margin: 0 0 14px; letter-spacing: -0.01em; }
+      .track-why-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+      .track-why-row { display: flex; align-items: center; gap: 11px; padding: 12px 13px; border-radius: 11px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); transition: opacity var(--t-fast); }
+      .track-why-row.is-rejected { opacity: 0.5; }
+      .track-why-row.is-rejected .track-why-text { text-decoration: line-through; }
+      .track-why-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-blue-light); flex: none; }
+      .track-why-text { flex: 1 1 auto; font-family: 'Onest', sans-serif; font-size: 14px; line-height: 1.45; color: rgba(255,255,255,0.86); }
+      .track-why-text b { color: #fff; font-weight: 700; }
+      .track-why-fix { flex: none; background: none; border: 1px solid rgba(255,255,255,0.16); color: var(--text-sec); font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600; padding: 7px 13px; min-height: 44px; border-radius: var(--r-pill); cursor: pointer; transition: color var(--t-fast), border-color var(--t-fast); white-space: nowrap; }
+      .track-why-fix:hover { color: #fff; border-color: var(--brand-blue-light); }
+      .track-why-fix:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .track-why-status { margin: 12px 0 0; font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.5; color: var(--accent-on-dark); min-height: 18px; }
+      .track-vector { margin: 0 0 8px; }
+      .track-vector-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; }
+      .track-vector-title { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 20px; color: #fff; margin: 0; letter-spacing: -0.01em; }
+      .track-vector-list { display: flex; flex-direction: column; gap: 12px; }
+      .track-vector-row { display: grid; grid-template-columns: 92px auto 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 4px; align-items: center; }
+      .track-vector-k { grid-column: 1; font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.92); }
+      .track-vector-v { grid-column: 2; font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; color: var(--accent-on-dark); white-space: nowrap; }
+      .track-vector-bar { grid-column: 3; height: 6px; border-radius: var(--r-pill); background: rgba(255,255,255,0.08); overflow: hidden; }
+      .track-vector-fill { height: 100%; border-radius: var(--r-pill); background: var(--brand-blue-light); }
+      .track-vector-why { grid-column: 1 / -1; grid-row: 2; font-family: 'Onest', sans-serif; font-size: 12px; color: rgba(235,235,245,0.60); line-height: 1.4; }
+      .demo-tag { display: inline-flex; align-items: center; font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-on-dark); background: rgba(81,104,252,0.12); border: 1px solid rgba(81,104,252,0.28); border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap; }
+      .track-neighbors-band { width: 100%; max-width: 620px; margin: 8px auto 0; padding: 0 24px; box-sizing: border-box; }
+      .track-neighbors-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; }
+      .track-neighbors-heading { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 18px; color: #fff; margin: 0; letter-spacing: -0.01em; }
+      .track-neighbors-row { display: flex; flex-direction: column; gap: 10px; }
+      .track-neighbor { display: flex; align-items: center; gap: 13px; width: 100%; text-align: left; padding: 10px 12px; min-height: 64px; cursor: pointer; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-base); transition: background var(--t-fast), border-color var(--t-fast); }
+      .track-neighbor:hover { background: rgba(255,255,255,0.07); border-color: rgba(81,104,252,0.40); }
+      .track-neighbor:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .track-neighbor-cover { width: 48px; height: 48px; flex: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: color-mix(in oklab, var(--brand-blue-light) 20%, #191C24); }
+      .track-neighbor-mono { font-family: 'Onest', sans-serif; font-weight: 800; font-size: 16px; color: #fff; }
+      .track-neighbor-meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+      .track-neighbor-title { font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; color: #fff; }
+      .track-neighbor-artist { font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.62); }
+      .track-neighbor-why { font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600; color: var(--accent-on-dark); margin-top: 2px; }
+      @media (prefers-reduced-motion: reduce) { .track-why-row, .track-why-fix, .track-neighbor { transition: none; } }
+
       /* ---- Up-next carousel (cover view) ------------------------------------- */
 
       .track-up-next-label {
@@ -8904,25 +8952,19 @@
 
           <!-- ---- A. Hero band ------------------------------------------------- -->
           <div class="track-hero">
-            <p class="track-eyebrow" aria-hidden="true">Сейчас играет · ГОРОД РОК · 103.5 FM</p>
+            <p class="track-eyebrow" aria-hidden="true">Сейчас играет · ГОРОД ПОП · 105.2 FM</p>
 
             <!-- Large album cover -->
-            <div class="track-cover" aria-hidden="true">
-              <!-- Abstract art: 3 concentric arcs -->
-              <svg viewBox="0 0 96 96" aria-hidden="true">
-                <circle cx="48" cy="48" r="38" stroke-width="1.5" stroke-dasharray="6 5"/>
-                <circle cx="48" cy="48" r="26" stroke-width="1.5" stroke-dasharray="8 4"/>
-                <circle cx="48" cy="48" r="12" stroke-width="1.5"/>
-                <circle cx="48" cy="48" r="4" fill="rgba(255,255,255,0.5)" stroke="none"/>
-              </svg>
+            <div class="track-cover" id="track-cover" aria-hidden="true">
+              <span class="track-cover-mono" id="track-cover-mono">ЕК</span>
             </div>
 
             <!-- Track title -->
-            <h2 class="track-title" id="track-page-title">Believer</h2>
+            <h2 class="track-title" id="track-page-title">Когда ты со мной</h2>
             <!-- Artist -->
-            <p class="track-artist" id="track-page-artist">IMAGINE DRAGONS</p>
+            <p class="track-artist" id="track-page-artist">ЕГОР КРИД</p>
             <!-- Album -->
-            <p class="track-album-line" id="track-page-album">альбом · Night Visions · 2012</p>
+            <p class="track-album-line" id="track-page-album">альбом · Дитя · 2023</p>
           </div>
           <!-- /hero -->
 
@@ -9082,52 +9124,21 @@
           <div class="track-view-region">
 
             <!-- VIEW: cover — up-next carousel -->
-            <div class="track-stage-cover" aria-label="Рекомендуемые треки">
-              <p class="track-up-next-label" aria-hidden="true">ДАЛЕЕ В ЭФИРЕ</p>
-              <div class="track-up-next-row" role="list" aria-label="Следующие треки">
-
-                <button
-                  class="track-up-next-card track-up-next-card--side"
-                  type="button"
-                  role="listitem"
-                  aria-label="Перейти к треку: Moment Apart — ODESZA"
-                  data-track-title="Moment Apart"
-                  data-track-artist="ODESZA"
-                  data-track-album="In Return · 2014"
-                >
-                  <div class="track-up-next-cover" style="background: linear-gradient(135deg, #1a4fa0, #56afd7);" aria-hidden="true">Moment Apart</div>
-                  <div class="track-up-next-title">Moment Apart</div>
-                  <div class="track-up-next-artist">ODESZA</div>
-                </button>
-
-                <button
-                  class="track-up-next-card track-up-next-card--current"
-                  type="button"
-                  role="listitem"
-                  aria-label="Текущий трек: Believer — IMAGINE DRAGONS"
-                  data-track-title="Believer"
-                  data-track-artist="IMAGINE DRAGONS"
-                  data-track-album="Night Visions · 2012"
-                >
-                  <div class="track-up-next-cover" style="background: linear-gradient(135deg, #1a4fa0, #7b2d8b, #c43a6e);" aria-hidden="true">Believer</div>
-                  <div class="track-up-next-title">Believer</div>
-                  <div class="track-up-next-artist">IMAGINE DRAGONS</div>
-                </button>
-
-                <button
-                  class="track-up-next-card track-up-next-card--side"
-                  type="button"
-                  role="listitem"
-                  aria-label="Перейти к треку: Shortwave — RYAN GRIGDRY"
-                  data-track-title="Shortwave"
-                  data-track-artist="RYAN GRIGDRY"
-                  data-track-album="Shortwave · 2019"
-                >
-                  <div class="track-up-next-cover" style="background: linear-gradient(135deg, #1a6b3a, #2ecc71);" aria-hidden="true">Shortwave</div>
-                  <div class="track-up-next-title">Shortwave</div>
-                  <div class="track-up-next-artist">RYAN GRIGDRY</div>
-                </button>
-
+            <div class="track-stage-cover">
+              <!-- GOROD-047a — центр = «Почему играет» (L2 explainability) + вектор трека -->
+              <div class="track-stage-why">
+                <section class="track-why" aria-labelledby="track-why-h">
+                  <h2 class="track-why-title" id="track-why-h">Почему играет</h2>
+                  <ul class="track-why-list" id="track-why-list" role="list"></ul>
+                  <p class="track-why-status" id="track-why-status" role="status" aria-live="polite"></p>
+                </section>
+                <section class="track-vector" aria-labelledby="track-vector-h">
+                  <div class="track-vector-head">
+                    <h2 class="track-vector-title" id="track-vector-h">Вектор трека</h2>
+                    <span class="demo-tag" aria-label="демонстрационные данные">демо-вектор</span>
+                  </div>
+                  <div class="track-vector-list" id="track-vector-list"></div>
+                </section>
               </div>
             </div>
             <!-- /cover view -->
@@ -9319,116 +9330,15 @@
           </div>
           <!-- /view-state region -->
 
-          <!-- ---- E. Footer — "Также любят слушать" ------------------------------ -->
-          <div class="track-also-band">
-            <h2 class="track-also-heading">Также любят слушать</h2>
-
-            <div
-              class="track-also-row"
-              id="track-also-row"
-              role="list"
-              aria-label="Похожие треки"
-            >
-
-              <button
-                class="track-also-card"
-                type="button"
-                role="listitem"
-                aria-label="Перейти к треку: Enemy — IMAGINE DRAGONS × JID"
-                data-track-title="Enemy"
-                data-track-artist="IMAGINE DRAGONS × JID"
-                data-track-album="Arcane: Season 1 · 2021"
-              >
-                <div class="track-also-cover" style="background: linear-gradient(135deg, #0d0d0d, #c43a6e);" aria-hidden="true"></div>
-                <div class="track-also-meta">
-                  <div class="track-also-title">Enemy</div>
-                  <div class="track-also-artist">IMAGINE DRAGONS × JID</div>
-                </div>
-              </button>
-
-              <button
-                class="track-also-card"
-                type="button"
-                role="listitem"
-                aria-label="Перейти к треку: Thunder — IMAGINE DRAGONS"
-                data-track-title="Thunder"
-                data-track-artist="IMAGINE DRAGONS"
-                data-track-album="Evolve · 2017"
-              >
-                <div class="track-also-cover" style="background: linear-gradient(135deg, #1a4fa0, #56afd7);" aria-hidden="true"></div>
-                <div class="track-also-meta">
-                  <div class="track-also-title">Thunder</div>
-                  <div class="track-also-artist">IMAGINE DRAGONS</div>
-                </div>
-              </button>
-
-              <button
-                class="track-also-card"
-                type="button"
-                role="listitem"
-                aria-label="Перейти к треку: Whatever It Takes — IMAGINE DRAGONS"
-                data-track-title="Whatever It Takes"
-                data-track-artist="IMAGINE DRAGONS"
-                data-track-album="Evolve · 2017"
-              >
-                <div class="track-also-cover" style="background: linear-gradient(135deg, #7b2d8b, #c43a6e);" aria-hidden="true"></div>
-                <div class="track-also-meta">
-                  <div class="track-also-title">Whatever It Takes</div>
-                  <div class="track-also-artist">IMAGINE DRAGONS</div>
-                </div>
-              </button>
-
-              <button
-                class="track-also-card"
-                type="button"
-                role="listitem"
-                aria-label="Перейти к треку: Demons — IMAGINE DRAGONS"
-                data-track-title="Demons"
-                data-track-artist="IMAGINE DRAGONS"
-                data-track-album="Night Visions · 2012"
-              >
-                <div class="track-also-cover" style="background: linear-gradient(135deg, #2c3e50, #7b2d8b);" aria-hidden="true"></div>
-                <div class="track-also-meta">
-                  <div class="track-also-title">Demons</div>
-                  <div class="track-also-artist">IMAGINE DRAGONS</div>
-                </div>
-              </button>
-
-              <button
-                class="track-also-card"
-                type="button"
-                role="listitem"
-                aria-label="Перейти к треку: Radioactive — IMAGINE DRAGONS"
-                data-track-title="Radioactive"
-                data-track-artist="IMAGINE DRAGONS"
-                data-track-album="Night Visions · 2012"
-              >
-                <div class="track-also-cover" style="background: linear-gradient(135deg, #1a6b3a, #56afd7);" aria-hidden="true"></div>
-                <div class="track-also-meta">
-                  <div class="track-also-title">Radioactive</div>
-                  <div class="track-also-artist">IMAGINE DRAGONS</div>
-                </div>
-              </button>
-
-              <button
-                class="track-also-card"
-                type="button"
-                role="listitem"
-                aria-label="Перейти к треку: Bones — IMAGINE DRAGONS"
-                data-track-title="Bones"
-                data-track-artist="IMAGINE DRAGONS"
-                data-track-album="Mercury — Acts 1 &amp; 2 · 2022"
-              >
-                <div class="track-also-cover" style="background: linear-gradient(135deg, #e64a19, #1a4fa0);" aria-hidden="true"></div>
-                <div class="track-also-meta">
-                  <div class="track-also-title">Bones</div>
-                  <div class="track-also-artist">IMAGINE DRAGONS</div>
-                </div>
-              </button>
-
+          <!-- ---- E. Соседи по атрибутам — НЕ «вам также понравится» (GOROD-047a, AUDIT §4) -->
+          <div class="track-neighbors-band">
+            <div class="track-neighbors-head">
+              <h2 class="track-neighbors-heading">Рядом по звучанию</h2>
+              <span class="demo-tag" aria-label="демонстрационные данные">демо-вектор</span>
             </div>
+            <div class="track-neighbors-row" id="track-neighbors-row" role="list" aria-label="Треки с общим атрибутом"></div>
           </div>
-          <!-- /also-band -->
+          <!-- /neighbors-band -->
 
         </div>
         <!-- /.track-page -->
@@ -14762,6 +14672,89 @@
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'complete' || document.readyState === 'interactive') onRoute();
     else window.addEventListener('DOMContentLoaded', onRoute);
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-047a — Трек: explainability-экран. «Почему играет» (L2, reject→общий
+     gorodfm_rejected как TwinrWhy) + вектор (bar-meter, демо) + соседи по АТРИБУТАМ. ---- */
+  (function () {
+    'use strict';
+    var REJ_KEY = 'gorodfm_rejected';
+    var WHY = [
+      { id: 'artist', short: 'Артист',     t: 'Егор Крид — ты <b>дослушал до конца 3 раза</b> за неделю' },
+      { id: 'vocal',  short: 'Вокал',      t: '<b>Тёплый поп-вокал</b> (мужской) — паттерн, который ты часто дослушиваешь' },
+      { id: 'tempo',  short: 'Темп',       t: '<b>105 BPM</b> — попадает в твой вечерний диапазон 90–110' },
+      { id: 'mood',   short: 'Настроение', t: 'Настроение «спокойно-тёплое» → <b>ты сам выбрал «Спокойно»</b> в контексте' }
+    ];
+    var VECTOR = [
+      { k: 'Темп',         v: '105 BPM',         pct: 58, why: 'средний — твой вечерний диапазон' },
+      { k: 'Энергия',      v: 'средняя',         pct: 52, why: 'ровная, без скачков' },
+      { k: 'Вокал',        v: 'мужской, тёплый', pct: 78, why: 'твой частый паттерн дослушивания' },
+      { k: 'Акустичность', v: 'низкая',          pct: 30, why: 'электронная аранжировка' }
+    ];
+    var NEIGHBORS = [
+      { mono: 'ЧA', title: 'Часики',      artist: 'Miyagi & Эндшпиль', why: 'тот же темп ~105 BPM' },
+      { mono: 'ГИ', title: 'Гипнозы',     artist: 'Markul',            why: 'тот же тёплый мужской вокал' },
+      { mono: 'НE', title: 'Не свидимся', artist: 'Скриптонит',        why: 'та же эпоха — релизы 2022–23' }
+    ];
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function stripTags(s) { return String(s == null ? '' : s).replace(/<[^>]*>/g, ''); }
+    function getRej() { try { return JSON.parse(localStorage.getItem(REJ_KEY) || '[]'); } catch (e) { return []; } }
+    function setRej(a) { try { localStorage.setItem(REJ_KEY, JSON.stringify(a)); } catch (e) {} }
+    function renderWhy() {
+      var list = $('track-why-list'); if (!list) return;
+      var rej = getRej(); list.innerHTML = '';
+      WHY.forEach(function (r) {
+        var isRej = rej.indexOf(r.id) !== -1;
+        var li = document.createElement('li'); li.className = 'track-why-row' + (isRej ? ' is-rejected' : ''); li.setAttribute('role', 'listitem');
+        li.innerHTML = '<span class="track-why-dot" aria-hidden="true"></span><span class="track-why-text">' + r.t + '</span>' +
+          '<button class="track-why-fix" type="button" aria-label="' + (isRej ? 'Вернуть причину: ' : 'Исправить причину: ') + esc(stripTags(r.t)) + '">' + (isRej ? 'вернуть' : 'исправить причину') + '</button>';
+        li.querySelector('.track-why-fix').addEventListener('click', function () { toggle(r); });
+        list.appendChild(li);
+      });
+    }
+    function toggle(r) {
+      var rej = getRej(), i = rej.indexOf(r.id), nowRej;
+      if (i === -1) { rej.push(r.id); nowRej = true; } else { rej.splice(i, 1); nowRej = false; }
+      setRej(rej); renderWhy();
+      var st = $('track-why-status');
+      if (st) { st.innerHTML = nowRej ? ('✓ Убрал причину «' + esc(r.short) + '» — пересчитываю волну. Виден и в «Мой вкус».') : ('Вернул «' + esc(r.short) + '» в причины.'); }
+      if (window.TwinrWave) window.TwinrWave.bump();
+      if (nowRej && window.TwinrRibbon) window.TwinrRibbon.show('Убрал из волны: <b>' + esc(r.short) + '</b>. <span class="ai-why">меньше такого дальше</span>.');
+    }
+    function renderVector() {
+      var box = $('track-vector-list'); if (!box) return; box.innerHTML = '';
+      VECTOR.forEach(function (a) {
+        var row = document.createElement('div'); row.className = 'track-vector-row';
+        row.setAttribute('aria-label', a.k + ': ' + a.v + ' — ' + a.why);
+        row.innerHTML = '<span class="track-vector-k">' + esc(a.k) + '</span><span class="track-vector-v">' + esc(a.v) + '</span>' +
+          '<div class="track-vector-bar" aria-hidden="true"><div class="track-vector-fill" style="width:' + (a.pct | 0) + '%"></div></div>' +
+          '<span class="track-vector-why">' + esc(a.why) + '</span>';
+        box.appendChild(row);
+      });
+    }
+    function renderNeighbors() {
+      var row = $('track-neighbors-row'); if (!row) return; row.innerHTML = '';
+      NEIGHBORS.forEach(function (n) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'track-neighbor'; b.setAttribute('role', 'listitem');
+        b.setAttribute('aria-label', 'Трек ' + n.title + ' — ' + n.artist + '. Причина: ' + n.why);
+        b.innerHTML = '<span class="track-neighbor-cover" aria-hidden="true"><span class="track-neighbor-mono">' + esc(n.mono) + '</span></span>' +
+          '<span class="track-neighbor-meta"><span class="track-neighbor-title">' + esc(n.title) + '</span><span class="track-neighbor-artist">' + esc(n.artist) + '</span><span class="track-neighbor-why">' + esc(n.why) + '</span></span>';
+        row.appendChild(b);
+      });
+    }
+    function tintCover() {
+      var cover = $('track-cover'); if (!cover) return;
+      var c = getComputedStyle(document.documentElement).getPropertyValue('--np-accent').trim() || '#5168FC';
+      cover.style.setProperty('--track-tint', c);
+    }
+    function render() { renderWhy(); renderVector(); renderNeighbors(); tintCover(); }
+    function onRoute() { if ((location.hash || '') === '#/track') render(); }
+    window.addEventListener('hashchange', onRoute);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
+    window.GorodTrack = { render: render };
   })();
   </script>
 
