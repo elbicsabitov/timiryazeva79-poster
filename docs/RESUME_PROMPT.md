@@ -1,6 +1,22 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-6) — AI-радио: P2 **`GOROD-050` еженедельный Twinr-recap + 9:16 шеринг-карточка** DONE + 2-линзовое review (**ship**) + 4 находки пофикшены + PUSHED + standalone пересобран (2.4 MB)
+## ⚡ LATEST (2026-06-02 cont-7) — ДВА РЕСЁРЧА (директива «делаем лучший сервис»). Блюпринт-workflow прерван оператором; всё захвачено в durable-доки
+
+🎯 **Эльбик directive cont-7:** «продумай фулл структуру, все страницы и UX/UI ресёрч и по архитектуре на Карпати-уровне — делаем ЛУЧШИЙ сервис». Затем «прерывай что есть и делай передачу».
+
+**Что захвачено (durable, в repo):**
+1. ✅ **`docs/superpowers/SPEC-gorod-051-context-starts.md`** — ПОЛНЫЙ build-ready спек GOROD-051 (контекст-старты Утро/День/Вечер/Ночь + Тренировка/Дорога). Модуль `window.GorodContext` на **#/taste** (аддитивно, рядом с волной) + backward-compatible `TwinrWave.setContext` (детерм. amp/speed/энергия/оттенок по контексту; bump/audio не тронуты). time-aware дефолт `getHours()`. **Honesty-floor:** не вести волну без тапа (suggest-only, как GorodRecap). **Доказано НЕ триггерит gated 045** (#/home pixel-perfect не тронут — волна живёт только на #/taste, единственная честная поверхность). localStorage `gorodfm_context`. Вставка: новая `<section class="ctx-strip">` между `</header>` taste-hero (стр. 9632) и `.taste-body` (9634). **→ ГОТОВ К БИЛДУ как есть.**
+2. ⚠️ **`docs/superpowers/BLUEPRINT-research-dimensions-partial.md`** — 7/9 Karpathy-измерений full-service блюпринта (workflow `w1lo7vxfi` ПРЕРВАН до синтеза). Захвачены: **core-радио/Волна** (045-phasing + steering), **Открыть/discovery** (karta-vkusa не существует, search=keywords), **wedge/профиль** (wedge = «3 разрозненных острова» TwinrWhy/GorodTaste/GorodProfile — НЕ связаны), **habit/онбординг/recap/social**, **AI/recsys-архитектура** (reason_tag moat, MVP→scale), **дизайн-система** (🐛 нашёл РЕАЛЬНЫЙ баг: один-акцент нарушен — фиолетовый `#8b5cf6` в волне `designs/gorod-fm.html:12927`) + 1 тонкий выход. **НЕ дошли** ~2 из {IA/навигация, legacy-rework Артист-Трек-Медиатека, монетизация} — но они УЖЕ покрыты `AUDIT-gorod-fm-screens-and-service.md` (§2 IA · §1/§4 legacy · §7 монетизация). Синтез + completeness-критик НЕ запускались.
+
+**СЛЕД. СЕССИЯ (START HERE):**
+- **A) Доделать блюпринт:** перезапустить сохранённый скрипт `…/workflows/scripts/gorod-full-service-blueprint-wf_dc2f3a03-be5.js` (Workflow({scriptPath})) для полного мастер-дока, ИЛИ синтезировать `docs/superpowers/BLUEPRINT-gorod-fm-full-service.md` из 7 partial-измерений + AUDIT (покрывает 2 недостающих). Структура синтеза — в скрипте (фазы synth/review).
+- **B) Или сразу строить GOROD-051** по готовому SPEC (самодостаточен, не ждёт блюпринта).
+- **Быстрофикс из ресёрча (можно сразу):** дизайн-агент флагнул фиолетовый `#8b5cf6` в `LAYERS` волны (стр. 12927) — нарушение «один акцент»; заменить на `--brand-blue-light`/оттенок синего (anti-slop).
+- Доки-пойнтеры выше = **содержимое ресёрчей**; этот блок = **выводы**.
+
+---
+
+## ⚡ cont-6 (2026-06-02) — AI-радио: P2 **`GOROD-050` еженедельный Twinr-recap + 9:16 шеринг-карточка** DONE + 2-линзовое review (**ship**) + 4 находки пофикшены + PUSHED + standalone пересобран (2.4 MB)
 
 📖 Эта сессия (cont-6): построен новый экран **`#/recap`** (модуль `window.GorodRecap`, decoupled trailing-script). HERO = **детерминированная слово-идентичность** из реального вектора (`buildIdentity`: mood×temp→noun + genitive grain; NO rng/Date в идентичности → fidelity) · genre-**bloom** SVG (лепесток=вес, dominant=белый узел + green grow-ring) · поведенческие **+/− дельты** («−» ТОЛЬКО из реального `gorodfm_rejected`) · 1 неожиданное **открытие** · **defense-receipt** (`--accent-on-dark`). НЕ vanity-числа (ошибка Wrapped). Вход = бывшая заглушка `#taste-share` («Поделиться карточкой») → `#/recap`. Honest share = копирует ТЕКСТ (no fake API). **Cold-профиль** (нет picks И нет rejections) → честный empty-state (без выдуманного провенанса — `hasRealSignal()` гейт). Данные байт-идентичны `GorodProfile` → views не могут разойтись. Commits: `77f4fad` (feat) + `cecbeaa` (standalone+gitignore .scratch). Karpathy-research-workflow + 2-lens review-workflow. 12 `<script>`-блоков `node --check` ✓, zero console errors.
 

@@ -1,6 +1,15 @@
-# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-6)
+# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-7)
 
-**Branch:** master — **ВСЁ ЗАКОММИЧЕНО И ЗАПУШЕНО** (`origin/master`, HEAD `cecbeaa`+docs).
+**Branch:** master — закоммичено, push в финале sync (HEAD `161c9fa`+).
+
+## cont-7 — ДВА РЕСЁРЧА захвачены (директива «делаем лучший сервис»), блюпринт прерван оператором
+Эльбик: «продумай фулл структуру, все страницы, UX/UI ресёрч, архитектуру — Карпати-уровень, лучший сервис» → затем «прерывай что есть, делай передачу».
+- ✅ **`SPEC-gorod-051-context-starts.md`** — полный build-ready спек контекст-стартов (модуль `GorodContext` на #/taste + `TwinrWave.setContext`, аддитивно, НЕ триггерит 045, honesty-floor suggest-only, `getHours` дефолт, `gorodfm_context`). **Готов к билду.**
+- ⚠️ **`BLUEPRINT-research-dimensions-partial.md`** — 7/9 измерений (workflow `w1lo7vxfi`/`wf_dc2f3a03-be5` прерван ДО синтеза+критика): core-радио · discovery · wedge · habit · AI-архитектура · дизайн-система + 1 тонкий. НЕ дошли ~2 из {IA · legacy-rework · монетизация} — покрыты `AUDIT...§1/§2/§4/§7`. **🐛 находка дизайн-агента:** фиолетовый `#8b5cf6` в `LAYERS` волны (`gorod-fm.html:12927`) нарушает «один акцент» — заменить на синий-оттенок.
+- **Next:** (A) доделать блюпринт — перезапустить скрипт `gorod-full-service-blueprint-wf_dc2f3a03-be5.js` ИЛИ синтезировать `BLUEPRINT-gorod-fm-full-service.md` из 7 partial + AUDIT; (B) или сразу строить GOROD-051 по SPEC. Детали → `docs/RESUME_PROMPT.md` cont-7.
+
+---
+
 **Read-first order:** этот файл → `docs/superpowers/AUDIT-gorod-fm-screens-and-service.md` §8 (forward-план GOROD-040..057) → `VISION-gorod-fm-ai-driven.md` (продуктовая визия).
 **Предшественник:** `HANDOFF-gorod-fm-ai-product.md` (AI-pivot). **Session log:** `.claude-memory/session_2026_06_02_gorod_fm_resume_cont.md` (содержит cont-2…cont-5).
 
