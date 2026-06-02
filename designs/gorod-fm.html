@@ -97,8 +97,9 @@
 
         /* — Text — */
         --text-pri:        #FFFFFF;
-        --text-sec:        rgba(255, 255, 255, 0.70);
-        --text-quat:       rgba(235, 235, 245, 0.60);  /* Apple secondary-dark */
+        --text-sec:        rgba(255, 255, 255, 0.62);  /* dropped .70->.62 so primary pops (polish §0.1) */
+        --text-ter:        rgba(255, 255, 255, 0.40);  /* tertiary/decorative; essential meta uses --text-sec */
+        --text-quat:       rgba(235, 235, 245, 0.60);  /* legacy alias (migrating to sec/ter per surface) */
 
         /* — Radii — */
         --r-base:          10px;
@@ -109,7 +110,7 @@
         /* Tech-modern restyle (2026-06-02): neutral near-black + ONE restrained
            brand glow instead of the saturated cyan/blue wash (anti-slop, research 10).
            Reads premium/technological (Linear/Arc/Vercel) and lets cover art carry colour. */
-        --bg-base:     radial-gradient(120% 82% at 50% -8%, rgba(81,104,252,0.12) 0%, rgba(81,104,252,0) 46%), #0B0C0F;
+        --bg-base:     #0B0C0F;   /* FLAT near-black (Apple deference); brand radial lives only behind now-playing cover */
         --bg-overlay:  linear-gradient(-88.75deg, rgba(10,11,15,0) 70%, rgba(10,11,15,0.35) 88%, rgba(10,11,15,0.6) 100%);
         --tile-shade:  linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
 
@@ -147,16 +148,36 @@
            reads as SIGNAL, not decoration. The --t-* above keep every existing
            call-site; these add the vocabulary new components reuse. */
         --ease-standard:   cubic-bezier(0.2, 0.8, 0.2, 1);    /* default in / out */
-        --ease-emphasized: cubic-bezier(0.34, 1.4, 0.64, 1);  /* gentle overshoot — arrivals */
+        --ease-emphasized: cubic-bezier(0.32, 0.72, 0, 1);    /* Apple decel for sheets/arrivals (no overshoot) */
         --ease-exit:       cubic-bezier(0.4, 0, 1, 1);        /* accelerate away */
         --dur-breathe:     1600ms;   /* Twinr edge-glow "breath" while it speaks */
         --dur-announce:    1600ms;   /* between-track transition card total */
+
+        /* ===== Apple-polish design system (AUDIT-apple-polish-plan §0) ===== */
+        /* Type scale — Onest 400/500/600/700; weight does hierarchy, not colour */
+        --lh-tight: 1.08; --lh-snug: 1.14; --lh-body: 1.45; --track-tight: -0.02em;
+        --fs-display: clamp(32px, 5vw, 44px); --fs-h1: 28px; --fs-h2: 21px; --fs-h3: 17px;
+        --fs-body: 15px; --fs-caption: 13px; --fs-micro: 11px;
+        /* Spacing — 8pt grid */
+        --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 40px; --s8: 48px; --s9: 64px; --s10: 80px;
+        /* Nested radius scale (--r-base/--r-pill kept) */
+        --r-xl: 20px; --r-lg: 14px; --r-md: 10px; --r-sm: 8px;
+        /* Surfaces / elevation / material */
+        --surface-0: #111318; --surface-1: #15171D; --surface-2: #1B1E26; --surface-3: #23262F;
+        --hairline: rgba(255,255,255,.08); --divider: rgba(255,255,255,.06); --border-strong: rgba(255,255,255,.14);
+        --inset-top: inset 0 1px 0 rgba(255,255,255,.05);
+        --surf-hover: rgba(255,255,255,.10); --surf-active: rgba(255,255,255,.16);
+        /* Shadow scale (ambient, not 'halloween' glows) */
+        --sh-1: 0 1px 2px rgba(0,0,0,.30);
+        --sh-2: 0 4px 12px rgba(0,0,0,.35);
+        --sh-3: 0 12px 32px -8px rgba(0,0,0,.45);
+        --sh-4: 0 24px 56px -16px rgba(0,0,0,.50);
+        /* Accent hover + motion durations */
+        --brand-blue-hover: #6477ff;
+        --d-micro: 120ms; --d-std: 220ms; --d-emph: 340ms;
       }
 
-      /* Warm theme: player accent switches to Monte Carlo amber */
-      [data-theme="warm"] {
-        --player-accent: #d19c4f;
-      }
+      /* Warm theme retired (Apple-polish §G3) — overlay keeps the cinema palette. */
     }
 
     /* =========================================================================
@@ -268,15 +289,7 @@
         transition: opacity var(--t-slow);
       }
 
-      /* Warm bg rises when player overlay is open */
-      body[data-player-expanded] .bg-warm {
-        opacity: 1;
-      }
-
-      /* Explicit warm theme override */
-      [data-theme="warm"] .bg-warm {
-        opacity: 1;
-      }
+      /* .bg-warm retired (Apple-polish §G3) — never rises; player overlay stays cinema near-black. */
 
       @media (prefers-reduced-motion: reduce) {
         .bg-cinema,
@@ -10794,14 +10807,7 @@
       const btnPlayerBackMobile = document.getElementById('btn-player-back-mobile');
       const tabbarPlayerBtn = document.getElementById('tabbar-player-btn');
 
-      // Track theme before opening player so we can restore it on close
-      var _previousTheme = null;
-
       function openPlayer() {
-        // Save current theme and switch to warm
-        _previousTheme = document.documentElement.getAttribute('data-theme') || 'cinema';
-        applyTheme('warm');
-
         // Reset to cover view on every fresh open
         setPlayerView(lsGet(LS_KEYS.playerView, 'cover'));
 
@@ -10819,11 +10825,6 @@
       window.openPlayer = openPlayer;   // bridge for GorodHomeRadio (045) + GorodArtist (047b)
 
       function closePlayer() {
-        // Restore previous theme
-        if (_previousTheme) {
-          applyTheme(_previousTheme);
-          _previousTheme = null;
-        }
         document.body.removeAttribute('data-player-expanded');
         playerFull.setAttribute('aria-hidden', 'true');
         if (playerMini) playerMini.focus();
