@@ -2951,7 +2951,7 @@
         transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
       }
       .ai-chip:hover { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); color: #fff; }
-      .ai-chip:active { transform: scale(0.96); }
+      .ai-chip:active { transform: scale(0.98); }
       .ai-chip:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
 
       .ai-input {
@@ -7152,6 +7152,21 @@
     html[data-surface="web"] .app-shell         { grid-template-columns: var(--sidebar-w) 1fr !important; }
     html[data-surface="web"] #app               { grid-column: 2 !important; }
     html[data-surface="web"] .player-mini       { display: flex !important; bottom: 0 !important; padding: 0 20px !important; padding-bottom: max(0px, env(safe-area-inset-bottom)) !important; }
+      /* G7 (cont-11) — tactile :active scale (reduced-motion gated) + 44px tap targets */
+      @media (prefers-reduced-motion: no-preference) {
+        .home-chip:active, .home-tile:active, .home-ctx-card:active,
+        .home-radio-like:active, .home-radio-steer:active, .home-radio-skip:active,
+        .taste-ctrl:active, .taste-pin:active, .taste-saved-chip:active, .taste-share-btn:active,
+        .discover-chip:active, .discover-near-card:active, .discover-dial-btn:active, .discover-track-play:active,
+        .wave-chip:active, .profile-cta:active, .profile-facet-lower:active,
+        .track-why-fix:active, .track-neighbor:active, .ai-track-play:active {
+          transform: scale(0.98);
+        }
+      }
+      /* 44px hit area on sub-44 controls (visual size unchanged, G7 §0.6/L166) */
+      .discover-track-play, .ai-track-play, .discover-dial-btn, .taste-pin, .taste-ctrl { position: relative; }
+      .discover-track-play::before, .ai-track-play::before, .discover-dial-btn::before,
+      .taste-pin::before, .taste-ctrl::before { content: ''; position: absolute; inset: -9px; }
   </style>
 </head>
 
