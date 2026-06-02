@@ -2032,6 +2032,93 @@
         opacity: 0;
       }
 
+      /* ===================================================================
+         GOROD-045 — ВОЛНА как РАДИО (#/home default). Плитки = .home-tiles alt.
+         =================================================================== */
+      .home-radio {
+        position: relative; z-index: 5;
+        --home-np: var(--np-accent);
+        display: flex; flex-direction: column;
+        min-height: calc(100dvh - var(--player-mini-h, 84px) - var(--topbar-h, 64px));
+        max-width: 760px; margin: 0 auto; padding: 24px 24px 40px; gap: 20px;
+      }
+      .home-radio[hidden] { display: none; }
+      .home-radio-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+      .home-ctx-card {
+        display: inline-flex; align-items: center; gap: 12px; min-height: 44px;
+        padding: 10px 16px; cursor: pointer; text-align: left;
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10);
+        border-radius: var(--r-base); font-family: 'Onest', sans-serif; color: #fff;
+        transition: background var(--t-fast), border-color var(--t-fast);
+      }
+      .home-ctx-card:hover { background: rgba(81,104,252,0.12); border-color: rgba(81,104,252,0.40); }
+      .home-ctx-card:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .home-ctx-cap { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.55); }
+      .home-ctx-now { font-size: 15px; font-weight: 700; }
+      .home-ctx-act { font-size: 13px; font-weight: 600; color: var(--accent-on-dark); margin-left: 2px; }
+      .home-view-toggle { display: inline-flex; gap: 4px; padding: 4px; background: rgba(255,255,255,0.05); border-radius: var(--r-pill); }
+      .home-view-btn {
+        min-height: 36px; padding: 0 16px; cursor: pointer; border: none; background: transparent;
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.65);
+        border-radius: var(--r-pill); transition: background var(--t-fast), color var(--t-fast);
+      }
+      .home-view-btn.is-on { background: var(--tint-blue-light-20); color: #fff; }
+      .home-view-btn:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .home-radio-stage { position: relative; flex: 1 1 auto; display: flex; align-items: center; justify-content: center; min-height: 320px; }
+      .home-wave { position: absolute; left: 0; right: 0; bottom: -8px; width: 100%; height: 46%; z-index: 0; pointer-events: none; opacity: 0.9; }
+      .home-hero {
+        position: relative; z-index: 1; width: min(360px, 78vw); aspect-ratio: 1 / 1;
+        border: none; padding: 0; cursor: pointer; border-radius: 20px; overflow: hidden; background: #111318;
+        box-shadow: 0 24px 70px -16px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.06), 0 18px 60px -20px var(--home-np);
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+      }
+      .home-hero:hover { transform: translateY(-2px); box-shadow: 0 30px 80px -16px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.10), 0 24px 70px -18px var(--home-np); }
+      .home-hero:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 4px; }
+      .home-hero-art { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .home-hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 100%); pointer-events: none; }
+      .home-radio-bottom { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+      .home-radio-why {
+        display: inline-flex; align-items: center; gap: 8px; max-width: 560px; cursor: pointer;
+        background: none; border: none; padding: 4px 6px; border-radius: var(--r-base);
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.78); text-align: center;
+        transition: color var(--t-fast);
+      }
+      .home-radio-why:hover { color: #fff; }
+      .home-radio-why:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 2px; }
+      .home-radio-why svg { width: 13px; height: 13px; flex: none; color: var(--brand-blue-light); }
+      .home-radio-why-text b { color: var(--accent-on-dark); font-weight: 700; }
+      .home-radio-meta { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+      .home-radio-title { font-family: 'Onest', sans-serif; font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.01em; }
+      .home-radio-artist { font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.65); }
+      .home-radio-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 4px; }
+      .home-radio-like, .home-radio-steer {
+        min-height: 56px; cursor: pointer; font-family: 'Onest', sans-serif;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border-radius: var(--r-pill); transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+      }
+      .home-radio-like { width: 56px; padding: 0; color: #fff; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); }
+      .home-radio-like svg { width: 24px; height: 24px; }
+      .home-radio-like.is-on { background: var(--tint-blue-light-20); border-color: var(--brand-blue-light); color: var(--brand-blue-light); }
+      .home-radio-steer { padding: 0 24px; font-size: 15px; font-weight: 700; color: #fff; background: var(--tint-blue-light-20); border: 1px solid var(--brand-blue-light); }
+      .home-radio-steer svg { width: 20px; height: 20px; }
+      .home-radio-like:hover, .home-radio-steer:hover { transform: translateY(-1px); }
+      .home-radio-like:focus-visible, .home-radio-steer:focus-visible, .home-radio-skip:focus-visible { outline: 3px solid var(--brand-blue-light); outline-offset: 3px; }
+      .home-radio-skip {
+        min-height: 44px; width: 44px; padding: 0; cursor: pointer; background: none; border: none; color: rgba(255,255,255,0.40);
+        display: inline-flex; align-items: center; justify-content: center; transition: color var(--t-fast);
+      }
+      .home-radio-skip:hover { color: rgba(255,255,255,0.70); }
+      .home-radio-skip svg { width: 20px; height: 20px; }
+      @media (max-width: 560px) {
+        .home-radio { padding: 16px 16px 32px; gap: 16px; }
+        .home-hero { width: 78vw; }
+        .home-radio-top { justify-content: center; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .home-hero, .home-radio-like, .home-radio-steer { transition: none; }
+        .home-hero:hover, .home-radio-like:hover, .home-radio-steer:hover { transform: none; }
+      }
+
       /* =====================================================================
          ONBOARDING (#/onboarding) — собери свой вкус (floating bubble picker)
          First-run taste capture for the "First AI-driven music" narrative.
@@ -7488,6 +7575,53 @@
       <section data-page="home" aria-labelledby="page-home-heading">
         <h1 id="page-home-heading" class="visually-hidden">Главная</h1>
 
+        <!-- GOROD-045 — ВОЛНА как РАДИО (3 зоны). Default-вид; плитки = alt-browse ниже. -->
+        <div class="home-radio" id="home-radio">
+          <div class="home-radio-top">
+            <button class="home-ctx-card" type="button" id="home-ctx-card"
+                    aria-label="Текущий контекст волны. Открыть «Мой вкус», чтобы сменить">
+              <span class="home-ctx-cap">Контекст волны</span>
+              <span class="home-ctx-now" id="home-ctx-now">Вечер · ~95 BPM</span>
+              <span class="home-ctx-act" aria-hidden="true">Сменить</span>
+            </button>
+            <div class="home-view-toggle" role="group" aria-label="Вид главной">
+              <button class="home-view-btn is-on" type="button" data-view="radio" aria-pressed="true">Радио</button>
+              <button class="home-view-btn" type="button" data-view="tiles" aria-pressed="false">Подборки</button>
+            </div>
+          </div>
+          <div class="home-radio-stage">
+            <canvas class="home-wave" id="home-wave" aria-hidden="true"></canvas>
+            <button class="home-hero" type="button" id="home-hero-btn" aria-label="Открыть плеер: Любимка — Niletto">
+              <img class="home-hero-art" id="home-hero-art" src="assets/gorod-fm/home-featured-egor-krid.png" alt="" aria-hidden="true">
+              <span class="home-hero-shade" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="home-radio-bottom">
+            <button class="home-radio-why" type="button" id="home-radio-why" aria-label="Почему играет этот трек — открыть объяснение">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
+              <span class="home-radio-why-text" id="home-radio-why-text" role="status" aria-live="polite">Тёплый поп ~95 BPM — как ты любишь под вечер</span>
+            </button>
+            <div class="home-radio-meta">
+              <span class="home-radio-title" id="home-radio-title">Любимка</span>
+              <span class="home-radio-artist" id="home-radio-artist">Niletto</span>
+            </div>
+            <div class="home-radio-controls">
+              <button class="home-radio-like" type="button" id="home-radio-like" aria-pressed="false" aria-label="Нравится — добавить в волну">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.4 2 5 5.2 5c2 0 3.3 1.2 3.8 2.3h6c.5-1.1 1.8-2.3 3.8-2.3C22 5 23.6 8.4 22 11.7 19.5 16.4 12 21 12 21z" fill="currentColor"/></svg>
+              </button>
+              <button class="home-radio-steer" type="button" id="home-radio-steer" aria-label="Steer — поправить волну">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3.5l2.5 7 4-14 2.5 7H21"/></svg>
+                <span>Steer</span>
+              </button>
+              <button class="home-radio-skip" type="button" id="home-radio-skip" aria-label="Пропустить трек">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 4 15 12 5 20 5 4" fill="currentColor" stroke="none"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- /.home-radio -->
+
+        <div class="home-tiles" hidden>
         <!-- Figma 2174:422 — dark home with 8 tiles + featured central card + blue player -->
         <div class="home-stage">
 
@@ -7631,6 +7765,8 @@
 
         </div>
         <!-- /.home-stage -->
+        </div>
+        <!-- /.home-tiles -->
 
       </section>
 
@@ -13460,11 +13596,17 @@
     }
     function apply(img) {
       if (!img) return;
-      var go = function () { var c = sample(img); if (c) document.documentElement.style.setProperty('--np-accent', c); };
+      var go = function () { var c = sample(img); if (c) document.documentElement.style.setProperty('--np-accent', c); paintHero(); };
       if (img.complete && img.naturalWidth) go(); else img.addEventListener('load', go);
     }
+    function paintHero() {                                   // GOROD-045 — mirror player accent onto #/home hero (no-op without radio-home)
+      var hr = document.getElementById('home-radio');
+      if (!hr) return;
+      var c = getComputedStyle(document.documentElement).getPropertyValue('--np-accent').trim();
+      if (c) hr.style.setProperty('--home-np', c);
+    }
     function refresh() { apply(document.getElementById('mini-art-img')); }
-    window.NowPlayingTint = { refresh: refresh };
+    window.NowPlayingTint = { refresh: refresh, paintHero: paintHero };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh); else refresh();
   })();
   </script>
@@ -14173,6 +14315,118 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
     // public API (lets a future #/home pill — VARIANT B — suggest/apply without coupling)
     window.GorodContext = { render: render, suggest: function () { var s = read() || {}; if (!isToday(s.ts)) s.ctx = defaultCtx(); write(s); render(s); }, apply: chooseTime };
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-045 — ВОЛНА как РАДИО (#/home, 3 зоны). Аддитивно.
+     Дефолт-вид = радио; плитки (Figma 2174:422) = alt-browse через toggle.
+     Контекст-карта зеркалит gorodfm_context (051), переключение делегирует #/taste.
+     «Почему» зеркалит #player-track-reason (FIDELITY — не генерим локально).
+     Ambient-волна = СВОЙ лёгкий canvas (#home-wave), не TwinrWave (тот на #taste-wave).
+     RAF паузится на route-уход + document.hidden (perf §10). */
+  (function () {
+    'use strict';
+    var VIEW_KEY = 'gorodfm_home_view', LIKE_KEY = 'gorodfm_liked', CTX_KEY = 'gorodfm_context';
+    function $(id){ return document.getElementById(id); }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+    function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+    function lsJSON(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+
+    var CTX_LABEL = { morning:'Утро', day:'День', evening:'Вечер', night:'Ночь', workout:'Тренировка', commute:'Дорога' };
+    var CTX_BPM   = { morning:85, day:100, evening:95, night:70, workout:128, commute:108 };
+    function defaultCtxKey(){ var h=new Date().getHours(); if(h>=5&&h<11)return 'morning'; if(h>=11&&h<17)return 'day'; if(h>=17&&h<23)return 'evening'; return 'night'; }
+    function currentCtx(){
+      var s=lsJSON(CTX_KEY), key;
+      if(s && s.activity && CTX_LABEL[s.activity]) key=s.activity;
+      else key=(s && s.ctx) || defaultCtxKey();
+      return { key:key, label:CTX_LABEL[key]||'Вечер', bpm:CTX_BPM[key]||95 };
+    }
+    function paintCtx(){ var el=$('home-ctx-now'); if(!el) return; var c=currentCtx(); el.textContent = c.label + ' · ~' + c.bpm + ' BPM'; }
+
+    function paintWhy(){
+      var src=$('player-track-reason'), span=src&&src.querySelector('span'), dst=$('home-radio-why-text');
+      if(dst && span) dst.innerHTML = span.innerHTML;        // trusted: player sets behavioral pill (FLOW)
+      var t=$('player-track-title'), a=$('player-track-artist');
+      var ht=$('home-radio-title'), ha=$('home-radio-artist');
+      if(ht && t) ht.textContent = t.textContent;
+      if(ha && a) ha.textContent = a.textContent;
+      var hero=$('home-hero-btn'); if(hero && t && a) hero.setAttribute('aria-label','Открыть плеер: '+t.textContent+' — '+a.textContent);
+    }
+
+    function likedSet(){ var a=lsJSON(LIKE_KEY); return Array.isArray(a)?a:[]; }
+    function curTitle(){ var t=$('home-radio-title'); return t?t.textContent:''; }
+    function refreshLike(){ var b=$('home-radio-like'); if(!b) return; var on=likedSet().indexOf(curTitle())!==-1; b.setAttribute('aria-pressed', on?'true':'false'); b.classList.toggle('is-on', on); }
+    function toggleLike(){
+      var arr=likedSet(), title=curTitle(), i=arr.indexOf(title), on;
+      if(i===-1){ arr.push(title); on=true; } else { arr.splice(i,1); on=false; }
+      lsSet(LIKE_KEY, JSON.stringify(arr)); refreshLike(); pulse();
+      if(on && window.TwinrRibbon) window.TwinrRibbon.show('Добавил в волну: <b>'+esc(title)+'</b>. <span class="ai-why">больше такого дальше</span>.');
+      if(window.TwinrWave && window.TwinrWave.bump) window.TwinrWave.bump();
+    }
+
+    var cv, cx, raf=0, t=0, energy=0.4, pulseV=0, running=false;
+    var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var LAYERS = [ {freq:1.1, amp:0.30, speed:0.6, alpha:0.85, base:1}, {freq:1.7, amp:0.20, speed:0.9, alpha:0.55, base:0}, {freq:2.6, amp:0.12, speed:1.3, alpha:0.35, base:0} ];
+    function accentRGB(){ var c=getComputedStyle(document.documentElement).getPropertyValue('--np-accent').trim(); var m=c.match(/(\d+)\D+(\d+)\D+(\d+)/); if(m) return m[1]+','+m[2]+','+m[3]; return '129,148,255'; }
+    function size(){ if(!cv) return; var r=cv.getBoundingClientRect(); cv.width=Math.max(1,r.width); cv.height=Math.max(1,r.height); }
+    function frame(){
+      if(!cx) return; var w=cv.width, h=cv.height; cx.clearRect(0,0,w,h);
+      pulseV*=0.94; var rgb=accentRGB(), mid=h*0.62, e=1+pulseV*1.2+energy;
+      for(var i=0;i<LAYERS.length;i++){ var L=LAYERS[i]; cx.beginPath();
+        for(var x=0;x<=w;x+=6){ var nx=x/w, env=Math.sin(nx*Math.PI);
+          var y=mid+Math.sin(nx*Math.PI*2*L.freq+t*L.speed)*(h*L.amp)*e*env;
+          if(x===0)cx.moveTo(x,y); else cx.lineTo(x,y); }
+        cx.strokeStyle='rgba('+(L.base?rgb:'129,148,255')+','+L.alpha+')'; cx.lineWidth=L.base?2.4:1.4;
+        cx.lineJoin='round'; cx.lineCap='round'; cx.stroke();
+      }
+      t+=0.016;
+    }
+    function loop(){ frame(); raf=requestAnimationFrame(loop); }
+    function startWave(){ cv=$('home-wave'); if(!cv) return; cx=cv.getContext('2d'); size(); if(REDUCE){ frame(); return; } if(!running){ running=true; cancelAnimationFrame(raf); loop(); } }
+    function stopWave(){ running=false; cancelAnimationFrame(raf); }
+    function pulse(){ pulseV=Math.min(1.4, pulseV+0.7); if(!running && cv && cx && !REDUCE){ running=true; loop(); } }
+
+    function applyView(v){
+      var radio=$('home-radio'), tiles=document.querySelector('.home-tiles');
+      var isTiles = (v==='tiles');
+      if(radio) radio.hidden = isTiles;
+      if(tiles) tiles.hidden = !isTiles;
+      [].forEach.call(document.querySelectorAll('.home-view-btn'),function(b){ var on=b.getAttribute('data-view')===v; b.setAttribute('aria-pressed', on?'true':'false'); b.classList.toggle('is-on', on); });
+      if(isTiles) stopWave(); else if((location.hash||'')==='#/home' && !document.hidden) startWave();
+    }
+    function setView(v){ lsSet(VIEW_KEY, v); applyView(v); }
+
+    var wired=false;
+    function wire(){
+      if(wired) return; var root=$('home-radio'); if(!root) return;
+      var card=$('home-ctx-card'); if(card) card.addEventListener('click', function(){ if(window.GorodContext && window.GorodContext.suggest) window.GorodContext.suggest(); window.location.hash='#/taste'; });
+      [].forEach.call(document.querySelectorAll('.home-view-btn'),function(b){ b.addEventListener('click', function(){ setView(b.getAttribute('data-view')); }); });
+      var why=$('home-radio-why'); if(why) why.addEventListener('click', function(){ if(window.TwinrWhy) window.TwinrWhy.open(); });
+      var steer=$('home-radio-steer'); if(steer) steer.addEventListener('click', function(){ if(window.TwinrWhy) window.TwinrWhy.open(); });
+      var like=$('home-radio-like'); if(like) like.addEventListener('click', toggleLike);
+      var skip=$('home-radio-skip'); if(skip) skip.addEventListener('click', function(){ if(window.TwinrTransition && window.TwinrTransition.next) window.TwinrTransition.next(); });
+      var hero=$('home-hero-btn'); if(hero) hero.addEventListener('click', function(){ if(typeof window.openPlayer==='function') window.openPlayer(); });
+      wired=true;
+    }
+    function refreshAll(){ paintCtx(); paintWhy(); refreshLike(); if(window.NowPlayingTint && window.NowPlayingTint.paintHero) window.NowPlayingTint.paintHero(); }
+
+    function onRoute(){
+      var onHome=(location.hash||'')==='#/home';
+      if(onHome){ wire(); applyView(lsGet(VIEW_KEY)||'radio'); refreshAll(); }
+      else stopWave();
+    }
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) stopWave(); else if((location.hash||'')==='#/home' && (lsGet(VIEW_KEY)||'radio')==='radio') startWave(); });
+    window.addEventListener('hashchange', onRoute);
+    window.addEventListener('resize', function(){ if(running) size(); });
+    function observePlayer(){
+      var src=$('player-track-reason'); if(!src || !window.MutationObserver) return;
+      new MutationObserver(function(){ if((location.hash||'')==='#/home'){ paintWhy(); refreshLike(); } }).observe(src, { childList:true, subtree:true, characterData:true });
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ observePlayer(); onRoute(); });
+    else { observePlayer(); onRoute(); }
+    window.GorodHomeRadio = { setView:setView, refresh:refreshAll };
   })();
   </script>
 
