@@ -4239,12 +4239,13 @@
         background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: var(--r-pill); padding: 6px 6px 6px 16px; transition: border-color var(--t-fast);
       }
-      .discover-ask-field:focus-within { border-color: var(--brand-blue-light); }
+      .discover-ask-field:hover { border-color: rgba(255,255,255,0.18); }
+      .discover-ask-field:focus-within { border-color: var(--brand-blue-light); box-shadow: 0 0 0 3px rgba(81,104,252,0.25); }
       .discover-ask-field > svg { width: 18px; height: 18px; color: var(--text-sec); flex: none; }
       .discover-input { flex: 1 1 auto; min-width: 0; background: none; border: none; outline: none; font-family: 'Onest', sans-serif; font-size: 15px; color: #fff; }
       .discover-input::placeholder { color: var(--text-quat); }
       .discover-ask-go { flex: none; height: 40px; padding: 0 20px; border: none; border-radius: var(--r-pill); background: var(--brand-blue-light); color: #fff; font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: transform var(--t-fast); }
-      .discover-ask-go:hover { transform: translateY(-1px); }
+      .discover-ask-go:hover { transform: translateY(-1px); background: var(--brand-blue-hover); }
       .discover-ask-go:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
       .discover-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
       .discover-chip { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: var(--r-pill); cursor: pointer; background: rgba(255, 255, 255, 0.05); color: #d6dbe8; border: 1px solid rgba(255, 255, 255, 0.1); transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast); }
@@ -4268,7 +4269,7 @@
       .discover-track-why { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); margin-top: 2px; }
       .discover-track-why b { color: #cdd4f5; font-weight: 600; }
       .discover-near { max-width: 1080px; margin: 26px auto 0; padding: 0 clamp(16px, 4vw, 28px); }
-      .discover-near-title { font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: #fff; margin: 0 0 14px; }
+      .discover-near-title { font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 700; color: #fff; margin: 0 0 14px; }
       .discover-near-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
       .discover-near-row::-webkit-scrollbar { display: none; }
       .discover-near-card { flex: none; width: 220px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--hairline); transition: background var(--t-fast), border-color var(--t-fast); }
@@ -4309,9 +4310,9 @@
       .discover-ed-card { flex: none; width: 268px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform var(--t-fast), border-color var(--t-fast); }
       .discover-ed-card:hover { transform: translateY(-3px); border-color: var(--brand-blue-light); }
       .discover-ed-card:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
-      .discover-ed-title { font-family: 'Onest', sans-serif; font-size: 15.5px; font-weight: 800; color: #fff; }
+      .discover-ed-title { font-family: 'Onest', sans-serif; font-size: 15.5px; font-weight: 700; color: #fff; }
       .discover-ed-note { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-sec); margin-top: 6px; line-height: 1.45; }
-      .discover-ed-curator { font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 700; color: var(--accent-on-dark); margin-top: 10px; }
+      .discover-ed-curator { font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 700; color: var(--text-sec); margin-top: 10px; }
       @media (max-width: 560px) {
         .discover-dial { margin-left: 0; width: 100%; justify-content: space-between; }
         .discover-dial-btn { flex: 1 1 auto; }
@@ -7815,7 +7816,7 @@
           <div class="discover-results" id="discover-results" hidden>
             <div class="discover-results-head">
               <span class="discover-results-title" id="discover-results-title"></span>
-              <button class="discover-results-play" id="discover-results-play" type="button">▶ Запустить как волну</button>
+              <button class="discover-results-play" id="discover-results-play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:13px;height:13px;fill:currentColor;vertical-align:-1px;margin-right:6px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Запустить как волну</button>
             </div>
             <ul class="discover-results-list" id="discover-results-list"></ul>
           </div>
