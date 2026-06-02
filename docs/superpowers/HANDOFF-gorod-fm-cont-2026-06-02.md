@@ -1,6 +1,6 @@
-# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-5)
+# HANDOFF — Город ФМ (continuation, 2026-06-02 · cont-6)
 
-**Branch:** master — **ВСЁ ЗАКОММИЧЕНО И ЗАПУШЕНО** (`origin/master`, HEAD `c1a14b2`).
+**Branch:** master — **ВСЁ ЗАКОММИЧЕНО И ЗАПУШЕНО** (`origin/master`, HEAD `cecbeaa`+docs).
 **Read-first order:** этот файл → `docs/superpowers/AUDIT-gorod-fm-screens-and-service.md` §8 (forward-план GOROD-040..057) → `VISION-gorod-fm-ai-driven.md` (продуктовая визия).
 **Предшественник:** `HANDOFF-gorod-fm-ai-product.md` (AI-pivot). **Session log:** `.claude-memory/session_2026_06_02_gorod_fm_resume_cont.md` (содержит cont-2…cont-5).
 
@@ -10,7 +10,17 @@
 
 AI-радио доведено до **рабочего wedge на каждой ключевой поверхности**, Karpathy-аудит сервиса исполняется по приоритетам. North star (из аудита): *«ты видишь свою логику и можешь её поправить — даже реклама твоя»*; доверие = **fidelity** (объяснение = реальный вектор).
 
-**🎯 Где остановились (cont-5):** P0 (5/5) + P1 «Открыть» + **P1 safe-остаток `048`/`049`** + **P2 `052` «Открытый профиль»** — все done, reviewer-verified, **pushed**. Дальше: 045/047 (Эльбик-gate) ИЛИ автономно P2 loops остаток (050/051/053/054).
+**🎯 Где остановились (cont-6):** + **P2 `050` еженедельный Twinr-recap + 9:16 шеринг-карточка** (`#/recap`, `window.GorodRecap`) — done, **2-линзовое review (ship)**, 4 находки пофикшены, **pushed**, standalone пересобран (2.4 MB). Дальше: 045/047 (Эльбик-gate) ИЛИ автономно P2 остаток (**051/053/054** — 050 закрыт).
+
+### cont-6 деталь (`GOROD-050`)
+Новый экран `#/recap` = «доказательство роста» прозрачной модели. **HERO = детерминированная слово-идентичность** (`buildIdentity`: top-2 facets → mood×temperature→identity-noun + genitive-grain; heat остывает от реального `tempo`-reject; **NO rng/Date в идентичности** ⇒ одинаковый localStorage = байт-идентичная фраза = fidelity). Genre-**bloom** SVG (`buildPetals`: лепесток-длина=вес, dominant=белый узел + green grow-ring; flat single-hue accent, НЕ градиент). Поведенческие **+/− дельты** (`buildDeltas`: «−» строго из реального `gorodfm_rejected`, пусто ⇒ нет «−»). 1 **открытие** (adjacency-canon по lowest-weight mood). **defense-receipt** в `--accent-on-dark`. НЕ vanity-числа. Вход = бывшая заглушка `#taste-share` → `location.hash='#/recap'`. Honest share = `copySummary` копирует ТЕКСТ (no Web Share API, no PNG render). **Cold-профиль гейт** `hasRealSignal()` (нет picks И нет rejections) → честный empty-state (НЕ FALLBACK-карточка с выдуманным «дослушиваешь до конца»). Данные (`facets`/`FALLBACK`/`REJ_LABELS`) **байт-идентичны GorodProfile** ⇒ views не расходятся. Token-fix: `--success #34d399` промотан из var()-fallback в реальный `:root`-токен. a11y-fix: bloom-svg `aria-hidden` (wrapper несёт `role=img`+aria-label — нет двойного role=img). bloom viewBox расширен (`-85 -8 490 320`) → кириллич-лейблы не клипаются на mobile. **Модули НЕ ломать:** `TwinrTransition`/`GorodProfile`/`GorodRecap` — последние 3 trailing-script IIFE. `#/recap` в `VALID_ROUTES`. НЕ 4-я вкладка (IA: recap ∈ «Мой вкус»).
+
+| Commit | Что (cont-6) |
+|--------|-----|
+| `77f4fad` | **feat: `GOROD-050` — weekly Twinr-recap + 9:16 share card** (`window.GorodRecap` + `#/recap` + entry-wire). |
+| `cecbeaa` | chore: rebuild standalone с GOROD-050 (2.4 MB) + gitignore `.scratch/`. |
+
+**Carry-over TD (app-wide, не блокер):** FALLBACK top-up даёт поведенческий провенанс («усилено: дослушиваешь до конца») и partial-history юзерам (та же про-форма в `GorodProfile` 052). Recap-гейт ловит только полный cold-start; полный фикс = в общей модели профиля (вне scope 050).
 
 ---
 

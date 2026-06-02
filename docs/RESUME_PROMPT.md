@@ -1,6 +1,12 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-02 cont-5) — AI-радио: P1 (048 transition-card · 049 edge-glow) + P2 (052 «Открытый профиль») DONE + reviewer-verified + PUSHED; дальше 045/047 (Эльбик-gate) или P2 loops остаток
+## ⚡ LATEST (2026-06-02 cont-6) — AI-радио: P2 **`GOROD-050` еженедельный Twinr-recap + 9:16 шеринг-карточка** DONE + 2-линзовое review (**ship**) + 4 находки пофикшены + PUSHED + standalone пересобран (2.4 MB)
+
+📖 Эта сессия (cont-6): построен новый экран **`#/recap`** (модуль `window.GorodRecap`, decoupled trailing-script). HERO = **детерминированная слово-идентичность** из реального вектора (`buildIdentity`: mood×temp→noun + genitive grain; NO rng/Date в идентичности → fidelity) · genre-**bloom** SVG (лепесток=вес, dominant=белый узел + green grow-ring) · поведенческие **+/− дельты** («−» ТОЛЬКО из реального `gorodfm_rejected`) · 1 неожиданное **открытие** · **defense-receipt** (`--accent-on-dark`). НЕ vanity-числа (ошибка Wrapped). Вход = бывшая заглушка `#taste-share` («Поделиться карточкой») → `#/recap`. Honest share = копирует ТЕКСТ (no fake API). **Cold-профиль** (нет picks И нет rejections) → честный empty-state (без выдуманного провенанса — `hasRealSignal()` гейт). Данные байт-идентичны `GorodProfile` → views не могут разойтись. Commits: `77f4fad` (feat) + `cecbeaa` (standalone+gitignore .scratch). Karpathy-research-workflow + 2-lens review-workflow. 12 `<script>`-блоков `node --check` ✓, zero console errors.
+
+**Следующий автономный P2-остаток:** `GOROD-051` контекст-старты Утро/Работа/Вечер (частично entangled с gated 045) · `GOROD-053` стрики «Дней с Волной» + freeze · `GOROD-054` cold-start импорт-seed. 🔒 Gate: `045` Волна-3-зоны · `047` Артист/Трек (нужны обложки/realign). Carry-over TD (app-wide, не блокер): FALLBACK top-up даёт поведенческий провенанс и для partial-history юзеров (та же про-форма в `GorodProfile` 052) — фиксить в общей модели профиля, не в recap.
+
+## ⚡ PREV (2026-06-02 cont-5) — AI-радио: P1 (048 transition-card · 049 edge-glow) + P2 (052 «Открытый профиль») DONE + reviewer-verified + PUSHED; дальше 045/047 (Эльбик-gate) или P2 loops остаток
 
 📖 **READ FIRST: `docs/superpowers/HANDOFF-gorod-fm-cont-2026-06-02.md`** — полный хендофф (что построено, архитектура модулей, forward-план, gates, демо, constraints). Потом `AUDIT-gorod-fm-screens-and-service.md` §8 (план GOROD-040..057).
 
