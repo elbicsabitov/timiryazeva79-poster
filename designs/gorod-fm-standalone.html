@@ -126,6 +126,7 @@
         --tint-blue-light-20:  rgba(81, 104, 252, 0.2);  /* active chip + home player bar */
         --np-accent:           var(--brand-blue-light);  /* now-playing accent — JS overrides from cover (GOROD-042) */
         --accent-on-dark:      #8094ff;                  /* lighter accent for SMALL text on near-black — AA 6.8:1 vs #111318 (brand #5168FC is only 4.25:1) (GOROD-052) */
+        --success:             #34d399;                  /* success/growth green — promoted from inline var() fallback to a real token (GOROD-050) */
         --featured-cta-bg:     #2d2d5d;                  /* purple bar under featured card */
         --home-bg-base:        #0C0B0B;                  /* dark home background */
         --tile-shade-strong:   linear-gradient(124.4deg, rgba(0,0,0,0) 39.815%, rgba(0,0,0,0.4) 65.624%, rgba(0,0,0,0.4) 80.293%);
@@ -2921,6 +2922,78 @@
       .profile-ad-text b { color: #fff; font-weight: 700; }
       .profile-moat { margin-top: 28px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-family: 'Onest', sans-serif; font-size: 13px; line-height: 1.55; color: var(--text-quat); text-wrap: pretty; max-width: 74ch; }
       .profile-moat b { color: var(--text-sec); font-weight: 700; }
+
+      /* =====================================================================
+         GOROD-050 — Weekly Twinr-recap + 9:16 share card. Proves the transparent
+         model EVOLVES: a deterministic word-identity (= the real vector, fidelity),
+         a genre bloom, behavioral +/− deltas (− only from real rejections), one
+         surprise discovery, and a single behavioral receipt. Near-black + ONE
+         accent; identity-word is the hero (NOT vanity numbers — Wrapped's mistake).
+         ===================================================================== */
+      .recap-stage { max-width: 680px; margin: 0 auto; padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 24px) 120px; font-family: 'Onest', sans-serif; }
+      .recap-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+      .recap-back { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-size: 14px; font-weight: 600; color: var(--text-sec); text-decoration: none; border-radius: var(--r-base); transition: color var(--t-fast); }
+      .recap-back:hover { color: var(--text-pri); }
+      .recap-back:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .recap-kicker, .recap-card-kicker, .recap-discovery-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-on-dark); }
+      .recap-title { font-size: clamp(26px, 5vw, 38px); font-weight: 800; line-height: 1.06; color: var(--text-pri); margin: 0 0 8px; text-wrap: balance; }
+      .recap-sub { font-size: 15px; line-height: 1.5; color: var(--text-sec); margin: 0 0 26px; max-width: 56ch; text-wrap: pretty; }
+      .recap-h2 { font-size: 18px; font-weight: 800; color: var(--text-pri); margin: 34px 0 12px; }
+
+      /* ── 9:16 share card (the composite that gets screenshotted) ── */
+      .recap-card { position: relative; width: min(360px, 86vw); aspect-ratio: 1080 / 1920; margin: 0 auto; background: var(--bg-base); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7); }
+      .recap-card-inner { position: absolute; inset: 0; padding: clamp(20px, 6.5%, 34px); display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .recap-card-kicker { margin-bottom: auto; }
+      .recap-card-word { font-size: clamp(25px, 7.4vw, 38px); font-weight: 800; line-height: 1.08; color: var(--text-pri); margin: 7% 0 5%; text-wrap: balance; }
+      .recap-card-bloom { width: 64%; max-width: 200px; margin: 0 auto 6%; }
+      .recap-card-bloom .bloom { width: 100%; height: auto; display: block; }
+      .recap-card-delta { font-size: 14px; color: var(--text-sec); margin: 0 0 5px; }
+      .recap-card-delta .grow { color: var(--success, #34d399); font-weight: 600; }
+      .recap-card-discovery { font-size: 13px; color: var(--text-quat); margin: 0 0 7px; line-height: 1.4; }
+      .recap-card-defense { font-size: 12px; line-height: 1.45; color: var(--accent-on-dark); margin: 0; max-width: 32ch; }
+      .recap-card-mark { margin-top: auto; padding-top: 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sec); opacity: 0.72; }
+
+      /* ── actions ── */
+      .recap-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 24px 0 4px; }
+      .recap-btn { min-height: 44px; padding: 0 20px; display: inline-flex; align-items: center; border-radius: var(--r-pill); font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), filter var(--t-fast); }
+      .recap-btn--primary { background: var(--brand-blue-light); color: #fff; border: 1px solid var(--brand-blue-light); }
+      .recap-btn--primary:hover { filter: brightness(1.08); }
+      .recap-btn--ghost { background: transparent; color: var(--text-sec); border: 1px solid rgba(255, 255, 255, 0.18); text-decoration: none; }
+      .recap-btn--ghost:hover { color: var(--text-pri); border-color: rgba(255, 255, 255, 0.36); }
+      .recap-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .recap-receipt { min-height: 1.2em; text-align: center; font-size: 13px; font-weight: 600; color: var(--success, #34d399); margin: 10px 0 0; }
+
+      /* ── screen bloom + deltas + discovery ── */
+      .recap-screen-bloom { margin: 0 auto; }
+      /* the screen bloom carries genre labels in the SVG wings → its viewBox is
+         widened (set in JS) so long Cyrillic labels paint INSIDE the box and stay
+         on-screen at a true 360px mobile column. overflow:visible is belt-and-braces. */
+      .recap-screen-bloom .bloom { width: min(420px, 88vw); height: auto; display: block; margin: 0 auto; overflow: visible; }
+      .recap-deltas { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 11px; }
+      .recap-delta-row { font-size: 14.5px; line-height: 1.45; }
+      .recap-delta-row .recap-delta-name { font-weight: 700; color: var(--text-pri); }
+      .recap-delta-row.grow .recap-delta-name { color: var(--success, #34d399); }
+      .recap-delta-row.fade .recap-delta-name { color: rgba(255, 255, 255, 0.55); }
+      .recap-delta-row .recap-delta-why { color: var(--text-quat); }
+      .recap-discovery-panel { margin-top: 12px; padding: 16px 18px; border-radius: var(--r-base); border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03); }
+      .recap-discovery-line { color: var(--text-pri); font-size: 15px; line-height: 1.45; margin: 6px 0 0; }
+      .recap-discovery-line b { color: var(--accent-on-dark); font-weight: 700; }
+
+      /* ── motion: SIGNAL not decoration — one-shot bloom on entry ── */
+      @keyframes recap-petal-grow { from { transform: scale(0.04); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+      @keyframes recap-node-pop { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+      .recap-screen-bloom .petal-blade, .recap-screen-bloom .petal-stem { transform-box: view-box; transform-origin: 160px 160px; animation: recap-petal-grow var(--dur-announce) var(--ease-emphasized) both; }
+      .recap-screen-bloom .petal-node, .recap-screen-bloom .bloom-grow-ring { transform-box: view-box; transform-origin: center; animation: recap-node-pop var(--t-mid) var(--ease-emphasized) 0.18s both; }
+      /* card bloom is a STATIC snapshot — never animates */
+      .recap-card-bloom .petal-blade, .recap-card-bloom .petal-stem, .recap-card-bloom .petal-node { animation: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .recap-screen-bloom .petal-blade, .recap-screen-bloom .petal-stem, .recap-screen-bloom .petal-node, .recap-screen-bloom .bloom-grow-ring { animation: none !important; opacity: 1 !important; transform: none !important; }
+      }
+
+      @media (max-width: 480px) {
+        .recap-card { width: min(340px, 90vw); }
+        .recap-card-word { font-size: clamp(24px, 8vw, 34px); }
+      }
 
       /* Sonify-the-wave toggle on the taste hero */
       .taste-sonify {
@@ -9635,6 +9708,50 @@
       </section>
       <!-- /#/profile -->
 
+      <!-- GOROD-050 — Weekly Twinr-recap + 9:16 share card -->
+      <section data-page="recap" aria-labelledby="page-recap-heading" aria-hidden="true">
+        <div class="recap-stage">
+          <div class="recap-nav">
+            <a class="recap-back" href="#/taste">← К вкусу</a>
+            <span class="recap-kicker">Итоги недели · <span id="recap-week">22</span></span>
+          </div>
+
+          <h1 id="page-recap-heading" class="recap-title">Твоя неделя — в одном слове</h1>
+          <p class="recap-sub">Не «сколько минут», а кто ты сейчас по звуку. Слово собрано из реального вектора — и его видно: рядом карта вкуса, под ней — на чём оно держится. Поправишь грань — пересчитается.</p>
+
+          <!-- ── 9:16 share card (the composite that gets screenshotted) ── -->
+          <figure class="recap-card" id="recap-card" role="group" aria-labelledby="recap-card-word" aria-describedby="recap-card-defense">
+            <div class="recap-card-inner">
+              <span class="recap-card-kicker">Город ФМ · неделя <span class="recap-card-week">22</span></span>
+              <p class="recap-card-word" id="recap-card-word">Размах с битом</p>
+              <div class="recap-card-bloom" id="recap-card-bloom" aria-hidden="true"></div>
+              <p class="recap-card-delta" id="recap-card-delta"></p>
+              <p class="recap-card-discovery" id="recap-card-discovery"></p>
+              <p class="recap-card-defense" id="recap-card-defense"></p>
+              <span class="recap-card-mark">Город&nbsp;ФМ</span>
+            </div>
+          </figure>
+
+          <div class="recap-actions">
+            <button class="recap-btn recap-btn--primary" id="recap-copy" type="button">Скопировать карточку</button>
+            <a class="recap-btn recap-btn--ghost" href="#/taste">Поправить грань →</a>
+          </div>
+          <p class="recap-receipt" id="recap-receipt" role="status" aria-live="polite"></p>
+
+          <h2 class="recap-h2">Карта вкуса на эту неделю</h2>
+          <div class="recap-screen-bloom" id="recap-screen-bloom" role="img" aria-label=""></div>
+
+          <h2 class="recap-h2">Что сдвинулось за неделю</h2>
+          <ul class="recap-deltas" id="recap-deltas"></ul>
+
+          <div class="recap-discovery-panel">
+            <span class="recap-discovery-kicker">Открытие недели</span>
+            <p class="recap-discovery-line" id="recap-discovery-line"></p>
+          </div>
+        </div>
+      </section>
+      <!-- /#/recap -->
+
     </main>
   </div>
   <!-- /.app-shell -->
@@ -10729,7 +10846,7 @@
         trackView:    'gorod-fm.track-view',
       };
 
-      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste', '#/profile'];
+      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste', '#/profile', '#/recap'];
       const DEFAULT_ROUTE = '#/map';
 
       /* ---- localStorage helpers -------------------------------------------- */
@@ -12962,8 +13079,7 @@
       });
       var share = document.getElementById('taste-share');
       if (share) share.addEventListener('click', function () {
-        var d = document.getElementById('taste-delta');
-        if (d) d.textContent = '✓ карточка вкуса скопирована';
+        location.hash = '#/recap';                 // open the weekly recap (GOROD-050); router + GorodRecap take over
         if (window.TwinrWave) window.TwinrWave.bump();
       });
       var sonify = document.getElementById('taste-sonify');
@@ -13504,6 +13620,313 @@
     function onRoute() { if ((location.hash || '') === '#/profile') { if (!built) init(); render(); } }
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
+  })();
+  </script>
+
+  <!-- ---- GOROD-050 — Weekly Twinr-recap + 9:16 share card. PROVES the transparent
+       model evolves: a deterministic word-identity (= the real vector, fidelity),
+       a genre bloom, behavioral +/− deltas (− only from real gorodfm_rejected), one
+       surprise discovery, and a single behavioral receipt. Reads live gorodfm_taste
+       + gorodfm_rejected. Decoupled trailing module; the data model is byte-identical
+       to GorodProfile so the two views can never disagree (a disagreement = a fidelity
+       bug). No rng / no Date in the identity → same localStorage ⇒ same phrase. ---- -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ---- shared data model (BYTE-IDENTICAL to GorodProfile) ---- */
+    var TASTE_KEY = 'gorodfm_taste', REJ_KEY = 'gorodfm_rejected';
+    var REJ_LABELS = { artist: 'Егор Крид', vocal: 'Тёплый поп-вокал', tempo: 'Темп ~95 BPM' };
+    var FALLBACK = [
+      { n: 'Арена-рок',      w: 80, prov: 'усилено: дослушиваешь до конца' },
+      { n: 'Хип-хоп 2010-х', w: 66, prov: 'из прослушивания за месяц' },
+      { n: 'Электро-поп',    w: 54, prov: 'по времени суток — вечер' },
+      { n: 'Инди',           w: 40, prov: 'смежное — рядом с твоим вектором' }
+    ];
+    function readPicks() { try { return (JSON.parse(localStorage.getItem(TASTE_KEY) || '[]')).slice(0, 6); } catch (e) { return []; } }
+    function readRej() { try { return JSON.parse(localStorage.getItem(REJ_KEY) || '[]'); } catch (e) { return []; } }
+    function facets() {
+      var out = [];
+      readPicks().forEach(function (p) { out.push({ n: p, w: 84, prov: 'из онбординга — ты выбрал сам' }); });
+      FALLBACK.forEach(function (f) { if (out.length < 5 && !out.some(function (o) { return o.n === f.n; })) out.push(f); });
+      return out.slice(0, 5);
+    }
+
+    /* ---- identity maps (mood × temperature → identity-NOUN). gen = grammatical
+       genitive tail (с/со …) so output is correct WITHOUT an inflection engine. ---- */
+    var GENRE = {
+      'ИНДИ':           { tex: 'туман',       gen: 'с туманом',       mood: 'melancholy', heat: 1 },
+      'ЛОФАЙ':          { tex: 'хрип',        gen: 'с хрипом',        mood: 'tender',     heat: 0 },
+      'ЭЛЕКТРО':        { tex: 'синтезатор',  gen: 'с синтезатором',  mood: 'synthetic',  heat: 2 },
+      'ПОП':            { tex: 'хук',         gen: 'с хуком',         mood: 'tender',     heat: 1 },
+      'ДЖАЗ':           { tex: 'импровизация',gen: 'с импровизацией', mood: 'classic',    heat: 1 },
+      'КЛАССИКА':       { tex: 'струны',      gen: 'со струнами',     mood: 'classic',    heat: 0 },
+      'ХИП-ХОП':        { tex: 'бит',         gen: 'с битом',         mood: 'street',     heat: 2 },
+      'РЭП':            { tex: 'бит',         gen: 'с битом',         mood: 'street',     heat: 2 },
+      'РОК':            { tex: 'гитары',      gen: 'с гитарами',      mood: 'raw',        heat: 2 },
+      'МЕТАЛЛ':         { tex: 'перегруз',    gen: 'с перегрузом',    mood: 'raw',        heat: 3 },
+      'ДИСКО':          { tex: 'грув',        gen: 'с грувом',        mood: 'groove',     heat: 2 },
+      'Арена-рок':      { tex: 'стадион',     gen: 'со стадионом',    mood: 'arena',      heat: 2 },
+      'Хип-хоп 2010-х': { tex: 'бит',         gen: 'с битом',         mood: 'street',     heat: 2 },
+      'Электро-поп':    { tex: 'синтезатор',  gen: 'с синтезатором',  mood: 'synthetic',  heat: 1 },
+      'Инди':           { tex: 'туман',       gen: 'с туманом',       mood: 'melancholy', heat: 1 }
+    };
+    var ARTIST = {
+      'Martin Garrix': { tex: 'дроп',     gen: 'с дропом',     mood: 'synthetic',  heat: 3 },
+      'Linkin Park':   { tex: 'перегруз', gen: 'с перегрузом', mood: 'raw',        heat: 3 },
+      'Макс Корж':     { tex: 'улица',    gen: 'с улицей',     mood: 'street',     heat: 2 },
+      'Рамиль':        { tex: 'хук',      gen: 'с хуком',      mood: 'tender',     heat: 1 },
+      'Niletto':       { tex: 'хук',      gen: 'с хуком',      mood: 'tender',     heat: 1 },
+      'Любимка':       { tex: 'нерв',     gen: 'с нервом',     mood: 'melancholy', heat: 2 }
+    };
+    var MOOD_ADJ = {
+      arena:      { cold: 'Стадион',    neutral: 'Размах',    warm: 'Эйфория' },
+      melancholy: { cold: 'Меланхолия', neutral: 'Полумрак',  warm: 'Тоска' },
+      synthetic:  { cold: 'Неон',       neutral: 'Пульс',     warm: 'Эйфория' },
+      raw:        { cold: 'Тревога',    neutral: 'Драйв',     warm: 'Ярость' },
+      tender:     { cold: 'Тишина',     neutral: 'Тепло',     warm: 'Нежность' },
+      groove:     { cold: 'Холодок',    neutral: 'Качель',    warm: 'Жар' },
+      classic:    { cold: 'Строгость',  neutral: 'Линия',     warm: 'Патетика' },
+      street:     { cold: 'Бетон',      neutral: 'Поток',     warm: 'Кураж' },
+      eclectic:   { cold: 'Разнобой',   neutral: 'Мозаика',   warm: 'Карнавал' }
+    };
+    function resolve(f) { return GENRE[f.n] || ARTIST[f.n] || { tex: 'звук', gen: 'со звуком', mood: 'eclectic', heat: 1 }; }
+
+    /* ---- DETERMINISTIC word-identity. Same localStorage ⇒ byte-identical phrase.
+       Always genitive (moodNoun + grain.gen) so single-grain stays grammatical. ---- */
+    function buildIdentity() {
+      var fs = facets();
+      if (!fs.length) return null;                         // honesty floor: no profile ⇒ no card
+      var ranked = fs.map(function (f, i) { return { f: f, i: i }; })
+                     .sort(function (a, b) { return (b.f.w - a.f.w) || (a.i - b.i); });
+      var top1 = ranked[0].f, top2 = ranked[1] ? ranked[1].f : null;
+      var num = fs.reduce(function (s, f) { return s + resolve(f).heat * (f.w / 100); }, 0);
+      var den = fs.reduce(function (s, f) { return s + (f.w / 100); }, 0);
+      var heat = den ? num / den : 1;
+      if (readRej().indexOf('tempo') > -1) heat -= 0.5;    // a real rejection cools the phrase
+      var temp = heat < 0.9 ? 'cold' : (heat > 2.0 ? 'warm' : 'neutral');
+      var t1 = resolve(top1), t2 = top2 ? resolve(top2) : t1;
+      var moodNoun = (MOOD_ADJ[t1.mood] && MOOD_ADJ[t1.mood][temp]) || (MOOD_ADJ[t1.mood] && MOOD_ADJ[t1.mood].neutral) || 'Поток';
+      var contrast = !!(top2 && t2.tex !== t1.tex);
+      var phrase = moodNoun + ' ' + (contrast ? t2.gen : t1.gen);
+      var why = 'Это «' + top1.n + '» ' + top1.w + '% (' + top1.prov + ')'
+              + (top2 ? ' и «' + top2.n + '» ' + top2.w + '%' : '')
+              + (readRej().indexOf('tempo') > -1 ? '; ты убрал быстрый темп — фраза остыла' : '')
+              + '. Поправишь грань — пересчитается.';
+      return { phrase: phrase, defense: why, top1: top1, top2: top2 };
+    }
+
+    /* ---- weekly deltas: "+" = strongest gained facet (behavioral prov);
+       "−" = a REAL rejected id (never fabricated). Empty rej ⇒ no "−". ---- */
+    function buildDeltas() {
+      var fs = facets(), rej = readRej().filter(function (id) { return REJ_LABELS[id]; });
+      var plus = null, minus = null;
+      if (fs.length) {
+        var ranked = fs.map(function (f, i) { return { f: f, i: i }; })
+                       .sort(function (a, b) { return (b.f.w - a.f.w) || (a.i - b.i); });
+        plus = ranked[0].f;
+      }
+      if (rej.length) { var id = rej[rej.length - 1]; minus = { id: id, label: REJ_LABELS[id] }; }
+      return { plus: plus, minus: minus };
+    }
+    function cardDeltaHTML(d) {
+      if (!d.plus) return '';
+      var s = '<span class="grow">▲ +' + esc(d.plus.n) + '</span>';
+      if (d.minus) s += ' · −' + esc(d.minus.label);
+      return s + ' за неделю';
+    }
+    function deltaText(d) {
+      if (!d.plus) return '';
+      var s = '▲ +' + d.plus.n;
+      if (d.minus) s += ' · −' + d.minus.label;
+      return s + ' за неделю';
+    }
+
+    /* ---- "1 неожиданное открытие": adjacency canon keyed by the LOWEST-weight
+       facet's mood (the genuinely surprising grain). Why = always behavioral. ---- */
+    var DISCOVERY = {
+      melancholy: { who: 'Любимка',       why: 'дослушал до конца 3 раза' },
+      tender:     { who: 'Niletto',       why: 'по времени суток — вечер' },
+      street:     { who: 'Макс Корж',     why: 'из прослушивания за месяц' },
+      synthetic:  { who: 'Martin Garrix', why: 'смежное — рядом с твоим вектором' },
+      raw:        { who: 'Linkin Park',   why: 'усилено: дослушиваешь до конца' },
+      arena:      { who: 'Любимка',       why: 'рядом с твоим вектором — и ты дослушал' },
+      classic:    { who: 'Рамиль',        why: 'по времени суток — вечер' },
+      groove:     { who: 'Niletto',       why: 'из прослушивания за месяц' },
+      eclectic:   { who: 'Любимка',       why: 'смежное — рядом с твоим вектором' }
+    };
+    function buildDiscovery() {
+      var fs = facets(); if (!fs.length) return null;
+      var ranked = fs.map(function (f, i) { return { f: f, i: i }; })
+                     .sort(function (a, b) { return (a.f.w - b.f.w) || (a.i - b.i); });
+      var dd = DISCOVERY[resolve(ranked[0].f).mood] || DISCOVERY.eclectic;
+      return { who: dd.who, why: dd.why, line: dd.who + ' — ' + dd.why };
+    }
+
+    /* ---- genre bloom (SVG). Petal length = real weight; ONE flat accent tint
+       (never a gradient fill); dominant facet gets a white node. ---- */
+    function f2(v) { return Math.round(v * 10) / 10; }
+    function buildPetals(fs) {
+      var cx = 160, cy = 160, RMIN = 34, RMAX = 135, N = Math.max(fs.length, 1), dom = 0;
+      fs.forEach(function (f, i) { if (f.w > fs[dom].w) dom = i; });
+      return fs.map(function (f, i) {
+        var a = (-90 + i * 360 / N) * Math.PI / 180, r = RMIN + (RMAX - RMIN) * (f.w / 100);
+        var nx = cx + r * Math.cos(a), ny = cy + r * Math.sin(a);
+        var hw = 9 + 6 * (f.w / 100), bd = r * 0.42, pA = a + Math.PI / 2, pB = a - Math.PI / 2;
+        var ax = cx + bd * Math.cos(a) + hw * Math.cos(pA), ay = cy + bd * Math.sin(a) + hw * Math.sin(pA);
+        var bx = cx + bd * Math.cos(a) + hw * Math.cos(pB), by = cy + bd * Math.sin(a) + hw * Math.sin(pB);
+        return {
+          d: 'M' + cx + ' ' + cy + ' Q' + f2(ax) + ' ' + f2(ay) + ' ' + f2(nx) + ' ' + f2(ny) + ' Q' + f2(bx) + ' ' + f2(by) + ' ' + cx + ' ' + cy + ' Z',
+          nx: f2(nx), ny: f2(ny), dom: (i === dom), name: f.n, w: f.w,
+          nodeR: (i === dom ? 6.6 : (4.6 + (f.w / 100) * 2)).toFixed(1),
+          bladeOp: (i === dom ? 0.18 : (0.10 + (f.w / 100) * 0.06)).toFixed(2),
+          stemOp: (0.30 + 0.50 * (f.w / 100)).toFixed(2),
+          labelAnchor: (Math.cos(a) > 0.3 ? 'start' : (Math.cos(a) < -0.3 ? 'end' : 'middle')),
+          lx: f2(cx + (RMAX + 18) * Math.cos(a)), ly: f2(cy + (RMAX + 18) * Math.sin(a) + 4)
+        };
+      });
+    }
+    function bloomAria(fs) {
+      var dom = fs[0]; fs.forEach(function (f) { if (f.w > dom.w) dom = f; });
+      return 'Карта вкуса: ' + fs.map(function (f) { return f.n + ' ' + f.w; }).join(', ') + '. Доминанта — ' + dom.n + '.';
+    }
+    function bloomSvg(fs, cfg) {
+      cfg = cfg || {};
+      var sfx = cfg.idSuffix || 's';
+      var petals = buildPetals(fs);
+      var defs = '<defs><filter id="bloom-soft-' + sfx + '" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>';
+      var rings = '<g stroke="rgba(255,255,255,0.06)" fill="none" stroke-width="1"><circle cx="160" cy="160" r="55"/><circle cx="160" cy="160" r="95"/><circle cx="160" cy="160" r="135"/></g>';
+      var blades = '', stems = '', nodes = '', labels = '';
+      petals.forEach(function (p, i) {
+        blades += '<path class="petal-blade" d="' + p.d + '" fill="var(--np-accent)" fill-opacity="' + p.bladeOp + '" stroke="var(--brand-blue-light)" stroke-opacity="' + p.stemOp + '" stroke-width="1"/>';
+        stems += '<line class="petal-stem" x1="160" y1="160" x2="' + p.nx + '" y2="' + p.ny + '" stroke="var(--brand-blue-light)" stroke-width="1.25" stroke-opacity="' + p.stemOp + '"/>';
+        if (cfg.growIndex === i) {
+          nodes += '<circle class="bloom-grow-ring" cx="' + p.nx + '" cy="' + p.ny + '" r="' + (parseFloat(p.nodeR) + 5).toFixed(1) + '" fill="none" stroke="var(--success,#34d399)" stroke-width="1.5" stroke-opacity="0.85"/>';
+        }
+        nodes += '<circle class="petal-node' + (p.dom ? ' dom' : '') + '" cx="' + p.nx + '" cy="' + p.ny + '" r="' + p.nodeR + '" fill="' + (p.dom ? '#fff' : 'var(--accent-on-dark)') + '" filter="url(#bloom-soft-' + sfx + ')"/>';
+        if (cfg.labels) {
+          labels += '<text x="' + p.lx + '" y="' + p.ly + '" text-anchor="' + p.labelAnchor + '" fill="' + (p.dom ? '#fff' : 'rgba(255,255,255,0.70)') + '" font-weight="' + (p.dom ? 800 : 600) + '" font-size="' + (p.dom ? 14 : 13) + '">' + esc(p.name) + '</text>';
+        }
+      });
+      var labelG = cfg.labels ? '<g class="bloom-labels" font-family="Onest, sans-serif">' + labels + '</g>' : '';
+      // SVG is DECORATIVE — the accessible name is carried by the wrapper div
+      // (screen: role=img + aria-label; card: aria-hidden). Avoids a double role=img.
+      // viewBox is widened for the labelled (screen) variant so wing labels stay inside.
+      var vb = cfg.viewBox || '0 0 320 320';
+      return '<svg class="bloom" viewBox="' + vb + '" aria-hidden="true" focusable="false"><title>' + esc(cfg.title || 'Карта вкуса') + '</title>'
+        + defs + rings + '<g class="bloom-petals">' + blades + stems + nodes + '</g>'
+        + '<circle class="bloom-core" cx="160" cy="160" r="3" fill="var(--brand-blue-light)"/>' + labelG + '</svg>';
+    }
+
+    /* ---- the week label is a real calendar fact (ISO week), not fabricated ---- */
+    function isoWeek() {
+      try {
+        var d = new Date();
+        var dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        var day = dt.getUTCDay() || 7;
+        dt.setUTCDate(dt.getUTCDate() + 4 - day);
+        var ys = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+        return Math.ceil((((dt - ys) / 86400000) + 1) / 7);
+      } catch (e) { return 22; }
+    }
+
+    /* ---- honest share: copy a text summary (no fake share API / no PNG render) ---- */
+    function copySummary() {
+      var id = hasRealSignal() ? buildIdentity() : null;
+      if (!id) { showReceipt('Профиль пуст — собери вкус, и карточку будет из чего собрать.'); return; }
+      var d = buildDeltas(), disc = buildDiscovery();
+      var lines = [
+        'Город ФМ · моя неделя в звуке:',
+        '«' + id.phrase + '»',
+        deltaText(d),
+        disc ? ('Открытие: ' + disc.line) : '',
+        id.defense
+      ].filter(Boolean);
+      var text = lines.join('\n');
+      var done = function () { showReceipt('✓ Текст карточки скопирован — вставь в сторис'); if (window.TwinrWave) window.TwinrWave.bump(); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () { legacyCopy(text); done(); });
+      } else { legacyCopy(text); done(); }
+    }
+    function legacyCopy(text) {
+      try {
+        var ta = document.createElement('textarea'); ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      } catch (e) {}
+    }
+
+    /* ---- DOM glue ---- */
+    function $(id) { return document.getElementById(id); }
+    function setText(id, t) { var el = $(id); if (el) el.textContent = t; }
+    function setHTML(id, h) { var el = $(id); if (el) el.innerHTML = h; }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function indexOfFacet(fs, name) { for (var i = 0; i < fs.length; i++) { if (fs[i].n === name) return i; } return -1; }
+    function showReceipt(msg) { var el = $('recap-receipt'); if (el) el.textContent = msg; }
+
+    function renderDeltaList(d) {
+      var ul = $('recap-deltas'); if (!ul) return; ul.innerHTML = '';
+      if (d.plus) {
+        var li = document.createElement('li'); li.className = 'recap-delta-row grow';
+        li.innerHTML = '<span class="recap-delta-name">▲ +' + esc(d.plus.n) + '</span> <span class="recap-delta-why">— ' + esc(d.plus.prov) + '</span>';
+        ul.appendChild(li);
+      }
+      if (d.minus) {
+        var li2 = document.createElement('li'); li2.className = 'recap-delta-row fade';
+        li2.innerHTML = '<span class="recap-delta-name">− ' + esc(d.minus.label) + '</span> <span class="recap-delta-why">— ты убрал это на плеере, ушло из волны</span>';
+        ul.appendChild(li2);
+      } else {
+        var li3 = document.createElement('li'); li3.className = 'recap-delta-row';
+        li3.innerHTML = '<span class="recap-delta-why">Ты пока ничего не убирал — вектор только растёт.</span>';
+        ul.appendChild(li3);
+      }
+    }
+
+    // A cold profile (no picks AND no rejections) has no real behavior — distinct
+    // from facets(), which always backfills FALLBACK to keep the vector non-empty.
+    function hasRealSignal() { return readPicks().length > 0 || readRej().length > 0; }
+    var built = false;
+    function render() {
+      var week = isoWeek();
+      setText('recap-week', week);
+      var cwk = document.querySelector('.recap-card-week'); if (cwk) cwk.textContent = week;
+
+      // Honesty floor (fidelity = the wedge): with no real signal there is nothing
+      // to explain — show a genuine empty state instead of a FALLBACK-derived card
+      // that would assert listening history («дослушиваешь до конца») that never happened.
+      var id = hasRealSignal() ? buildIdentity() : null;
+      if (!id) {
+        setText('recap-card-word', 'Здесь будет твоё слово недели');
+        setText('recap-card-defense', 'Послушай волну и собери вкус — Twinr соберёт из реальных действий одно честное слово про твою неделю. Ничего выдуманного.');
+        setHTML('recap-card-delta', ''); setText('recap-card-discovery', '');
+        setHTML('recap-card-bloom', '');
+        var sbE = $('recap-screen-bloom'); if (sbE) { sbE.innerHTML = ''; sbE.removeAttribute('aria-label'); }
+        setHTML('recap-deltas', '<li class="recap-delta-row"><span class="recap-delta-why">Вектор пустой — соберёшь вкус, и тут появится, что сдвинулось за неделю.</span></li>');
+        setText('recap-discovery-line', 'Открытия появятся, когда волна узнает тебя.');
+        return;
+      }
+      var fs = facets(), d = buildDeltas(), disc = buildDiscovery();
+
+      setText('recap-card-word', id.phrase);
+      setText('recap-card-defense', id.defense);
+      setHTML('recap-card-delta', cardDeltaHTML(d));
+      setText('recap-card-discovery', disc ? ('Открытие: ' + disc.line) : '');
+
+      var plusIdx = d.plus ? indexOfFacet(fs, d.plus.n) : -1;
+      var aria = bloomAria(fs);
+      setHTML('recap-card-bloom', bloomSvg(fs, { labels: false, idSuffix: 'card', growIndex: -1, title: 'Карта вкуса' }));
+      var sb = $('recap-screen-bloom');
+      if (sb) { sb.innerHTML = bloomSvg(fs, { labels: true, idSuffix: 'screen', growIndex: plusIdx, viewBox: '-85 -8 490 320', title: 'Карта вкуса · неделя ' + week }); sb.setAttribute('aria-label', aria); }
+
+      renderDeltaList(d);
+      setHTML('recap-discovery-line', disc ? ('<b>' + esc(disc.who) + '</b> — потому что ' + esc(disc.why)) : 'Пока без открытий — слушай волну, и здесь появится неожиданное.');
+    }
+
+    function init() { var btn = $('recap-copy'); if (btn) btn.addEventListener('click', copySummary); built = true; }
+    function onRoute() { if ((location.hash || '') === '#/recap') { if (!built) init(); render(); } }
+    window.addEventListener('hashchange', onRoute);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onRoute); else onRoute();
+    window.GorodRecap = { render: render };
   })();
   </script>
 

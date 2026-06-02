@@ -11,5 +11,8 @@ __pycache__/
 .venv/
 .env
 
+# Scratch dir — syntax-check helper, screenshot crops, server logs (transient)
+.scratch/
+
 # Git worktrees (superpowers isolated workspaces)
 .worktrees/
