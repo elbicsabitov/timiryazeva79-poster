@@ -11883,26 +11883,26 @@
     'use strict';
     var ASSET = 'assets/gorod-fm/';
     var DATA = [
-      { t: 'ПОП', hue: 330, w: 1.15 },
-      { t: 'РОК', hue: 2, w: 1.1 },
-      { t: 'ХИП-ХОП', hue: 258, w: 1.2 },
+      { t: 'ПОП', hue: 330, w: 1.15, img: 'genre-pop.jpg' },
+      { t: 'РОК', hue: 2, w: 1.1, img: 'genre-rock.jpg' },
+      { t: 'ХИП-ХОП', hue: 258, w: 1.2, img: 'genre-hiphop.jpg' },
       { t: 'Егор Крид', img: 'home-featured-egor-krid.png', w: 1.15, g: 'ПОП' },
-      { t: 'ДИСКО', hue: 292, w: 1.0 },
+      { t: 'ДИСКО', hue: 292, w: 1.0, img: 'genre-disco.jpg' },
       { t: 'Макс Корж', img: 'favs-artist-maks-korzh-base.png', w: 1.1, g: 'ХИП-ХОП' },
-      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05 },
+      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05, img: 'genre-electro.jpg' },
       { t: 'Дима Билан', img: 'favs-artist-dima-bilan-overlay.png', w: 1.0, g: 'ПОП' },
-      { t: 'ЛОФАЙ', hue: 222, w: 0.95 },
+      { t: 'ЛОФАЙ', hue: 222, w: 0.95, img: 'genre-lofi.jpg' },
       { t: 'Martin Garrix', img: 'favs-dj-martin-garrix.png', w: 1.05, g: 'ЭЛЕКТРО' },
-      { t: 'ИНДИ', hue: 152, w: 0.95 },
+      { t: 'ИНДИ', hue: 152, w: 0.95, img: 'genre-indie.jpg' },
       { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК' },
-      { t: 'ДЖАЗ', hue: 36, w: 0.9 },
+      { t: 'ДЖАЗ', hue: 36, w: 0.9, img: 'genre-jazz.jpg' },
       { t: 'Вадим Адамов', img: 'home-tile-vadim-adamov-base.png', w: 1.0, g: 'ЭЛЕКТРО' },
-      { t: 'РЭП', hue: 278, w: 1.0 },
+      { t: 'РЭП', hue: 278, w: 1.0, img: 'genre-rap.jpg' },
       { t: 'Мия Бойка', img: 'favs-artist-mia-boyka.png', w: 0.95, g: 'ПОП' },
-      { t: 'R&B', hue: 320, w: 0.9 },
+      { t: 'R&B', hue: 320, w: 0.9, img: 'genre-rnb.jpg' },
       { t: 'Рамиль', img: 'favs-artist-ramil.png', w: 0.95, g: 'ПОП' },
-      { t: 'МЕТАЛЛ', hue: 210, w: 0.9 },
-      { t: 'КЛАССИКА', hue: 45, w: 0.85 }
+      { t: 'МЕТАЛЛ', hue: 210, w: 0.9, img: 'genre-metal.jpg' },
+      { t: 'КЛАССИКА', hue: 45, w: 0.85, img: 'genre-classic.jpg' }
     ];
     // Apple-Music-style: tapping a bubble spawns related ones.
     // genre -> representative artists; artist -> similar artists.
@@ -12040,7 +12040,7 @@
         return null;
       }
       if (bubbles.length >= MAX_BUBBLES) return null;
-      var genre = d.g || (parent ? parent.genre : (d.img ? null : d.t));
+      var genre = d.g || (parent ? parent.genre : d.t);
       var wgt = depth === 0 ? d.w : Math.max(0.52, 0.7 - depth * 0.05);
       var size = Math.round(BASE * wgt);
       var el = document.createElement('button');
@@ -14860,26 +14860,26 @@
     var ASSET = 'assets/gorod-fm/';
     var DATA = [
       /* ПОПУЛЯРНО СЕЙЧАС (editorial / "в эфире Город ФМ") — seeded first => central cluster */
-      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05, pop: true },
-      { t: 'ХИП-ХОП', hue: 258, w: 1.2, pop: true },
-      { t: 'ПОП', hue: 330, w: 1.15, pop: true },
+      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05, pop: true, img: 'genre-electro.jpg' },
+      { t: 'ХИП-ХОП', hue: 258, w: 1.2, pop: true, img: 'genre-hiphop.jpg' },
+      { t: 'ПОП', hue: 330, w: 1.15, pop: true, img: 'genre-pop.jpg' },
       { t: 'Егор Крид', img: 'home-featured-egor-krid.png', w: 1.15, g: 'ПОП', pop: true },
       { t: 'Макс Корж', img: 'favs-artist-maks-korzh-base.png', w: 1.1, g: 'ХИП-ХОП', pop: true },
       { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК', pop: true },
-      { t: 'РОК', hue: 2, w: 1.1 },
-      { t: 'ДИСКО', hue: 292, w: 1.0 },
+      { t: 'РОК', hue: 2, w: 1.1, img: 'genre-rock.jpg' },
+      { t: 'ДИСКО', hue: 292, w: 1.0, img: 'genre-disco.jpg' },
       { t: 'Дима Билан', img: 'favs-artist-dima-bilan-overlay.png', w: 1.0, g: 'ПОП' },
       { t: 'Martin Garrix', img: 'favs-dj-martin-garrix.png', w: 1.05, g: 'ЭЛЕКТРО' },
-      { t: 'ЛОФАЙ', hue: 222, w: 0.95 },
-      { t: 'ИНДИ', hue: 152, w: 0.95 },
+      { t: 'ЛОФАЙ', hue: 222, w: 0.95, img: 'genre-lofi.jpg' },
+      { t: 'ИНДИ', hue: 152, w: 0.95, img: 'genre-indie.jpg' },
       { t: 'Вадим Адамов', img: 'home-tile-vadim-adamov-base.png', w: 1.0, g: 'ЭЛЕКТРО' },
-      { t: 'ДЖАЗ', hue: 36, w: 0.9 },
-      { t: 'РЭП', hue: 278, w: 1.0 },
+      { t: 'ДЖАЗ', hue: 36, w: 0.9, img: 'genre-jazz.jpg' },
+      { t: 'РЭП', hue: 278, w: 1.0, img: 'genre-rap.jpg' },
       { t: 'Мия Бойка', img: 'favs-artist-mia-boyka.png', w: 0.95, g: 'ПОП' },
-      { t: 'R&B', hue: 320, w: 0.9 },
+      { t: 'R&B', hue: 320, w: 0.9, img: 'genre-rnb.jpg' },
       { t: 'Рамиль', img: 'favs-artist-ramil.png', w: 0.95, g: 'ПОП' },
-      { t: 'МЕТАЛЛ', hue: 210, w: 0.9 },
-      { t: 'КЛАССИКА', hue: 45, w: 0.85 }
+      { t: 'МЕТАЛЛ', hue: 210, w: 0.9, img: 'genre-metal.jpg' },
+      { t: 'КЛАССИКА', hue: 45, w: 0.85, img: 'genre-classic.jpg' }
     ];
     // Apple-Music-style: tapping a bubble spawns related ones.
     // genre -> representative artists; artist -> similar artists.
@@ -15055,7 +15055,7 @@
     function makeBubble(d, depth, parent){
       if (byName[d.t]) { var ex = byName[d.t]; if (ex.el.animate) ex.el.animate([{ filter: 'brightness(1.7)' }, { filter: 'brightness(1)' }], { duration: 380 }); return null; }
       if (bubbles.length >= MAX_BUBBLES) return null;
-      var genre = d.g || (parent ? parent.genre : (d.img ? null : d.t));
+      var genre = d.g || (parent ? parent.genre : d.t);
       var wgt = depth === 0 ? (d.w || 1) : Math.max(0.52, 0.7 - depth * 0.05);
       var size = Math.round(BASE * wgt);
       var el = document.createElement('button');

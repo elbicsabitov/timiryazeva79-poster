@@ -1,0 +1,19 @@
+{
+  "_note": "Genre bubble photos for #/onboarding + discover taste-cloud. Source: Unsplash (free Unsplash License — free for commercial & non-commercial use, no attribution legally required; recorded here for provenance). Downloaded cont-13 2026-06-03. Genres have no dedicated imagery in the project's Figma cover file; groups/artists use the existing Figma-extracted assets.",
+  "source": "Unsplash",
+  "license": "Unsplash License (https://unsplash.com/license)",
+  "images": {
+    "genre-pop.jpg": "https://unsplash.com/photos/1563841930606-67e2bce48b78",
+    "genre-rock.jpg": "https://unsplash.com/photos/1565035010268-a3816f98589a",
+    "genre-hiphop.jpg": "https://unsplash.com/photos/1682534434080-404a5edda2f3",
+    "genre-disco.jpg": "https://unsplash.com/photos/1713961616536-ad21f02ccccf",
+    "genre-electro.jpg": "https://unsplash.com/photos/1619229725920-ac8b63b0631a",
+    "genre-lofi.jpg": "https://unsplash.com/photos/1621177555452-bedbe4c28879",
+    "genre-indie.jpg": "https://unsplash.com/photos/1619378449400-cb8c5bd7b6f7",
+    "genre-jazz.jpg": "https://unsplash.com/photos/1503853585905-d53f628e46ac",
+    "genre-rap.jpg": "https://unsplash.com/photos/1619067321513-bb55a012e9b2",
+    "genre-rnb.jpg": "https://unsplash.com/photos/1595422656857-ced3a4a0ce25",
+    "genre-metal.jpg": "https://unsplash.com/photos/1577648884063-1d3d1477b8a7",
+    "genre-classic.jpg": "https://unsplash.com/photos/1617544517234-c436b0624a34"
+  }
+}
