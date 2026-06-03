@@ -1,6 +1,26 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-13) — Discover taste-cloud + carousel polish + popular bubbles + genre-фото. **6 коммитов локально (HEAD `933187d`), PUSH ДЕРЖИТСЯ до `sync`.**
+## ⚡ LATEST (2026-06-03 cont-15) — «ДОДЕЛАЙ ВСЕ ДОЛГИ»: light theme v1 + ЛК + standalone-regen + weight-cloud. **6 коммитов локально (`0aae4c1`..`8199bed`), PUSH ДЕРЖИТСЯ до `sync`.**
+
+**📖 ПОЛНЫЙ хендофф: `docs/superpowers/HANDOFF-gorod-fm-cont-15.md`** (всё + NEXT + deferred + Эльбик-решения).
+
+**✅ СДЕЛАНО (committed, verified Chrome 0-errors):** weight-cloud `09704df` (cont-14) · **light theme v1** `36a688e` (Apple-grade, ADDITIVE, dev-gated — dark `cinema` BYTE-IDENTICAL; `html[data-theme="light"]` token-блок + unlayered per-surface overrides + 2 canvas-ветки + toggle; имя `light`; прод форсит cinema → клиент не видит; все 7 §8 критик-фиксов) · **ЛК account-sheet** `ca20b28` (топбар «Личный кабинет» → модалка: Twinr-ID pointer + theme-pills + demo-labeled История/Export/Delete/Logout) · **review-фиксы** `b2bb18f` (4-линзовый wf `w5iwcj491`: закрыты light-дыры на main-flows taste-saved/discover-results/cloud-strip; Светлая-pill dev-only в проде; setTheme CarPlay+wave) · **standalone** `8199bed` 3.07 MB (regen из dev, Pillow). **«Сохранённое»+#/artist — verified already-shipped** (реал-контент артиста = Ф1+ needs-assets, НЕ фабрикую).
+
+**🔴 NEXT:** **A.** PUSH @ `sync`. **B.** light deferred sweep вторичных роутов (#/track/#/profile/#/recap/#/artist/podborki-gallery/#/lives — hardcoded dark surfaces/white text; wire `--cover-mix-base` seam). **C.** standalone GorodTasteSeed-aware inline (cloud-фото runtime-concat, ~38 refs не заинлайнены → офлайн flat-fallback). **D.** backlog #/artist real-content (Ф1+). Детали → `HANDOFF-gorod-fm-cont-15.md`.
+
+---
+
+## ⚡ PREV (2026-06-03 cont-14) — #/taste **«Облако вкуса»** weight-editable bubble cloud DONE + 5-линзовый adversarial review + verified Chrome. **Коммит `09704df` локально (поверх cont-13), PUSH ДЕРЖИТСЯ до `sync`.**
+
+**✅ СДЕЛАНО (committed `09704df`, verified :8770 0-errors):** Заменил row-stack редактор #/taste на **packed-bubble облако** где РАЗМЕР шарика = вес интереса (diameter ∝ √weight, area-honest). Тап → docked `[− pips +]` stepper (5 нотчей); радиус анимируется, форк discover-физики reflow-ит соседей. **РОВ-фикс: веса PERSIST в новый `gorodfm_weights`** (раньше пересобирались из pick-order каждый load → правки умирали = control-theater). Честный per-facet provenance: **you** (задал: точное n/4 + синее кольцо) / **pick** (в твоих выборах: «по выбору») / **demo** (DEFAULT: «демо» pill) / **rejected** (lock+min, struck). Segmented control (Жанры/Артисты/Настроения/Эпохи, ≤6), артист-фото, «Списком» fallback + reduced-motion static, full a11y (role=slider/aria-labelledby/valuetext/keyboard). **4 критик-фикса все применены** (no fabricated «heard»; SR % только src=you; re-entrancy safe — persistWeight МОЛЧИТ; #taste-delta не клоббер). **5-линзовый ревью → фиксы:** matchSponsor исключает rejected (держит обещание reject-card «волна избегает»); SR digest you-set first; убран latent фейк «за неделю» из HTML; closeStrip flush; cStart retry cancellable; dead PIN/cByName удалены. **Девиации от спека (все к честности):** убран no-op 📌 pin (theater без eviction), docked strip вместо floating (избегает cont-13 focus↔physics лага), area ∝ реальный вес вместо квантованного level. Поймал+пофиксил баг load-order (ARTIST_IMG строился до GorodTasteSeed) + strict-mode ReferenceError (stray cByName).
+
+**🔴 NEXT:** **A.** **Standalone mirror** — `gorod-fm-standalone.html` НЕ зеркалит cont-13 (taste-cloud/carousel/popular/genre-фото) НИ cont-14 (weight-cloud). Нужно: скопировать IIFE+CSS из dev, base64-инлайн genre-*.jpg + artist .png. `.scratch/rebuild_standalone_full.py` стал. **B.** backlog cont-12: #/artist enrich · «Сохранённое» группировка · ЛК account-sheet · light-theme (`SPEC-gorod-fm-light-theme.md` готов). **C.** **PUSH всё при `sync`** (cont-13 6 коммитов + cont-14 `09704df`).
+
+**🟡 Эльбик-gate:** GOROD-029 онбординг-eyebrow «ПЕРВЫЙ AI» · GOROD-030 лицензии. Артефакты cont-14: спек `docs/superpowers/SPEC-gorod-fm-taste-weight-cloud.md` (реализован с 4 фиксами); review-workflow `wuobrjxae`.
+
+---
+
+## ⚡ PREV (2026-06-03 cont-13) — Discover taste-cloud + carousel polish + popular bubbles + genre-фото. **коммиты локально, PUSH ДЕРЖИТСЯ до `sync`.**
 
 **📖 ПОЛНЫЙ хендофф: `docs/superpowers/HANDOFF-gorod-fm-cont-13.md`** (всё сделанное + NEXT + решения за Эльбиком).
 
