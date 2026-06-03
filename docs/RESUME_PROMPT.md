@@ -1,6 +1,26 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-11) — МИНИ-ПЛЕЕР ПЕРЕДЕЛАН (PRIORITY #1) + play/pause fidelity-баг + **ВЕСЬ AUDIT-backlog ЗАКРЫТ** (G2/G6/G7/route + 8 per-surface волн) + **плеер locked calm-blue (Variant A — color-from-art retired)** + standalone. **ЗАПУШЕНО origin/master** (~15 коммитов cont-11, HEAD `42d1902`+)
+## ⚡ LATEST (2026-06-03 cont-12) — ВИЗУАЛЬНЫЙ АУДИТ всего сайта (Chrome MCP) + 2 фикса плеера. 🔴 НЕ ЗАКОММИЧЕНО, gallery-restyle НЕ ДОДЕЛАН (прервано оператором «прерви без потерь»)
+
+🎯 Эльбик: (1) «визуальный аудит всего сайта через mcp chrome — соответствует ли плану» → (2) «внизу странная полуобрезанная Believer-плашка — не пофиксили на норм плеер?» → (3) «галерею переоформи + рассинхрон пофикси, потом пушни и комить» → **прервано до завершения**.
+
+**📖 ПОЛНЫЙ хендофф: `docs/superpowers/HANDOFF-gorod-fm-cont-12.md`** (аудит + детали фиксов + анкеры + план).
+
+**Аудит — ГОТОВ. Вердикт: сайт СИЛЬНО соответствует плану cont-9→cont-11** ✅ (все 8 экранов + плеер сверены с per-surface спеками через 10-агентный workflow; единый синий акцент 0 cyan/violet/red, Onest, плоский анти-слоп, поведенч. «почему» везде, demo-честность, 0 console errors, TWEAKS/#/map gated).
+
+**🟢 СДЕЛАНО (working tree, НЕ закоммичено):**
+1. **Мини-плеер был перекрыт — ФИКС ВЕРИФИЦИРОВАН (Chrome), в ОБОИХ файлах.** `#home-bottom-sheet` (легаси шторка, z65, h480, якорь bottom:72px) закрытым `translateY(100%)` оставлял 72px-полоску поверх `.player-mini` (z60) = «обрезанная Believer-плашка». Фикс: `transform: translateY(calc(100% + var(--player-mini-h)))` (CSS `.home-bottom-sheet` ~L4059 в `gorod-fm.html`+`gorod-fm-standalone.html`). Низ всех роутов теперь = `#player-mini`.
+2. **Рассинхрон now-playing — ФИКС ТОЛЬКО dev, НЕ верифицирован, НЕ в standalone.** мини=Слеза/Егор Крид vs полный плеер=Believer/Imagine Dragons (оба статик-HTML). Добавлен `syncFullPlayerFromMini()` (`gorod-fm.html` ~L10865) — копирует title/artist/cover мини→полный (`#player-full-title/-artist`, карусель-центр, реальная обложка вместо концентр-плейсхолдера); зовётся на клик мини-бара+tabbar (НЕ трогает artist/track-radio флоу).
+
+**🔴 NEXT (в порядке):** **A.** Gallery-restyle `#/podborki` (НЕ НАЧАТ): ядро = `.podborki-tile-label` CSS **L4426** `font-weight:900; font-size:36px; uppercase; transform:rotate(-90deg) scaleX(1.05)` (повёрнутые/растянутые подписи, наруш. GDS-19). Галерея `.podborki-gallery` L~7875, тайлы `.podborki-tile` L7883+/CSS L4360 (h628), чипы `.podborki-chip` L4193. Развилка: В1 де-ротация (горизонт. label 700/≤24px, фото kept) | В2 flatten в `.discover-ed-card`-стиль. Discover-редизайн задумывал галерею→«От редакции» (уже есть). **РЕШИТЬ с Эльбиком.** · **B.** Верифицировать Фикс #2 в Chrome · **C.** Зеркалить Фикс #2(+gallery) в standalone · **D.** Commit + push ВСЁ.
+
+**🟡 Прочее (не блокеры):** онбординг eyebrow «ПЕРВЫЙ AI» = GOROD-029 gate; профиль показывает дефолт-вектор как «ТВОЁ» без demo-лейбла пока recap честно гейтит.
+
+**git:** working tree грязное (`gorod-fm.html` + `gorod-fm-standalone.html` изменены, НЕ закоммичено — файлы на диске сохранены). Сервер :8770 был запущен.
+
+---
+
+## ⚡ PREV (2026-06-03 cont-11) — МИНИ-ПЛЕЕР ПЕРЕДЕЛАН (PRIORITY #1) + play/pause fidelity-баг + **ВЕСЬ AUDIT-backlog ЗАКРЫТ** (G2/G6/G7/route + 8 per-surface волн) + **плеер locked calm-blue (Variant A — color-from-art retired)** + standalone. **ЗАПУШЕНО origin/master** (~15 коммитов cont-11, HEAD `42d1902`+)
 
 🎯 **Эльбик cont-10 флаг (×2): «плашка внизу как плеер — UX/UI ресёрч Карпати-уровня».** Сделано research-first.
 
