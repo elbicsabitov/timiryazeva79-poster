@@ -4393,6 +4393,17 @@
       .tcloud-bubble-check { position: absolute; z-index: 3; right: 7px; bottom: 7px; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-blue-light); display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(.5); transition: opacity var(--t-fast), transform var(--t-fast); }
       .tcloud-bubble.is-selected .tcloud-bubble-check { opacity: 1; transform: scale(1); }
       .tcloud-bubble-check svg { width: 12px; height: 12px; }
+      /* ПОПУЛЯРНО СЕЙЧАС — monochrome trend chip (top-left); hue-free, blue stays selection-only */
+      .tcloud-bubble-trend { position: absolute; z-index: 3; left: 7px; top: 7px; width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18); display: flex; align-items: center; justify-content: center; }
+      .tcloud-bubble-trend svg { width: 11px; height: 11px; }
+      .tcloud-pop-legend { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font: 600 11.5px/1.3 'Onest', sans-serif; color: var(--text-ter); }
+      .tcloud-pop-legend svg { width: 12px; height: 12px; flex: none; }
+      .tcloud-count .tc-go { color: var(--accent-on-dark); font-weight: 700; }
+      .tcloud-bubble.is-graduating { opacity: 0; transform: scale(.4) !important; transition: opacity .45s ease, transform .45s ease; pointer-events: none; }
+      .tcloud-reshuffle { margin: 12px 0 0; background: transparent; border: 1px solid var(--hairline); border-radius: 999px; padding: 6px 14px; font: 600 12.5px 'Onest', sans-serif; color: var(--text-sec); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: border-color var(--t-fast), color var(--t-fast); }
+      .tcloud-reshuffle:hover { border-color: var(--brand-blue-light); color: #fff; }
+      .tcloud-reshuffle:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      @media (prefers-reduced-motion: reduce) { .tcloud-bubble.is-graduating { transition: none; } }
       .tcloud-count { margin: 12px 0 0; font: 600 14px/1.3 'Onest', sans-serif; color: var(--text-sec); }
       .tcloud-count .n { color: var(--accent-on-dark); font-weight: 700; }
       .tcloud-count.is-met .met { color: var(--success, #34d399); }
@@ -7964,6 +7975,8 @@
               <div class="tcloud-field" id="tcloud-field" role="group" aria-label="Собери вкус — жанры и исполнители; тапни, чтобы добавить в волну"></div>
               <p class="tcloud-count" id="tcloud-count" aria-live="polite" aria-atomic="true">Собери вкус — тапни жанр или артиста</p>
               <p class="tcloud-editorial-note" id="tcloud-ed-note" hidden>Связи между артистами подобраны редакцией</p>
+              <p class="tcloud-pop-legend" id="tcloud-pop-legend"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 16 10 10 14 14 20 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="15 7 20 7 20 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>ПОПУЛЯРНО СЕЙЧАС · в эфире Город ФМ</p>
+              <button type="button" class="tcloud-reshuffle" id="tcloud-reshuffle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 12a9 9 0 0 1-15 6.7L3 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Обновить подборку</button>
             </div>
             <div class="mediateka-search">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
@@ -14846,20 +14859,21 @@
   window.GorodTasteSeed = (function () {
     var ASSET = 'assets/gorod-fm/';
     var DATA = [
-      { t: 'ПОП', hue: 330, w: 1.15 },
+      /* ПОПУЛЯРНО СЕЙЧАС (editorial / "в эфире Город ФМ") — seeded first => central cluster */
+      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05, pop: true },
+      { t: 'ХИП-ХОП', hue: 258, w: 1.2, pop: true },
+      { t: 'ПОП', hue: 330, w: 1.15, pop: true },
+      { t: 'Егор Крид', img: 'home-featured-egor-krid.png', w: 1.15, g: 'ПОП', pop: true },
+      { t: 'Макс Корж', img: 'favs-artist-maks-korzh-base.png', w: 1.1, g: 'ХИП-ХОП', pop: true },
+      { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК', pop: true },
       { t: 'РОК', hue: 2, w: 1.1 },
-      { t: 'ХИП-ХОП', hue: 258, w: 1.2 },
-      { t: 'Егор Крид', img: 'home-featured-egor-krid.png', w: 1.15, g: 'ПОП' },
       { t: 'ДИСКО', hue: 292, w: 1.0 },
-      { t: 'Макс Корж', img: 'favs-artist-maks-korzh-base.png', w: 1.1, g: 'ХИП-ХОП' },
-      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05 },
       { t: 'Дима Билан', img: 'favs-artist-dima-bilan-overlay.png', w: 1.0, g: 'ПОП' },
-      { t: 'ЛОФАЙ', hue: 222, w: 0.95 },
       { t: 'Martin Garrix', img: 'favs-dj-martin-garrix.png', w: 1.05, g: 'ЭЛЕКТРО' },
+      { t: 'ЛОФАЙ', hue: 222, w: 0.95 },
       { t: 'ИНДИ', hue: 152, w: 0.95 },
-      { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК' },
-      { t: 'ДЖАЗ', hue: 36, w: 0.9 },
       { t: 'Вадим Адамов', img: 'home-tile-vadim-adamov-base.png', w: 1.0, g: 'ЭЛЕКТРО' },
+      { t: 'ДЖАЗ', hue: 36, w: 0.9 },
       { t: 'РЭП', hue: 278, w: 1.0 },
       { t: 'Мия Бойка', img: 'favs-artist-mia-boyka.png', w: 0.95, g: 'ПОП' },
       { t: 'R&B', hue: 320, w: 0.9 },
@@ -14930,7 +14944,7 @@
     var SEED = window.GorodTasteSeed; if (!SEED) return;
     var ASSET = SEED.ASSET, DATA = SEED.DATA, REL = SEED.REL, POOL = SEED.POOL;
     var TKEY = 'gorodfm_taste';
-    var BASE = 58, MAX_BUBBLES = 24;
+    var BASE = 58, MAX_BUBBLES = 16;
     /* physics == onboarding's proven-smooth values (only the box differs) */
     var K_SEL = 0.00020, K_UNSEL = 0.00008, PUSH = 0.16, DAMP = 0.965, BOUNCE = -0.55, VCLAMP = 2.6, PAD = 10;
 
@@ -14938,6 +14952,8 @@
     var field   = document.getElementById('tcloud-field');
     var countEl = document.getElementById('tcloud-count');
     var edNote  = document.getElementById('tcloud-ed-note');
+    var reshuffleBtn = document.getElementById('tcloud-reshuffle');
+    var GRADUATE = true, GRADUATE_MS = 800, GRADUATE_ANIM_MS = 460;
     if (!field || !wrapper) return;
 
     var bubbles = [], byName = {};
@@ -14966,13 +14982,13 @@
 
     function pluralSignal(n){ var d = n % 10, dd = n % 100; if (d === 1 && dd !== 11) return 'сигнал'; if (d >= 2 && d <= 4 && (dd < 10 || dd >= 20)) return 'сигнала'; return 'сигналов'; }
     function selectedCount(){ var n = 0; bubbles.forEach(function (b) { if (b.sel) n++; }); return n; }
+    function totalTaste(){ return readTaste().length; }   // graduated picks live in storage, not bubbles[]
     function refreshCount(receipt){
       if (!countEl) return;
       if (settleTimer) { clearTimeout(settleTimer); settleTimer = 0; }
-      var n = selectedCount(), disp = Math.min(n, 8), met = n >= 5, line;
+      var n = totalTaste(), disp = Math.min(n, 99), met = n >= 5, line;
       if (n === 0) line = 'Собери вкус — тапни жанр или артиста';
-      else if (n < 5) line = 'Твоя модель за <b class="n">' + disp + '</b> ' + pluralSignal(disp) + ' · ещё ' + (5 - n) + ' до старта';
-      else line = 'Твоя модель за <b class="n">' + disp + '</b> ' + pluralSignal(disp) + ' · <span class="met">стартовый вектор собран</span>';
+      else line = '<b class="n">' + disp + '</b> в твоём вкусе' + (met ? ' · <span class="met">стартовый вектор собран</span>' : ' · ещё ' + (5 - n) + ' до старта') + ' <span class="tc-go">→</span>';
       if (receipt) { line = receipt + ' · ' + line; }
       countEl.innerHTML = line;
       countEl.classList.toggle('is-met', met);
@@ -14983,11 +14999,31 @@
       b.sel = !b.sel; b.userTapped = true;
       b.el.classList.toggle('is-selected', b.sel);
       b.el.setAttribute('aria-pressed', String(b.sel));
-      b.el.setAttribute('aria-label', (b.sel ? 'В вкусе: ' : 'Добавить в вкус: ') + b.d.t);
+      b.el.setAttribute('aria-label', (b.d.pop ? 'Популярно сейчас. ' : '') + (b.sel ? 'В вкусе: ' : 'Добавить в вкус: ') + b.d.t);
       refreshCount((b.sel ? '+ ' : '− ') + b.d.t);
       scheduleWrite();
     }
-    function onTap(b){ toggle(b); if (b.sel && !b.expanded) { b.expanded = true; spawnChildren(b); } }
+    function onTap(b){
+      var wasSel = b.sel;
+      toggle(b);                                    // writes gorodfm_taste via scheduleWrite()
+      if (b.sel && !b.expanded) { b.expanded = true; spawnChildren(b); }  // bloom FIRST
+      if (GRADUATE && b.sel && !wasSel) graduate(b); // newly-collected -> graduates to #/taste, frees canvas
+    }
+    function graduate(b){
+      if (b._grad) return; b._grad = true;
+      setTimeout(function () {
+        if (!b.el) return;
+        var done = function () {
+          var idx = bubbles.indexOf(b); if (idx !== -1) bubbles.splice(idx, 1);
+          delete byName[b.d.t];
+          if (b.el && b.el.parentNode) b.el.parentNode.removeChild(b.el);
+          refreshCount();                            // "N в твоём вкусе ->" reflects storage
+        };
+        if (REDUCEmq.matches || !b.el.animate) { done(); return; }
+        b.el.classList.add('is-graduating');
+        setTimeout(done, GRADUATE_ANIM_MS);
+      }, GRADUATE_MS);
+    }
 
     function relatedFor(b){
       var list = REL[b.d.t] ? REL[b.d.t].slice() : [];
@@ -14999,7 +15035,7 @@
     function ensureRoom(n){
       while (bubbles.length + n > MAX_BUBBLES) {
         var idx = -1, i;
-        for (i = 0; i < bubbles.length; i++) { if (!bubbles[i].sel && !bubbles[i].expanded) { idx = i; break; } }
+        for (i = 0; i < bubbles.length; i++) { if (!bubbles[i].sel && !bubbles[i].expanded && !bubbles[i].d.pop) { idx = i; break; } }
         if (idx === -1) break;
         var rm = bubbles.splice(idx, 1)[0]; delete byName[rm.d.t];
         if (rm.el && rm.el.parentNode) rm.el.parentNode.removeChild(rm.el);
@@ -15028,10 +15064,14 @@
       el.style.setProperty('--size', size + 'px');
       if (d.img) { el.style.backgroundImage = 'url(' + ASSET + d.img + ')'; }
       el.setAttribute('aria-pressed', 'false');
-      el.setAttribute('aria-label', 'Добавить в вкус: ' + d.t);
+      el.setAttribute('aria-label', (d.pop ? 'Популярно сейчас. ' : '') + 'Добавить в вкус: ' + d.t);
       el.innerHTML = '<span class="tcloud-bubble-label">' + d.t + '</span>' +
         '<span class="tcloud-bubble-check" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
       var b = { d: d, el: el, genre: genre, sel: false, depth: depth, expanded: false, userTapped: false, r: size / 2, x: 0, y: 0, vx: 0, vy: 0 };
+      if (d.pop && depth === 0) {
+        el.classList.add('tcloud-bubble--popular');
+        el.insertAdjacentHTML('beforeend', '<span class="tcloud-bubble-trend" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="4 16 10 10 14 14 20 7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.88"/><polyline points="15 7 20 7 20 12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.88"/></svg></span>');
+      }
       if (parent) {
         /* burst out from the parent like onboarding (same feel) — but fan the
            directions evenly by child index so 4 children don't all fly one way. */
@@ -15108,7 +15148,7 @@
     function setSelected(b, on){
       b.sel = on; b.el.classList.toggle('is-selected', on);
       b.el.setAttribute('aria-pressed', String(on));
-      b.el.setAttribute('aria-label', (on ? 'В вкусе: ' : 'Добавить в вкус: ') + b.d.t);
+      b.el.setAttribute('aria-label', (b.d.pop ? 'Популярно сейчас. ' : '') + (on ? 'В вкусе: ' : 'Добавить в вкус: ') + b.d.t);
     }
     function preselectFromStorage(){
       var stored = readTaste();
@@ -15129,6 +15169,31 @@
     window.addEventListener('resize', function () { if (!REDUCEmq.matches) { placed = false; if (isVisible) scatter(); } });
     window.addEventListener('gorodfm-taste-changed', function () { if (!selfDispatch) refresh(); });
 
+    if (countEl) {
+      countEl.style.cursor = 'pointer'; countEl.setAttribute('role', 'link'); countEl.setAttribute('tabindex', '0');
+      var goTaste = function () { location.hash = '#/taste'; };
+      countEl.addEventListener('click', goTaste);
+      countEl.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTaste(); } });
+    }
+    function reshuffle(){
+      var i, b;
+      for (i = bubbles.length - 1; i >= 0; i--) {
+        b = bubbles[i];
+        if (!b.sel && !b.expanded && !b.d.pop) {            // keep selected/expanded/popular
+          bubbles.splice(i, 1); delete byName[b.d.t];
+          if (b.el && b.el.parentNode) b.el.parentNode.removeChild(b.el);
+        }
+      }
+      var genres = Object.keys(POOL), tries = 0;
+      while (bubbles.length < MAX_BUBBLES - 1 && tries < 80) {
+        tries++;
+        var g = genres[Math.floor(Math.random() * genres.length)];
+        var pool = POOL[g] || []; var nm = pool[Math.floor(Math.random() * pool.length)];
+        if (nm && !byName[nm]) makeBubble({ t: nm, g: g }, 1, null);
+      }
+      placed = false; if (isVisible) scatter(); requestRun();
+    }
+    if (reshuffleBtn) reshuffleBtn.addEventListener('click', reshuffle);
     window.GorodTasteCloud = { start: start, stop: stop, requestRun: requestRun, refresh: refresh };
   })();
   </script>
