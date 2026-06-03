@@ -4361,13 +4361,29 @@
       .mediateka-add:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
       .mediateka-empty { font: 400 14px 'Onest', sans-serif; color: var(--text-sec); padding: 8px 0 4px; }
       /* floating genre "шарики" — интерактивный поиск (метафора онбординга) */
-      .media-bubbles { position: relative; display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center; margin: 2px 0 20px; min-height: 104px; }
-      .media-bubble { flex: none; display: inline-flex; align-items: center; justify-content: center; text-align: center; border-radius: 50%; cursor: pointer; font: 600 12.5px/1.15 'Onest', sans-serif; color: var(--text-pri); background: radial-gradient(circle at 36% 30%, rgba(81,104,252,.24), rgba(81,104,252,.07)); border: 1px solid rgba(81,104,252,.32); padding: 0 8px; transition: transform var(--t-fast), background var(--t-fast), border-color var(--t-fast); animation: media-bubble-float 6.5s ease-in-out infinite; will-change: transform; }
-      .media-bubble:hover { background: radial-gradient(circle at 36% 30%, rgba(81,104,252,.42), rgba(81,104,252,.16)); }
-      .media-bubble[aria-pressed="true"] { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; box-shadow: 0 6px 18px -6px rgba(81,104,252,.6); }
-      .media-bubble:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; }
-      @keyframes media-bubble-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-      @media (prefers-reduced-motion: reduce) { .media-bubble { animation: none; } }
+      /* ---- Медиатека taste-CLOUD (cont-13): embedded select-to-build-taste bubbles.
+         Forked from .onb-bubble; single blue accent, Onest, flat, no float keyframe. ---- */
+      .tcloud-wrapper { position: relative; z-index: 1; margin: 2px 0 22px; padding: 16px; background: rgba(255,255,255,.03); border: 1px solid var(--hairline); border-radius: var(--r-lg); }
+      .tcloud-field { position: relative; min-height: 280px; overflow: hidden; touch-action: manipulation; }
+      @media (max-width: 560px) { .tcloud-field { min-height: 230px; } }
+      .tcloud-bubble { position: absolute; top: 0; left: 0; width: var(--size,72px); height: var(--size,72px); border-radius: 50%; border: none; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; color: #fff; font: 700 clamp(11px, calc(var(--size) * 0.16), 17px)/1.05 'Onest', sans-serif; letter-spacing: 0.01em; overflow: hidden; will-change: transform; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: box-shadow var(--t-fast), filter var(--t-fast), opacity .35s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 22px rgba(0,0,0,.42); }
+      .tcloud-bubble-label { position: relative; z-index: 2; padding: 0 7px; text-shadow: 0 1px 6px rgba(0,0,0,.5); pointer-events: none; }
+      .tcloud-bubble--genre { background: radial-gradient(120% 120% at 30% 25%, #1b1d24, #121318); border: 1px solid rgba(255,255,255,.10); }
+      .tcloud-bubble--artist { background-size: cover; background-position: center; }
+      .tcloud-bubble--artist::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(0,0,0,.05) 30%, rgba(0,0,0,.72) 100%); }
+      .tcloud-bubble:hover { filter: brightness(1.12); }
+      .tcloud-bubble:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; }
+      .tcloud-bubble.is-selected { box-shadow: 0 0 0 2px var(--surface-0), 0 0 0 4px var(--brand-blue-light), 0 6px 16px rgba(0,0,0,.4); }
+      .tcloud-bubble-check { position: absolute; z-index: 3; right: 7px; bottom: 7px; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-blue-light); display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(.5); transition: opacity var(--t-fast), transform var(--t-fast); }
+      .tcloud-bubble.is-selected .tcloud-bubble-check { opacity: 1; transform: scale(1); }
+      .tcloud-bubble-check svg { width: 12px; height: 12px; }
+      .tcloud-count { margin: 12px 0 0; font: 600 14px/1.3 'Onest', sans-serif; color: var(--text-sec); }
+      .tcloud-count .n { color: var(--accent-on-dark); font-weight: 700; }
+      .tcloud-count.is-met .met { color: var(--success, #34d399); }
+      .tcloud-editorial-note { margin: 6px 0 0; font: 400 11.5px/1.3 'Onest', sans-serif; color: var(--text-ter); }
+      .tcloud-field.is-static { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 12px; overflow: visible; }
+      .tcloud-field.is-static .tcloud-bubble { position: relative; transform: none !important; }
+      @media (prefers-reduced-motion: reduce) { .tcloud-bubble { transition: box-shadow var(--t-fast), opacity .2s; } }
 
       .discover-editorial-row { max-width: 1080px; margin: 0 auto 8px; padding: 0 clamp(16px, 4vw, 28px); display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; }
       .discover-editorial-row::-webkit-scrollbar { display: none; }
@@ -7908,9 +7924,13 @@
           <section class="mediateka" aria-labelledby="mediateka-h">
             <div class="mediateka-head">
               <h3 class="mediateka-title" id="mediateka-h">Медиатека</h3>
-              <p class="mediateka-sub">Ищи артистов или тапни жанр-шарик — добавляй в вкус, и волна учится.</p>
+              <p class="mediateka-sub">Тапни жанр или артиста — добавится в твой вкус, волна сразу подстроится.</p>
             </div>
-            <div class="media-bubbles" id="mediateka-bubbles" role="group" aria-label="Жанры — тапни шарик, чтобы отфильтровать"></div>
+            <div class="tcloud-wrapper" id="mediateka-tcloud">
+              <div class="tcloud-field" id="tcloud-field" role="group" aria-label="Собери вкус — жанры и исполнители; тапни, чтобы добавить в волну"></div>
+              <p class="tcloud-count" id="tcloud-count" aria-live="polite" aria-atomic="true">Собери вкус — тапни жанр или артиста</p>
+              <p class="tcloud-editorial-note" id="tcloud-ed-note" hidden>Связи между артистами подобраны редакцией</p>
+            </div>
             <div class="mediateka-search">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
               <input class="mediateka-input" id="mediateka-input" type="text" placeholder="Найди артиста…" aria-label="Поиск артиста в медиатеке">
@@ -14725,23 +14745,14 @@
     var grid = document.getElementById('mediateka-grid');
     var input = document.getElementById('mediateka-input');
     var empty = document.getElementById('mediateka-empty');
-    var bubbles = document.getElementById('mediateka-bubbles');
     if (!grid || !input) return;
-    var activeGenre = '';
     function readTaste(){ try { return JSON.parse(localStorage.getItem(TKEY) || '[]'); } catch(e){ return []; } }
     function inTaste(n){ return readTaste().indexOf(n) !== -1; }
     function addTaste(n){ var t = readTaste(); if (t.indexOf(n) === -1) { t.push(n); try { localStorage.setItem(TKEY, JSON.stringify(t)); } catch(e){} } }
     function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-    function renderBubbles(){
-      if (!bubbles) return;
-      bubbles.innerHTML = GENRES.map(function(b, i){
-        var on = activeGenre === b.g;
-        return '<button class="media-bubble" type="button" data-g="' + esc(b.g) + '" aria-pressed="' + on + '" style="width:' + b.s + 'px;height:' + b.s + 'px;animation-delay:' + (i * 0.45).toFixed(2) + 's">' + esc(b.g) + '</button>';
-      }).join('');
-    }
     function render(q){
       q = (q || '').trim().toLowerCase();
-      var list = ART.filter(function(a){ return (!q || a.n.toLowerCase().indexOf(q) !== -1) && (!activeGenre || a.g === activeGenre); });
+      var list = ART.filter(function(a){ return (!q || a.n.toLowerCase().indexOf(q) !== -1); });
       if (empty) empty.hidden = list.length > 0;
       grid.innerHTML = list.map(function(a){
         var added = inTaste(a.n);
@@ -14753,12 +14764,6 @@
           + '</div>';
       }).join('');
     }
-    if (bubbles) bubbles.addEventListener('click', function(e){
-      var b = e.target.closest('.media-bubble'); if (!b) return;
-      var g = b.getAttribute('data-g');
-      activeGenre = (activeGenre === g) ? '' : g;
-      renderBubbles(); render(input.value);
-    });
     grid.addEventListener('click', function(e){
       var b = e.target.closest('.mediateka-add'); if (!b) return;
       var n = b.getAttribute('data-name');
@@ -14766,9 +14771,307 @@
       addTaste(n);
       b.setAttribute('data-added', 'true');
       b.textContent = '✓ в вкусе';
+      window.dispatchEvent(new Event('gorodfm-taste-changed'));
     });
     input.addEventListener('input', function(){ render(input.value); });
-    renderBubbles(); render('');
+    window.addEventListener('gorodfm-taste-changed', function(){ render(input.value); });
+    render('');
+  })();
+  </script>
+  <script>
+  /* ======================================================================
+     GorodTasteSeed — shared taste-elicitation seed (genres + real Figma
+     artist covers + curated bloom relations). Copied VERBATIM from the
+     GorodOnboarding IIFE seed; onboarding itself is left UNTOUCHED (the
+     "do not break #/onboarding" gate). Keep in sync if the seed changes.
+     ====================================================================== */
+  window.GorodTasteSeed = (function () {
+    var ASSET = 'assets/gorod-fm/';
+    var DATA = [
+      { t: 'ПОП', hue: 330, w: 1.15 },
+      { t: 'РОК', hue: 2, w: 1.1 },
+      { t: 'ХИП-ХОП', hue: 258, w: 1.2 },
+      { t: 'Егор Крид', img: 'home-featured-egor-krid.png', w: 1.15, g: 'ПОП' },
+      { t: 'ДИСКО', hue: 292, w: 1.0 },
+      { t: 'Макс Корж', img: 'favs-artist-maks-korzh-base.png', w: 1.1, g: 'ХИП-ХОП' },
+      { t: 'ЭЛЕКТРО', hue: 190, w: 1.05 },
+      { t: 'Дима Билан', img: 'favs-artist-dima-bilan-overlay.png', w: 1.0, g: 'ПОП' },
+      { t: 'ЛОФАЙ', hue: 222, w: 0.95 },
+      { t: 'Martin Garrix', img: 'favs-dj-martin-garrix.png', w: 1.05, g: 'ЭЛЕКТРО' },
+      { t: 'ИНДИ', hue: 152, w: 0.95 },
+      { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК' },
+      { t: 'ДЖАЗ', hue: 36, w: 0.9 },
+      { t: 'Вадим Адамов', img: 'home-tile-vadim-adamov-base.png', w: 1.0, g: 'ЭЛЕКТРО' },
+      { t: 'РЭП', hue: 278, w: 1.0 },
+      { t: 'Мия Бойка', img: 'favs-artist-mia-boyka.png', w: 0.95, g: 'ПОП' },
+      { t: 'R&B', hue: 320, w: 0.9 },
+      { t: 'Рамиль', img: 'favs-artist-ramil.png', w: 0.95, g: 'ПОП' },
+      { t: 'МЕТАЛЛ', hue: 210, w: 0.9 },
+      { t: 'КЛАССИКА', hue: 45, w: 0.85 }
+    ];
+    // Apple-Music-style: tapping a bubble spawns related ones.
+    // genre -> representative artists; artist -> similar artists.
+    var REL = {
+      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина'],
+      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons'],
+      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит'],
+      'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин'],
+      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker'],
+      'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib'],
+      'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco'],
+      'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong'],
+      'РЭП': ['Eminem','Kendrick Lamar','Drake','ЛСП'],
+      'R&B': ['The Weeknd','Frank Ocean','SZA','Бьянка'],
+      'МЕТАЛЛ': ['Metallica','Rammstein','Ария','S.O.A.D.'],
+      'КЛАССИКА': ['Чайковский','Моцарт','L.Einaudi','H.Zimmer'],
+      'Егор Крид': ['Niletto','MONATIK','JONY','Артур Пирожков'],
+      'Макс Корж': ['Баста','Скриптонит','Каста','ЛСП'],
+      'Дима Билан': ['С.Лазарев','П.Гагарина','Zivert','Егор Крид'],
+      'Martin Garrix': ['David Guetta','Avicii','Tiësto','Alan Walker'],
+      'Linkin Park': ['Imagine Dragons','Papa Roach','3 Days Grace','Limp Bizkit'],
+      'Вадим Адамов': ['DJ Smash','Filatov & Karas','Burito','Niletto'],
+      'Мия Бойка': ['INSTASAMKA','Клава Кока','Зомб','Дора'],
+      'Рамиль': ['JONY','HammAli & Navai','Niletto','Zivert']
+    };
+    var MAX_BUBBLES = 80;
+    var GENRE_HUE = {
+      'ПОП': 330, 'РОК': 2, 'ХИП-ХОП': 258, 'ДИСКО': 292, 'ЭЛЕКТРО': 190,
+      'ЛОФАЙ': 222, 'ИНДИ': 152, 'ДЖАЗ': 36, 'РЭП': 278, 'R&B': 320,
+      'МЕТАЛЛ': 210, 'КЛАССИКА': 45
+    };
+    // Deep fallback pool so ANY bubble keeps blooming coherent "similar" ones
+    // (genre-tagged) — endless Apple-Music-style expansion.
+    var POOL = {
+      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина','Niletto','JONY','Дора','Клава Кока','Dua Lipa','The Weeknd'],
+      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons','ДДТ','Nirvana','Coldplay','Muse','The Beatles','Queen'],
+      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит','Каста','ЛСП','Travis Scott','Kanye West','Тимати','Гуф'],
+      'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин','Bee Gees','Daft Punk','Donna Summer','CHIC'],
+      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker','Calvin Harris','Skrillex','deadmau5','Zedd','ODESZA'],
+      'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib','Idealism','Jinsang','mac ayres','Powfu'],
+      'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco','Tame Impala','The Strokes','Cigarettes A.S.','Phoenix'],
+      'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong','John Coltrane','Ella Fitzgerald','Чет Бейкер','Norah Jones'],
+      'РЭП': ['Eminem','Kendrick Lamar','Drake','ЛСП','J.Cole','50 Cent','Тимати','Big Baby Tape'],
+      'R&B': ['The Weeknd','Frank Ocean','SZA','Бьянка','Usher','Alicia Keys','H.E.R.','Daniel Caesar'],
+      'МЕТАЛЛ': ['Metallica','Rammstein','Ария','S.O.A.D.','Slipknot','Korn','Nightwish','Disturbed'],
+      'КЛАССИКА': ['Чайковский','Моцарт','L.Einaudi','H.Zimmer','Бетховен','Бах','Vivaldi','Шопен']
+    };
+    return { ASSET: ASSET, DATA: DATA, REL: REL, POOL: POOL, GENRE_HUE: GENRE_HUE };
+  })();
+  </script>
+  <script>
+  /* ----------------------------------------------------------------------
+     GorodTasteCloud (cont-13) — embedded select-to-build-taste cloud in the
+     Медиатека (#/podborki). Forked from the onboarding bubble engine with
+     constants tuned for a bounded ~360x190 in-page box + IntersectionObserver
+     pause + live reduced-motion + focus-freeze. Taps write the REAL shared
+     gorodfm_taste UNCAPPED + VERBATIM (same format as onboarding saveTaste and
+     the grid "+ в вкус"), preserving non-cloud entries — no data-loss.
+     ---------------------------------------------------------------------- */
+  (function () {
+    'use strict';
+    var SEED = window.GorodTasteSeed; if (!SEED) return;
+    var ASSET = SEED.ASSET, DATA = SEED.DATA, REL = SEED.REL, POOL = SEED.POOL;
+    var TKEY = 'gorodfm_taste';
+    var BASE = 58, MAX_BUBBLES = 24;
+    /* physics == onboarding's proven-smooth values (only the box differs) */
+    var K_SEL = 0.00020, K_UNSEL = 0.00008, PUSH = 0.16, DAMP = 0.965, BOUNCE = -0.55, VCLAMP = 2.6, PAD = 10;
+
+    var wrapper = document.getElementById('mediateka-tcloud');
+    var field   = document.getElementById('tcloud-field');
+    var countEl = document.getElementById('tcloud-count');
+    var edNote  = document.getElementById('tcloud-ed-note');
+    if (!field || !wrapper) return;
+
+    var bubbles = [], byName = {};
+    var raf = 0, running = false, placed = false, bloomed = false;
+    var W = 0, H = 0;
+    var REDUCEmq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var isVisible = false, writeTimer = 0, settleTimer = 0, selfDispatch = false;
+
+    function readTaste(){ try { return JSON.parse(localStorage.getItem(TKEY) || '[]') || []; } catch (e) { return []; } }
+    /* uncapped, verbatim merge: keep entries not represented by a cloud bubble
+       (grid "+ в вкус" additions, onboarding-only names), reflect cloud selection. */
+    function writeTaste(){
+      var stored = readTaste();
+      var cloudNames = bubbles.map(function (b) { return b.d.t; });
+      var out = stored.filter(function (n) { return cloudNames.indexOf(n) === -1; });
+      bubbles.forEach(function (b) { if (b.sel && out.indexOf(b.d.t) === -1) out.push(b.d.t); });
+      try { localStorage.setItem(TKEY, JSON.stringify(out)); } catch (e) {}
+    }
+    function scheduleWrite(){
+      if (writeTimer) clearTimeout(writeTimer);
+      writeTimer = setTimeout(function () {
+        writeTimer = 0; writeTaste();
+        selfDispatch = true; window.dispatchEvent(new Event('gorodfm-taste-changed')); selfDispatch = false;
+      }, 120);
+    }
+
+    function pluralSignal(n){ var d = n % 10, dd = n % 100; if (d === 1 && dd !== 11) return 'сигнал'; if (d >= 2 && d <= 4 && (dd < 10 || dd >= 20)) return 'сигнала'; return 'сигналов'; }
+    function selectedCount(){ var n = 0; bubbles.forEach(function (b) { if (b.sel) n++; }); return n; }
+    function refreshCount(receipt){
+      if (!countEl) return;
+      if (settleTimer) { clearTimeout(settleTimer); settleTimer = 0; }
+      var n = selectedCount(), disp = Math.min(n, 8), met = n >= 5, line;
+      if (n === 0) line = 'Собери вкус — тапни жанр или артиста';
+      else if (n < 5) line = 'Твоя модель за <b class="n">' + disp + '</b> ' + pluralSignal(disp) + ' · ещё ' + (5 - n) + ' до старта';
+      else line = 'Твоя модель за <b class="n">' + disp + '</b> ' + pluralSignal(disp) + ' · <span class="met">стартовый вектор собран</span>';
+      if (receipt) { line = receipt + ' · ' + line; }
+      countEl.innerHTML = line;
+      countEl.classList.toggle('is-met', met);
+      if (receipt) { settleTimer = setTimeout(function () { settleTimer = 0; refreshCount(); }, 2400); }
+    }
+
+    function toggle(b){
+      b.sel = !b.sel; b.userTapped = true;
+      b.el.classList.toggle('is-selected', b.sel);
+      b.el.setAttribute('aria-pressed', String(b.sel));
+      b.el.setAttribute('aria-label', (b.sel ? 'В вкусе: ' : 'Добавить в вкус: ') + b.d.t);
+      refreshCount((b.sel ? '+ ' : '− ') + b.d.t);
+      scheduleWrite();
+    }
+    function onTap(b){ toggle(b); if (b.sel && !b.expanded) { b.expanded = true; spawnChildren(b); } }
+
+    function relatedFor(b){
+      var list = REL[b.d.t] ? REL[b.d.t].slice() : [];
+      var pool = (POOL[b.genre] || []).slice(), i, j, t;
+      for (i = pool.length - 1; i > 0; i--) { j = Math.floor(Math.random() * (i + 1)); t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+      for (i = 0; i < pool.length && list.length < 4; i++) { if (list.indexOf(pool[i]) === -1) list.push(pool[i]); }
+      return list;
+    }
+    function ensureRoom(n){
+      while (bubbles.length + n > MAX_BUBBLES) {
+        var idx = -1, i;
+        for (i = 0; i < bubbles.length; i++) { if (!bubbles[i].sel && !bubbles[i].expanded) { idx = i; break; } }
+        if (idx === -1) break;
+        var rm = bubbles.splice(idx, 1)[0]; delete byName[rm.d.t];
+        if (rm.el && rm.el.parentNode) rm.el.parentNode.removeChild(rm.el);
+      }
+    }
+    function spawnChildren(parent){
+      var names = relatedFor(parent).filter(function (nm) { return !byName[nm]; });
+      if (!names.length) { pulse(parent); return; }
+      ensureRoom(names.length);
+      parent._spawnTotal = names.length; parent._spawnI = 0;
+      names.forEach(function (name) { makeBubble({ t: name }, parent.depth + 1, parent); });
+      if (!bloomed) { bloomed = true; if (edNote) edNote.hidden = false; }
+      refreshCount('+' + names.length + ' похожих ниже');
+    }
+    function pulse(b){ if (b.el.animate) b.el.animate([{ transform: b.el.style.transform + ' scale(1.12)' }, { transform: b.el.style.transform }], { duration: 320 }); }
+
+    function makeBubble(d, depth, parent){
+      if (byName[d.t]) { var ex = byName[d.t]; if (ex.el.animate) ex.el.animate([{ filter: 'brightness(1.7)' }, { filter: 'brightness(1)' }], { duration: 380 }); return null; }
+      if (bubbles.length >= MAX_BUBBLES) return null;
+      var genre = d.g || (parent ? parent.genre : (d.img ? null : d.t));
+      var wgt = depth === 0 ? (d.w || 1) : Math.max(0.52, 0.7 - depth * 0.05);
+      var size = Math.round(BASE * wgt);
+      var el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'tcloud-bubble ' + (d.img ? 'tcloud-bubble--artist' : 'tcloud-bubble--genre');
+      el.style.setProperty('--size', size + 'px');
+      if (d.img) { el.style.backgroundImage = 'url(' + ASSET + d.img + ')'; }
+      el.setAttribute('aria-pressed', 'false');
+      el.setAttribute('aria-label', 'Добавить в вкус: ' + d.t);
+      el.innerHTML = '<span class="tcloud-bubble-label">' + d.t + '</span>' +
+        '<span class="tcloud-bubble-check" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+      var b = { d: d, el: el, genre: genre, sel: false, depth: depth, expanded: false, userTapped: false, r: size / 2, x: 0, y: 0, vx: 0, vy: 0 };
+      if (parent) {
+        /* burst out from the parent like onboarding (same feel) — but fan the
+           directions evenly by child index so 4 children don't all fly one way. */
+        var total = parent._spawnTotal || 1, idx = (parent._spawnI = (parent._spawnI || 0) + 1) - 1;
+        var ang = (idx / total) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
+        var sp = 2.6 + Math.random() * 1.8;
+        b.x = parent.x + Math.cos(ang) * (parent.r * 0.5);
+        b.y = parent.y + Math.sin(ang) * (parent.r * 0.5);
+        b.vx = Math.cos(ang) * sp; b.vy = Math.sin(ang) * sp;
+        if (W) { b.x = Math.max(b.r, Math.min(W - b.r, b.x)); b.y = Math.max(PAD + b.r, Math.min(H - PAD - b.r, b.y)); }
+        paint(b); el.style.opacity = '0';
+        requestAnimationFrame(function () { el.style.opacity = '1'; });
+      }
+      el.addEventListener('click', function () { onTap(b); });
+      field.appendChild(el);
+      bubbles.push(b); byName[d.t] = b;
+      return b;
+    }
+
+    function measure(){ if (!field) return; var r = field.getBoundingClientRect(); W = r.width; H = r.height; }
+    function scatter(){
+      measure();
+      if (W < 10 || H < 10) return false;
+      var mid = H / 2;
+      bubbles.forEach(function (b, i) {
+        var ang = (i / bubbles.length) * Math.PI * 2 + Math.random() * 0.6;
+        b.x = W / 2 + Math.cos(ang) * (W * (0.10 + Math.random() * 0.30));
+        b.y = mid + Math.sin(ang) * ((H - 2 * PAD) * (0.14 + Math.random() * 0.30));
+        b.x = Math.max(b.r, Math.min(W - b.r, b.x));
+        b.y = Math.max(PAD + b.r, Math.min(H - PAD - b.r, b.y));
+        b.vx = (Math.random() - 0.5) * 0.6; b.vy = (Math.random() - 0.5) * 0.6;
+        paint(b);
+      });
+      placed = true; return true;
+    }
+    function paint(b){ var sc = b.sel ? 1.06 : 1; b.el.style.transform = 'translate(' + (b.x - b.r) + 'px,' + (b.y - b.r) + 'px) scale(' + sc + ')'; }
+
+    function step(){
+      var cx = W / 2, cy = H / 2, i, j, b;
+      for (i = 0; i < bubbles.length; i++) {
+        b = bubbles[i];
+        var k = b.sel ? K_SEL : K_UNSEL;
+        b.vx += (cx - b.x) * k; b.vy += (cy - b.y) * k;
+        b.vx *= DAMP; b.vy *= DAMP;
+      }
+      for (i = 0; i < bubbles.length; i++) {
+        for (j = i + 1; j < bubbles.length; j++) {
+          var a = bubbles[i], c = bubbles[j];
+          var dx = c.x - a.x, dy = c.y - a.y, dist = Math.sqrt(dx * dx + dy * dy) || 0.01, min = a.r + c.r + 10;
+          if (dist < min) { var pu = (min - dist) / dist * PUSH, px = dx * pu, py = dy * pu; a.vx -= px; a.vy -= py; c.vx += px; c.vy += py; }
+        }
+      }
+      for (i = 0; i < bubbles.length; i++) {
+        b = bubbles[i];
+        var spd = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+        if (spd > VCLAMP) { b.vx = b.vx / spd * VCLAMP; b.vy = b.vy / spd * VCLAMP; }
+        b.x += b.vx; b.y += b.vy;
+        if (b.x < b.r) { b.x = b.r; b.vx *= BOUNCE; } else if (b.x > W - b.r) { b.x = W - b.r; b.vx *= BOUNCE; }
+        if (b.y < PAD + b.r) { b.y = PAD + b.r; b.vy *= BOUNCE; } else if (b.y > H - PAD - b.r) { b.y = H - PAD - b.r; b.vy *= BOUNCE; }
+        paint(b);
+      }
+      raf = requestAnimationFrame(step);
+    }
+
+    function start(){ if (running || REDUCEmq.matches || !isVisible) return; if (!placed && !scatter()) return; running = true; raf = requestAnimationFrame(step); }
+    function stop(){ running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    function requestRun(){ if (!REDUCEmq.matches && isVisible) start(); else stop(); }
+
+    function applyReduced(){
+      if (REDUCEmq.matches) { field.classList.add('is-static'); bubbles.forEach(function (b) { b.el.style.transform = ''; }); }
+      else { field.classList.remove('is-static'); placed = false; if (isVisible) scatter(); }
+      requestRun();
+    }
+    function setSelected(b, on){
+      b.sel = on; b.el.classList.toggle('is-selected', on);
+      b.el.setAttribute('aria-pressed', String(on));
+      b.el.setAttribute('aria-label', (on ? 'В вкусе: ' : 'Добавить в вкус: ') + b.d.t);
+    }
+    function preselectFromStorage(){
+      var stored = readTaste();
+      bubbles.forEach(function (b) { if (stored.indexOf(b.d.t) !== -1) { setSelected(b, true); b.userTapped = true; } });
+    }
+    function refresh(){
+      var stored = readTaste();
+      bubbles.forEach(function (b) { var on = stored.indexOf(b.d.t) !== -1; if (on !== b.sel) setSelected(b, on); });
+      refreshCount();
+    }
+
+    DATA.forEach(function (d) { makeBubble(d, 0, null); });
+    preselectFromStorage();
+    refreshCount();
+    if (REDUCEmq.matches) field.classList.add('is-static');
+    if (REDUCEmq.addEventListener) REDUCEmq.addEventListener('change', applyReduced);
+    new IntersectionObserver(function (e) { isVisible = e[0].isIntersecting; requestRun(); }, { threshold: 0, rootMargin: '200px 0px' }).observe(wrapper);
+    window.addEventListener('resize', function () { if (!REDUCEmq.matches) { placed = false; if (isVisible) scatter(); } });
+    window.addEventListener('gorodfm-taste-changed', function () { if (!selfDispatch) refresh(); });
+
+    window.GorodTasteCloud = { start: start, stop: stop, requestRun: requestRun, refresh: refresh };
   })();
   </script>
 </body>
