@@ -4056,9 +4056,14 @@
         display: flex;
         flex-direction: column;
         gap: 0;
-        transform: translateY(100%);
+        /* Fully clear the viewport when closed. The sheet is anchored at
+           bottom:var(--player-mini-h), so translateY(100%) alone slides it down by
+           its own 480px height but leaves a 72px strip overlapping the redesigned
+           .player-mini (z60) — the old now-playing header was covering the new mini-bar.
+           Clearing the bottom offset too hides it completely on any viewport. */
+        transform: translateY(calc(100% + var(--player-mini-h)));
         transition: transform var(--t-mid);
-        /* hidden by default via transform; we also need display logic */
+        /* hidden by default via transform; open state restores translateY(0) below */
       }
 
       /* The sheet's drag handle strip */
@@ -4303,6 +4308,67 @@
       .discover-map-axis--y { top: 8px; left: 50%; transform: translateX(-50%); }
       .discover-map-axis--x { bottom: 8px; left: 50%; transform: translateX(-50%); }
       .discover-map-foot { font-family: 'Onest', sans-serif; font-size: 12.5px; color: var(--text-quat); margin: 10px 0 0; }
+      /* ---- Discover shelves (cont-12) — карусели разного дизайна (как Figma) ---- */
+      .discover-shelf { max-width: 1100px; margin: 26px auto 0; padding: 0 clamp(16px, 4vw, 28px); }
+      .discover-shelf--hero { margin-top: 20px; }
+      .shelf-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+      .shelf-title { font: 700 19px/1 'Onest', sans-serif; letter-spacing: -0.01em; color: var(--text-pri); margin: 0; }
+      .shelf-sub { font: 400 13px/1 'Onest', sans-serif; color: var(--text-sec); }
+      .shelf-row { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding: 2px 2px 6px; }
+      .shelf-row::-webkit-scrollbar { display: none; }
+      .shelf-item { flex: none; scroll-snap-align: start; background: none; border: none; padding: 0; text-align: left; cursor: pointer; }
+      .shelf-item:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; border-radius: var(--r-lg); }
+      /* tiles (collections) */
+      .shelf-row--tiles { gap: 14px; }
+      .shelf-row--tiles .shelf-item { width: auto; }
+      .shelf-tile { position: relative; width: 100%; height: 408px; border-radius: var(--r-lg); overflow: hidden; background: var(--surface-2) center/cover no-repeat; border: 1px solid var(--hairline); box-shadow: var(--sh-2); transition: transform var(--t-fast), box-shadow var(--t-fast); }
+      @media (prefers-reduced-motion: no-preference) { .shelf-item:hover .shelf-tile { transform: translateY(-4px); box-shadow: var(--sh-3); } }
+      .shelf-tile::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,15,0) 46%, rgba(11,12,15,.72) 100%); }
+      .shelf-tile-label { position: absolute; left: 16px; bottom: 18px; z-index: 2; writing-mode: vertical-rl; transform: rotate(180deg); transform-origin: center; font: 700 21px/1 'Onest', sans-serif; letter-spacing: 0.02em; text-transform: uppercase; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.55); max-height: calc(100% - 64px); }
+      .shelf-tile-play { position: absolute; right: 12px; bottom: 12px; z-index: 2; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--brand-blue-light); color: #fff; opacity: 0; transform: translateY(6px); transition: opacity var(--t-fast), transform var(--t-fast); box-shadow: 0 6px 16px -6px rgba(81,104,252,.6); }
+      .shelf-item:hover .shelf-tile-play, .shelf-item:focus-within .shelf-tile-play { opacity: 1; transform: translateY(0); }
+      .shelf-tile-rel { margin-top: 9px; font: 400 12px/1.3 'Onest', sans-serif; color: var(--accent-on-dark); display: flex; align-items: center; gap: 6px; max-width: 264px; }
+      .shelf-tile-rel::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex: none; }
+      /* avatars (artists) */
+      .shelf-row--avatars .shelf-item { width: 120px; text-align: center; }
+      .shelf-avatar { width: 110px; height: 110px; border-radius: 50%; margin: 0 auto; background: var(--surface-2) center/cover no-repeat; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), var(--sh-1); transition: transform var(--t-fast); }
+      @media (prefers-reduced-motion: no-preference) { .shelf-item:hover .shelf-avatar { transform: scale(1.04); } }
+      .shelf-avatar-name { margin-top: 11px; font: 600 13.5px/1.2 'Onest', sans-serif; color: var(--text-pri); }
+      /* cards (groups) */
+      .shelf-row--cards .shelf-item { width: 160px; }
+      .shelf-card-cover { width: 160px; height: 160px; border-radius: var(--r-lg); background: var(--surface-2) center/cover no-repeat; border: 1px solid var(--hairline); box-shadow: var(--sh-2); transition: transform var(--t-fast), box-shadow var(--t-fast); }
+      @media (prefers-reduced-motion: no-preference) { .shelf-item:hover .shelf-card-cover { transform: translateY(-3px); box-shadow: var(--sh-3); } }
+      .shelf-card-name { margin-top: 10px; font: 600 13.5px/1.2 'Onest', sans-serif; color: var(--text-pri); }
+
+      /* ---- Медиатека (cont-12) — поиск + "+ в вкус" wedge ---- */
+      .mediateka { max-width: 1100px; margin: 32px auto 8px; padding: 0 clamp(16px, 4vw, 28px); }
+      .mediateka-head { margin-bottom: 14px; }
+      .mediateka-title { font: 700 19px/1 'Onest', sans-serif; letter-spacing: -0.01em; color: var(--text-pri); margin: 0; }
+      .mediateka-sub { font: 400 13px/1.35 'Onest', sans-serif; color: var(--text-sec); margin: 4px 0 0; }
+      .mediateka-search { display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: var(--r-lg); background: var(--surface-2); border: 1px solid var(--hairline); margin-bottom: 18px; max-width: 520px; transition: border-color var(--t-fast); }
+      .mediateka-search:focus-within { border-color: rgba(81,104,252,.5); }
+      .mediateka-search svg { width: 18px; height: 18px; color: var(--text-ter); flex: none; }
+      .mediateka-input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: var(--text-pri); font: 400 15px/1 'Onest', sans-serif; }
+      .mediateka-input::placeholder { color: var(--text-ter); }
+      .mediateka-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+      .mediateka-artist { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 18px 12px 14px; border-radius: var(--r-lg); background: var(--surface-1); border: 1px solid var(--hairline); }
+      .mediateka-photo { width: 84px; height: 84px; border-radius: 50%; background-size: cover; background-position: center top; background-color: var(--surface-2); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+      .mediateka-name { font: 600 14px/1.2 'Onest', sans-serif; color: var(--text-pri); }
+      .mediateka-hint { font: 400 11.5px/1.3 'Onest', sans-serif; color: var(--text-sec); margin-top: -3px; }
+      .mediateka-add { margin-top: 4px; min-height: 34px; padding: 7px 14px; border-radius: var(--r-pill); font: 600 12.5px/1 'Onest', sans-serif; cursor: pointer; background: var(--tint-blue-light-20); color: var(--accent-on-dark); border: 1px solid rgba(81,104,252,.4); transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast); display: inline-flex; align-items: center; gap: 6px; }
+      .mediateka-add:hover { background: rgba(81,104,252,.28); }
+      .mediateka-add[data-added="true"] { background: transparent; border-color: var(--hairline); color: var(--text-sec); cursor: default; }
+      .mediateka-add:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .mediateka-empty { font: 400 14px 'Onest', sans-serif; color: var(--text-sec); padding: 8px 0 4px; }
+      /* floating genre "шарики" — интерактивный поиск (метафора онбординга) */
+      .media-bubbles { position: relative; display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center; margin: 2px 0 20px; min-height: 104px; }
+      .media-bubble { flex: none; display: inline-flex; align-items: center; justify-content: center; text-align: center; border-radius: 50%; cursor: pointer; font: 600 12.5px/1.15 'Onest', sans-serif; color: var(--text-pri); background: radial-gradient(circle at 36% 30%, rgba(81,104,252,.24), rgba(81,104,252,.07)); border: 1px solid rgba(81,104,252,.32); padding: 0 8px; transition: transform var(--t-fast), background var(--t-fast), border-color var(--t-fast); animation: media-bubble-float 6.5s ease-in-out infinite; will-change: transform; }
+      .media-bubble:hover { background: radial-gradient(circle at 36% 30%, rgba(81,104,252,.42), rgba(81,104,252,.16)); }
+      .media-bubble[aria-pressed="true"] { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; box-shadow: 0 6px 18px -6px rgba(81,104,252,.6); }
+      .media-bubble:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; }
+      @keyframes media-bubble-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+      @media (prefers-reduced-motion: reduce) { .media-bubble { animation: none; } }
+
       .discover-editorial-row { max-width: 1080px; margin: 0 auto 8px; padding: 0 clamp(16px, 4vw, 28px); display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; }
       .discover-editorial-row::-webkit-scrollbar { display: none; }
       .discover-ed-card { flex: none; width: 268px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform var(--t-fast), border-color var(--t-fast); }
@@ -7783,6 +7849,12 @@
             </div>
           </div>
 
+          <!-- Подборки — карусель-герой, видна сразу при открытии (реальный Figma-контент) -->
+          <section class="discover-shelf discover-shelf--hero" aria-labelledby="shelf-collections-h">
+            <div class="shelf-head"><h3 class="shelf-title" id="shelf-collections-h">Подборки</h3><span class="shelf-sub">Запусти любую как волну</span></div>
+            <div class="shelf-row shelf-row--tiles" id="shelf-collections" role="list" aria-label="Подборки станций"></div>
+          </section>
+
           <!-- D1 карта вкуса + D2 distance-dial (GOROD-046b). Демо-данные. -->
           <section class="discover-map-wrap" aria-labelledby="discover-map-h">
             <div class="discover-map-head">
@@ -7820,228 +7892,32 @@
           <h3 class="discover-editorial-title">От редакции</h3>
           <div class="discover-editorial-row" id="discover-editorial-row" role="list" aria-label="Подборки от редакции — выбор человека, не алгоритма"></div>
 
-          <!-- Chip row -->
-          <div
-            class="podborki-chip-row"
-            role="group"
-            aria-label="Жанр подборки"
-            id="podborki-chip-row"
-          >
-            <button
-              class="podborki-chip"
-              type="button"
-              aria-pressed="true"
-              data-genre="rok"
-              aria-label="Фильтр: РОК"
-            >РОК</button>
-            <button
-              class="podborki-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="disko"
-              aria-label="Фильтр: ДИСКО"
-            >ДИСКО</button>
-            <button
-              class="podborki-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="pop"
-              aria-label="Фильтр: ПОП"
-            >ПОП</button>
-            <button
-              class="podborki-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="hip-hop"
-              aria-label="Фильтр: ХИП-ХОП"
-            >ХИП-ХОП</button>
-            <button
-              class="podborki-chip"
-              type="button"
-              aria-pressed="false"
-              data-genre="eshche"
-              aria-label="Фильтр: ЕЩЁ"
-            >ЕЩЁ</button>
-          </div>
+          <!-- Исполнители — круглые аватары (как Figma) -->
+          <section class="discover-shelf" aria-labelledby="shelf-artists-h">
+            <div class="shelf-head"><h3 class="shelf-title" id="shelf-artists-h">Исполнители</h3><span class="shelf-sub">Радио по артисту в один тап</span></div>
+            <div class="shelf-row shelf-row--avatars" id="shelf-artists" role="list" aria-label="Исполнители"></div>
+          </section>
 
-          <!-- Desktop / tablet: single flat row (all 9 tiles in .podborki-gallery) -->
-          <!-- Mobile: restructured to 2 rows via JS — see script below          -->
-          <div
-            class="podborki-gallery"
-            id="podborki-gallery-desktop"
-            role="list"
-            aria-label="Подборки станций"
-          >
+          <!-- Группы — карточки-квадраты (как Figma) -->
+          <section class="discover-shelf" aria-labelledby="shelf-groups-h">
+            <div class="shelf-head"><h3 class="shelf-title" id="shelf-groups-h">Группы</h3></div>
+            <div class="shelf-row shelf-row--cards" id="shelf-groups" role="list" aria-label="Группы"></div>
+          </section>
 
-            <!-- Tile 1: POP GOLD 2010s — width 245 (Figma 2385:1026) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="1"
-              data-label="POP GOLD 2010s"
-              style="width:245px"
-              role="listitem"
-              aria-label="Открыть подборку POP GOLD 2010s"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-pop-gold-2010s.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">POP GOLD 2010s</span>
-              </div>
-            </button>
-
-            <!-- Tile 2: K-POP — width 299 (Figma 2385:1024) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="2"
-              data-label="K-POP"
-              style="width:299px"
-              role="listitem"
-              aria-label="Открыть подборку K-POP"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-k-pop.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">K-POP</span>
-              </div>
-            </button>
-
-            <!-- Tile 3: CHILL — width 310 (Figma 2385:1022) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="3"
-              data-label="CHILL"
-              style="width:310px"
-              role="listitem"
-              aria-label="Открыть подборку CHILL"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-chill.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">CHILL</span>
-              </div>
-            </button>
-
-            <!-- Tile 4: ДИСКАЧ 90-Х — width 309 (Figma 2385:1020) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="4"
-              data-label="ДИСКАЧ 90-Х"
-              style="width:309px"
-              role="listitem"
-              aria-label="Открыть подборку ДИСКАЧ 90-Х"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-discach-90.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">ДИСКАЧ 90-Х</span>
-              </div>
-            </button>
-
-            <!-- Tile 5: Z. CITY SHOW — width 373 (Figma 2385:1018) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="5"
-              data-label="Z. CITY SHOW"
-              style="width:373px"
-              role="listitem"
-              aria-label="Открыть подборку Z. CITY SHOW"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-z-city-show.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">Z. CITY SHOW</span>
-              </div>
-            </button>
-
-            <!-- Tile 6: VADIM ADAMOV — width 373 (Figma 2385:1016) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="6"
-              data-label="VADIM ADAMOV"
-              style="width:373px"
-              role="listitem"
-              aria-label="Открыть подборку VADIM ADAMOV"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-vadim-adamov.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">VADIM ADAMOV</span>
-              </div>
-            </button>
-
-            <!-- Tile 7: DJ PITKIN — width 373 (Figma 2385:1014) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="7"
-              data-label="DJ PITKIN"
-              style="width:373px"
-              role="listitem"
-              aria-label="Открыть подборку DJ PITKIN"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-dj-pitkin.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">DJ PITKIN</span>
-              </div>
-            </button>
-
-            <!-- Tile 8: DFM CHILL (base only) — width 373 (Figma 2385:1012) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="8"
-              data-label="DFM CHILL"
-              style="width:373px"
-              role="listitem"
-              aria-label="Открыть подборку DFM CHILL"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-dfm-chill-base.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">DFM CHILL</span>
-              </div>
-            </button>
-
-            <!-- Tile 9: DFM CHILL (base + overlay) — width 373 (Figma 2385:1033) -->
-            <button
-              class="podborki-tile"
-              type="button"
-              data-tile="9"
-              data-label="DFM CHILL"
-              style="width:373px"
-              role="listitem"
-              aria-label="Открыть подборку DFM CHILL"
-            >
-              <div class="podborki-tile-bg" style="background-image:url(assets/gorod-fm/podborki-tile-dfm-chill-base.png);"></div>
-              <div class="podborki-tile-bg podborki-tile-bg--layer" style="background-image:url(assets/gorod-fm/podborki-tile-dfm-chill-overlay.png);"></div>
-              <div class="podborki-tile-shade"></div>
-              <div class="podborki-tile-label-wrap">
-                <span class="podborki-tile-label">DFM CHILL</span>
-              </div>
-            </button>
-
-          </div><!-- /.podborki-gallery -->
-
-          <!-- Mobile 2-row gallery (hidden on desktop, populated by JS) -->
-          <div
-            class="podborki-gallery-mobile"
-            id="podborki-gallery-mobile"
-            aria-label="Подборки станций"
-            aria-hidden="true"
-            style="display:none"
-          >
-            <!-- Row 1: tiles 1-5 -->
-            <div class="podborki-row" role="list" aria-label="Подборки, ряд 1" id="podborki-row-1"></div>
-            <!-- Row 2: tiles 6-9 -->
-            <div class="podborki-row" role="list" aria-label="Подборки, ряд 2" id="podborki-row-2"></div>
-          </div>
+          <!-- Медиатека — найди и улучшай вкус (реальные артисты Figma) -->
+          <section class="mediateka" aria-labelledby="mediateka-h">
+            <div class="mediateka-head">
+              <h3 class="mediateka-title" id="mediateka-h">Медиатека</h3>
+              <p class="mediateka-sub">Ищи артистов или тапни жанр-шарик — добавляй в вкус, и волна учится.</p>
+            </div>
+            <div class="media-bubbles" id="mediateka-bubbles" role="group" aria-label="Жанры — тапни шарик, чтобы отфильтровать"></div>
+            <div class="mediateka-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+              <input class="mediateka-input" id="mediateka-input" type="text" placeholder="Найди артиста…" aria-label="Поиск артиста в медиатеке">
+            </div>
+            <div class="mediateka-grid" id="mediateka-grid" role="list" aria-label="Артисты медиатеки"></div>
+            <p class="mediateka-empty" id="mediateka-empty" hidden>Ничего не нашлось — попробуй другое имя.</p>
+          </section>
 
         </div><!-- /.podborki-page -->
 
@@ -10857,8 +10733,39 @@
         if (playerMini) playerMini.focus();
       }
 
+      // Sync the full player's now-playing meta + cover FROM the persistent mini-bar.
+      // The mini-bar is the source of truth for the current track; this fixes the desync
+      // where tapping the mini-bar (Слеза / Егор Крид) opened a stale "Believer" full player.
+      function syncFullPlayerFromMini() {
+        var mt = document.getElementById('player-track-title');
+        var ma = document.getElementById('player-track-artist');
+        var miniImg = document.getElementById('mini-art-img');
+        var ft = document.getElementById('player-full-title');
+        var fa = document.getElementById('player-full-artist');
+        if (mt && ft) ft.textContent = mt.textContent;
+        if (ma && fa) fa.textContent = ma.textContent;
+        // Mobile carousel — keep the centre (current) item in sync with the mini-bar.
+        var center = document.querySelector('.player-full-carousel-item[aria-label="Текущий трек"]');
+        if (center) {
+          var cCover = center.querySelector('.player-full-carousel-cover');
+          var cTitle = center.querySelector('.player-full-carousel-track-title');
+          var cArtist = center.querySelector('.player-full-carousel-track-artist');
+          if (mt && cCover) cCover.textContent = mt.textContent;
+          if (mt && cTitle) cTitle.textContent = mt.textContent;
+          if (ma && cArtist) cArtist.textContent = ma.textContent;
+        }
+        // Desktop cover — show the real album art instead of the generic placeholder glyph.
+        var fullCover = document.querySelector('.player-full-cover-desktop');
+        if (fullCover && miniImg && miniImg.getAttribute('src')) {
+          fullCover.innerHTML = '<img src="' + miniImg.getAttribute('src') + '" alt="' +
+            (miniImg.getAttribute('alt') || '') +
+            '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;">';
+        }
+      }
+
       if (playerMini) {
         playerMini.addEventListener('click', function () {
+          syncFullPlayerFromMini();
           openPlayer();
         });
       }
@@ -10879,6 +10786,7 @@
 
       if (tabbarPlayerBtn) {
         tabbarPlayerBtn.addEventListener('click', function () {
+          syncFullPlayerFromMini();
           openPlayer();
         });
       }
@@ -14745,5 +14653,123 @@
   })();
   </script>
 
+  <script>
+  /* GorodShelves (cont-12) — карусели Подборки/Исполнители/Группы из реального Figma-контента */
+  (function GorodShelves(){
+    var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;fill:currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+    function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function startWave(name, sub){
+      var mt=document.getElementById('player-track-title'), ma=document.getElementById('player-track-artist');
+      if(mt) mt.textContent=name; if(ma) ma.textContent=sub||'Город ФМ · Подборки';
+      var ft=document.getElementById('player-full-title'), fa=document.getElementById('player-full-artist');
+      if(ft) ft.textContent=name; if(fa) fa.textContent=sub||'Город ФМ · Подборки';
+      if(typeof window.openPlayer==='function') window.openPlayer();
+    }
+    var COLLECTIONS = [
+      {n:'POP GOLD 2010s',w:208,img:'assets/gorod-fm/podborki-tile-pop-gold-2010s.png',rel:'Эпоха, по которой ты часто скучаешь'},
+      {n:'CHILL',w:252,img:'assets/gorod-fm/podborki-tile-chill.png',rel:'Ближе к твоим вечерним ~70 BPM'},
+      {n:'ДИСКАЧ 90-х',w:260,img:'assets/gorod-fm/podborki-tile-discach-90.png',rel:'Новое для тебя — диско-эпоха'},
+      {n:'K-POP',w:248,img:'assets/gorod-fm/podborki-tile-k-pop.png',rel:'Шаг в сторону от твоего вектора'},
+      {n:'DFM Chill',w:300,img:'assets/gorod-fm/podborki-tile-dfm-chill-base.png',rel:'Спокойнее, чем твоя волна'},
+      {n:'Z. City Show',w:300,img:'assets/gorod-fm/podborki-tile-z-city-show.png',rel:'Шоу редакции — живой эфир'},
+      {n:'Vadim Adamov',w:300,img:'assets/gorod-fm/podborki-tile-vadim-adamov.png',rel:'Диджей-сет рядом с поп-вектором'},
+      {n:'DJ Pitkin',w:252,img:'assets/gorod-fm/podborki-tile-dj-pitkin.png',rel:'Танцевальный — дальше от твоего'}
+        ];
+    var ARTISTS = [
+      {n:'Akon',img:'assets/gorod-fm/favs-artist-akon.png'},
+      {n:'Дима Билан',img:'assets/gorod-fm/favs-artist-dima-bilan-overlay.png'},
+      {n:'Макс Корж',img:'assets/gorod-fm/favs-artist-maks-korzh-base.png'},
+      {n:'Мия Бойка',img:'assets/gorod-fm/favs-artist-mia-boyka.png'},
+      {n:'Рамиль',img:'assets/gorod-fm/favs-artist-ramil.png'},
+      {n:'Rem Digga',img:'assets/gorod-fm/favs-artist-rem-diga-overlay.png'}
+    ];
+    var GROUPS = [
+      {n:'Linkin Park',img:'assets/gorod-fm/favs-group-linkin-park-overlay.png'},
+      {n:'Ludovico Einaudi',img:'assets/gorod-fm/favs-group-ludovico-overlay.png'},
+      {n:'Bernhoft',img:'assets/gorod-fm/favs-group-bernhoft.png'},
+      {n:'Crystal Castles',img:'assets/gorod-fm/favs-group-crystal-castles.png'},
+      {n:'My Darkest Days',img:'assets/gorod-fm/favs-group-my-darkest-days.png'}
+    ];
+    var c = document.getElementById('shelf-collections');
+    if (c) c.innerHTML = COLLECTIONS.map(function(x){
+      return '<button class="shelf-item" type="button" role="listitem" style="width:'+x.w+'px" data-name="'+esc(x.n)+'" data-sub="Город ФМ · Подборки" aria-label="Запустить волну '+esc(x.n)+'">'
+        + '<div class="shelf-tile" style="background-image:url('+x.img+')"><span class="shelf-tile-label">'+esc(x.n)+'</span><span class="shelf-tile-play">'+PLAY+'</span></div>'
+        + '<div class="shelf-tile-rel">'+esc(x.rel)+'</div></button>';
+    }).join('');
+    var a = document.getElementById('shelf-artists');
+    if (a) a.innerHTML = ARTISTS.map(function(x){
+      return '<button class="shelf-item" type="button" role="listitem" data-name="'+esc(x.n)+'" data-sub="Радио по артисту" aria-label="Запустить волну по артисту '+esc(x.n)+'">'
+        + '<div class="shelf-avatar" style="background-image:url('+x.img+')"></div><div class="shelf-avatar-name">'+esc(x.n)+'</div></button>';
+    }).join('');
+    var g = document.getElementById('shelf-groups');
+    if (g) g.innerHTML = GROUPS.map(function(x){
+      return '<button class="shelf-item" type="button" role="listitem" data-name="'+esc(x.n)+'" data-sub="Радио по группе" aria-label="Запустить волну по группе '+esc(x.n)+'">'
+        + '<div class="shelf-card-cover" style="background-image:url('+x.img+')"></div><div class="shelf-card-name">'+esc(x.n)+'</div></button>';
+    }).join('');
+    [c,a,g].forEach(function(el){ if(!el) return; el.addEventListener('click', function(e){ var b=e.target.closest('.shelf-item'); if(!b) return; startWave(b.getAttribute('data-name'), b.getAttribute('data-sub')); }); });
+  })();
+  </script>
+  <script>
+  /* GorodMediateka (cont-12) — поиск артистов + "+ в вкус" пишет gorodfm_taste (реальный wedge) */
+  (function GorodMediateka(){
+    var ART = [
+      {f:'a-studio',n:'А-Студио',g:'Поп-рок'},{f:'afina',n:'Афина',g:'Поп'},{f:'aigel',n:'Аигел',g:'Электро-рэп'},
+      {f:'ak-47',n:'АК-47',g:'Хип-хоп'},{f:'akvarium',n:'Аквариум',g:'Рок'},{f:'alisa',n:'Алиса',g:'Рок'},
+      {f:'alsmi',n:'ALSMI',g:'Поп'},{f:'alsu',n:'Алсу',g:'Поп'},{f:'alyans',n:'Альянс',g:'Синти-поп'},
+      {f:'anet-sai',n:'Анет Сай',g:'Поп'},{f:'ani-lorak',n:'Ани Лорак',g:'Поп'},{f:'anna-german',n:'Анна Герман',g:'Ретро'},
+      {f:'anna-vorobey',n:'Анна Воробей',g:'Поп'},{f:'anton-tokarev',n:'Антон Токарев',g:'Поп'},{f:'ariya',n:'Ария',g:'Метал'},
+      {f:'arthur-pirozhkov',n:'Артур Пирожков',g:'Поп'},{f:'artur',n:'Артур',g:'Поп'},{f:'asia',n:'Asia',g:'Поп'}
+    ];
+    var GENRES = [{g:'Поп',s:100},{g:'Рок',s:82},{g:'Хип-хоп',s:90},{g:'Метал',s:76},{g:'Электро-рэп',s:94},{g:'Синти-поп',s:92},{g:'Ретро',s:78},{g:'Поп-рок',s:86}];
+    var TKEY = 'gorodfm_taste';
+    var grid = document.getElementById('mediateka-grid');
+    var input = document.getElementById('mediateka-input');
+    var empty = document.getElementById('mediateka-empty');
+    var bubbles = document.getElementById('mediateka-bubbles');
+    if (!grid || !input) return;
+    var activeGenre = '';
+    function readTaste(){ try { return JSON.parse(localStorage.getItem(TKEY) || '[]'); } catch(e){ return []; } }
+    function inTaste(n){ return readTaste().indexOf(n) !== -1; }
+    function addTaste(n){ var t = readTaste(); if (t.indexOf(n) === -1) { t.push(n); try { localStorage.setItem(TKEY, JSON.stringify(t)); } catch(e){} } }
+    function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function renderBubbles(){
+      if (!bubbles) return;
+      bubbles.innerHTML = GENRES.map(function(b, i){
+        var on = activeGenre === b.g;
+        return '<button class="media-bubble" type="button" data-g="' + esc(b.g) + '" aria-pressed="' + on + '" style="width:' + b.s + 'px;height:' + b.s + 'px;animation-delay:' + (i * 0.45).toFixed(2) + 's">' + esc(b.g) + '</button>';
+      }).join('');
+    }
+    function render(q){
+      q = (q || '').trim().toLowerCase();
+      var list = ART.filter(function(a){ return (!q || a.n.toLowerCase().indexOf(q) !== -1) && (!activeGenre || a.g === activeGenre); });
+      if (empty) empty.hidden = list.length > 0;
+      grid.innerHTML = list.map(function(a){
+        var added = inTaste(a.n);
+        return '<div class="mediateka-artist" role="listitem">'
+          + '<div class="mediateka-photo" style="background-image:url(assets/gorod-fm/library-artist-' + a.f + '.png)"></div>'
+          + '<div class="mediateka-name">' + esc(a.n) + '</div>'
+          + '<div class="mediateka-hint">' + esc(a.g) + '</div>'
+          + '<button class="mediateka-add" type="button" data-name="' + esc(a.n) + '" data-added="' + added + '" aria-label="Добавить ' + esc(a.n) + ' в вкус">' + (added ? '✓ в вкусе' : '+ в вкус') + '</button>'
+          + '</div>';
+      }).join('');
+    }
+    if (bubbles) bubbles.addEventListener('click', function(e){
+      var b = e.target.closest('.media-bubble'); if (!b) return;
+      var g = b.getAttribute('data-g');
+      activeGenre = (activeGenre === g) ? '' : g;
+      renderBubbles(); render(input.value);
+    });
+    grid.addEventListener('click', function(e){
+      var b = e.target.closest('.mediateka-add'); if (!b) return;
+      var n = b.getAttribute('data-name');
+      if (inTaste(n)) return;
+      addTaste(n);
+      b.setAttribute('data-added', 'true');
+      b.textContent = '✓ в вкусе';
+    });
+    input.addEventListener('input', function(){ render(input.value); });
+    renderBubbles(); render('');
+  })();
+  </script>
 </body>
 </html>
