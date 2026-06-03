@@ -7375,6 +7375,41 @@
       --cover-mix-base:#111318; --accent-on-dark:#8094ff; --accent-text:#8094ff;
       --brand-blue-light:#5168FC; --brand-blue-hover:#6477ff;
     }
+
+    /* ====================================================================
+       ЛК — account sheet (BLUEPRINT-sections-integration). Thin modal opened from
+       the topbar «Личный кабинет» pill. Themes for free via tokens (dark + light).
+       All affordances are demo-labeled (no real backend). Single-accent (no red logout).
+       ==================================================================== */
+    .account-sheet { position: fixed; inset: 0; z-index: 250; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity .22s ease; }
+    .account-sheet.is-open { opacity: 1; pointer-events: auto; }
+    .account-backdrop { position: absolute; inset: 0; background: rgba(6,7,10,.66); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .account-panel { position: relative; width: 100%; max-width: 420px; max-height: 88vh; overflow-y: auto; background: var(--surface-0); border: 1px solid var(--hairline); border-radius: var(--r-xl); box-shadow: var(--sh-4); padding: 26px 24px 22px; }
+    .account-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--surf-hover); border: none; color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color var(--t-fast); }
+    .account-close svg { width: 18px; height: 18px; }
+    .account-close:hover { color: var(--text-pri); }
+    .account-close:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .account-title { font: 700 21px 'Onest', sans-serif; color: var(--text-pri); margin: 0 0 4px; }
+    .account-sub { font: 400 13px/1.5 'Onest', sans-serif; color: var(--text-sec); margin: 0 0 4px; }
+    .account-block { padding: 15px 0; border-top: 1px solid var(--divider); }
+    .account-block--first { border-top: none; padding-top: 16px; }
+    .account-row-k { display: block; font: 700 11.5px 'Onest', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 10px; }
+    .account-row-v { font: 600 14px 'Onest', sans-serif; color: var(--text-pri); display: inline-flex; align-items: center; gap: 8px; }
+    .account-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .account-pill { background: var(--surf-hover); border: 1px solid var(--hairline); border-radius: 999px; padding: 8px 14px; font: 600 13px 'Onest', sans-serif; color: var(--text-sec); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast); }
+    .account-pill.is-on { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .account-pill:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .account-demo, .account-beta { font: 700 9px 'Onest', sans-serif; letter-spacing: .04em; text-transform: uppercase; padding: 1px 6px; border-radius: 999px; background: var(--surf-hover); border: 1px solid var(--hairline); color: var(--text-sec); }
+    .account-pill.is-on .account-beta { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.32); color: #fff; }
+    .account-toggle { display: flex; align-items: center; gap: 10px; font: 500 14px 'Onest', sans-serif; color: var(--text-pri); cursor: pointer; }
+    .account-toggle input { width: 18px; height: 18px; accent-color: var(--brand-blue-light); flex: none; }
+    .account-note { font: 400 12px/1.45 'Onest', sans-serif; color: var(--text-ter, var(--text-sec)); margin: 8px 0 0; }
+    .account-actions { padding-top: 16px; border-top: 1px solid var(--divider); display: flex; flex-direction: column; gap: 8px; }
+    .account-btn { width: 100%; text-align: left; background: var(--surf-hover); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 12px 14px; font: 600 14px 'Onest', sans-serif; color: var(--text-pri); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: background var(--t-fast); }
+    .account-btn:hover { background: var(--surf-active); }
+    .account-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .account-btn--logout { color: var(--text-sec); justify-content: center; }
+    .account-btn-ack { font: 600 12px 'Onest', sans-serif; color: var(--accent-text); }
   </style>
 
   <!-- Surface overrides: outside @layer to guarantee cascade win at desktop viewports.
@@ -9449,6 +9484,45 @@
       <!-- /#/onboarding -->
 
       <!-- Résumé → music concept-demo (VISION #7) — opened from onboarding "загрузите резюме" -->
+      <!-- ЛК — account sheet (thin, demo; opened from topbar «Личный кабинет»). Themes via tokens. -->
+      <div class="account-sheet" id="account-sheet" role="dialog" aria-modal="true" aria-labelledby="account-title" aria-hidden="true">
+        <div class="account-backdrop" id="account-backdrop" aria-hidden="true"></div>
+        <div class="account-panel" role="document">
+          <button class="account-close" id="account-close" type="button" aria-label="Закрыть">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <h2 class="account-title" id="account-title">Личный кабинет</h2>
+          <p class="account-sub">Демо: всё хранится на устройстве — на сервер ничего не уходит.</p>
+
+          <div class="account-block account-block--first">
+            <span class="account-row-k">Профиль</span>
+            <span class="account-row-v">Twinr-ID <span class="account-demo">демо</span></span>
+            <p class="account-note">Единый вход управляется в Twinr-ID. В полной версии — почта/телефон и синк между устройствами.</p>
+          </div>
+
+          <div class="account-block">
+            <span class="account-row-k">Тема оформления</span>
+            <div class="account-pills" role="group" aria-label="Тема оформления">
+              <button class="account-pill" type="button" data-theme-set="cinema" aria-pressed="true">Тёмная</button>
+              <button class="account-pill" type="button" data-theme-set="light" aria-pressed="false">Светлая <span class="account-beta">бета</span></button>
+              <button class="account-pill" type="button" data-theme-set="system" aria-pressed="false">Как в системе</button>
+            </div>
+          </div>
+
+          <div class="account-block">
+            <span class="account-row-k">Прозрачность <span class="account-demo">демо</span></span>
+            <label class="account-toggle"><input type="checkbox" id="account-history" checked> История прослушиваний кормит волну</label>
+            <p class="account-note">В полной версии: выключишь — волна перестаёт учиться на этой сессии (приватный режим). В прототипе тумблер ничего не отключает.</p>
+          </div>
+
+          <div class="account-actions">
+            <button class="account-btn" id="account-export" type="button"><span>Экспорт моих данных</span><span class="account-demo">демо</span></button>
+            <button class="account-btn" id="account-delete" type="button"><span>Удалить локальные данные</span><span class="account-demo">демо</span></button>
+            <button class="account-btn account-btn--logout" id="account-logout" type="button">Выйти</button>
+          </div>
+        </div>
+      </div>
+
       <div class="resume-modal" id="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resume-title" aria-hidden="true">
         <div class="resume-backdrop" id="resume-backdrop" aria-hidden="true"></div>
         <div class="resume-panel" role="document">
@@ -15670,6 +15744,84 @@
     }
     if (reshuffleBtn) reshuffleBtn.addEventListener('click', reshuffle);
     window.GorodTasteCloud = { start: start, stop: stop, requestRun: requestRun, refresh: refresh };
+  })();
+  </script>
+
+  <script>
+  /* ---- ЛК — account sheet (thin, demo). Opened from the topbar «Личный кабинет» pill.
+         Identity = Twinr-ID pointer (no auth). Theme select routes through the real
+         applyTheme via the Tweaks buttons (keeps attr+LS+sidebar-icon in sync). Export/
+         delete/History are demo-labeled — no backend, no false causal claims. ---- */
+  (function () {
+    'use strict';
+    function $(id) { return document.getElementById(id); }
+    var sheet, lastFocus = null;
+    function isOpen() { return sheet && sheet.classList.contains('is-open'); }
+    function open() {
+      sheet = $('account-sheet'); if (!sheet) return;
+      lastFocus = document.activeElement;
+      sheet.setAttribute('aria-hidden', 'false'); sheet.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      syncPills();
+      var c = $('account-close'); if (c) c.focus();
+    }
+    function close() {
+      if (!sheet) return;
+      sheet.setAttribute('aria-hidden', 'true'); sheet.classList.remove('is-open');
+      document.body.style.overflow = '';
+      if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} }
+    }
+    function syncPills(sel) {
+      var cur = document.documentElement.getAttribute('data-theme') || 'cinema';
+      [].forEach.call(document.querySelectorAll('.account-pill'), function (b) {
+        var v = b.getAttribute('data-theme-set');
+        var on = sel ? (v === sel) : (v !== 'system' && v === cur);
+        b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+    function setTheme(v) {
+      var t = v === 'system' ? ((window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'cinema') : v;
+      var tb = document.querySelector('.tweak-btn[data-tweak="theme"][data-value="' + t + '"]');
+      if (tb) { tb.click(); }   // route through the real applyTheme (syncs attr + LS + tweaks states + sidebar icon)
+      else { document.documentElement.setAttribute('data-theme', t); try { localStorage.setItem('gorod-fm.theme', t); } catch (e) {} }
+      syncPills(v);
+    }
+    function ack(btn, msg) {
+      if (!btn) return; var chip = btn.querySelector('.account-demo'); if (!chip) return;
+      var prev = chip.textContent; chip.textContent = msg; chip.classList.add('account-btn-ack');
+      setTimeout(function () { chip.textContent = prev; chip.classList.remove('account-btn-ack'); }, 1600);
+    }
+    function exportData() {
+      try {
+        var data = { gorodfm_taste: JSON.parse(localStorage.getItem('gorodfm_taste') || '[]'),
+                     gorodfm_weights: JSON.parse(localStorage.getItem('gorodfm_weights') || '{}'),
+                     gorodfm_rejected: JSON.parse(localStorage.getItem('gorodfm_rejected') || '[]') };
+        var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob), a = document.createElement('a');
+        a.href = url; a.download = 'gorod-fm-taste-demo.json'; document.body.appendChild(a); a.click();
+        setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 800);
+        ack($('account-export'), '✓ скачано');
+      } catch (e) {}
+    }
+    function deleteData() {
+      ['gorodfm_taste', 'gorodfm_weights', 'gorodfm_rejected', 'gorodfm_liked'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+      try { window.dispatchEvent(new Event('gorodfm-taste-changed')); } catch (e) {}
+      ack($('account-delete'), '✓ очищено');
+    }
+    function logout() { close(); location.hash = '#/home'; }
+    function wire() {
+      var btn = document.querySelector('.topbar-account'); if (btn) btn.addEventListener('click', open);
+      var c = $('account-close'); if (c) c.addEventListener('click', close);
+      var bd = $('account-backdrop'); if (bd) bd.addEventListener('click', close);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen()) close(); });
+      [].forEach.call(document.querySelectorAll('.account-pill'), function (b) {
+        b.addEventListener('click', function () { setTheme(b.getAttribute('data-theme-set')); });
+      });
+      var ex = $('account-export'); if (ex) ex.addEventListener('click', exportData);
+      var del = $('account-delete'); if (del) del.addEventListener('click', deleteData);
+      var lo = $('account-logout'); if (lo) lo.addEventListener('click', logout);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
   })();
   </script>
 </body>
