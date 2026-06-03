@@ -1,0 +1,607 @@
+{
+  "summary": "Read-only per-route audit of hardcoded dark surfaces / white-on-paper text that break the light theme on secondary routes of gorod-fm.html",
+  "agentCount": 6,
+  "logs": [],
+  "result": {
+    "results": [
+      {
+        "route": "#/track",
+        "summary": "The #/track route is almost entirely UNTHEMED for light: a Grep of the per-surface light-override block (~L7323-7397) confirms ZERO `.track-*` rules exist, so on the warm-paper light bg (#FAFAF7, the page renders inside #app which inherits the paper body) virtually every text element vanishes (white-on-paper) and every panel keeps a dark-on-dark glass background. The whole track page sits on PAPER — there is no immersive-dark wrapper around it (unlike the player overlay, which re-asserts dark tokens via `html[data-theme=\"light\"] .player-mini/.player-full` at L7389). So the hero (`.track-title` #EAF0FF, `.track-artist` rgba-white), the «Почему играет» block (`.track-why-*`, rgba-white text + rgba-white .04 glass cards), the «Вектор трека» block (`.track-vector-*`), the lyrics view (`.track-lyric-line` rgba(255,255,255,.45)/#fff), the history list (`.track-history-*`), and the «Рядом по звучанию» neighbors (`.track-neighbor-*`) all break. The fix shape: (1) one new `html[data-theme=\"light\"] …` override group for all the on-paper text + glass-card surfaces (re-point to --text-*/--surface-*/--hairline tokens); (2) wire the 2 CSS art-tint covers (.track-cover L5790, .track-neighbor-cover L5826) to `var(--cover-mix-base, #orig)` so they flip to a white floor in light while dark stays byte-identical, AND flip their white monograms to dark ink (white mono on a near-white flipped cover = invisible); (3) edit the 9 inline `.track-history-cover` color-mix backgrounds (L8941-9068) to use `var(--cover-mix-base, #15171D)` and override the cover text color; (4) one scoped override for the SHARED `.player-progress` scrubber rail (rgba(255,255,255,.20)) which is rendered on paper here and would vanish. The transport play button (white on blue fill) and the immersive player chrome stay white correctly.",
+        "cssOverrides": [
+          {
+            "selectors": "html[data-theme=\"light\"] .track-cover-mono",
+            "declarations": "color: var(--text-pri); text-shadow: none;",
+            "rationale": "L5793: `.track-cover-mono { color:#fff; text-shadow:0 2px 24px rgba(0,0,0,.35) }`. Once the big cover (L5790) is wired to --cover-mix-base it flips to a near-white floor (22% blue on #FFFFFF) in light → a white monogram becomes invisible. Flip to dark ink and drop the dark shadow.",
+            "lineHint": "L5793 (mono); cover bg L5790"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-title",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L5702: `.track-title { color:#EAF0FF }` — near-white title on paper, ~1.05:1, effectively invisible.",
+            "lineHint": "L5698-5707"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-artist",
+            "declarations": "color: var(--text-sec);",
+            "rationale": "L5713: `.track-artist { color:rgba(255,255,255,.70) }` — white-on-paper subtitle vanishes. Maps to the secondary text ramp.",
+            "lineHint": "L5709-5719"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-why-title, html[data-theme=\"light\"] .track-vector-title, html[data-theme=\"light\"] .track-neighbors-heading",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "Three section headings hardcode #fff (L5796 .track-why-title, L5810 .track-vector-title, L5821 .track-neighbors-heading) — all sit on paper and disappear.",
+            "lineHint": "L5796 / L5810 / L5821"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-why-row, html[data-theme=\"light\"] .track-neighbor",
+            "declarations": "background: var(--surface-1); border-color: var(--hairline);",
+            "rationale": "L5798 `.track-why-row` and L5823 `.track-neighbor` use `background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07/.08)` — on paper these glass fills are invisible and give no card definition. Re-point to a white card + hairline (matches the established discover/taste light card pattern at L7370/7375).",
+            "lineHint": "L5798 (why-row) / L5823 (neighbor)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-neighbor:hover",
+            "declarations": "background: var(--surf-hover); border-color: var(--brand-blue-light);",
+            "rationale": "L5824: `.track-neighbor:hover { background:rgba(255,255,255,.07); border-color:rgba(81,104,252,.40) }` — the white hover wash is invisible on paper; use the light hover token.",
+            "lineHint": "L5824"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-why-text",
+            "declarations": "color: var(--text-sec);",
+            "rationale": "L5802: `.track-why-text { color:rgba(255,255,255,.86) }` — body text on the (now white) why-row card vanishes.",
+            "lineHint": "L5802"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-why-text b",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L5803: `.track-why-text b { color:#fff }` — the emphasized inline value (e.g. «80%») would vanish on the white card.",
+            "lineHint": "L5803"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-why-fix",
+            "declarations": "border-color: var(--border-strong); color: var(--text-sec);",
+            "rationale": "L5804: `.track-why-fix { border:1px solid rgba(255,255,255,.16); color:var(--text-sec) }` — the white-alpha border is invisible on paper; give it a real light border. (color already token-based but listed for completeness of the button.)",
+            "lineHint": "L5804"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-why-fix:hover",
+            "declarations": "color: var(--text-pri); border-color: var(--brand-blue-light);",
+            "rationale": "L5805: `.track-why-fix:hover { color:#fff; border-color:var(--brand-blue-light) }` — hover sets text to #fff which would vanish on the white card.",
+            "lineHint": "L5805"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-vector-k",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L5813: `.track-vector-k { color:rgba(255,255,255,.92) }` — attribute key label, near-white on paper.",
+            "lineHint": "L5813"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-vector-why",
+            "declarations": "color: var(--text-sec);",
+            "rationale": "L5817: `.track-vector-why { color:rgba(235,235,245,.60) }` — explanation caption, light-violet-white on paper ≈invisible.",
+            "lineHint": "L5817"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-vector-bar",
+            "declarations": "background: var(--surf-active);",
+            "rationale": "L5815: `.track-vector-bar { background:rgba(255,255,255,.08) }` — the bar TRACK (empty channel) is white-alpha → invisible on paper, so the meter loses its track. Use a subtle dark wash. (The --fill at L5816 is --brand-blue-light, themes fine.)",
+            "lineHint": "L5815"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-neighbor-mono",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L5827: `.track-neighbor-mono { color:#fff }` sits inside `.track-neighbor-cover` (L5826) which, once wired to --cover-mix-base, flips to a near-white floor → white mono invisible. Flip to dark ink.",
+            "lineHint": "L5827 (mono); cover bg L5826"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-neighbor-title",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L5829: `.track-neighbor-title { color:#fff }` — on the (now white) neighbor card → invisible.",
+            "lineHint": "L5829"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-neighbor-artist",
+            "declarations": "color: var(--text-sec);",
+            "rationale": "L5830: `.track-neighbor-artist { color:rgba(255,255,255,.62) }` — secondary line on the white card.",
+            "lineHint": "L5830"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-lyric-line",
+            "declarations": "color: var(--text-ter);",
+            "rationale": "L5970: `.track-lyric-line { color:rgba(255,255,255,.45) }` — the lyrics view renders inside .track-view-region on PAPER (no dark wrapper), so the inactive lyric lines are white-on-paper. Map the dimmed state to the tertiary ink ramp so inactive lines read as muted-on-paper.",
+            "lineHint": "L5966-5976"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-lyric-line[data-active]",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L5979: `.track-lyric-line[data-active] { color:#ffffff }` — the active/sung line is pure white → invisible on paper. The active line must be the strongest dark ink.",
+            "lineHint": "L5978-5980"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-history-row",
+            "declarations": "border-bottom-color: var(--divider);",
+            "rationale": "L6003: `.track-history-row { border-bottom:1px solid rgba(255,255,255,.06) }` — the row separators are white-alpha → invisible on paper, so the history list loses all row structure.",
+            "lineHint": "L5998-6006"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-history-cover",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L6023: `.track-history-cover { color:rgba(255,255,255,.7) }` is the monogram text inside the inline-tinted covers. Once those inline covers flip to a white floor (see inlineStyleIssues), the white-ish label must become dark ink. (One row uses `background:var(--surface-1)` at L9054 — already white in light — so its #fff-ish label is ALREADY invisible today even before the color-mix flip; this override fixes both.)",
+            "lineHint": "L6023 (color); covers L8941-9068"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .track-scrubber-wrap .player-progress",
+            "declarations": "background: var(--surf-active);",
+            "rationale": "SHARED player class L1306: `.player-progress { background:rgba(255,255,255,.20) }`. The track route renders the scrubber via `.player-scrubber/.player-progress` directly on PAPER — it is NOT inside the `.player-mini/.player-full` scope that re-asserts dark tokens (L7389-7397) — so the rail track is white-alpha on paper and the empty portion of the scrubber vanishes. Scope the fix to the track scrubber so the player overlay rail (which stays dark) is untouched. The fill (L1314 --brand-blue-light) and times (L1296 --text-pri) already theme fine.",
+            "lineHint": "L1306 (.player-progress); used in track at L8818-8829"
+          }
+        ],
+        "coverMixSites": [
+          {
+            "lineHint": "L5790 (.track-cover)",
+            "current": "background: color-mix(in oklab, var(--track-tint) 22%, #111318) !important;",
+            "proposed": "background: color-mix(in oklab, var(--track-tint) 22%, var(--cover-mix-base, #111318)) !important;",
+            "rationale": "The 480x480 hero album-art placeholder. --cover-mix-base defaults to #111318 in :root (L179) and flips to #FFFFFF in light (L209), so dark stays byte-identical while light gets a near-white art-tint floor. This is the route's flagship cover — its white monogram (.track-cover-mono, L5793) MUST also flip to dark ink (reported in cssOverrides), because a near-white cover + white mono = invisible. Keep the `!important` (it currently overrides the dead base gradient at L5682)."
+          },
+          {
+            "lineHint": "L5826 (.track-neighbor-cover)",
+            "current": "background: color-mix(in oklab, var(--brand-blue-light) 20%, #191C24);",
+            "proposed": "background: color-mix(in oklab, var(--brand-blue-light) 20%, var(--cover-mix-base, #191C24));",
+            "rationale": "48px neighbor thumbnail in «Рядом по звучанию». Note the floor hex here is #191C24, NOT #111318 — so the fallback must preserve #191C24 for dark byte-identity. Light flips it to a near-white floor; its white monogram (.track-neighbor-mono L5827) is flipped to dark ink in cssOverrides."
+          }
+        ],
+        "inlineStyleIssues": [
+          {
+            "lineHint": "L8941, L8955, L8969, L8983, L8997, L9011, L9025, L9040, L9068 (9 rows)",
+            "element": ".track-history-cover (inline style)",
+            "problem": "Nine history-row covers hardcode an inline `style=\"background: color-mix(in oklab, var(--np-accent) 20%, #15171D);\"`. The #15171D dark floor cannot be re-pointed by a CSS rule without !important, so in light these stay dark blue-black tiles on the white history list, and the cover monogram text (rgba(255,255,255,.7) from L6023) reads white-on-dark there while the rest of the row is dark-on-white — visually inconsistent and the cover does not flip with the theme.",
+            "fix": "Edit each inline value to `background: color-mix(in oklab, var(--np-accent) 20%, var(--cover-mix-base, #15171D));`. Dark falls back to #15171D (byte-identical); light flips the floor to #FFFFFF. Pair with the `html[data-theme=\"light\"] .track-history-cover { color: var(--text-pri); }` override so the monogram label is dark ink on the now-light cover."
+          },
+          {
+            "lineHint": "L9054",
+            "element": ".track-history-cover (inline style, the «Demons / Imagine Dragons / ID» row)",
+            "problem": "This one cover uses `style=\"background: var(--surface-1);\"`. In light --surface-1 is #FFFFFF (white), so the cover is already white TODAY — but its monogram text inherits .track-history-cover `color:rgba(255,255,255,.7)` (L6023) = white-on-white, already invisible even before any other fix.",
+            "fix": "No inline edit needed (var(--surface-1) themes correctly). It is FIXED by the same `html[data-theme=\"light\"] .track-history-cover { color: var(--text-pri); }` override that the other rows need — listed here only to flag that this row is the existing-bug canary proving the cover text override is required regardless of the color-mix flip."
+          }
+        ],
+        "leaveWhite": [
+          {
+            "selector": ".player-transport-btn--play (white #fff icon, L1366-1368, used at L8847-8861)",
+            "reason": "The big play button fills with var(--brand-blue-light) (#3346C4 in light) and the icon is #fff — white-on-deep-blue meets AA (the token note confirms #3346C4 makes white labels >=4.5:1). White is correct on a blue fill; do NOT override."
+          },
+          {
+            "selector": ".track-eyebrow / .track-why-status / .track-why-dot / .track-vector-v / .track-vector-fill / .track-neighbor-why / .track-history-plus / .demo-tag (accent-driven)",
+            "reason": "These already use theme tokens (--accent-on-dark/--accent-text/--brand-blue-light/--player-accent) or are accent dots/fills, so they re-color automatically in light (accent-text #3A4ED0 = 6.31:1 on paper). No hardcoded white text — leave as-is."
+          },
+          {
+            "selector": ".track-album-line / .track-history-title / .track-history-subtitle / .track-history-duration (token text)",
+            "reason": "Use var(--text-pri)/var(--text-quat) already (L5725, L6043, L6052, L6097) — these theme correctly to dark ink in light. No fix needed."
+          },
+          {
+            "selector": ".player-time / .player-transport-btn / .player-action-tab (shared player chrome, token-based)",
+            "reason": "On the track route these render on paper but use --text-pri/--text-sec/--text-quat (L1296, L1340, L1252), so they invert correctly to dark ink in light. Only the .player-progress RAIL background (rgba-white) needed a scoped fix (in cssOverrides); the rest is token-clean white-free."
+          },
+          {
+            "selector": ".track-cover-mono text-shadow / .track-cover svg stroke (L5688-5694)",
+            "reason": "The .track-cover svg rule is DEAD for this route — the live cover markup (L8710-8712) contains only `<span class=\"track-cover-mono\">`, no <svg> — so the rgba(255,255,255,.45) stroke never renders here. Nothing to override (noted, not actioned)."
+          }
+        ],
+        "openQuestions": [
+          "Lyrics-view immersion decision: I treated the lyrics view as ON PAPER (it lives in .track-view-region with no dark wrapper) and mapped inactive lines to --text-ter / active to --text-pri. If the design intent is instead an immersive-dark lyrics moment (like the player overlay), the alternative is to wrap .track-stage-lyrics in a re-asserted-dark token scope (mirroring the L7389 .player-full block) and keep white. Confirm which: paper-with-dark-ink (proposed) vs immersive-dark panel.",
+          "Dead/JS-unused track classes: `.track-up-next-*` (L5836-5941, white-ish cover text rgba(255,255,255,.7) at L5901) and `.track-also-*` (L6104-6203) have CSS but DO NOT appear in the live track markup (no .track-up-next-row / .track-also-band in the HTML, and the JS renderers only build why/vector/neighbors/cover). I left them out of must-fix. If a future build re-enables the up-next carousel or the «Также любят слушать» footer on this route, .track-up-next-cover and .track-up-next-artist will need the same paper-ink treatment — flag for that milestone.",
+          "Contrast check on --text-ter for lyrics: --text-ter is rgba(0,0,0,.40) on #FAFAF7 ≈ 3.0:1 — below 4.5:1 for body text but the inactive lyric lines are intentionally de-emphasized (large 36px display type, decorative, aria-hidden). If they must meet AA as readable content, bump inactive lines to --text-sec (rgba(0,0,0,.60) ≈ 4.7:1) instead of --text-ter.",
+          "The base .track-cover gradient (L5682, #1a4fa0→#7b2d8b→#c43a6e) is fully shadowed by the !important color-mix at L5790, so it never paints in either theme — confirm it is intentionally dead and can be removed in a future cleanup (not a light-theme issue, just noted while auditing)."
+        ]
+      },
+      {
+        "route": "#/profile («Открытый профиль» pitch screen)",
+        "summary": "In LIGHT theme this route is largely broken because nothing under the per-surface override block (~L7323) touches any .profile-* selector — I grepped the whole file and there are ZERO existing html[data-theme=\"light\"] .profile- rules. The route ships three hardcoded dark surfaces (.profile-box #111318 L3181, .profile-panel #111318 L3214, .profile-ad-strip #111318 L3222) plus a stack of hardcoded #fff text (.profile-title L3169, .profile-box-label L3183, .profile-facet-name L3200, .profile-section-h L3212, .profile-ad-text b L3224) and white-on-white borders/ghost-buttons (.profile-cta--ghost L3175/3176, .profile-facet-lower L3207/3208, .profile-rej-chip L3216). The CRITICAL nuance: the layout is a deliberate two-box contrast device — .profile-box--closed (the \"Яндекс·Spotify black box\", grayscale, L3185) is rhetorically meant to look dead/dark and should STAY dark even in light (it's analogous to player chrome), while .profile-box--open (the \"Город ФМ\" side) must flip to a white card. So the fix must NOT blanket-recolor .profile-box; it must scope the light surface to .profile-box--open and leave --closed (and its white faux-bars/label/lock) dark. The .profile-faux* bars live ONLY inside --closed (markup L9793-9807), so they theme correctly as-is and need no override (contradicting the spec's \"faux-bars flipped to ink\" note — there is no ink-flip rule in the file and none is needed). Fix shape: ~10 scoped override rules, no color-mix sites, no inline-style problems (the only inline style is style=\"width:NN%\" set in JS at L14327/14359, which carries no color). The .profile-cta--primary blue button + the entire --closed box are intentional and left white/dark.",
+        "cssOverrides": [
+          {
+            "lineHint": "L3169 / L3212 / L3183 / L3200 / L3224",
+            "selectors": "html[data-theme=\"light\"] .profile-title, html[data-theme=\"light\"] .profile-box--open .profile-box-label, html[data-theme=\"light\"] .profile-box--open .profile-facet-name, html[data-theme=\"light\"] .profile-section-h, html[data-theme=\"light\"] .profile-ad-text b",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "All hardcoded color:#fff. .profile-title (L3169) sits on the paper stage; .profile-section-h (L3212) is a section heading on paper; .profile-box-label (L3183) and .profile-facet-name (L3200) are scoped to .profile-box--open because that box becomes a white card (the --closed box stays dark, see leaveWhite); .profile-ad-text b (L3224) is bold text inside the now-light .profile-ad-strip. #fff text on #FAFAF7/#FFF = invisible. --text-pri #1A1C1F is the AA near-black."
+          },
+          {
+            "lineHint": "L3181 (+ L3195/3196 left intact)",
+            "selectors": "html[data-theme=\"light\"] .profile-box--open",
+            "declarations": "background: var(--surface-1); border-color: var(--hairline); box-shadow: var(--sh-2);",
+            "rationale": "Base .profile-box (L3181) hardcodes background:#111318 + border 1px rgba(255,255,255,.1). On paper a near-black card with a near-invisible white border looks broken. Scoped to --open ONLY so the deliberate dark --closed 'black box' is untouched. --open's accent border/glow (L3195/3196) can keep its rgba(81,104,252,.35) accent border for emphasis; we replace only the inherited dark fill. Dark mode keeps #111318 because the unscoped base rule is unchanged."
+          },
+          {
+            "lineHint": "L3214 / L3222",
+            "selectors": "html[data-theme=\"light\"] .profile-panel, html[data-theme=\"light\"] .profile-ad-strip",
+            "declarations": "background: var(--surface-1); border-color: var(--hairline); box-shadow: var(--sh-1);",
+            "rationale": ".profile-panel (L3214) and .profile-ad-strip (L3222) both hardcode background:#111318 + border rgba(255,255,255,.1). Both sit on the paper stage (markup L9818, L9822) and are NOT contrast/immersive devices — they are ordinary content panels (rejected-chips panel + ad strip). On paper they render as dark slabs with invisible borders. Flip to white card + hairline. Dark untouched (base rules unscoped)."
+          },
+          {
+            "lineHint": "L3175",
+            "selectors": "html[data-theme=\"light\"] .profile-cta--ghost",
+            "declarations": "border-color: var(--border-strong); color: var(--text-sec);",
+            "rationale": ".profile-cta--ghost (L3175) uses border-color:rgba(255,255,255,.18) — a white border invisible on paper, so the button has no visible outline. color:var(--text-sec) already remaps via token but is restated for safety. Swap border to --border-strong rgba(0,0,0,.14). NOTE its :hover (L3176) sets color:#fff + border rgba(255,255,255,.4) — also needs the hover override below."
+          },
+          {
+            "lineHint": "L3176",
+            "selectors": "html[data-theme=\"light\"] .profile-cta--ghost:hover",
+            "declarations": "color: var(--text-pri); border-color: var(--text-pri);",
+            "rationale": ".profile-cta--ghost:hover (L3176) hardcodes color:#fff + border-color:rgba(255,255,255,.4). On paper the hovered label turns white = invisible and the border washes out. Remap to ink so the ghost button reads on hover. Two profile-cta--ghost instances exist in markup (L9789 '← К волне', L9824 'Посмотреть →')."
+          },
+          {
+            "lineHint": "L3207",
+            "selectors": "html[data-theme=\"light\"] .profile-box--open .profile-facet-lower",
+            "declarations": "border-color: var(--border-strong); color: var(--text-sec);",
+            "rationale": ".profile-facet-lower (L3207) is the «меньше» edit pill; it hardcodes border:1px solid rgba(255,255,255,.16) (invisible white border on the now-white --open card). color:var(--text-sec) already tokenized. Scoped to --open since facets render only inside the open box (#profile-facets, markup L9810 / JS L14323)."
+          },
+          {
+            "lineHint": "L3208",
+            "selectors": "html[data-theme=\"light\"] .profile-box--open .profile-facet-lower:hover",
+            "declarations": "color: var(--text-pri); border-color: var(--text-pri);",
+            "rationale": ".profile-facet-lower:hover (L3208) hardcodes color:#fff + border rgba(255,255,255,.4) — hovered edit pill label goes white-on-white = invisible. Remap to ink."
+          },
+          {
+            "lineHint": "L3198",
+            "selectors": "html[data-theme=\"light\"] .profile-box--open .profile-facet",
+            "declarations": "border-top-color: var(--divider);",
+            "rationale": ".profile-facet (L3198) row separator is border-top:1px solid rgba(255,255,255,.06) — a white hairline that disappears on the white --open card, so the facet list loses its row dividers. Swap to --divider rgba(0,0,0,.07). (.profile-facet:first-child L3199 has border:none, unaffected.)"
+          },
+          {
+            "lineHint": "L3202",
+            "selectors": "html[data-theme=\"light\"] .profile-box--open .profile-facet-bar",
+            "declarations": "background: var(--surf-active);",
+            "rationale": ".profile-facet-bar (L3202) track is background:rgba(255,255,255,.07) — an invisible white track on the white --open card, so the unfilled portion of each grade bar disappears. Swap to --surf-active rgba(0,0,0,.07) so the track reads under the blue fill. (.profile-facet-fill L3203 is var(--brand-blue-light), already correct.)"
+          },
+          {
+            "lineHint": "L3196",
+            "selectors": "html[data-theme=\"light\"] .profile-box--open .profile-box-tag",
+            "declarations": "color: var(--accent-text);",
+            "rationale": ".profile-box--open .profile-box-tag (L3196) hardcodes color:#c7d0ff (near-white pastel blue) on background:var(--tint-blue-light-20). In light, tint-blue-light-20 is rgba(81,104,252,.12) over a WHITE card → #c7d0ff label is ~1.3:1 = invisible. Remap to --accent-text #3A4ED0 (6.31:1) for the «открыто · твоё» tag."
+          },
+          {
+            "lineHint": "L3216",
+            "selectors": "html[data-theme=\"light\"] .profile-rej-chip",
+            "declarations": "color: var(--text-sec); border-color: var(--border-strong); text-decoration-color: var(--text-ter);",
+            "rationale": ".profile-rej-chip (L3216) is a struck-through rejected-tag chip inside the .profile-panel (now white). border:1px solid rgba(255,255,255,.12) is invisible on white, and text-decoration-color:rgba(255,255,255,.4) (the strike line) disappears. color already tokenized via --text-sec. Swap border to --border-strong and the strike to --text-ter rgba(0,0,0,.40) so the line-through (the whole point of the chip) is visible."
+          }
+        ],
+        "coverMixSites": [],
+        "inlineStyleIssues": [],
+        "leaveWhite": [
+          {
+            "selector": ".profile-box--closed (L3185) and everything inside it: .profile-box-label (white, L3183), .profile-box--closed .profile-box-tag (bg rgba(255,255,255,.08)/color var(--text-quat), L3186), .profile-faux-name (rgba(255,255,255,.22), L3190), .profile-faux-bar (rgba(255,255,255,.13), L3191), .profile-faux-lock svg + span (var(--text-sec), L3193/3194)",
+            "reason": "The closed box is a DELIBERATE dark 'black-box' rhetoric device — the comment at L3163-3164 says 'the closed box is deliberately grayscale/lifeless (rhetoric: their box is dead)', representing the competitors' hidden profile. Like the player chrome / onboarding splash, it is an intentionally immersive-dark moment and must STAY dark even in light theme. Because it stays dark (#111318 via the unscoped base .profile-box), its white label, white blurred faux-bars, and lock copy are all white-on-dark and CORRECT. That is exactly why every white-text override above is scoped to .profile-box--open — overriding base .profile-box would wrongly lighten this box and kill the contrast. NOTE: the spec's claim that '.profile-faux* were flipped to ink per the light spec' is NOT in the file — there is no html[data-theme=\"light\"] .profile-faux rule anywhere; the faux bars are intended to remain white on the dark closed box and need no change."
+          },
+          {
+            "selector": ".profile-cta--primary (L3173) — background:var(--brand-blue-light); color:#fff",
+            "reason": "Primary CTA «Поправить профиль →» (markup L9788) is white label on the blue brand fill. In light --brand-blue-light = #3346C4 (deep blue, white labels AA per token comment L204). White on blue is correct and intentional; leave it."
+          },
+          {
+            "selector": ".profile-kicker (L3167) color:var(--accent-on-dark); .profile-receipt (L3211) color:var(--accent-on-dark); .profile-facet-pct (L3201) color:var(--accent-on-dark); .profile-facet-prov::before / .profile-facet-fill / .profile-kicker-dot / .profile-rej-prov::before (var(--brand-blue-light) or --accent-on-dark)",
+            "reason": "These are already TOKENIZED (no hardcoded white/dark) — they resolve to --accent-on-dark #3A4ED0 / --brand-blue-light #3346C4 in light, which are AA on paper. Listed here to confirm they were inspected and need no override. (The kicker/receipt sit on paper, facet-pct/prov/fill sit on the white --open card — all read fine.)"
+          },
+          {
+            "selector": ".profile-sub (L3170), .profile-section-sub (L3213), .profile-empty (L3217, var(--text-sec)), .profile-ad-text (L3223), .profile-moat (L3225 var(--text-quat)), .profile-moat b (L3226 var(--text-sec)), .profile-rej-prov (L3219 var(--text-quat))",
+            "reason": "All secondary/tertiary copy already uses --text-sec/--text-quat tokens which remap to rgba(0,0,0,.60) in light — no hardcoded color, theme correctly. .profile-empty and .profile-rej-prov sit inside the now-light .profile-panel; .profile-moat sits on paper. No override needed."
+          }
+        ],
+        "openQuestions": [
+          "Confirm the design intent that .profile-box--closed must STAY dark in light theme (treated like player chrome). The whole override strategy here scopes the light surface to .profile-box--open and leaves --closed dark. If instead BOTH boxes should be light, the closed box would need its own light fill plus dark-ink overrides for its faux-bars/label/lock, and the grayscale filter (L3185) would read as a flat grey card rather than a 'dead black box' — a weaker rhetorical contrast. Recommendation: keep it dark.",
+          "The spec note says '.profile-faux-bars were flipped to ink per the light spec' — I found NO such rule in the file (zero html[data-theme=\"light\"] .profile-faux* anywhere) and, given the closed box stays dark, no flip is needed/wanted. Flag in case a faux-bar light rule was expected to already exist and was lost.",
+          "Contrast check: .profile-cta--ghost border at --border-strong rgba(0,0,0,.14) is a non-text UI border (3:1 not required) and reads fine; its label uses --text-sec rgba(0,0,0,.60) ≈ 7.5:1 on white — safe. .profile-box--open .profile-box-tag at --accent-text #3A4ED0 on the tint over white ≈ 6.3:1 — safe.",
+          "The two .profile-cta--ghost instances and the .profile-facet-lower hover rely on scoped :hover overrides; verify no global a:hover wins specificity — base hover rules are inside @layer components so the unlayered light override (per the block header at L7323) should beat them."
+        ]
+      },
+      {
+        "route": "#/artist (artist deep-dive)",
+        "summary": "The #/artist route currently has ZERO light-theme overrides (verified: no `html[data-theme=\"light\"] .artist-*` rules exist anywhere). It is moderately broken in light theme, but less than feared because most surfaces use theme vars that flip correctly (`--surf-glass-12/20` flip to black-alpha, `--text-pri/-sec/-quat` flip, `--brand-blue-light` becomes deep blue #3346C4 with white labels AA, `--accent-on-dark` becomes #3A4ED0 at 6.31:1). Two real defect classes remain: (1) every interactive chrome element hardcodes white-alpha borders (`rgba(255,255,255,.06–.30)`) on `.artist-action-secondary`, `.artist-why-item`, `.artist-why-reject`, `.artist-why-not`, `.artist-station-chip` — these vanish on warm paper, leaving borderless/floating controls; fix = scoped overrides to `--hairline`/`--border-strong`. (2) The most serious break is the top-tracks cover: JS injects the cover background INLINE as `style=\"background:var(--surface-1)\"` (L15182), which is #FFFFFF in light, while `.artist-track-mono` is hardcoded `color:#fff` — white monogram on a white cover = invisible. Fix = change the inline value to `var(--brand-blue-light)` (white mono on deep-blue = AA). The hero stays correctly immersive: `.artist-photo` background is overwritten inline by `tintFor()` to a DARK hsl blue (L=30–42%), so its white `.artist-photo-mono` is correct and must be left alone. The `.artist-name` and all body text already use `--text-pri/-sec/-quat` and theme correctly. No hardcoded dark hex backgrounds in the artist CSS. No art-tint color-mix() backgrounds exist in this route (the hero/track tints are JS-set HSL/vars, not color-mix), so coverMixSites is empty.",
+        "cssOverrides": [
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-action-secondary",
+            "declarations": "border-color: var(--hairline);",
+            "rationale": "Base rule (L5097) hardcodes `border:1px solid rgba(255,255,255,0.12)` — a white-alpha border that disappears on the #FAFAF7 paper, leaving the secondary 'В избранное' pill borderless/floating. Flip to --hairline (rgba(0,0,0,.09)). Background already uses --surf-glass-12 (flips to black-alpha) and text uses --text-pri (flips), so only the border needs correcting.",
+            "lineHint": "5093-5097"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-why-item",
+            "declarations": "border-color: var(--hairline);",
+            "rationale": "Base rule (L5140) hardcodes `border:1px solid rgba(255,255,255,0.06)` — invisible on paper, so the explainability 'why' cards lose their card edge. Background --surf-glass-12 and text --text-pri/--text-quat flip correctly; only the border vanishes.",
+            "lineHint": "5137-5141"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-why-reject",
+            "declarations": "border-color: var(--border-strong);",
+            "rationale": "Base rule (L5151) hardcodes `border:1px solid rgba(255,255,255,0.14)` for the 'не моё / вернуть' chip — vanishes on paper. Use --border-strong (rgba(0,0,0,.14)) to match the original 0.14 weight on dark. Text color --text-quat flips fine.",
+            "lineHint": "5149-5152"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-why-reject:hover",
+            "declarations": "color: var(--text-pri); border-color: var(--border-strong);",
+            "rationale": "Hover base rule (L5155) sets `border-color:rgba(255,255,255,0.30)` (white-alpha) — invisible/wrong on paper. Re-point to --border-strong so the chip's border darkens on hover instead of disappearing.",
+            "lineHint": "5155"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-why-not",
+            "declarations": "border-color: var(--border-strong);",
+            "rationale": "Base rule (L5161) hardcodes `border:1px solid rgba(255,255,255,0.14)` for the 'Это не про меня' button — vanishes on paper. Flip to --border-strong. Text --text-sec flips correctly; the aria-pressed variant uses rgba(81,104,252,...) tints which read acceptably on white.",
+            "lineHint": "5159-5162"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-why-not:hover",
+            "declarations": "color: var(--text-pri); border-color: var(--border-strong);",
+            "rationale": "Hover base rule (L5164) sets `border-color:rgba(255,255,255,0.30)` (white-alpha) — invisible on paper. Re-point to --border-strong.",
+            "lineHint": "5164"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-station-chip",
+            "declarations": "border-color: var(--hairline);",
+            "rationale": "Base rule (L5201) hardcodes `border:1px solid rgba(255,255,255,0.12)` for the station chips — vanishes on paper, so the 260px chips lose their outline against the white card. Background --surf-glass-12 and text --text-sec/--text-pri flip correctly; only the border needs flipping to --hairline.",
+            "lineHint": "5198-5201"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .artist-track-mono",
+            "declarations": "color: #fff;",
+            "rationale": "DEFENSIVE / paired with the inline fix. `.artist-track-mono` (L5189) is hardcoded `color:#fff`. It is correct ONLY if the cover stays a deep-blue fill. If the recommended inline fix (cover bg -> var(--brand-blue-light)) is applied, white mono on #3346C4 is AA and this override is unnecessary. Include this rule ONLY if you instead choose to leave the cover white — in which case #fff is wrong and this must become `color: var(--brand-blue-light)` for ~AA on white. Prefer the inline fix; treat this entry as the fallback if the inline value cannot be edited.",
+            "lineHint": "5189"
+          }
+        ],
+        "coverMixSites": [],
+        "inlineStyleIssues": [
+          {
+            "lineHint": "15182",
+            "element": ".artist-track-cover (injected by renderTracks() in the GorodArtist IIFE)",
+            "problem": "The cover background is set INLINE as `style=\"background:var(--surface-1)\"`, overriding the stylesheet's `background:var(--brand-blue-light)` (L5186). In LIGHT theme --surface-1 = #FFFFFF, so the cover becomes pure white. The monogram inside (`.artist-track-mono`, L5189) is hardcoded `color:#fff`. Result: white monogram on a white cover = completely invisible in light theme (in dark theme --surface-1 is dark so it currently reads, masking the latent bug). A CSS rule cannot override an inline background without !important.",
+            "fix": "Change the inline value from `var(--surface-1)` to `var(--brand-blue-light)` so the cover is a deep-blue fill in BOTH themes (dark #5168FC-family, light #3346C4) and the white mono lands on blue at AA. Exact edit: replace `style=\"background:var(--surface-1)\"` with `style=\"background:var(--brand-blue-light)\"` at L15182. This also makes the track cover consistent with the CSS base rule it was overriding. (Alternative if blue is undesired: keep white cover but add the !important-free override `html[data-theme=\"light\"] .artist-track-mono{color:var(--brand-blue-light)}` from cssOverrides — but the inline edit is the cleaner, dark-safe fix and is preferred.)"
+          }
+        ],
+        "leaveWhite": [
+          {
+            "selector": ".artist-photo-mono (L5062, color:#fff)",
+            "reason": "The hero avatar background is overwritten INLINE by setHeroTint() -> tintFor(ARTIST) (L15199), which returns hsl(215–255, 40%, 30–42%) — a DARK desaturated blue (lightness 30–42%) in BOTH themes. White monogram on that dark tint is correct/immersive. The hero is an intentional dark art-tint cover, not a paper surface, so white stays."
+          },
+          {
+            "selector": ".artist-action-primary (L5085, color:#fff on background:var(--brand-blue-light))",
+            "reason": "Primary 'Слушать радио артиста' button is a brand-blue fill; in light --brand-blue-light = #3346C4, which is documented to keep white labels >=4.5:1 (AA). White text on blue fill themes correctly — leave."
+          },
+          {
+            "selector": ".artist-track-mono (L5189, color:#fff) — CONDITIONAL",
+            "reason": "White is correct PROVIDED the recommended inline fix is applied so the cover becomes var(--brand-blue-light) (deep blue, white AA). Left white under that assumption. If the cover is instead left white, see the cssOverrides fallback entry — in that case white is NOT acceptable."
+          },
+          {
+            "selector": ".artist-photo box-shadow inset highlight rgba(255,255,255,0.06) (L5053) and .artist-photo::after / .artist-track-cover::after white-alpha gloss gradients (L5058, L5188)",
+            "reason": "Purely decorative inner-highlight and top-gloss overlays on the avatar/cover. They sit on the dark tint / blue fill, are sub-perceptual on light, and carry no text. No contrast risk — leave untouched."
+          }
+        ],
+        "openQuestions": [
+          "Track-cover design intent: should the cover be a deep-blue brand fill (current CSS base, recommended inline fix) or a neutral white surface? The injected JS deliberately overrode the CSS to --surface-1, suggesting a recent design pivot to a light/neutral cover that was never re-validated for the light theme. Confirm which look is desired before committing the inline edit vs. the mono-color fallback.",
+          "Hero band tone: `.artist-hero` background `rgba(0,0,0,0.12)` (L5042) renders as a faint grey wash on #FAFAF7 paper — acceptable but slightly muddy. Not flagged as a break (no vanishing text), but a designer may prefer flipping it to `var(--surface-2)` or a tint-blue wash for a cleaner light look. Out of scope for the strict vanish-rule; raising for design review only.",
+          "The aria-pressed states on .artist-action-secondary / .artist-why-not / .artist-station-chip[aria-pressed] use rgba(81,104,252,.10–.45) tints + --accent-on-dark text. On #FAFAF7 the #3A4ED0 text is 6.31:1 (fine), but the 10% blue background fill is very faint on white — confirm the pressed/selected state is still visually distinguishable enough in light, or consider bumping the pressed background to var(--tint-blue-light-20)."
+        ]
+      },
+      {
+        "route": "#/podborki («Открыть» / discovery)",
+        "summary": "CRITICAL ROUTING FINDING FIRST: the legacy `.podborki-*` gallery (`.podborki-chip-row`, `.podborki-gallery-desktop/-mobile`, `.podborki-row-1/-2`, `.podborki-tile*`) is DEAD on this route. `initPodborki()` (L11750) looks those up by id — `document.getElementById('podborki-chip-row')` L11753, `'podborki-gallery-desktop'` L11787, `'podborki-gallery-mobile'` L11842, `'podborki-row-1/-2'` L11843-44 — but NONE of those id attributes exist anywhere in the markup (grep for `id=\"podborki…\"` returns zero; the static `.podborki-page` at L8084 contains only `.discover-*`/`.shelf-*`/`.mediateka-*`/`.tcloud-*`). So `.podborki-chip`, `.podborki-tile`, `.podborki-tile-shade`, `.podborki-tile-label` etc. render nothing in EITHER theme; their hardcoded `#fff`/`rgba(255,255,255,.14)` (chips L4244-4266, label L4634) are moot. The font-weight:900+rotate(-90deg) cont-12 concern on `.podborki-tile-label` L4628-4637 is also dead-code and does not interact with light readability here. What ACTUALLY renders on `#/podborki` is the GOROD-046 \"Открыть\" surface. Most of it was already patched in the existing override block (L7354-7385: titles, near/ed cards, ask-field, chip, results, track, tcloud-strip). What still breaks in light: the search input text (#fff → invisible while typing on the white ask-field), two #fff focus rings, a pale-lavender bold inline accent (#cdd4f5), and the map \"known/dimmed\" node variant whose rgba-white bg+border vanishes on the paper map-stage. Fix shape = a handful of `html[data-theme=\"light\"]` text/border overrides appended to the existing block; no color-mix sites and no inline styles to fix.",
+        "cssOverrides": [
+          {
+            "selectors": "html[data-theme=\"light\"] .discover-input",
+            "declarations": "color: var(--text-pri);",
+            "rationale": "L4291 `.discover-input{...color:#fff}` — the text the user types into the «Открыть» search field is hardcoded white, so it is invisible on the white ask-field (`.discover-ask-field` is overridden to var(--surface-0) at L7364). Placeholder already uses var(--text-quat) so it themes; only the typed value needs the ink override.",
+            "lineHint": "L4291 (base); append near existing L7354-7365 discover block"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .discover-ask-go:focus-visible",
+            "declarations": "outline-color: var(--accent-on-dark);",
+            "rationale": "L4295 `.discover-ask-go:focus-visible{outline:3px solid #fff}` — a white keyboard-focus ring around the «Найти» button is invisible on the warm-paper page. Existing block fixed the non-focus paths but NOT this `#fff` outline. (`.discover-results-play:focus-visible` is already handled at L7373, but the ask-go one is not — only the base L7365 selector targeted a different property earlier; this `#fff` literal still wins.) Note L7365 already references `.discover-ask-go:focus-visible` with outline-color — VERIFY no duplicate; if present, this item is redundant.",
+            "lineHint": "L4295 (base); confirm vs existing L7365"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .discover-track-why b",
+            "declarations": "color: var(--accent-text);",
+            "rationale": "L4316 `.discover-track-why b{color:#cdd4f5}` — the emphasized term inside the post-search «почему» explainer line is a pale lavender (#cdd4f5) tuned for dark; on #FAFAF7 it is ~1.3:1 and effectively unreadable. The surrounding `.discover-track-why` uses var(--text-sec) (themes fine); only the bold accent needs re-inking to the AA accent (var(--accent-text)=#3A4ED0, 6.31:1).",
+            "lineHint": "L4316 (base)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .discover-map-node.is-known",
+            "declarations": "background: var(--surf-hover); border-color: var(--border-strong);",
+            "rationale": "L4347 `.discover-map-node.is-known{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--text-sec)}` — the «known/already-in-your-taste» dimmed node on the taste-map. Its background and border are rgba-WHITE, so on the light map-stage (`.discover-map-stage` L4340 bg rgba(255,255,255,.02)) the pill has zero visible fill or edge and the dimmed neighbors disappear. Text color is a token (fine). Swap the two white rgba values to light-surface tokens so the dimmed pill still reads as a faint chip.",
+            "lineHint": "L4347 (base); see also stage L4340"
+          }
+        ],
+        "coverMixSites": [],
+        "inlineStyleIssues": [],
+        "leaveWhite": [
+          {
+            "selector": ".podborki-chip / .podborki-tile / .podborki-tile-shade / .podborki-tile-label (L4236-4643)",
+            "reason": "DEAD CODE on this route. initPodborki() (L11750) only injects these via getElementById('podborki-chip-row'|'podborki-gallery-desktop'|'podborki-gallery-mobile'|'podborki-row-1'|'podborki-row-2'), and none of those id attributes exist in the markup — the rendered `#/podborki` section (L8081, `.podborki-page` L8084) contains only `.discover-*`/`.shelf-*`/`.mediateka-*`/`.tcloud-*`. So the chips' `#fff`/rgba-white text+borders and the tile-label `#fff` over `--tile-shade` never paint in either theme. No light override needed. (Note: the light `:root` already softens `--tile-shade` to rgba(0,0,0,.12) at L196 anyway, so even if revived the shade-on-photo white labels would theme via the token — not a hardcoded-white risk.)"
+          },
+          {
+            "selector": ".shelf-tile-label (L4370, color:#fff over .shelf-tile::after dark gradient L4369)",
+            "reason": "The collection-tile label sits on a photo cover with a bottom-anchored dark gradient `linear-gradient(...rgba(11,12,15,.72) 100%)` baked into `::after` (NOT theme-token, intentionally dark in both themes) plus a text-shadow. White-on-dark-photo = correct and legible in light. This is the immersive cover moment — leave white."
+          },
+          {
+            "selector": ".shelf-tile-play (L4371) / .shelf-card / .shelf-avatar covers",
+            "reason": "`.shelf-tile-play` is a `var(--brand-blue-light)` round play button with `color:#fff` icon — white-on-blue-fill (deep #3346C4 in light, AA) = correct. Covers/avatars use var(--surface-2) + photo backgrounds, no hardcoded white text. Leave."
+          },
+          {
+            "selector": ".shelf-arrow (L4382, background:rgba(20,22,28,.72), color:#fff)",
+            "reason": "The horizontal-scroll arrow is a deliberately dark glass circle (fixed rgba(20,22,28,.72), blur) acting as a floating control over content — white icon on dark glass is an intentional theme-neutral affordance and remains legible on paper. Leave (matches how home/taste shelf arrows are treated)."
+          },
+          {
+            "selector": ".discover-map-node (active, L4343, background:rgba(11,12,15,.72), color:#fff) + .discover-map-node-dot (L4346)",
+            "reason": "Active/unknown taste-map nodes are dark glass pills (fixed rgba(11,12,15,.72), blue border) with white text — a deliberate dark chip floating on the map canvas; white-on-dark is correct and reads on paper. (Only the `.is-known` DIMMED variant breaks — see cssOverrides.) Leave the active node white."
+          },
+          {
+            "selector": ".tcloud-bubble + .tcloud-bubble-label + .tcloud-bubble-num/-check/-trend (L4428-4480)",
+            "reason": "Taste-cloud bubbles are dark genre gradients (radial #1b1d24→#121318 L4430) or artist PHOTO circles with a dark scrim (L4432) and white labels + text-shadow. White-on-dark-bubble / white-on-photo = correct. The blue check/num pills use var(--brand-blue-light) fill with #fff (white-on-blue, AA). Leave; these are the same surfaces already left-white on the #/taste cloud."
+          },
+          {
+            "selector": ".discover-results-play (L4305, color:#fff base) / .discover-track-play (L4310, color:#fff)",
+            "reason": "Already handled by the existing light block: `.discover-results-play` color is re-inked to var(--accent-text) at L7372 and `.discover-track-play` to var(--text-pri) on var(--surf-active) at L7371 (within the L7368 results-cluster override). No new rule needed; the residual base `#fff` is overridden. Listed here only to confirm it is NOT an open gap."
+          },
+          {
+            "selector": ".discover-ask-go (L4293, color:#fff on var(--brand-blue-light)) / .discover-dial-btn[aria-pressed]:#fff / .tcloud-seg.is-active:#fff",
+            "reason": "These #fff labels sit on the blue brand fill (var(--brand-blue-light) → deep #3346C4 in light, white labels AA per token spec) or on a blue-tint active state. White is correct on the blue fill. Leave."
+          }
+        ],
+        "openQuestions": [
+          "L7365 already contains `html[data-theme=\"light\"] .discover-ask-go:focus-visible { outline-color: var(--accent-on-dark); }`. The base rule at L4295 is `outline: 3px solid #fff` (shorthand sets outline-color too). Need to confirm cascade: the L7365 unlayered override should win over the @layer base, so the ask-go focus ring may ALREADY be fixed — if so, my .discover-ask-go cssOverride is redundant and can be dropped. (The .discover-input #fff and .discover-track-why b #cdd4f5 are confirmed-uncovered and stand regardless.)",
+          "The taste-map is drawn on a `<canvas id=\"discover-map\">` (L8133) via JS — the node connection lines / point colors are likely painted with dark-theme RGBs in the JS draw routine, not CSS. Out of scope for this CSS-override audit, but the canvas axis labels (`.discover-map-axis` L4350 use var(--text-quat), fine) and the stage bg (L4340 rgba(255,255,255,.02), invisible-but-harmless on paper) suggest the canvas itself may need a JS-side light palette to remain legible. Flag for the JS/canvas owner.",
+          "Contrast risk to verify on #FAFAF7: `.discover-map-node.is-known` text uses var(--text-sec)=rgba(0,0,0,.60) on the proposed var(--surf-hover) fill — should be comfortably >4.5:1, but confirm once the dimmed-node bg is set (a near-transparent fill means it reads against paper, ~10:1, fine)."
+        ]
+      },
+      {
+        "route": "#/lives (Route A) + #/recap (Route B)",
+        "summary": "Both routes are partially broken on warm-paper light theme today; neither has any html[data-theme=\"light\"] override yet (grep confirms zero .lives-/.recap- light rules). ROUTE A (#/lives): text is mostly token-driven (--text-pri/-sec/-quat, --brand-blue-light eyebrow) so it themes correctly — the ONLY real breakage is the hardcoded white card border `rgba(255,255,255,0.12)` on .lives-card (L5273), which vanishes on paper and erases every card's edge; its hover border already flips to --brand-blue-light. The .lives-live-pill (#ff3b30 red fill, #fff text + #fff dot) does NOT vanish on paper (white-on-saturated-red stays legible), so it is left white (the red being off single-accent system is explicitly out of scope here). ROUTE B (#/recap): clean split — the 9:16 share CARD (.recap-card + inner, L3246-3260) must stay DARK per O3 (PNG export), but its background is `var(--bg-base)` which flips to #FAFAF7 in light → the card would turn into paper and break the export, so the card scope must be PINNED back to the dark palette (same technique as the player-mini/full block at L7389). The page CHROME around it sits on paper and breaks: .recap-btn--ghost white border `rgba(255,255,255,0.18/.36)` (L3267-3268) invisible on paper; .recap-delta-row.fade name `rgba(255,255,255,0.55)` (L3287) invisible; .recap-discovery-panel white border `rgba(255,255,255,0.08)` + bg `rgba(255,255,255,0.03)` (L3289) invisible. Everything else (titles, subs, primary blue btn, cta links, receipt) is token-driven and themes fine. One inline style exists (recap-png-dl, display:none) and is harmless.",
+        "cssOverrides": [
+          {
+            "selectors": "html[data-theme=\"light\"] .lives-card",
+            "declarations": "border-color: var(--hairline);",
+            "rationale": "L5264-5279: .lives-card hardcodes `border: 1px solid rgba(255,255,255,0.12)` — a white hairline that is invisible on the warm-paper bg, so every station card loses its edge and the grid reads as floating text. Background `var(--surf-glass-12)` already flips to rgba(0,0,0,.04) in light (token redefined L215), so only the border needs flipping to the light hairline. Dark keeps rgba(255,255,255,.12) untouched.",
+            "lineHint": "5264-5279 (border at 5273)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .recap-card",
+            "declarations": "--bg-base:#0B0C0F; --surface-0:#111318; --surface-1:#15171D; --surface-2:#1B1E26; --surface-3:#23262F; --text-pri:#FFFFFF; --text-sec:rgba(255,255,255,.62); --text-ter:rgba(255,255,255,.40); --text-quat:rgba(235,235,245,.60); --accent-on-dark:#8094ff; --accent-text:#8094ff; --success:#34d399; --brand-blue-light:#5168FC;",
+            "rationale": "L3246: the 9:16 share card sets `background: var(--bg-base)`, which in light flips to #FAFAF7 — turning the intentionally-dark, PNG-exported card into paper and breaking decision O3. The card's inner text/borders (recap-card-word/-kicker/-delta/-defense/-mark and the inline rgba(255,255,255,..) fade/border at L3257) all assume a dark surface. Pinning the dark palette back inside the .recap-card scope (mirrors the player-mini/-full pattern at L7389-7397) makes the whole card render byte-identical to dark — bg dark, white ink readable, #8094ff accent kept (light's #3A4ED0 deep-blue would be low-contrast on dark), success green kept. Dark theme is untouched because this rule only exists under html[data-theme=\"light\"].",
+            "lineHint": "3246-3260 (bg at 3246; fades/accents at 3257,3259)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .recap-btn--ghost",
+            "declarations": "border-color: var(--border-strong);",
+            "rationale": "L3267: .recap-btn--ghost hardcodes `border: 1px solid rgba(255,255,255,0.18)` on a transparent button that sits on paper → the outline is invisible and the «Поправить грань →» action loses its shape. Its text uses --text-sec (themes fine). Flip the border to --border-strong (rgba(0,0,0,.14)) so the ghost button reads on paper. Pairs with the hover override below.",
+            "lineHint": "3267"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .recap-btn--ghost:hover",
+            "declarations": "border-color: var(--text-pri);",
+            "rationale": "L3268: hover sets `border-color: rgba(255,255,255,0.36)` (white) — invisible on paper, so the hover affordance disappears. Flip to --text-pri (warm near-black #1A1C1F) to match the existing dark-mode intent of a stronger border + --text-pri color on hover.",
+            "lineHint": "3268"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .recap-delta-row.fade .recap-delta-name",
+            "declarations": "color: var(--text-ter);",
+            "rationale": "L3287: faded (declining-genre) delta names hardcode `color: rgba(255,255,255,0.55)` — white-on-paper, fully invisible in the «Что сдвинулось за неделю» list that sits on the paper page. The .grow variant uses --success (themed) and the base name uses --text-pri (themed); only .fade is broken. Flip to --text-ter (rgba(0,0,0,.40)) so a fading genre reads as muted ink, preserving the grow/fade visual contrast.",
+            "lineHint": "3287"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .recap-discovery-panel",
+            "declarations": "border-color: var(--hairline); background: var(--surface-2);",
+            "rationale": "L3289: the «Открытие недели» panel hardcodes `border: 1px solid rgba(255,255,255,0.08)` + `background: rgba(255,255,255,0.03)` — both white, so on paper the panel has an invisible border and a near-zero-tint bg that is indistinguishable from the page. Its inner text (recap-discovery-line --text-pri, b --accent-on-dark) themes fine. Flip border to --hairline and bg to --surface-2 (#F4F4F1) so the panel reads as a subtle inset card on paper.",
+            "lineHint": "3289"
+          }
+        ],
+        "coverMixSites": [],
+        "inlineStyleIssues": [],
+        "leaveWhite": [
+          {
+            "selector": ".lives-live-pill (color:#ffffff on background:#ff3b30) — L5294-5311",
+            "reason": "White text sits on a saturated red FILL, not on paper — white-on-#ff3b30 stays legible (~3.3:1, and the pill is a chip/badge fill where white is the correct label color per RULE 2). It does NOT vanish on paper. The red being off single-accent (should be blue/neutral) is a known earlier flag but is explicitly OUT OF SCOPE for this light-theme-breakage task. Leave white."
+          },
+          {
+            "selector": ".lives-live-dot (background:#ffffff) — L5313-5318",
+            "reason": "The pulsing live dot sits INSIDE the red .lives-live-pill, so it is white-on-red and stays visible. It never touches paper. Leave white."
+          },
+          {
+            "selector": ".recap-card + all .recap-card-* (the 9:16 share card) — L3246-3260, markup L9844-9854",
+            "reason": "Intentionally DARK shareable card whose PNG export must stay dark (decision O3). The card and all its inner text/fades/borders (recap-card-word/-kicker/-delta/-delta--hero .fade rgba(255,255,255,.55) L3257, -defense, -mark, the rgba(255,255,255,.08) border L3246) are CORRECT for a dark surface. Rather than override each white element, the .recap-card scope is pinned back to the dark palette (see cssOverrides) so the whole card renders dark in light theme — leaving these whites correct by design."
+          },
+          {
+            "selector": ".recap-btn--primary (color:#fff on background:var(--brand-blue-light)) — L3265",
+            "reason": "White label on the --brand-blue-light FILL, which in light = #3346C4 (deep blue, white labels verified ≥4.5:1 AA per the L204-205 token note). White is the correct label color on a blue fill. Leave white."
+          }
+        ],
+        "openQuestions": [
+          "Route A .lives-live-pill uses #ff3b30 red + #fff — this is OFF the single-accent system (should be --brand-blue-light or neutral) and was flagged earlier. It does not break in light theme so it is out of scope here, but a separate token-correctness pass should retint the pill to blue/neutral in BOTH themes (and then white-on-blue stays correct).",
+          "Route B card pin: I pinned --accent-on-dark/--accent-text back to #8094ff inside .recap-card so recap-card-kicker/-defense (which use --accent-on-dark) stay readable on the dark card. Confirm this matches the player-chrome decision (L7395 uses the same #8094ff) — if the recap card brand-accent should differ, adjust the pinned value.",
+          "Route B .recap-discovery-panel bg: I chose --surface-2 (#F4F4F1) for a subtle inset on the #FAFAF7 page. If the design wants a flat (borderless-feel) panel, --surface-1/#FFFFFF white card with --hairline border is the alternative — pick per the discover-near-card precedent (L7362 uses --surface-0).",
+          "The recap CARD bloom SVG (recap-card-bloom, JS-injected at L14765) inherits the pinned dark palette via the .recap-card scope — verify the bloom SVG does not itself hardcode fills that assume light tokens (it is rendered by bloomSvg(); not inspected line-by-line here)."
+        ]
+      },
+      {
+        "route": "SHARED CHROME + cross-route surfaces (topbar / sidebar / mobile-tabbar / why-pop / TwinrTransition / ai-dock+ribbon / modals+toasts) — safety-net audit",
+        "summary": "The per-surface light-override block (L7323-7397) covers home/taste/discover/player but NEVER touches the persistent app chrome. The bug is real and high-visibility: .topbar (L356-360 gradient rgba(12,11,11,.72→0)), .sidebar (L457 rgba(12,11,11,.60)) and .mobile-tabbar (L1393 rgba(12,11,11,.90)) all hardcode a DARK glass background that does NOT flip in light theme — yet every label/icon inside them resolves color through tokens (--text-pri/--text-sec/--text-quat/currentColor) which DO flip to dark ink under html[data-theme=\"light\"]. Net result in light: the logo «Город.fm», nav labels «Волна/Мой вкус/Открыть», «Карта флоу», «Поиск», «Личный кабинет» pill and the bottom tabbar render dark-ink-on-dark-glass = effectively invisible chrome on every route. The home-fab (L3725) is a second real break: it sits on tokenized --surf-glass-20 (flips to rgba(0,0,0,.06) light) but hardcodes color:#ffffff + a white border, so a white glyph lands on a near-transparent dark-on-paper glass = invisible. The fix shape mirrors the existing player-chrome precedent (L7386): re-assert the chrome surface backgrounds to a light glass so the now-dark-ink text/icons read on paper, plus repaint the few inner hardcoded white/dark-tint accents. The four genuinely immersive-dark overlays (why-pop, ai-dock, ai-ribbon, np-transition card) self-paint their OWN dark glass bg directly (not via tokens), so they correctly stay dark and their white text is correct — left white. The .tweaks panel/.tweaks-fab are dev-only (hidden in prod, and light is itself dev-gated) but I report the one that would still misrender. No inline white/dark styles found in chrome markup. No color-mix(#111318) sites in this scope.",
+        "cssOverrides": [
+          {
+            "selectors": "html[data-theme=\"light\"] .topbar",
+            "declarations": "background: linear-gradient(180deg, rgba(250,250,247,.82) 0%, rgba(250,250,247,0) 100%); border-bottom: 1px solid var(--hairline);",
+            "rationale": "Base .topbar (L356-360) hardcodes a dark glass gradient rgba(12,11,11,.72→0) that never flips. In light the topbar text resolves to --text-pri dark ink and the «Поиск»/«Личный кабинет» pills tint via tokens, so the whole bar becomes dark-ink-on-dark-glass = invisible. Repaint to a warm-paper glass scrim (matches --bg-base #FAFAF7) + a hairline so the bar reads. Dark keeps the L356 gradient byte-identical (rule is light-scoped).",
+            "lineHint": "L345-363 (.topbar base bg)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .topbar-account:hover",
+            "declarations": "background: var(--surf-active);",
+            "rationale": ".topbar-account:hover (L442) hardcodes background: rgba(255,255,255,.28) — a light-on-dark glass hover meant for the dark bar. On the new paper topbar a near-white hover wash on white = no visible affordance and clashes. Map to the light active-surface token (rgba(0,0,0,.07)). Dark untouched.",
+            "lineHint": "L440-443 (.topbar-account:hover)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .sidebar",
+            "declarations": "background: rgba(255,255,255,.72); border-right: 1px solid var(--hairline);",
+            "rationale": ".sidebar (L457) hardcodes background: rgba(12,11,11,.60) dark glass. In light the logo + nav labels + theme-toggle all use --text-pri/--text-quat (dark ink) so the entire rail is dark-ink-on-dark-glass = invisible. Repaint to a white glass; the border-right already uses --surf-glass-12 (token, flips fine) but re-stating --hairline gives the light rail proper edge weight. Dark keeps rgba(12,11,11,.60).",
+            "lineHint": "L447-463 (.sidebar base bg)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .sidebar-item[aria-current=\"page\"]",
+            "declarations": "background: var(--tint-blue-light-20); box-shadow: inset 3px 0 0 var(--brand-blue-light);",
+            "rationale": "Active nav item (L531-536) hardcodes background: rgba(81,104,252,.12) — a dark-tuned blue wash. On a white rail it reads weak/grey; the light token --tint-blue-light-20 (rgba(81,104,252,.12)) is intentionally the same density but the accent rail (box-shadow) should use --brand-blue-light which flips to the AA #3346C4 in light. Keeps the selected-state legible on paper. Dark untouched.",
+            "lineHint": "L531-536 (.sidebar-item[aria-current])"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .mobile-tabbar",
+            "declarations": "background: rgba(255,255,255,.92); border-top: 1px solid var(--hairline);",
+            "rationale": ".mobile-tabbar (L1393) hardcodes background: rgba(12,11,11,.90) dark glass; .tabbar-item text uses --text-quat (flips to dark ink) so on mobile the whole bottom bar is dark-ink-on-dark-glass = invisible. Repaint to near-opaque white glass + light hairline top border (border-top currently uses --surf-glass-12 token which flips, but re-stating --hairline gives weight). Active/hover tab uses --brand-blue-light which flips to AA blue, fine. Dark keeps rgba(12,11,11,.90).",
+            "lineHint": "L1384-1398 (.mobile-tabbar base bg)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .home-fab",
+            "declarations": "color: var(--text-pri); border-color: var(--border-strong); box-shadow: var(--sh-2);",
+            "rationale": ".home-fab (L3725-3744) sits on tokenized --surf-glass-20 (flips to light rgba(0,0,0,.06)) but hardcodes color:#ffffff (L3736) and border:1px solid rgba(255,255,255,.22) (L3735) + a heavy dark drop-shadow. On the light glass a white glyph + white border = invisible. Repaint glyph to --text-pri ink, border to --border-strong, shadow to the light --sh-2. Background already themes. Dark untouched.",
+            "lineHint": "L3725-3744 (.home-fab color/border/shadow)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .home-fab:hover",
+            "declarations": "background: var(--surf-active); box-shadow: var(--sh-3);",
+            "rationale": ".home-fab:hover (L3747-3751) hardcodes background: rgba(255,255,255,.30) (white-on-dark hover) + dark shadow. On paper a near-white hover wash is invisible; map to --surf-active (rgba(0,0,0,.07)) + light --sh-3. Dark keeps the white wash.",
+            "lineHint": "L3747-3751 (.home-fab:hover)"
+          },
+          {
+            "selectors": "html[data-theme=\"light\"] .tweaks",
+            "declarations": "background: rgba(255,255,255,.94); color: var(--text-pri);",
+            "rationale": "DEV-ONLY (hidden in prod via html:not([data-dev=\"true\"]) at L1437-1439, and the light theme is itself dev-gated). Reported for completeness: .tweaks (L1446) hardcodes background: rgba(20,18,18,.92) dark glass; if a dev opens both the tweaks panel AND light theme, its tokenized inner labels go dark-ink-on-dark = unreadable. Low priority — only surfaces in dev. Dark untouched.",
+            "lineHint": "L1441-1453 (.tweaks panel bg, dev-gated)"
+          }
+        ],
+        "coverMixSites": [],
+        "inlineStyleIssues": [],
+        "leaveWhite": [
+          {
+            "selector": ".why-pop / .why-pop-title / .why-row-text / .why-row-reject (L717-748)",
+            "reason": "The «почему?» reject popover self-paints its OWN dark glass: .why-pop background: rgba(18,18,24,.97) (L720) hardcoded, NOT via a token, so it stays dark in light theme exactly like the player chrome. Its #fff title (L729), #eef0f6 row text (L736) and rgba(255,255,255,.x) row borders/buttons all sit ON that dark glass = correct white-on-dark. This is an intentional immersive-dark overlay (it deliberately clones the wave-dials dialog language). Leave white — adding a light override would only break a surface that themes correctly."
+          },
+          {
+            "selector": ".ai-dock + children (.ai-dock-title #fff L2880, .ai-msg-bubble #eef0f6 L2937, .ai-track-title #fff L2964, .ai-input-field #fff L3004, .ai-chip #d6dbe8 L2989)",
+            "reason": "The Twinr AI dock self-paints background: rgba(18,18,24,.97) (L2851) directly (not a token) so it stays dark in light theme. The head (rgba(81,104,252,.14)), bubbles (rgba(255,255,255,.07)), track chips (rgba(0,0,0,.28)) and all white/near-white text + white borders sit on that dark glass = correct. Mirrors player-chrome precedent — an intentionally immersive-dark assistant panel. Leave white."
+          },
+          {
+            "selector": ".ai-launcher (#fff label L2798, rgba(255,255,255,.22) spark L2812, outline #fff L2807)",
+            "reason": "The AI launcher pill background is a blue gradient linear-gradient(135deg, --brand-blue-light, --accent-on-dark) (L2797). Per RULE 2, white text/icons on a BLUE FILL are correct and the brand-blue tokens flip to AA-safe values in light (white label stays ≥4.5:1). Leave white."
+          },
+          {
+            "selector": ".ai-ribbon + children (.ai-ribbon-text #eef0f6 L3080, b #fff L3081, .ai-ribbon-close white bg/icon L3086-3087)",
+            "reason": "The between-track ambient ribbon self-paints background: rgba(18,18,24,.95) (L3070) directly. White/near-white text + rgba(255,255,255,.x) close button sit on that dark glass = correct. Intentional immersive-dark floating notice (like a now-playing announcement). Leave white."
+          },
+          {
+            "selector": ".np-transition / .np-transition-card + children (TwinrTransition: .np-transition-title #fff L3139, .np-transition-why #d7dae3 L3148, .np-transition-why b #fff L3152, card border rgba(255,255,255,.1) L3113)",
+            "reason": "The between-track transition card self-paints a near-black surface: .np-transition backdrop rgba(8,9,12,.72) (L3101-3102) and .np-transition-card background: #111318 (L3112) — both hardcoded, not tokens — so they stay dark in light theme. The header comment (L3091-3096) explicitly calls it a 'near-black' DJ-announce moment. All #fff/#d7dae3 text + white-tint border sit on that near-black card = correct white-on-dark. This is the canonical immersive-dark moment (same family as the player). Leave white. NOTE: card bg is a flat #111318, not a color-mix(... #111318) art-tint, so it is NOT a coverMix candidate — no monogram/cover-tinted surface here."
+          },
+          {
+            "selector": ".account-backdrop (rgba(6,7,10,.66) L7406)",
+            "reason": "The ЛК account-sheet uses a dim scrim behind a tokenized .account-panel (background: var(--surface-0), L7407 — themes for free). The backdrop is an intentional dim overlay over the whole app and the comment at L7400-7402 confirms 'themes for free via tokens (dark + light)'. A semi-dark scrim is correct in BOTH themes (standard modal dimming). The panel + its text are fully tokenized, so the sheet itself needs no override. Leave the backdrop scrim as-is."
+          }
+        ],
+        "openQuestions": [
+          "Chrome strategy choice: I propose REPAINTING the topbar/sidebar/tabbar backgrounds to light glass (so the now-dark-ink tokenized text reads on paper). The alternative — mirroring the player-chrome precedent and RE-ASSERTING dark tokens on the chrome (keeping the bars dark in light theme, like a permanent dark rail) — would be zero-text-touch and arguably more 'cinema-brand'. Which does the design owner want for persistent chrome? My override set assumes light-glass repaint.",
+          "If the light-glass repaint is chosen, confirm the topbar glass opacity (.82) and tabbar (.92) read acceptably over the warm-paper #FAFAF7 with backdrop-blur active — these may need a tuning pass on real content (text behind the blur could lower contrast of «Поиск»/«Личный кабинет» labels below 4.5:1).",
+          "The .tweaks dev panel is hidden in production and light theme is dev-gated (account-pill light/system options hidden when data-dev=false, L7434). Confirm whether dev+light is a combination worth supporting at all, or whether the .tweaks override can be dropped."
+        ]
+      }
+    ]
+  }
+}

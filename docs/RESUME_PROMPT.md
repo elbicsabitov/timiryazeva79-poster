@@ -1,6 +1,16 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-15) — «ДОДЕЛАЙ ВСЕ ДОЛГИ»: light theme v1 + ЛК + standalone-regen + weight-cloud. **6 коммитов локально (`0aae4c1`..`8199bed`), PUSH ДЕРЖИТСЯ до `sync`.**
+## ⚡ LATEST (2026-06-03 cont-16) — Light theme **deferred secondary-route sweep**: 6-агентный read-only АУДИТ ГОТОВ, билд НА ПАУЗЕ (Эльбик: «как агенты дойдут — пауза без потерь, продолжим через пару часов»). **`gorod-fm.html` НЕ тронут, рабочее дерево чистое, 13 коммитов локально ahead (HEAD `c6a192d`), PUSH ДЕРЖИТСЯ.**
+
+**📖 START NEXT: `docs/superpowers/HANDOFF-gorod-fm-cont-16.md`** — build-ready спек (Step 0 seam+inline edits · Step 1 готовые CSS-блоки по роутам · locked-решения · open-questions · execution order). **Raw аудит (НЕ перезапускать workflow — 537k токенов): `docs/superpowers/cont-16-light-sweep-analysis.json`** (6 роутов, каждое правило + rationale + line-hints).
+
+**✅ СДЕЛАНО cont-16 (только анализ + durable-захват, БЕЗ кода):** 6 параллельных агентов прошли #/track · #/profile · #/artist · #/podborki · #/lives+#/recap · shared-chrome → структурированный override-спек. Ключевые находки: (1) **#/podborki gallery = DEAD CODE** (live-роут = «Открыть» discover-surface, почти весь уже пропатчен; осталось 3 правила); (2) **#/artist latent-баг** — track-cover bg задаётся inline `var(--surface-1)` (L15182) = бел-на-бел в light → фикс inline на `var(--brand-blue-light)`; (3) **#/profile** подтверждён closed-box-остаётся-тёмным, а cont-15 заметка «faux→ink» ЛОЖНА (правила нет, не нужно); (4) **#/recap** карточка остаётся тёмной (WYSIWYG с PNG O3), флипается только chrome; (5) **chrome strategy** = light-glass repaint (Apple-day дефолт, reversible) — 🟡 Эльбик может выбрать dark-rail.
+
+**🔴 NEXT (execute spec из cont-16 handoff):** Step 0 (удалить `--cover-mix-base` из dark `:root` L179 + wire 12 cover-mix сайтов на `var(--cover-mix-base, #orig)` → dark byte-identical + 1 artist inline) → Step 1 (append 6 override-блоков) → `node .scratch/check_scripts.cjs` → Chrome `?dev=1` light-walk + dark-byte-identity → adversarial review → standalone regen → DEBT/RESUME. **PUSH держится до `sync`.**
+
+---
+
+## ⚡ PREV (2026-06-03 cont-15) — «ДОДЕЛАЙ ВСЕ ДОЛГИ»: light theme v1 + ЛК + standalone-regen + weight-cloud. **6 коммитов локально (`0aae4c1`..`8199bed`), PUSH ДЕРЖИТСЯ до `sync`.**
 
 **📖 ПОЛНЫЙ хендофф: `docs/superpowers/HANDOFF-gorod-fm-cont-15.md`** (всё + NEXT + deferred + Эльбик-решения).
 
