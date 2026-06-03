@@ -4412,6 +4412,61 @@
       .tcloud-field.is-static .tcloud-bubble { position: relative; transform: none !important; }
       @media (prefers-reduced-motion: reduce) { .tcloud-bubble { transition: box-shadow var(--t-fast), opacity .2s; } }
 
+      /* ---- #/taste «Облако вкуса» — weight-editable bubble cloud (SPEC taste-weight-cloud) ---- */
+      .tcloud-tweak { position: relative; z-index: 1; margin: 2px 0 18px; padding: 16px; background: rgba(255,255,255,.03); border: 1px solid var(--hairline); border-radius: var(--r-lg); }
+      .tcloud-tweak-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+      .tcloud-tweak-eyebrow { font: 600 12.5px/1.45 'Onest', sans-serif; color: var(--text-sec); margin: 0; max-width: 62ch; }
+      .tcloud-tweak-eyebrow b { color: #eef0f6; font-weight: 700; }
+      .tcloud-listtoggle { flex: none; background: transparent; border: 1px solid var(--hairline); border-radius: 999px; padding: 6px 13px; font: 600 12.5px 'Onest', sans-serif; color: var(--text-sec); cursor: pointer; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+      .tcloud-listtoggle:hover { border-color: var(--brand-blue-light); color: #fff; }
+      .tcloud-listtoggle[aria-pressed="true"] { border-color: var(--brand-blue-light); color: #fff; background: rgba(81,104,252,.12); }
+      .tcloud-listtoggle:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .tcloud-segctrl { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+      .tcloud-seg { background: rgba(255,255,255,.04); border: 1px solid var(--hairline); border-radius: 999px; padding: 7px 15px; font: 600 13px 'Onest', sans-serif; color: var(--text-sec); cursor: pointer; transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast); }
+      .tcloud-seg:hover { color: #fff; border-color: rgba(255,255,255,.18); }
+      .tcloud-seg.is-active { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+      .tcloud-seg:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      /* weight bubble: radius animates on step (honest motion — physics, not decoration) */
+      .tcloud-bubble--tweak { transition: box-shadow var(--t-fast), filter var(--t-fast), opacity .35s ease, width var(--t-mid) cubic-bezier(.34,1.25,.64,1), height var(--t-mid) cubic-bezier(.34,1.25,.64,1); }
+      .tcloud-field.has-focus .tcloud-bubble:not(.is-focused) { opacity: .6; }
+      .tcloud-bubble--you { border: 1px solid var(--brand-blue-light); box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 0 0 1px rgba(81,104,252,.55), 0 8px 22px rgba(0,0,0,.42); }
+      .tcloud-bubble.is-focused { box-shadow: 0 0 0 2px var(--surface-0), 0 0 0 4px var(--brand-blue-light), 0 8px 22px rgba(0,0,0,.5); z-index: 4; }
+      .tcloud-bubble--rejected { filter: grayscale(1) brightness(.7); cursor: default; }
+      .tcloud-bubble--rejected .tcloud-bubble-label { text-decoration: line-through; opacity: .82; }
+      .tcloud-bubble-num { position: absolute; z-index: 3; right: 6px; bottom: 6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: var(--brand-blue-light); color: #fff; font: 700 10.5px/18px 'Onest', sans-serif; text-align: center; font-variant-numeric: tabular-nums; }
+      .tcloud-prov-pill { position: absolute; z-index: 3; left: 6px; top: 6px; padding: 1px 7px; border-radius: 999px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.82); font: 600 9.5px/1.5 'Onest', sans-serif; letter-spacing: .02em; pointer-events: none; }
+      .tcloud-lock { position: absolute; z-index: 3; right: 6px; bottom: 6px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; }
+      .tcloud-lock svg { width: 10px; height: 10px; fill: rgba(255,255,255,.78); }
+      /* docked focus/edit strip */
+      .tcloud-focus-strip { margin: 14px 0 0; padding: 13px 14px; background: rgba(255,255,255,.04); border: 1px solid var(--hairline); border-radius: var(--r-lg); animation: tcloud-strip-in var(--t-mid) cubic-bezier(.34,1.2,.64,1); }
+      @keyframes tcloud-strip-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+      .tcloud-strip-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 11px; flex-wrap: wrap; }
+      .tcloud-strip-name { font: 700 16px 'Onest', sans-serif; color: #fff; }
+      .tcloud-strip-prov { font: 600 11.5px 'Onest', sans-serif; color: var(--text-sec); }
+      .tcloud-strip-ctrls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .tcloud-step { width: 44px; height: 44px; border-radius: 50%; flex: none; background: rgba(255,255,255,.06); border: 1px solid var(--hairline); color: #eef0f6; font: 700 22px/1 'Onest', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast); }
+      .tcloud-step:hover:not(:disabled) { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+      .tcloud-step:disabled { opacity: .38; cursor: not-allowed; }
+      .tcloud-step:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .tcloud-pips { display: flex; gap: 7px; align-items: center; }
+      .tcloud-pip { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,.16); transition: background var(--t-fast), transform var(--t-fast); }
+      .tcloud-pip.is-on { background: var(--brand-blue-light); transform: scale(1.12); }
+      .tcloud-strip-close { width: 40px; height: 40px; border-radius: 50%; flex: none; background: transparent; border: 1px solid var(--hairline); color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color var(--t-fast), border-color var(--t-fast); margin-left: auto; }
+      .tcloud-strip-close svg { width: 14px; height: 14px; }
+      .tcloud-strip-close:hover { color: #fff; border-color: rgba(255,255,255,.2); }
+      .tcloud-strip-close:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .tcloud-strip-note { margin: 11px 0 0; font: 600 12.5px/1.45 'Onest', sans-serif; color: var(--accent-on-dark); min-height: 1.2em; }
+      .tcloud-strip-note.is-warn { color: var(--text-sec); }
+      .tcloud-legend { margin: 12px 0 0; font: 400 11.5px/1.45 'Onest', sans-serif; color: var(--text-ter, var(--text-sec)); }
+      .tcloud-legend b { color: var(--text-sec); font-weight: 700; }
+      .tcloud-list { display: flex; flex-direction: column; }
+      /* reduced-motion / static: snap radius, no spring/anim */
+      @media (prefers-reduced-motion: reduce) {
+        .tcloud-bubble--tweak { transition: box-shadow var(--t-fast), opacity .2s; }
+        .tcloud-focus-strip { animation: none; }
+        .tcloud-pip { transition: none; }
+      }
+
       .discover-editorial-row { max-width: 1080px; margin: 0 auto 8px; padding: 0 clamp(16px, 4vw, 28px); display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; }
       .discover-editorial-row::-webkit-scrollbar { display: none; }
       .discover-ed-card { flex: none; width: 268px; text-align: left; padding: 16px; border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform var(--t-fast), border-color var(--t-fast); }
@@ -9431,7 +9486,7 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
                   Открытый профиль
                 </a>
-                <span class="taste-delta" id="taste-delta" aria-live="polite">▲ +darkwave · −арена-рок за неделю</span>
+                <span class="taste-delta" id="taste-delta" aria-live="polite">Измени вес интереса — увидишь, что изменится в эфире.</span>
               </div>
             </div>
           </header>
@@ -13023,14 +13078,45 @@
     var data, built = false, rejList = [];
     var REJ_KEY = 'gorodfm_rejected';
     var REJ_LABELS = window.TwinrModel.REJ_LABELS;   // canon (same as GorodProfile/GorodRecap) — mirror of TwinrWhy REASONS id→label
-    var PIN ='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 4h6l-1 7 3 2v2h-4v5l-1 1-1-1v-5H6v-2l3-2z"/></svg>';
+    /* ---- «Облако вкуса» — weight-editable cloud (SPEC taste-weight-cloud) ---------
+       Size of a bubble = its weight in your vector (diameter ∝ √weight, area-honest).
+       Tap → docked −/+ stepper (5 notches). Weights PERSIST (gorodfm_weights) — the
+       wedge fix: today they die on reload. Provenance is honest per-facet (you / pick /
+       demo / rejected); no fabricated "heard" (hasRealSignal is a global bool, not per-facet). */
+    var WKEY = 'gorodfm_weights';
+    var WLEVELS = [8, 28, 48, 72, 92];               // L0..L4 → stored 0-100 weight (keeps matchSponsor/SR contract intact)
+    var MAXLEVEL = 4, BASE_T = 132, MIN_T = 60;       // diameter ∝ √weight; min readable + ≥44px touch floor
+    var GROUPS = ['Жанры', 'Артисты', 'Настроения', 'Эпохи'];
+    // GorodTasteSeed is defined LATER in the document than this IIFE — resolve lazily (at build time), never at module-eval time.
+    var _artistImg = null;
+    function artistImg(name) {
+      if (!_artistImg) { _artistImg = {}; var S = window.GorodTasteSeed; if (S && S.DATA) S.DATA.forEach(function (d) { if (d.img && d.g) _artistImg[d.t] = d.img; }); }
+      return _artistImg[name] || null;
+    }
+    function tasset() { var S = window.GorodTasteSeed; return (S && S.ASSET) ? S.ASSET : 'assets/gorod-fm/'; }
+    // cloud physics — forked from GorodTasteCloud (proven-smooth); only the box + interaction differ
+    var C_KSEL = 0.00018, C_KUN = 0.00009, C_PUSH = 0.16, C_DAMP = 0.965, C_BOUNCE = -0.55, C_VCL = 2.4, C_PAD = 12;
+    var cBubbles = [], cField = null, cRaf = 0, cRun = false, cPlaced = false, cRetry = 0, cW = 0, cH = 0, cId = 0;
+    var cREDUCE = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var activeGroup = 'Жанры', listMode = false, focusedB = null, footWired = false, deltaPrimed = false, coldStart = false, tasteDirty = false;
+    var ICON_LOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9z"/></svg>';
+    var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>';
+    function loadW() { try { return JSON.parse(localStorage.getItem(WKEY) || '{}') || {}; } catch (e) { return {}; } }
+    function keyFor(g, n) { return g === 'Жанры' ? n.toUpperCase() : n; }   // genre keys uppercase (matches gorodfm_taste convention); consistent both ways
+    function levelToW(l) { return WLEVELS[Math.max(0, Math.min(MAXLEVEL, l))]; }
+    function wToLevel(w) { var bi = 0, bd = 1e9, i, d; for (i = 0; i <= MAXLEVEL; i++) { d = Math.abs(WLEVELS[i] - w); if (d < bd) { bd = d; bi = i; } } return bi; }
+    function sizeForW(w) { var t = Math.sqrt(Math.max(0, Math.min(100, w)) / 100); return Math.max(MIN_T, Math.round(BASE_T * t)); }
+    function provLabel(src) { return src === 'pick' ? 'по выбору' : 'демо'; }
 
     function seed() {
       data = JSON.parse(JSON.stringify(DEFAULT));
+      var pickSet = {}, hadPicks = false;
       try {
         var picks = (JSON.parse(localStorage.getItem('gorodfm_taste') || '[]')).slice(0, 8);
+        hadPicks = picks.length > 0;
         picks.forEach(function (p, i) {
           var grp = (p === p.toUpperCase()) ? 'Жанры' : 'Артисты';   // uppercase = genre
+          pickSet[p] = true;                                          // real per-facet selection signal (honest 'pick' provenance)
           // deterministic weight by pick order — same profile must render byte-identically (fidelity, no Math.random)
           if (!data[grp].some(function (r) { return r.n === p; })) data[grp].unshift({ n: p, w: Math.max(72, 90 - i * 3) });
         });
@@ -13038,6 +13124,22 @@
       // keep each group readable
       Object.keys(data).forEach(function (g) { if (data[g].length > 6) data[g] = data[g].slice(0, 6); });
       applyRejections();   // W1 — reflect player-rejections in the editable vector (close the fidelity loop)
+      mergeWeights(pickSet);                                          // weight-cloud: user-set weights survive reload + honest provenance
+      coldStart = !hadPicks && rejList.length === 0;                  // no real signal → cloud shows "пример" empty state
+    }
+    // merge persisted user weights OVER pick-order/DEFAULT and tag honest per-facet provenance.
+    // No fabricated 'heard': hasRealSignal() is a GLOBAL bool (not per-facet), so 'heard' can't be backed — a size YOU didn't set is 'demo'/'pick', never a precise number.
+    function mergeWeights(pickSet) {
+      var saved = loadW();
+      Object.keys(data).forEach(function (g) {
+        data[g].forEach(function (r) {
+          if (r.rej) { r.src = 'rejected'; return; }                  // rejection wins
+          var key = keyFor(g, r.n);
+          if (saved[key]) { r.w = saved[key].w; r.src = 'you'; }      // you sized it → survives reload, shows exact value
+          else if (pickSet[r.n]) r.src = 'pick';                      // you chose it (real selection) — size still default, no number
+          else r.src = 'demo';                                        // scripted DEFAULT, never chosen → «демо» pill
+        });
+      });
     }
     // W1 (fidelity loop): GorodTaste now READS gorodfm_rejected (TwinrWhy writes it on «почему?»→«не моё»).
     // A matching facet is struck + lowered with provenance; every rejection also surfaces in a dedicated card.
@@ -13056,21 +13158,26 @@
       });
     }
     function rowHtml(r) {
-      return '<div class="taste-row' + (r.pinned ? ' is-pinned' : '') + (r.rej ? ' is-rejected' : '') + '" data-tag="' + r.n + '">' +
-        '<button class="taste-pin' + (r.pinned ? ' is-on' : '') + '" type="button" data-act="pin" aria-label="Закрепить ' + r.n + '">' + PIN + '</button>' +
+      var lvl = wToLevel(r.w);
+      var readout = r.rej ? 'оспорено' : (r.src === 'you' ? (lvl + '/4') : provLabel(r.src));
+      return '<div class="taste-row' + (r.rej ? ' is-rejected' : '') + '" data-tag="' + r.n + '">' +
         '<span class="taste-row-name">' + r.n + '</span>' +
-        '<div class="taste-bar"><div class="taste-bar-fill" style="width:' + r.w + '%"></div></div>' +
-        '<span class="taste-row-pct">' + r.w + '%</span>' +
+        '<div class="taste-bar"><div class="taste-bar-fill" style="width:' + (r.rej ? 12 : r.w) + '%"></div></div>' +
+        '<span class="taste-row-pct">' + readout + '</span>' +
         '<div class="taste-ctrls">' +
-          '<button class="taste-ctrl" type="button" data-act="minus" aria-label="Меньше ' + r.n + '">−</button>' +
-          '<button class="taste-ctrl" type="button" data-act="plus" aria-label="Больше ' + r.n + '">+</button>' +
+          '<button class="taste-ctrl" type="button" data-act="minus" aria-label="Меньше ' + r.n + '"' + (r.rej ? ' disabled' : '') + '>−</button>' +
+          '<button class="taste-ctrl" type="button" data-act="plus" aria-label="Больше ' + r.n + '"' + (r.rej ? ' disabled' : '') + '>+</button>' +
         '</div></div>';
     }
     // §10.1 — текстовый вектор для screen-reader (canvas #taste-wave = aria-hidden декор)
     function updateVectorSr() {
       var el = document.getElementById('taste-vector-sr'); if (!el) return;
       var parts = Object.keys(data).map(function (g) {
-        var top = data[g].filter(function (r) { return !r.rej; }).slice(0, 3).map(function (r) { return r.n + ' ' + r.w + '%'; }).join(', ');
+        var rows = data[g].filter(function (r) { return !r.rej; });
+        var ordered = rows.filter(function (r) { return r.src === 'you'; }).concat(rows.filter(function (r) { return r.src !== 'you'; }));   // surface weights YOU set first — never drop them from the digest (doesn't reorder visual/Tab DOM)
+        var top = ordered.slice(0, 3).map(function (r) {
+          return r.src === 'you' ? (r.n + ' — вес ' + wToLevel(r.w) + ' из 4') : r.n;   // honest: a value only for weights YOU set (no fabricated %)
+        }).join(', ');
         return g + ': ' + top;
       });
       el.setAttribute('aria-label', 'Ваш вкусовой вектор. ' + parts.join('. ') + '.');
@@ -13080,28 +13187,24 @@
       var body = document.getElementById('taste-body');
       if (!body) return;
       body.innerHTML = '';
-      Object.keys(data).forEach(function (g) {
-        var card = document.createElement('div'); card.className = 'taste-group';
-        card.innerHTML = '<div class="taste-group-title">' + g + ' <span>' + data[g].length + '</span></div>' + data[g].map(rowHtml).join('');
-        card.addEventListener('click', function (e) {
-          var btn = e.target.closest('[data-act]'); if (!btn) return;
-          var rowEl = btn.closest('.taste-row'); var tag = rowEl.getAttribute('data-tag');
-          var r = data[g].filter(function (x) { return x.n === tag; })[0]; if (!r) return;
-          var act = btn.getAttribute('data-act');
-          if (act === 'plus') r.w = Math.min(100, r.w + 10);
-          else if (act === 'minus') r.w = Math.max(0, r.w - 10);
-          else if (act === 'pin') { r.pinned = !r.pinned; rowEl.classList.toggle('is-pinned', !!r.pinned); rowEl.querySelector('[data-act="pin"]').classList.toggle('is-on', !!r.pinned); }
-          if (act === 'plus' || act === 'minus') {
-            rowEl.querySelector('.taste-bar-fill').style.width = r.w + '%';
-            rowEl.querySelector('.taste-row-pct').textContent = r.w + '%';
-          }
-          if (window.TwinrWave) window.TwinrWave.bump();   // the wave reacts — "ты это сформировал"
-          renderSponsor();                                  // taste changed → ad re-matches live
-        });
-        body.appendChild(card);
-      });
-      updateVectorSr();                                      // §10.1 AT-vector for screen-reader
-      if (window.GorodSaved) window.GorodSaved.refreshStreak();
+      var eyebrow = coldStart
+        ? 'Пока это <b>пример</b> — собери вкус, и облако станет твоим. Размер шарика = вес интереса в волне.'
+        : 'Размер шарика = <b>сколько этого в твоей волне</b>. Тапни — настрой −/+; волна и реклама подстроятся.';
+      var wrap = document.createElement('div');
+      wrap.className = 'tcloud-tweak';
+      wrap.innerHTML =
+        '<div class="tcloud-tweak-head">' +
+          '<p class="tcloud-tweak-eyebrow">' + eyebrow + '</p>' +
+          '<button class="tcloud-listtoggle" type="button" id="taste-listtoggle" aria-pressed="' + (listMode ? 'true' : 'false') + '">Списком</button>' +
+        '</div>' +
+        '<div class="tcloud-segctrl" role="group" aria-label="Категория интересов">' +
+          GROUPS.map(function (g) { return '<button class="tcloud-seg' + (g === activeGroup ? ' is-active' : '') + '" type="button" data-grp="' + g + '" aria-pressed="' + (g === activeGroup ? 'true' : 'false') + '">' + g + '</button>'; }).join('') +
+        '</div>' +
+        '<div class="tcloud-field" id="taste-cloud-field" role="group" aria-label="Размеры интересов — настрой вес каждого"></div>' +
+        '<div class="tcloud-list" id="taste-cloud-list" hidden></div>' +
+        stripHtml() +
+        '<p class="tcloud-legend">Здесь размер = <b>твой</b> вес. В «Открыть» размер = что популярно сейчас. Точное число — только у того, что ты настроил сам.</p>';
+      body.appendChild(wrap);
       if (rejList.length) {                                  // W1 — honest "you rejected these" card (every rejection visible)
         var rc = document.createElement('div'); rc.className = 'taste-group taste-rej-card';
         var chips = rejList.map(function (x) { return '<span class="taste-rej-chip' + (x.matched ? ' is-matched' : '') + '">' + x.label + '</span>'; }).join('');
@@ -13111,13 +13214,274 @@
           '<p class="taste-rej-cap">Эти причины ты убрал через «почему?» → «не моё» в плеере. Волна их избегает' + (anyMatched ? ', а совпавшие грани выше — понижены' : '') + '. Любую можно вернуть на плеере.</p>';
         body.appendChild(rc);
       }
+      wrap.querySelectorAll('.tcloud-seg').forEach(function (chip) { chip.addEventListener('click', function () { switchGroup(chip.getAttribute('data-grp')); }); });
+      var lt = document.getElementById('taste-listtoggle');
+      if (lt) lt.addEventListener('click', function () { setListMode(!listMode); });
+      wireStrip();
+      buildActive();
+      updateVectorSr();                                      // §10.1 AT-vector for screen-reader
+      if (window.GorodSaved) window.GorodSaved.refreshStreak();
+      wireFoot();
+      if (!deltaPrimed) { primeDelta(); deltaPrimed = true; }   // replace fabricated "за неделю" delta with an honest invite (once → never clobbers sponsor-dismiss)
+    }
+    function wireFoot() {
+      if (footWired) return; footWired = true;
       var share = document.getElementById('taste-share');
-      if (share) share.addEventListener('click', function () {
-        location.hash = '#/recap';                 // open the weekly recap (GOROD-050); router + GorodRecap take over
-        if (window.TwinrWave) window.TwinrWave.bump();
-      });
+      if (share) share.addEventListener('click', function () { location.hash = '#/recap'; if (window.TwinrWave) window.TwinrWave.bump(); });
       var sonify = document.getElementById('taste-sonify');
       if (sonify) sonify.addEventListener('click', function () { toggleSonify(sonify); });
+    }
+    function primeDelta() {
+      var d = document.getElementById('taste-delta'); if (!d) return;
+      d.textContent = coldStart ? 'Собери вкус — и здесь будешь видеть, что меняется в эфире от каждой правки.'
+                                : 'Измени вес интереса — увидишь, что изменится в эфире.';
+    }
+
+    /* ---- the cloud ---- */
+    function stripHtml() {
+      return '<div class="tcloud-focus-strip" id="taste-strip" hidden>' +
+        '<div class="tcloud-strip-head"><span class="tcloud-strip-name" id="taste-strip-name"></span><span class="tcloud-strip-prov" id="taste-strip-prov"></span></div>' +
+        '<div class="tcloud-strip-ctrls">' +
+          '<button class="tcloud-step" type="button" id="taste-strip-minus" aria-label="Меньше">−</button>' +
+          '<span class="tcloud-pips" id="taste-strip-pips" aria-hidden="true"></span>' +
+          '<button class="tcloud-step" type="button" id="taste-strip-plus" aria-label="Больше">+</button>' +
+          '<button class="tcloud-strip-close" type="button" id="taste-strip-close" aria-label="Готово">' + ICON_X + '</button>' +
+        '</div>' +
+        '<p class="tcloud-strip-note" id="taste-strip-note" role="status" aria-live="polite"></p>' +
+      '</div>';
+    }
+    function wireStrip() {
+      var m = document.getElementById('taste-strip-minus'), p = document.getElementById('taste-strip-plus'), cl = document.getElementById('taste-strip-close');
+      if (m) m.addEventListener('click', function () { if (focusedB) stepWeight(focusedB, -1, 'btn'); });
+      if (p) p.addEventListener('click', function () { if (focusedB) stepWeight(focusedB, 1, 'btn'); });
+      if (cl) cl.addEventListener('click', function () { closeStrip(); });
+    }
+    function buildActive() { cField = document.getElementById('taste-cloud-field'); if (listMode) buildList(); else buildCloud(); }
+    function buildCloud() {
+      cStop(); closeStripSilent();
+      cBubbles = []; cPlaced = false; cRetry = 0;
+      var list = document.getElementById('taste-cloud-list'); if (list) list.hidden = true;
+      cField = document.getElementById('taste-cloud-field'); if (!cField) return;
+      cField.hidden = false; cField.innerHTML = ''; cField.classList.remove('has-focus');
+      (data[activeGroup] || []).forEach(function (r) { makeCloudBubble(r, activeGroup); });
+      requestAnimationFrame(cApplyReduced);   // place after layout (rAF) so getBoundingClientRect has size
+    }
+    function buildList() {
+      cStop(); closeStripSilent();
+      cField = document.getElementById('taste-cloud-field'); if (cField) cField.hidden = true;
+      var list = document.getElementById('taste-cloud-list'); if (!list) return;
+      list.hidden = false;
+      list.innerHTML = (data[activeGroup] || []).map(function (r) { return rowHtml(r); }).join('');
+      list.onclick = function (e) {
+        var btn = e.target.closest('[data-act]'); if (!btn) return;
+        var rowEl = btn.closest('.taste-row'); if (!rowEl) return;
+        var r = (data[activeGroup] || []).filter(function (x) { return x.n === rowEl.getAttribute('data-tag'); })[0]; if (!r) return;
+        if (r.rej) { rejectNote(); return; }
+        var lvl = wToLevel(r.w), nl = btn.getAttribute('data-act') === 'plus' ? lvl + 1 : lvl - 1;
+        applyListWeight(r, activeGroup, Math.max(0, Math.min(MAXLEVEL, nl)), rowEl);
+      };
+    }
+    function applyListWeight(r, g, lvl, rowEl) {
+      var oldLvl = wToLevel(r.w);
+      if (lvl === oldLvl && r.src === 'you') return;
+      r.w = levelToW(lvl); r.src = 'you';
+      var fill = rowEl.querySelector('.taste-bar-fill'); if (fill) fill.style.width = r.w + '%';
+      var pct = rowEl.querySelector('.taste-row-pct'); if (pct) pct.textContent = lvl + '/4';
+      commitFx(r, g, lvl, oldLvl);
+    }
+    function makeCloudBubble(r, g) {
+      var lvl = wToLevel(r.w), size = r.rej ? MIN_T : sizeForW(r.w);
+      var img = (g === 'Артисты') ? artistImg(r.n) : null;
+      var lblId = 'tcb-lbl-' + (cId++);
+      var el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'tcloud-bubble tcloud-bubble--tweak ' + (img ? 'tcloud-bubble--artist' : 'tcloud-bubble--genre') +
+        (r.src === 'you' && !r.rej ? ' tcloud-bubble--you' : '') + (r.rej ? ' tcloud-bubble--rejected' : '');
+      el.style.setProperty('--size', size + 'px');
+      if (img) el.style.backgroundImage = 'url(' + tasset() + img + ')';
+      el.setAttribute('role', 'slider');
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('aria-labelledby', lblId);              // WCAG 2.5.3 — slider name = the visible label text (slider is not name-from-content)
+      el.setAttribute('aria-valuemin', '0');
+      el.setAttribute('aria-valuemax', String(MAXLEVEL));
+      el.setAttribute('aria-valuenow', String(lvl));
+      el.setAttribute('aria-valuetext', valueText(r, lvl));   // STATE only — name comes from aria-labelledby (no double-speak)
+      if (r.rej) el.setAttribute('aria-disabled', 'true');
+      el.innerHTML = innerHtml(r, lvl, lblId);
+      var b = { rec: r, group: g, el: el, lblId: lblId, focused: false, r: size / 2, x: 0, y: 0, vx: 0, vy: 0 };
+      el.addEventListener('click', function () { focusBubble(b); });
+      el.addEventListener('keydown', function (e) { onKey(b, e); });
+      cField.appendChild(el);
+      cBubbles.push(b);
+      return b;
+    }
+    function innerHtml(r, lvl, lblId) {
+      var s = '<span class="tcloud-bubble-label" id="' + lblId + '">' + r.n + '</span>';
+      if (r.rej) s += '<span class="tcloud-lock" aria-hidden="true">' + ICON_LOCK + '</span>';
+      else if (r.src === 'you') s += '<span class="tcloud-bubble-num" aria-hidden="true">' + lvl + '/4</span>';
+      else s += '<span class="tcloud-prov-pill" aria-hidden="true">' + provLabel(r.src) + '</span>';
+      return s;
+    }
+    function valueText(r, lvl) {   // STATE only; the facet name is supplied via aria-labelledby
+      if (r.rej) return 'отклонено в плеере — заморожено. Вернуть можно в плеере.';
+      if (r.src === 'you') return 'вес ' + lvl + ' из 4 — ты задал.';
+      return provLabel(r.src) + ', размер не задан. Настрой стрелками.';
+    }
+    function decorateBubble(b) {
+      var r = b.rec, lvl = wToLevel(r.w);
+      b.el.classList.toggle('tcloud-bubble--you', r.src === 'you' && !r.rej);
+      b.el.innerHTML = innerHtml(r, lvl, b.lblId);
+    }
+    function sizeBubble(b) {
+      var size = b.rec.rej ? MIN_T : sizeForW(b.rec.w);
+      b.el.style.setProperty('--size', size + 'px');
+      b.r = size / 2;   // collision radius updates instantly → neighbours start reflowing now (CSS animates the visual width)
+    }
+
+    /* focus / docked stepper */
+    function showStrip(b) {
+      if (focusedB && focusedB !== b) { focusedB.el.classList.remove('is-focused'); focusedB.focused = false; }
+      focusedB = b; b.focused = true; b.el.classList.add('is-focused');
+      if (cField) cField.classList.add('has-focus');
+      var s = document.getElementById('taste-strip'); if (s) s.hidden = false;
+      updateStrip(b);
+    }
+    function focusBubble(b) {
+      if (focusedB === b) { closeStrip(); return; }   // tap focused bubble again = close
+      showStrip(b);
+      try { b.el.focus(); } catch (e) {}
+    }
+    function updateStrip(b) {
+      var r = b.rec, lvl = wToLevel(r.w);
+      var nm = document.getElementById('taste-strip-name'); if (nm) nm.textContent = r.n;
+      var pv = document.getElementById('taste-strip-prov');
+      if (pv) pv.textContent = r.rej ? 'оспорено в плеере' : (r.src === 'you' ? ('вес ' + lvl + ' из 4 · ты задал') : (provLabel(r.src) + ' · размер не задан'));
+      var pips = document.getElementById('taste-strip-pips');
+      if (pips) { var h = '', i; for (i = 0; i <= MAXLEVEL; i++) h += '<span class="tcloud-pip' + (i <= lvl ? ' is-on' : '') + '"></span>'; pips.innerHTML = h; }
+      var m = document.getElementById('taste-strip-minus'), p = document.getElementById('taste-strip-plus');
+      if (m) m.disabled = r.rej || lvl <= 0;
+      if (p) p.disabled = r.rej || lvl >= MAXLEVEL;
+      var note = document.getElementById('taste-strip-note');
+      if (note) { if (r.rej) { note.classList.add('is-warn'); note.textContent = 'Заморожено — оспорено в плеере.'; } else { note.classList.remove('is-warn'); note.textContent = ''; } }
+    }
+    function closeStrip() {
+      var s = document.getElementById('taste-strip'); if (s) s.hidden = true;
+      if (focusedB) { focusedB.el.classList.remove('is-focused'); focusedB.focused = false; }
+      focusedB = null;
+      if (cField) cField.classList.remove('has-focus');
+      if (tasteDirty && built && location.hash === '#/taste') { tasteDirty = false; seed(); render(); }   // apply any deferred external taste change the moment editing ends (no stale/lying cloud)
+    }
+    function closeStripSilent() { var s = document.getElementById('taste-strip'); if (s) s.hidden = true; if (focusedB) { focusedB.el.classList.remove('is-focused'); focusedB.focused = false; } if (cField) cField.classList.remove('has-focus'); focusedB = null; }
+
+    /* the one setter — all paths drive this */
+    function stepWeight(b, dir, via) { setLevel(b, wToLevel(b.rec.w) + dir, via); }
+    function setLevel(b, lvl, via) { if (b.rec.rej) { rejectNote(); return; } applyWeight(b, Math.max(0, Math.min(MAXLEVEL, lvl)), via); }
+    function applyWeight(b, lvl, via) {
+      var r = b.rec, g = b.group, oldLvl = wToLevel(r.w), wasYou = r.src === 'you';
+      if (lvl === oldLvl && wasYou) {                       // genuine no-op (at a bound) — just re-announce, no bump/persist
+        var d0 = document.getElementById('taste-delta');
+        if (d0) d0.textContent = lvl >= MAXLEVEL ? (r.n + ' уже на максимуме веса.') : (lvl <= 0 ? (r.n + ' уже на минимуме — оспорить грань можно в плеере.') : d0.textContent);
+        if (via === 'btn') stripNote(r.n + ': вес ' + lvl + ' из 4');
+        return;
+      }
+      r.w = levelToW(lvl); r.src = 'you';
+      sizeBubble(b); decorateBubble(b);
+      b.el.setAttribute('aria-valuenow', String(lvl));
+      b.el.setAttribute('aria-valuetext', valueText(r, lvl));
+      if (focusedB === b) updateStrip(b);
+      commitFx(r, g, lvl, oldLvl);                           // one setter — shared with the list path
+      if (via === 'btn') stripNote(r.n + ': вес ' + lvl + ' из 4');   // role=status announce on button path only (arrows auto-announce via valuetext)
+    }
+    // shared commit tail — both the cloud (applyWeight) and the list (applyListWeight) funnel through this
+    function commitFx(r, g, lvl, oldLvl) {
+      persistWeight(g, r.n, r.w);
+      if (window.TwinrWave) window.TwinrWave.bump();         // wave reacts once per committed step — "ты это сформировал"
+      renderSponsor();                                       // ad re-matches live on the new r.w (anti-theater proof)
+      updateVectorSr();
+      if (window.GorodSaved) window.GorodSaved.refreshStreak();
+      consequence(r, lvl, lvl - oldLvl);                     // #taste-delta — behavioral, not marketing
+    }
+    function persistWeight(g, n, w) {
+      var key = keyFor(g, n);
+      var m = loadW(); m[key] = { w: w, src: 'you' };
+      try { localStorage.setItem(WKEY, JSON.stringify(m)); } catch (e) {}
+      // No 'gorodfm-taste-changed' dispatch: a weight edit touches gorodfm_weights only (never gorodfm_taste membership), and no other surface reads weights — broadcasting would re-render discover/search every step (storm). Discover→#/taste sync still flows via discover's own dispatch.
+    }
+    function consequence(r, lvl, delta) {
+      var d = document.getElementById('taste-delta'); if (!d) return;
+      if (delta > 0) d.textContent = r.n + ' — больше в волне. Чаще ставлю это; реже — то, что ниже.';
+      else if (delta < 0) d.textContent = r.n + ' — меньше. Реже в эфире; вместо него поднимается то, что выше.';
+      else d.textContent = lvl >= MAXLEVEL ? (r.n + ' уже на максимуме веса.') : (r.n + ' на минимуме — оспорить грань можно в плеере.');
+    }
+    function stripNote(t) { var n = document.getElementById('taste-strip-note'); if (n) { n.classList.remove('is-warn'); n.textContent = t; } }
+    function rejectNote() {
+      var n = document.getElementById('taste-strip-note'); if (n) { n.classList.add('is-warn'); n.textContent = 'Эту грань ты оспорил на плеере. Вернуть можно там же — «почему?» → «вернуть».'; }
+      var d = document.getElementById('taste-delta'); if (d) d.textContent = 'Эту грань ты оспорил на плеере — вес заморожен. Вернуть можно в плеере.';
+    }
+    function onKey(b, e) {
+      var lvl = wToLevel(b.rec.w), k = e.key;
+      if (b.rec.rej) {
+        if (['ArrowRight','ArrowUp','ArrowLeft','ArrowDown','Home','End','PageUp','PageDown','Enter',' '].indexOf(k) !== -1) { e.preventDefault(); showStrip(b); rejectNote(); }
+        else if (k === 'Escape') closeStrip();
+        return;
+      }
+      if (k === 'ArrowRight' || k === 'ArrowUp') { e.preventDefault(); showStrip(b); setLevel(b, lvl + 1, 'key'); }
+      else if (k === 'ArrowLeft' || k === 'ArrowDown') { e.preventDefault(); showStrip(b); setLevel(b, lvl - 1, 'key'); }
+      else if (k === 'Home') { e.preventDefault(); showStrip(b); setLevel(b, 0, 'key'); }
+      else if (k === 'End') { e.preventDefault(); showStrip(b); setLevel(b, MAXLEVEL, 'key'); }
+      else if (k === 'PageUp') { e.preventDefault(); showStrip(b); setLevel(b, lvl + 2, 'key'); }
+      else if (k === 'PageDown') { e.preventDefault(); showStrip(b); setLevel(b, lvl - 2, 'key'); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); focusBubble(b); }
+      else if (k === 'Escape') closeStrip();
+    }
+    function switchGroup(g) {
+      if (g === activeGroup) return;
+      activeGroup = g;
+      document.querySelectorAll('.tcloud-seg').forEach(function (c) { var on = c.getAttribute('data-grp') === g; c.classList.toggle('is-active', on); c.setAttribute('aria-pressed', String(on)); });
+      buildActive();
+    }
+    function setListMode(on) {
+      listMode = on;
+      var lt = document.getElementById('taste-listtoggle'); if (lt) lt.setAttribute('aria-pressed', String(on));
+      buildActive();
+    }
+
+    /* physics (forked from GorodTasteCloud) */
+    function cMeasure() { if (!cField) return; var rc = cField.getBoundingClientRect(); cW = rc.width; cH = rc.height; }
+    function cScatter() {
+      cMeasure(); if (cW < 10 || cH < 10) return false;
+      var mid = cH / 2;
+      cBubbles.forEach(function (b, i) {
+        var ang = (i / cBubbles.length) * Math.PI * 2 + Math.random() * 0.6;
+        b.x = cW / 2 + Math.cos(ang) * (cW * (0.10 + Math.random() * 0.26));
+        b.y = mid + Math.sin(ang) * ((cH - 2 * C_PAD) * (0.14 + Math.random() * 0.28));
+        b.x = Math.max(b.r, Math.min(cW - b.r, b.x));
+        b.y = Math.max(C_PAD + b.r, Math.min(cH - C_PAD - b.r, b.y));
+        b.vx = (Math.random() - 0.5) * 0.6; b.vy = (Math.random() - 0.5) * 0.6;
+        cPaint(b);
+      });
+      cPlaced = true; return true;
+    }
+    function cPaint(b) { var sc = b.focused ? 1.06 : 1; b.el.style.transform = 'translate(' + (b.x - b.r) + 'px,' + (b.y - b.r) + 'px) scale(' + sc + ')'; }
+    function cStep() {
+      var cx = cW / 2, cy = cH / 2, i, j, b;
+      for (i = 0; i < cBubbles.length; i++) { b = cBubbles[i]; var k = b.focused ? C_KSEL : C_KUN; b.vx += (cx - b.x) * k; b.vy += (cy - b.y) * k; b.vx *= C_DAMP; b.vy *= C_DAMP; }
+      for (i = 0; i < cBubbles.length; i++) { for (j = i + 1; j < cBubbles.length; j++) { var a = cBubbles[i], c = cBubbles[j]; var dx = c.x - a.x, dy = c.y - a.y, dist = Math.sqrt(dx * dx + dy * dy) || 0.01, mn = a.r + c.r + 10; if (dist < mn) { var pu = (mn - dist) / dist * C_PUSH, px = dx * pu, py = dy * pu; a.vx -= px; a.vy -= py; c.vx += px; c.vy += py; } } }
+      for (i = 0; i < cBubbles.length; i++) { b = cBubbles[i]; var spd = Math.sqrt(b.vx * b.vx + b.vy * b.vy); if (spd > C_VCL) { b.vx = b.vx / spd * C_VCL; b.vy = b.vy / spd * C_VCL; } b.x += b.vx; b.y += b.vy; if (b.x < b.r) { b.x = b.r; b.vx *= C_BOUNCE; } else if (b.x > cW - b.r) { b.x = cW - b.r; b.vx *= C_BOUNCE; } if (b.y < C_PAD + b.r) { b.y = C_PAD + b.r; b.vy *= C_BOUNCE; } else if (b.y > cH - C_PAD - b.r) { b.y = cH - C_PAD - b.r; b.vy *= C_BOUNCE; } cPaint(b); }
+      cRaf = requestAnimationFrame(cStep);
+    }
+    function cStart() {
+      if (cRun || cREDUCE.matches || listMode || location.hash !== '#/taste' || !cBubbles.length) return;
+      if (!cPlaced && !cScatter()) { cRetry++; if (cRetry < 30) cRaf = requestAnimationFrame(cStart); else cRaf = 0; return; }   // wait until field has layout dimensions (retry id in cRaf so cStop cancels it)
+      cRetry = 0; cRun = true; cRaf = requestAnimationFrame(cStep);
+    }
+    function cStop() { cRun = false; if (cRaf) cancelAnimationFrame(cRaf); cRaf = 0; cRetry = 0; }
+    function cRequestRun() { if (!cREDUCE.matches && !listMode && location.hash === '#/taste') cStart(); else cStop(); }
+    function cApplyReduced() {
+      if (!cField || location.hash !== '#/taste') return;   // deferred (rAF) call may fire after the user already left the route
+      if (cREDUCE.matches || listMode) { closeStripSilent(); cField.classList.add('is-static'); cBubbles.forEach(function (b) { b.el.style.transform = ''; }); }
+      else { cField.classList.remove('is-static'); cPlaced = false; cScatter(); }
+      cRequestRun();
     }
     /* ---- Спонсор по вкусу (VISION #9): taste-based, explainable, steerable - */
     var SPONSORS = [
@@ -13130,7 +13494,7 @@
     var sponsorWired = false;
     function matchSponsor() {
       var taste = [];
-      ['Жанры', 'Артисты'].forEach(function (g) { (data[g] || []).forEach(function (r) { taste.push({ n: r.n, w: r.w }); }); });
+      ['Жанры', 'Артисты'].forEach(function (g) { (data[g] || []).forEach(function (r) { if (r.rej) return; taste.push({ n: r.n, w: r.w }); }); });   // honor the reject-card promise «волна их избегает» — a player-rejected facet never picks/justifies an ad
       taste.sort(function (a, b) { return b.w - a.w; });
       var best = null, bestScore = -1, bestHits = [];
       SPONSORS.forEach(function (s) {
@@ -13176,10 +13540,20 @@
     function onRoute() {
       if (location.hash === '#/taste') {
         if (!built) { seed(); render(); built = true; }
+        else if (tasteDirty) { seed(); render(); tasteDirty = false; }   // membership changed on discover/onboarding → resync
         wireSponsor(); renderSponsor();
         if (window.TwinrWave) setTimeout(function () { window.TwinrWave.start(); }, 30);
-      } else { if (window.TwinrWave) window.TwinrWave.stop(); stopAudio(); }
+        cRequestRun();                                                    // resume the weight-cloud physics
+      } else { if (window.TwinrWave) window.TwinrWave.stop(); stopAudio(); cStop(); }
     }
+    // sync with discover/onboarding membership writers. We never self-dispatch (persistWeight is silent), so no guard/loop is possible.
+    // While a bubble is focused we defer (don't yank the DOM out from under the stepper); closeStrip() flushes the moment editing ends.
+    window.addEventListener('gorodfm-taste-changed', function () {
+      tasteDirty = true;
+      if (built && location.hash === '#/taste' && !focusedB) { seed(); render(); tasteDirty = false; }
+    });
+    if (cREDUCE.addEventListener) cREDUCE.addEventListener('change', function () { if (built) cApplyReduced(); });
+    window.addEventListener('resize', function () { if (built && location.hash === '#/taste' && !cREDUCE.matches && !listMode) { cPlaced = false; cScatter(); } });
     window.addEventListener('hashchange', onRoute);
     if (document.readyState === 'complete' || document.readyState === 'interactive') onRoute();
     else window.addEventListener('DOMContentLoaded', onRoute);
