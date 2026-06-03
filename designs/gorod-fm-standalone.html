@@ -4056,9 +4056,14 @@
         display: flex;
         flex-direction: column;
         gap: 0;
-        transform: translateY(100%);
+        /* Fully clear the viewport when closed. The sheet is anchored at
+           bottom:var(--player-mini-h), so translateY(100%) alone slides it down by
+           its own 480px height but leaves a 72px strip overlapping the redesigned
+           .player-mini (z60) — the old now-playing header was covering the new mini-bar.
+           Clearing the bottom offset too hides it completely on any viewport. */
+        transform: translateY(calc(100% + var(--player-mini-h)));
         transition: transform var(--t-mid);
-        /* hidden by default via transform; we also need display logic */
+        /* hidden by default via transform; open state restores translateY(0) below */
       }
 
       /* The sheet's drag handle strip */
