@@ -1,6 +1,18 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-12) — ВИЗУАЛЬНЫЙ АУДИТ всего сайта (Chrome MCP) + 2 фикса плеера. 🔴 НЕ ЗАКОММИЧЕНО, gallery-restyle НЕ ДОДЕЛАН (прервано оператором «прерви без потерь»)
+## ⚡ LATEST (2026-06-03 cont-13) — Discover taste-cloud + carousel polish + popular bubbles + genre-фото. **6 коммитов локально (HEAD `933187d`), PUSH ДЕРЖИТСЯ до `sync`.**
+
+**📖 ПОЛНЫЙ хендофф: `docs/superpowers/HANDOFF-gorod-fm-cont-13.md`** (всё сделанное + NEXT + решения за Эльбиком).
+
+**✅ СДЕЛАНО (committed, verified Chrome 0-errors):** (1) cont-12 ОТКРЫТЬ rebuild + 2 player-фикса залочены; (2) **Discover taste-cloud** (build+bloom+honest counter, форк GorodTasteCloud/GorodTasteSeed, онбординг не тронут); 🔴 **ЛАГ ИСПРАВЛЕН** (был `focusin→stop()` rAF-гейт; убран, физика=онбординг); (3) **карусель** Apple-fade+arrows + фикс выравнивания тайлов; (4) **«ПОПУЛЯРНО СЕЙЧАС»** 6 hue-free trend-chip + anti-clog **graduate-out** (флаг `GRADUATE`) + reshuffle + counter→#/taste; (5) **реальные фото ВСЕМ genre-шарикам** (12 Unsplash, онбординг+cloud, group/artist уже на real-assets).
+
+**🔴 NEXT:** **A.** #/taste weight-cloud (spec `SPEC-gorod-fm-taste-weight-cloud.md` готов, verdict=revise — 4 критик-фикса: hasRealSignal()=0-арг / SR-% leak / selfDispatch-loop / #taste-delta clobber). **B.** Standalone mirror (ВЕСЬ cont-13 НЕ зеркалён; ⚠️ `.scratch/build_tcloud.py` СТАЛЫЙ — без лаг-фиксов, копировать IIFE из dev). **C.** backlog: artist-enrich/Сохранённое/ЛК/light-theme/sections. **D.** PUSH при `sync`.
+
+**🟡 Эльбик-gate:** graduate-out (пики исчезают с canvas → #/taste; `GRADUATE=false` если оставлять) · Figma имеет только cover 540×320 (genre-фото взяты из инета) · GOROD-029/030.
+
+---
+
+## ⚡ PREV (2026-06-03 cont-12) — ВИЗУАЛЬНЫЙ АУДИТ всего сайта (Chrome MCP) + 2 фикса плеера → залочено в cont-13 `5d43896`/`d2e6939`
 
 🎯 Эльбик: (1) «визуальный аудит всего сайта через mcp chrome — соответствует ли плану» → (2) «внизу странная полуобрезанная Believer-плашка — не пофиксили на норм плеер?» → (3) «галерею переоформи + рассинхрон пофикси, потом пушни и комить» → **прервано до завершения**.
 
