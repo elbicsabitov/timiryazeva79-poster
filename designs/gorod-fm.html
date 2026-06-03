@@ -174,9 +174,52 @@
         /* Accent hover + motion durations */
         --brand-blue-hover: #6477ff;
         --d-micro: 120ms; --d-std: 220ms; --d-emph: 340ms;
+        /* seam tokens so call-sites are theme-agnostic (light overrides these) */
+        --accent-text: var(--accent-on-dark);
+        --cover-mix-base: #111318;
       }
 
       /* Warm theme retired (Apple-polish §G3) — overlay keeps the cinema palette. */
+
+      /* === LIGHT "day" theme — parallel override (Apple-grade, SPEC-gorod-fm-light-theme) ===
+         Additive: dark `cinema` stays byte-identical. Prod forces cinema (L~7345) so this is
+         dev-gated (?dev=1 → Tweaks «Light»). Token VALUES swap per theme; var NAMES unchanged
+         (zero call-site edits). Ratios measured vs --bg-base #FAFAF7. §8 critic fixes folded in:
+         blue fills darkened to #3346C4 (all white-on-blue labels ≥4.5:1 in one token — subsumes O2),
+         accent text/focus #3A4ED0 (6.31:1), wave alpha floored 0.82 in JS, --text-quat→.60 (migration),
+         faux-bars flipped to ink. PNG export stays dark (O3 default) + FOUC script N/A (cinema forced
+         in prod) — both documented as O7-public follow-ups. */
+      html[data-theme="light"] {
+        --brand-black:#FFFFFF;
+        --bg-base:#FAFAF7; --home-bg-base:#F4F4F1;
+        --bg-overlay:linear-gradient(-88.75deg, rgba(250,250,247,0) 70%, rgba(250,250,247,.45) 88%, rgba(250,250,247,.8) 100%);
+        --tile-shade:linear-gradient(124.4deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.12) 66%, rgba(0,0,0,.12) 80%);
+        --tile-shade-strong:linear-gradient(124.4deg, rgba(0,0,0,0) 36%, rgba(0,0,0,.18) 64%, rgba(0,0,0,.18) 80%);
+        --tile-darkening:rgba(0,0,0,.06);
+        --featured-cta-bg:rgba(255,255,255,.78);
+        /* Surfaces — white cards float on warm-paper base (inversion of dark) */
+        --surface-0:#FFFFFF; --surface-1:#FFFFFF; --surface-2:#F4F4F1; --surface-3:#EBEBE6;
+        /* Text ramp (AA-verified): warm near-black, not pure #000 */
+        --text-pri:#1A1C1F; --text-sec:rgba(0,0,0,.60); --text-ter:rgba(0,0,0,.40); --text-quat:rgba(0,0,0,.60);
+        /* Accent — ONE blue; #3346C4 fill makes every white label ≥4.5:1 (fold of §8 O2 fix) */
+        --brand-blue-light:#3346C4; --brand-blue-hover:#2A39A8;
+        --accent-on-dark:#3A4ED0; --accent-text:#3A4ED0;       /* ≤14px accent text + focus-ring, 6.31:1 */
+        --tint-blue-light-20:rgba(81,104,252,.12);
+        --np-accent:var(--brand-blue-light); --player-accent:var(--brand-blue-light);
+        --cover-mix-base:#FFFFFF;                                /* light floor for art-tint color-mix */
+        --success:#0A7A53;                                       /* #34d399 = 1.84:1 invisible on white */
+        /* Hairlines / borders (light needs a touch more weight) */
+        --hairline:rgba(0,0,0,.09); --divider:rgba(0,0,0,.07); --border-strong:rgba(0,0,0,.14);
+        --inset-top:inset 0 1px 0 rgba(255,255,255,.9);          /* top-light highlight = real light depth */
+        --surf-hover:rgba(0,0,0,.04); --surf-active:rgba(0,0,0,.07);
+        --surf-glass-20:rgba(0,0,0,.06); --surf-glass-12:rgba(0,0,0,.04);
+        /* Shadows — two-layer, blue-black undertone rgb(20,22,40), NOT grey/dirty */
+        --sh-1:0 1px 2px rgba(20,22,40,.06), 0 1px 1px rgba(20,22,40,.04);
+        --sh-2:0 4px 12px -2px rgba(20,22,40,.10), 0 2px 4px rgba(20,22,40,.05);
+        --sh-3:0 12px 28px -8px rgba(20,22,40,.14), 0 4px 8px -4px rgba(20,22,40,.07);
+        --sh-4:0 24px 56px -16px rgba(20,22,40,.18), 0 8px 16px -8px rgba(20,22,40,.08);
+      }
+      html[data-theme="light"] { background:var(--bg-base); color:var(--text-pri); }
     }
 
     /* =========================================================================
@@ -7275,6 +7318,63 @@
         border-radius: var(--r-base) var(--r-tile-tr) var(--r-base) var(--r-base);
       }
     }
+
+    /* ====================================================================
+       LIGHT theme — per-surface overrides (UNLAYERED → beats @layer components).
+       Only for hardcoded #fff / rgba(255,255,255,…) that sits on the PAPER bg and
+       would vanish on white. White text that sits on dark covers/photos/blue fills
+       is intentionally left white (it themes correctly). Dark mode untouched.
+       ==================================================================== */
+    /* — Home radio hero (sits on paper) — */
+    html[data-theme="light"] .home-radio-title,
+    html[data-theme="light"] .home-ctx-now,
+    html[data-theme="light"] .home-view-btn.is-on { color: var(--text-pri); }
+    html[data-theme="light"] .home-radio-artist,
+    html[data-theme="light"] .home-radio-why-text,
+    html[data-theme="light"] .home-ctx-cap,
+    html[data-theme="light"] .home-view-btn,
+    html[data-theme="light"] .home-radio-skip { color: var(--text-sec); }
+    html[data-theme="light"] .home-radio-like { color: var(--text-pri); background: var(--surf-hover); border-color: var(--hairline); }
+    html[data-theme="light"] .home-radio-steer { color: var(--accent-text); }
+    /* — Taste hero + ctx-strip + cloud eyebrow (on paper) — */
+    html[data-theme="light"] .taste-title,
+    html[data-theme="light"] .ctx-strip-title,
+    html[data-theme="light"] .ctx-chip-label,
+    html[data-theme="light"] .tcloud-tweak-eyebrow b { color: var(--text-pri); }
+    html[data-theme="light"] .taste-sub,
+    html[data-theme="light"] .ctx-chip-params,
+    html[data-theme="light"] .ctx-row-cap,
+    html[data-theme="light"] .ctx-why,
+    html[data-theme="light"] .ctx-hint { color: var(--text-sec); }
+    html[data-theme="light"] .taste-kicker { color: var(--accent-text); }
+    html[data-theme="light"] .ctx-chip { background: var(--surface-1); border-color: var(--hairline); }
+    html[data-theme="light"] .ctx-chip[aria-pressed="true"] { border-color: var(--brand-blue-light); background: var(--tint-blue-light-20); }
+    html[data-theme="light"] .taste-sonify { background: var(--surf-hover); border-color: var(--hairline); color: var(--text-pri); }
+    html[data-theme="light"] .taste-sonify span { color: var(--text-pri); }
+    /* — Discover (#/podborki): headings + cards that hardcode #fff / rgba-white on paper — */
+    html[data-theme="light"] .discover-title,
+    html[data-theme="light"] .discover-map-title,
+    html[data-theme="light"] .discover-near-title,
+    html[data-theme="light"] .discover-editorial-title,
+    html[data-theme="light"] .discover-near-name,
+    html[data-theme="light"] .discover-ed-title { color: var(--text-pri); }
+    html[data-theme="light"] .discover-chip { background: var(--surface-1); border-color: var(--hairline); color: var(--text-sec); }
+    html[data-theme="light"] .discover-near-card,
+    html[data-theme="light"] .discover-ed-card,
+    html[data-theme="light"] .discover-ask-field { background: var(--surface-0); border-color: var(--hairline); }
+    html[data-theme="light"] .discover-ask-go:focus-visible { outline-color: var(--accent-on-dark); }
+    /* — Player chrome stays immersive-dark in light (the now-playing is a dark moment, like the onboarding splash).
+         Re-assert the dark palette inside the player scopes → renders identical to dark mode, no per-icon fixes,
+         and avoids dark-text-on-dark from the hardcoded rgba(11,12,15,…) player backgrounds. — */
+    html[data-theme="light"] .player-mini,
+    html[data-theme="light"] .player-full {
+      --surface-0:#111318; --surface-1:#15171D; --surface-2:#1B1E26; --surface-3:#23262F;
+      --text-pri:#FFFFFF; --text-sec:rgba(255,255,255,.62); --text-ter:rgba(255,255,255,.40); --text-quat:rgba(235,235,245,.60);
+      --hairline:rgba(255,255,255,.08); --divider:rgba(255,255,255,.06); --border-strong:rgba(255,255,255,.14);
+      --surf-hover:rgba(255,255,255,.10); --surf-active:rgba(255,255,255,.16);
+      --cover-mix-base:#111318; --accent-on-dark:#8094ff; --accent-text:#8094ff;
+      --brand-blue-light:#5168FC; --brand-blue-hover:#6477ff;
+    }
   </style>
 
   <!-- Surface overrides: outside @layer to guarantee cascade win at desktop viewports.
@@ -7478,7 +7578,7 @@
           <svg id="sb-icon-moon" aria-hidden="true" viewBox="0 0 24 24" style="display:none">
             <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
           </svg>
-          <span>Cinema / Warm</span>
+          <span>Cinema / Light</span>
         </button>
       </div>
     </aside>
@@ -10595,10 +10695,8 @@
             data-tweak="theme"
             data-value="light"
             aria-pressed="false"
-            aria-label="Светлая тема — Phase 2 (недоступно)"
-            disabled
-            title="Phase 2 — будет в следующей итерации"
-          >Light · Phase 2</button>
+            aria-label="Светлая тема (Apple-grade, бета)"
+          >Light</button>
         </div>
       </div>
 
@@ -11106,10 +11204,10 @@
         const iconSun  = document.getElementById('sb-icon-sun');
         const iconMoon = document.getElementById('sb-icon-moon');
         if (iconSun && iconMoon) {
-          if (theme === 'warm') {
+          if (theme === 'light') {            // light active → show moon (tap = back to dark)
             iconSun.style.display = 'none';
             iconMoon.style.display = '';
-          } else {
+          } else {                            // dark/cinema → show sun (tap = go light)
             iconSun.style.display = '';
             iconMoon.style.display = 'none';
           }
@@ -11196,12 +11294,12 @@
         });
       });
 
-      // Sidebar theme toggle (cinema ↔ warm)
+      // Sidebar theme toggle (cinema ↔ light)
       const sbThemeToggle = document.getElementById('sb-theme-toggle');
       if (sbThemeToggle) {
         sbThemeToggle.addEventListener('click', function () {
           const current = document.documentElement.getAttribute('data-theme') || 'cinema';
-          applyTheme(current === 'cinema' ? 'warm' : 'cinema');
+          applyTheme(current === 'cinema' ? 'light' : 'cinema');
         });
       }
 
@@ -12988,8 +13086,10 @@
           var y = mid + Math.sin(nx * Math.PI * 2 * L.freq + t * L.speed * ctxState.speedMul) * (h * L.amp * ctxState.ampMul) * e * env;
           if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = L.color;
-        ctx.globalAlpha = L.alpha * (L.color === '#8094ff' ? (1 + ctxState.warm * 0.5) : (1 - ctxState.warm * 0.2));   // GOROD-051 — warmth via alpha, single hue
+        var dayW = document.documentElement.getAttribute('data-theme') === 'light';
+        ctx.strokeStyle = dayW ? '#3A4ED0' : L.color;                       // light: dark-blue ink (canvas ignores the CSS theme)
+        var a = L.alpha * (L.color === '#8094ff' ? (1 + ctxState.warm * 0.5) : (1 - ctxState.warm * 0.2));   // GOROD-051 — warmth via alpha, single hue
+        ctx.globalAlpha = dayW ? Math.max(0.82, a) : a;                     // light: floor 0.82 (≥4:1 — wave is a data-bearing wedge)
         ctx.lineWidth = L.width;
         ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
       }
@@ -14726,7 +14826,8 @@
         for(var x=0;x<=w;x+=6){ var nx=x/w, env=Math.sin(nx*Math.PI);
           var y=mid+Math.sin(nx*Math.PI*2*L.freq+t*L.speed)*(h*L.amp)*e*env;
           if(x===0)cx.moveTo(x,y); else cx.lineTo(x,y); }
-        cx.strokeStyle='rgba('+(L.base?rgb:'129,148,255')+','+L.alpha+')'; cx.lineWidth=L.base?2.4:1.4;
+        var dayW=document.documentElement.getAttribute('data-theme')==='light';
+        cx.strokeStyle = dayW ? 'rgba(58,78,208,'+Math.max(0.82,L.alpha)+')' : 'rgba('+(L.base?rgb:'129,148,255')+','+L.alpha+')'; cx.lineWidth=L.base?2.4:1.4;
         cx.lineJoin='round'; cx.lineCap='round'; cx.stroke();
       }
       t+=0.016;
