@@ -7363,6 +7363,26 @@
     html[data-theme="light"] .discover-ed-card,
     html[data-theme="light"] .discover-ask-field { background: var(--surface-0); border-color: var(--hairline); }
     html[data-theme="light"] .discover-ask-go:focus-visible { outline-color: var(--accent-on-dark); }
+    /* — Discover ask-RESULTS (post-search) + #/taste «Сохранённое»/streak + weight-cloud focus strip:
+         hardcoded #fff/#eef0f6 on paper (review w5iwcj491 HIGH/MED — all on MAIN flows) — */
+    html[data-theme="light"] .discover-results-title,
+    html[data-theme="light"] .discover-track-name { color: var(--text-pri); }
+    html[data-theme="light"] .discover-track { background: var(--surface-1); border-color: var(--hairline); }
+    html[data-theme="light"] .discover-track-play { background: var(--surf-active); color: var(--text-pri); }
+    html[data-theme="light"] .discover-results-play { color: var(--accent-text); }
+    html[data-theme="light"] .discover-results-play:focus-visible { outline-color: var(--accent-on-dark); }
+    html[data-theme="light"] .taste-streak,
+    html[data-theme="light"] .taste-saved { background: var(--surface-1); border-color: var(--hairline); }
+    html[data-theme="light"] .taste-streak-n,
+    html[data-theme="light"] .taste-saved-title,
+    html[data-theme="light"] .taste-saved-name,
+    html[data-theme="light"] .taste-saved-chip:hover,
+    html[data-theme="light"] .taste-saved-chip[aria-pressed="true"] { color: var(--text-pri); }
+    html[data-theme="light"] .tcloud-focus-strip { background: var(--surface-1); border-color: var(--hairline); }
+    html[data-theme="light"] .tcloud-strip-name { color: var(--text-pri); }
+    html[data-theme="light"] .tcloud-step { color: var(--text-pri); background: var(--surf-hover); }
+    html[data-theme="light"] .tcloud-pip { background: rgba(0,0,0,.16); }
+    html[data-theme="light"] .tcloud-pip.is-on { background: var(--brand-blue-light); }
     /* — Player chrome stays immersive-dark in light (the now-playing is a dark moment, like the onboarding splash).
          Re-assert the dark palette inside the player scopes → renders identical to dark mode, no per-icon fixes,
          and avoids dark-text-on-dark from the hardcoded rgba(11,12,15,…) player backgrounds. — */
@@ -7410,6 +7430,9 @@
     .account-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
     .account-btn--logout { color: var(--text-sec); justify-content: center; }
     .account-btn-ack { font: 600 12px 'Onest', sans-serif; color: var(--accent-text); }
+    /* light is dev-gated (incomplete on secondary routes) → hide the light/system pills in prod (review w5iwcj491 MED) */
+    html[data-dev="false"] .account-pill[data-theme-set="light"],
+    html[data-dev="false"] .account-pill[data-theme-set="system"] { display: none; }
   </style>
 
   <!-- Surface overrides: outside @layer to guarantee cascade win at desktop viewports.
@@ -15782,8 +15805,9 @@
     function setTheme(v) {
       var t = v === 'system' ? ((window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'cinema') : v;
       var tb = document.querySelector('.tweak-btn[data-tweak="theme"][data-value="' + t + '"]');
-      if (tb) { tb.click(); }   // route through the real applyTheme (syncs attr + LS + tweaks states + sidebar icon)
-      else { document.documentElement.setAttribute('data-theme', t); try { localStorage.setItem('gorod-fm.theme', t); } catch (e) {} }
+      if (tb && !tb.disabled) { tb.click(); }   // route through real applyTheme (syncs attr + LS + tweaks + sidebar icon)
+      else { document.documentElement.setAttribute('data-theme', t); try { localStorage.setItem('gorod-fm.theme', t); } catch (e) {} }   // CarPlay disables theme btns → direct fallback
+      try { if (window.TwinrWave && window.TwinrWave.bump) window.TwinrWave.bump(); } catch (e) {}   // poke wave to repaint in new ink even if its rAF is idle
       syncPills(v);
     }
     function ack(btn, msg) {
