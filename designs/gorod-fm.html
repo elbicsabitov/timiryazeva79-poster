@@ -4314,7 +4314,7 @@
       .shelf-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
       .shelf-title { font: 700 19px/1 'Onest', sans-serif; letter-spacing: -0.01em; color: var(--text-pri); margin: 0; }
       .shelf-sub { font: 400 13px/1 'Onest', sans-serif; color: var(--text-sec); }
-      .shelf-row { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding: 2px 2px 6px; }
+      .shelf-row { display: flex; align-items: flex-start; gap: 16px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding: 2px 2px 6px; }
       .shelf-row::-webkit-scrollbar { display: none; }
       .shelf-item { flex: none; scroll-snap-align: start; background: none; border: none; padding: 0; text-align: left; cursor: pointer; }
       .shelf-item:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; border-radius: var(--r-lg); }
@@ -4329,6 +4329,22 @@
       .shelf-item:hover .shelf-tile-play, .shelf-item:focus-within .shelf-tile-play { opacity: 1; transform: translateY(0); }
       .shelf-tile-rel { margin-top: 9px; font: 400 12px/1.3 'Onest', sans-serif; color: var(--accent-on-dark); display: flex; align-items: center; gap: 6px; max-width: 264px; }
       .shelf-tile-rel::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex: none; }
+      /* ---- Apple-Music-style shelf viewport: right/left edge fades + scroll arrows ---- */
+      .shelf-viewport { position: relative; }
+      .shelf-fade { position: absolute; top: 0; bottom: 14px; width: 56px; pointer-events: none; opacity: 0; transition: opacity var(--t-mid); z-index: 3; }
+      .shelf-fade--left { left: 0; background: linear-gradient(90deg, var(--home-bg-base), transparent); }
+      .shelf-fade--right { right: 0; background: linear-gradient(270deg, var(--home-bg-base), transparent); }
+      .shelf-viewport.can-left .shelf-fade--left { opacity: 1; }
+      .shelf-viewport.can-right .shelf-fade--right { opacity: 1; }
+      .shelf-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 4; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hairline); background: rgba(20,22,28,.72); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity var(--t-fast), background var(--t-fast); box-shadow: 0 6px 20px rgba(0,0,0,.42); }
+      .shelf-arrow svg { width: 20px; height: 20px; }
+      .shelf-arrow--left { left: 6px; }
+      .shelf-arrow--right { right: 6px; }
+      .shelf-arrow:hover { background: rgba(33,38,47,.94); }
+      .shelf-arrow:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; opacity: 1; pointer-events: auto; }
+      .shelf-viewport:hover .shelf-arrow.is-on, .shelf-viewport:focus-within .shelf-arrow.is-on { opacity: 1; pointer-events: auto; }
+      @media (hover: none) { .shelf-arrow { display: none; } }
+      @media (prefers-reduced-motion: reduce) { .shelf-fade, .shelf-arrow { transition: none; } }
       /* avatars (artists) */
       .shelf-row--avatars .shelf-item { width: 120px; text-align: center; }
       .shelf-avatar { width: 110px; height: 110px; border-radius: 50%; margin: 0 auto; background: var(--surface-2) center/cover no-repeat; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), var(--sh-1); transition: transform var(--t-fast); }
@@ -7868,7 +7884,13 @@
           <!-- Подборки — карусель-герой, видна сразу при открытии (реальный Figma-контент) -->
           <section class="discover-shelf discover-shelf--hero" aria-labelledby="shelf-collections-h">
             <div class="shelf-head"><h3 class="shelf-title" id="shelf-collections-h">Подборки</h3><span class="shelf-sub">Запусти любую как волну</span></div>
-            <div class="shelf-row shelf-row--tiles" id="shelf-collections" role="list" aria-label="Подборки станций"></div>
+            <div class="shelf-viewport">
+              <div class="shelf-row shelf-row--tiles" id="shelf-collections" role="list" aria-label="Подборки станций"></div>
+              <div class="shelf-fade shelf-fade--left" aria-hidden="true"></div>
+              <div class="shelf-fade shelf-fade--right" aria-hidden="true"></div>
+              <button class="shelf-arrow shelf-arrow--left" type="button" aria-label="Прокрутить назад" data-dir="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="shelf-arrow shelf-arrow--right" type="button" aria-label="Прокрутить вперёд" data-dir="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
           </section>
 
           <!-- D1 карта вкуса + D2 distance-dial (GOROD-046b). Демо-данные. -->
@@ -7911,13 +7933,25 @@
           <!-- Исполнители — круглые аватары (как Figma) -->
           <section class="discover-shelf" aria-labelledby="shelf-artists-h">
             <div class="shelf-head"><h3 class="shelf-title" id="shelf-artists-h">Исполнители</h3><span class="shelf-sub">Радио по артисту в один тап</span></div>
-            <div class="shelf-row shelf-row--avatars" id="shelf-artists" role="list" aria-label="Исполнители"></div>
+            <div class="shelf-viewport">
+              <div class="shelf-row shelf-row--avatars" id="shelf-artists" role="list" aria-label="Исполнители"></div>
+              <div class="shelf-fade shelf-fade--left" aria-hidden="true"></div>
+              <div class="shelf-fade shelf-fade--right" aria-hidden="true"></div>
+              <button class="shelf-arrow shelf-arrow--left" type="button" aria-label="Прокрутить назад" data-dir="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="shelf-arrow shelf-arrow--right" type="button" aria-label="Прокрутить вперёд" data-dir="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
           </section>
 
           <!-- Группы — карточки-квадраты (как Figma) -->
           <section class="discover-shelf" aria-labelledby="shelf-groups-h">
             <div class="shelf-head"><h3 class="shelf-title" id="shelf-groups-h">Группы</h3></div>
-            <div class="shelf-row shelf-row--cards" id="shelf-groups" role="list" aria-label="Группы"></div>
+            <div class="shelf-viewport">
+              <div class="shelf-row shelf-row--cards" id="shelf-groups" role="list" aria-label="Группы"></div>
+              <div class="shelf-fade shelf-fade--left" aria-hidden="true"></div>
+              <div class="shelf-fade shelf-fade--right" aria-hidden="true"></div>
+              <button class="shelf-arrow shelf-arrow--left" type="button" aria-label="Прокрутить назад" data-dir="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="shelf-arrow shelf-arrow--right" type="button" aria-label="Прокрутить вперёд" data-dir="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
           </section>
 
           <!-- Медиатека — найди и улучшай вкус (реальные артисты Figma) -->
@@ -14727,6 +14761,30 @@
         + '<div class="shelf-card-cover" style="background-image:url('+x.img+')"></div><div class="shelf-card-name">'+esc(x.n)+'</div></button>';
     }).join('');
     [c,a,g].forEach(function(el){ if(!el) return; el.addEventListener('click', function(e){ var b=e.target.closest('.shelf-item'); if(!b) return; startWave(b.getAttribute('data-name'), b.getAttribute('data-sub')); }); });
+    /* Apple-Music-style shelf scrollers: edge fades + arrows that auto show/hide by scroll position */
+    [].slice.call(document.querySelectorAll('.shelf-viewport')).forEach(function (vp) {
+      var row = vp.querySelector('.shelf-row'); if (!row) return;
+      function update() {
+        var max = row.scrollWidth - row.clientWidth - 1;
+        var canL = row.scrollLeft > 2, canR = row.scrollLeft < max;
+        vp.classList.toggle('can-left', canL);
+        vp.classList.toggle('can-right', canR);
+        var aL = vp.querySelector('.shelf-arrow--left'), aR = vp.querySelector('.shelf-arrow--right');
+        if (aL) aL.classList.toggle('is-on', canL);
+        if (aR) aR.classList.toggle('is-on', canR);
+      }
+      [].slice.call(vp.querySelectorAll('.shelf-arrow')).forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var dx = (+btn.getAttribute('data-dir')) * Math.round(row.clientWidth * 0.85);
+          try { row.scrollBy({ left: dx, behavior: 'smooth' }); } catch (e) { row.scrollLeft += dx; }
+          setTimeout(update, 360);
+        });
+      });
+      row.addEventListener('scroll', function () { requestAnimationFrame(update); }, { passive: true });
+      window.addEventListener('resize', update);
+      if ('IntersectionObserver' in window) { new IntersectionObserver(function (e) { if (e[0].isIntersecting) update(); }, { threshold: 0 }).observe(vp); }
+      update();
+    });
   })();
   </script>
   <script>
