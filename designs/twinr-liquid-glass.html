@@ -2,8 +2,9 @@
 <html lang="ru" data-theme="sunset">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Twinr · Большой Цифровой — Liquid Glass</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0ZGOEE2RSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNGRkMxNzEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE1IiBmaWxsPSJ1cmwoI3RnKSIvPgogIDxyZWN0IHg9IjE0IiB5PSIxNCIgd2lkdGg9IjIzIiBoZWlnaHQ9IjIzIiByeD0iNy41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuNSIvPgogIDxyZWN0IHg9IjI3IiB5PSIyNyIgd2lkdGg9IjIzIiBoZWlnaHQ9IjIzIiByeD0iNy41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuOSIvPgo8L3N2Zz4K">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -310,6 +311,8 @@ body[data-theme="dawn"]::after {
   transition: opacity 0.2s var(--ease-glass);
 }
 .sidebar:hover .brand-name { opacity: 1; transition-delay: 0.1s; }
+.brand-title { font-size: 15px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
+.brand-sub { font-size: 11px; font-weight: 500; letter-spacing: 0; color: var(--ink-3); line-height: 1.3; }
 
 .nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .nav-item {
@@ -2652,6 +2655,122 @@ body[data-theme="dawn"]::after {
 /* ═══ PRESET DEFAULTS ═══ */
 /* Initial state: material=regular, tint=coral, intensity=1, dim=none, shape=rounded, texture=smooth */
 
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE ADAPTIVE (2026-06-10) — off-canvas sidebar + compact chrome
+   Tiers: ≤920px (off-canvas nav, compact topbar) · ≤560px (phones)
+   Desktop ≥921px untouched.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Burger (hidden on desktop) */
+.nav-burger {
+  display: none;
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  align-items: center; justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--r-pill);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out-quart),
+              color var(--duration-fast) var(--ease-out-quart);
+}
+.nav-burger svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.8; }
+.nav-burger:hover { background: rgba(255, 255, 255, 0.08); color: var(--ink-1); }
+
+/* Scrim behind off-canvas sidebar */
+.sidebar-scrim {
+  position: fixed; inset: 0;
+  z-index: 110;
+  background: rgba(8, 4, 14, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-glass) var(--ease-glass);
+}
+.sidebar-scrim.show { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 920px) {
+  .stage { padding: 14px 14px 28px; }
+
+  /* Mounted-but-hidden pages (LG-008 keeps them in DOM for glass layers):
+     clip them so their desktop-width content can't create phantom
+     horizontal/vertical scroll on phones. Active page unaffected. */
+  .page:not(.active) { overflow: hidden; max-height: 100dvh; }
+
+  /* Inline-styled fixed grids (380px 1fr etc.) must collapse on phones —
+     inline style wins over the 1280px rule, hence !important here.
+     minmax(0,1fr) + min-width:0 so min-content can't blow the column out. */
+  .two-col, .three-col { grid-template-columns: minmax(0, 1fr) !important; }
+  .two-col > *, .three-col > * { min-width: 0; }
+
+  /* Sidebar → off-canvas sheet (always expanded when open) */
+  .sidebar {
+    top: 12px; left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: min(300px, 82vw);
+    transform: translateX(calc(-100% - 24px));
+    transition: transform var(--duration-glass) var(--ease-glass);
+    z-index: 120;
+  }
+  .sidebar:hover { width: min(300px, 82vw); }
+  .sidebar .brand-name,
+  .sidebar .nav-item .label { opacity: 1; }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .nav-burger { display: inline-flex; }
+
+  /* Topbar compact */
+  .topbar { gap: 10px; padding: 8px 12px; }
+  .crumbs span:not(.current), .crumbs .crumb-sep { display: none; }
+  .crumbs .current {
+    display: inline-block; max-width: 32vw;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .search { max-width: none; }
+  .search-key { display: none; }
+  .user-chip > div:not(.avatar) { display: none; }
+
+  /* Grids collapse */
+  .widget-grid { grid-template-columns: 1fr; }
+  .widget-big { grid-column: span 1; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .kpi-spark { width: 100%; }
+  .promo-features { grid-template-columns: 1fr; }
+
+  /* Page header stacks */
+  .page-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .page-actions { flex-wrap: wrap; }
+
+  /* Tables: horizontal scroll inside cards, columns keep air */
+  .card:has(.t-table) { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .card .t-table { min-width: 640px; }
+
+  /* Modal → near-fullscreen sheet */
+  .modal-panel { width: calc(100vw - 20px); max-height: 92dvh; padding: 20px 18px 18px; }
+
+  /* Touch targets (Apple HIG 44px) */
+  .icon-btn { width: 44px; height: 44px; }
+
+  /* Chip rows scroll, never wrap off-screen */
+  .tabs { max-width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs .tab { flex-shrink: 0; }
+}
+
+@media (max-width: 560px) {
+  .stage { padding: 10px 10px 24px; }
+  .kpi-grid { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .center-card { margin: 18px auto; }
+  .hero { padding-top: 26px; }
+  .hero-title { font-size: clamp(30px, 9.5vw, 40px); }
+  .crumbs { display: none; }
+  .topbar .icon-btn[title="Экспорт"] { display: none; }
+  .page-title { font-size: 27px; }
+  .pagination { flex-wrap: wrap; }
+}
+
 </style>
 </head>
 <body>
@@ -2680,8 +2799,13 @@ body[data-theme="dawn"]::after {
 <!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar" id="sidebar">
   <div class="brand">
-    <div class="brand-mark">БЦ</div>
-    <div class="brand-name">Большой Цифровой</div>
+    <div class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 36 36" width="22" height="22"><rect x="6" y="6" width="14" height="14" rx="4.5" fill="#fff" opacity=".55"/><rect x="14" y="14" width="14" height="14" rx="4.5" fill="#fff" opacity=".9"/></svg>
+    </div>
+    <div class="brand-name">
+      <div class="brand-title">Twinr</div>
+      <div class="brand-sub">Большой Цифровой</div>
+    </div>
   </div>
 
   <nav class="nav" aria-label="Основная навигация">
@@ -2709,11 +2833,17 @@ body[data-theme="dawn"]::after {
 
 </aside>
 
+<!-- Mobile nav scrim (off-canvas sidebar backdrop) -->
+<div class="sidebar-scrim" id="sidebarScrim" aria-hidden="true"></div>
+
 <!-- ═══ STAGE ═══ -->
 <div class="stage" id="stage">
 
 <!-- ═══ TOPBAR ═══ -->
 <header class="topbar">
+  <button class="nav-burger" id="navBurger" aria-label="Открыть меню" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
   <div class="crumbs">
     <span>Twinr</span>
     <span class="crumb-sep">/</span>
@@ -5456,6 +5586,38 @@ document.querySelectorAll('.hs-track, [id="srcGroupTabs"]').forEach(track => {
     }
   });
 });
+
+/* ═══ MOBILE OFF-CANVAS NAV (≤920px) ═══ */
+(() => {
+  const sb = document.getElementById('sidebar');
+  const burger = document.getElementById('navBurger');
+  const scrim = document.getElementById('sidebarScrim');
+  if (!sb || !burger || !scrim) return;
+  const setOpen = (open) => {
+    sb.classList.toggle('mobile-open', open);
+    scrim.classList.toggle('show', open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  burger.addEventListener('click', () => setOpen(!sb.classList.contains('mobile-open')));
+  scrim.addEventListener('click', () => setOpen(false));
+  sb.addEventListener('click', (e) => { if (e.target.closest('.nav-item')) setOpen(false); });
+  window.addEventListener('hashchange', () => setOpen(false));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sb.classList.contains('mobile-open')) setOpen(false); });
+  const mq = window.matchMedia('(min-width: 921px)');
+  (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))((m) => { if (m.matches) setOpen(false); });
+
+  /* Короткий placeholder поиска на телефонах */
+  const searchInput = document.querySelector('.topbar .search input');
+  if (searchInput) {
+    const full = searchInput.placeholder;
+    const phoneMq = window.matchMedia('(max-width: 560px)');
+    const applyPh = () => { searchInput.placeholder = phoneMq.matches ? 'Поиск…' : full; };
+    (phoneMq.addEventListener ? phoneMq.addEventListener.bind(phoneMq, 'change') : phoneMq.addListener.bind(phoneMq))(applyPh);
+    applyPh();
+  }
+})();
 </script>
 
 </body>
