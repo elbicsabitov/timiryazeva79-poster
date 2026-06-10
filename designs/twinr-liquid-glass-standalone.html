@@ -2727,9 +2727,15 @@ body[data-theme="dawn"]::after {
     display: inline-block; max-width: 32vw;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .search { max-width: none; }
+  /* min-width:0 — иначе intrinsic-ширина инпута выталкивает аватар за вьюпорт */
+  .search { max-width: none; min-width: 0; }
+  .search input { min-width: 0; }
   .search-key { display: none; }
   .user-chip > div:not(.avatar) { display: none; }
+
+  /* Touch targets ≥40px на контролах (HIG) */
+  .btn, .pill, .tabs .tab, .page-btn, .input, .select { min-height: 40px; }
+  .page-btn { min-width: 40px; }
 
   /* Grids collapse */
   .widget-grid { grid-template-columns: 1fr; }
@@ -5616,6 +5622,15 @@ document.querySelectorAll('.hs-track, [id="srcGroupTabs"]').forEach(track => {
     const applyPh = () => { searchInput.placeholder = phoneMq.matches ? 'Поиск…' : full; };
     (phoneMq.addEventListener ? phoneMq.addEventListener.bind(phoneMq, 'change') : phoneMq.addListener.bind(phoneMq))(applyPh);
     applyPh();
+  }
+
+  /* Кастомайзер на гайде: на мобиле по умолчанию свёрнут — иначе
+     fixed-панель закрывает половину вьюпорта. Идём через штатный
+     toggle (state+persist), пользователь разворачивает одним тапом. */
+  if (window.matchMedia('(max-width: 920px)').matches) {
+    const lg = document.getElementById('lgCustomizer');
+    const lgToggle = document.getElementById('lgToggle');
+    if (lg && lgToggle && !lg.classList.contains('is-collapsed')) lgToggle.click();
   }
 })();
 </script>

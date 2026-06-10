@@ -547,6 +547,14 @@ body::after {
 .am-table th.th-group { text-align: center; border-bottom: none; padding-bottom: 4px; color: var(--ink-3); }
 .am-table thead tr:last-child th { padding-top: 4px; }
 .am-table .kpi-delta { font-size: 11px; padding: 2px 8px; }
+/* Тёмная подложка под бейджами — иначе над ярким участком заката
+   полупрозрачный пилл падает ниже AA (reviewer 2026-06-10). */
+.am-table .kpi-delta, .am-table .kpi-delta.flat { background: rgba(16, 18, 26, 0.82); }
+.am-table .kpi-delta.down { background: rgba(58, 22, 22, 0.9); }
+.am-table .kpi-delta:not(.flat):not(.down) { background: rgba(18, 44, 32, 0.9); }
+/* Строки отчёта кликабельны → курсор + hover */
+#page-audio-metrics .am-table tbody tr { cursor: pointer; }
+#page-audio-metrics .am-table tbody tr:hover { background: rgba(255, 255, 255, 0.05); }
 .t-table { width: 100%; border-collapse: collapse; min-width: 100%; }
 .t-table th {
   text-align: left;
@@ -4240,6 +4248,7 @@ a.cell-link:active { opacity: 0.8; }
 
 <!-- ═══ АУДИО МЕТРИКА: ВЫХОДЫ ТРЕКА В ЭФИР («внутрь песни») ═══ -->
 <main class="page" id="page-audio-track">
+  <a href="#page-audio-metrics" class="back-link" style="margin-bottom: 14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Назад к отчёту</a>
   <div class="section-hero">
     <div class="sh-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
     <div>
