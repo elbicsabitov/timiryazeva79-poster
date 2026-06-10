@@ -23,8 +23,8 @@
 **Инфра:** `tools/build_twinr_crm_standalone.py` (постоянный инлайнер, оба standalone пересобраны: twinr 1.63MB, crm 0.94MB)
 **Ревью:** design-implementation-reviewer (agentId adc09a8610f404419): 1 HIGH (аватар за вьюпортом — `search input min-width:0`) + 3 MED (кастомайзер, тач-таргеты, AA бейджей над закатом → тёмные backplate вкл. `.flat` специфичность) + LOW (cursor:pointer строк, верхний back-link) — всё закрыто и re-verified в Chrome (chip 353<375, tab 40px, lgCustomizer 53px). TD-KTV-01 (a11y labels, pre-existing) и TD-KTV-02 (sticky thead в .t-wrap, latent) — backlog.
 
-## Deliverables (🔒 Эльбик отправляет)
-`deliverables/2026-06-10/twinr-updates-2026-06-10.zip` (1.1MB: standalone + twinr-brand/) и `crm-updates-2026-06-10.zip` (0.6MB: standalone + crm-icons/).
+## Deliverables
+`deliverables/2026-06-10/twinr-updates-2026-06-10.zip` (1.1MB: standalone + twinr-brand/) и `crm-updates-2026-06-10.zip` (0.6MB: standalone + crm-icons/). **Twinr-zip отправлен Татьяне 10.06 14:42 UTC (msg 589650), файлом без подписи — явная команда Эльбика «скинь чисто архив без текста».** CRM-zip не отправлен — за Эльбиком.
 
 ## Догон (15:00+) — Wordstat «Графики» (KTV-009)
 Её коммент 13:36: «Графики Вордстат очень выбиваются из стиля. Попросить Элбика отрисовать? https://dev.twinr.ru/cms/wordstat/wordstat_analyses/10/graphs» + скрин (msg589606: белые карточки, дефолт-фиолетовые бары) — Эльбик ответил 🫡. Сделано: placeholder `#page-wordstat` → вкладка «Графики» анализа «Активный гражданин»: 3 glass-карточки («Запросы по дням» 56 баров / «Суммарные запросы по неделям» 52 / «по месяцам» 12), coral-бары + amber-пик с аналитической подписью пика в заголовке, y-тики, x-метки на честных индексах (понедельники/кратные недели), табы Данные(disabled)|Графики, responsive SVG — проверено 375 и 1440, 0 console errors. Данные = демо-приближение формы её скрина. Генератор: `.scratch/wordstat_graphs.py`. Имя клиентки исправлено: **Татьяна** (заголовок чата; «Катя» была моей ошибкой декодинга).
