@@ -2,6 +2,24 @@
 
 > **Status legend** (added 2026-05-27 evening): `done` = работа выполнена. `🔒 Эльбик-gate` = всё что в нашей власти сделано, дальше ждём внешнего ввода (показ клиенту, ответы, реквизиты, выбор направления, утверждение, реализация после approval). `pending` (без замка) = ещё в работе или ждёт следующей сессии. Цель: ноль настоящих `pending` на Claude'е.
 
+## ⚡ Twinr + CRM Турбо — клиентские правки Кати @k_t_v_23 (2026-06-10)
+
+Бриф = скрины в её TG-чате 08–09.06 (всё, что после `twinr-icons.zip`). **Два проекта, НЕ путать:** Twinr = `designs/twinr-liquid-glass.html` (их прод живёт на нашем Liquid Glass), CRM Турбо = `designs/crm-glass.html`. Коммиты `698dade` / `54a2eee` / `8e0df6f`; design-implementation-reviewer пройден (1 HIGH + 3 MED → все закрыты, re-verified). Пакеты для Кати: `deliverables/2026-06-10/twinr-updates-2026-06-10.zip` + `crm-updates-2026-06-10.zip` (gitignored). Она деплоится 10.06 — Эльбик обещал прислать до конца дня.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| KTV-001 | Twinr: 2 иконки «копировать»/«удалить» → `twinr-icons.zip` | done (отправлен 08.06, до сессии) |
+| KTV-002 | Twinr: **моб-адаптив** всех 23 страниц (приоритет №1) — off-canvas sidebar+бургер+скрим, компакт-топбар, сетки в 1 кол (вкл. inline-grids через minmax(0,1fr)), таблицы скроллятся в картах, модалка-шит, тач-таргеты ≥40px, LG-008 phantom-scroll пофикшен | done (`698dade`+`8e0df6f`) |
+| KTV-003 | Twinr: фавиконка + лого сайдбар-плитки (twin-panes на coral→amber; Twinr = «AI based teams collaboration platform») + `assets/twinr-brand/` svg+png | done (`698dade`) |
+| KTV-004 | CRM: раздел **«Аудио Метрика»** — nav-пункт (eq-bars), отчёт `#page-audio-metrics` (станция dfm-afrovibes.microit + период + 5 фильтров + «Сформировать отчёт» + таблица 15с/60с с группированным thead, данные 1:1 со скринов) + `#page-audio-track` «Выходы трека в эфир» (клик по строке) | done (`54a2eee`) |
+| KTV-005 | CRM: кебаб ресурса «Создание ~~материала~~»→«Создание», «~~Дублировать~~»→«Медиа» (3 вхождения) | done (`54a2eee`) |
+| KTV-006 | CRM: подложка «как на Твинере» — УЖЕ в прототипе (тот же sunset на всех экранах, видна на Ресурсах); их вёрстка фон не взяла → просто забрать из standalone | done (подтверждено скринами) |
+| KTV-007 | Иконки для их nav: `audio-metrika` + `sluzhebnye-tg` (svg+png 512, стиль twinr-icons: lucide stroke-2 тёмный глиф) в `assets/crm-icons/` | done (`54a2eee`) |
+| KTV-008 | Отправить Кате оба zip + сообщение (драфт в session log) | 🔒 Эльбик-gate |
+| TD-KTV-01 | twinr: file-wide a11y — 37 полей без label/id (pre-existing, reviewer LOW) | backlog |
+| TD-KTV-02 | crm: sticky thead латентно не работает внутри `.t-wrap` скроллера (все таблицы CRM; всплывёт на длинных отчётах) | backlog |
+| TD-KTV-03 | push master (4 коммита) при `sync` | pending |
+
 ## ⚡ Город ФМ — v1 SHIPPED · v2 в работе · AI-product pivot + Karpathy research (2026-06-02)
 
 **Update 2026-06-03 (cont-16) — light deferred-sweep ANALYSIS done, build PAUSED, then SYNCED+PUSHED:** Эльбик: «как агенты дойдут — пауза без потерь». 6-агентный read-only аудит light-theme дыр на ВСЕХ вторичных роутах (workflow `woi5kyh7a`, 537k токенов) → **build-ready override-спек** в `docs/superpowers/HANDOFF-gorod-fm-cont-16.md` + verbatim raw `docs/superpowers/cont-16-light-sweep-analysis.json`. **`gorod-fm.html` НЕ тронут** (билд отложен на след. сессию — execute Step 0 seam + Step 1 override-блоки). Находки: (a) **#/podborki gallery = DEAD CODE** (live=«Открыть» discover-surface, почти весь пропатчен); (b) **#/artist latent-баг** track-cover inline `var(--surface-1)`=бел-на-бел в light → фикс inline на `var(--brand-blue-light)`; (c) #/profile closed-box остаётся тёмным (cont-15 «faux→ink» = ложь, правила нет); (d) #/recap карточка остаётся тёмной (WYSIWYG с PNG O3); (e) seam = удалить `--cover-mix-base` из dark `:root` L179 + wire 12 сайтов на `var(--cover-mix-base,#orig)` (dark byte-identical). 🟡 1 решение Эльбика: chrome strategy light-glass (дефолт) vs dark-rail. **TD-GFM-LIGHT-SWEEP** = pending (next session). Этот sync запушил cont-12→16.

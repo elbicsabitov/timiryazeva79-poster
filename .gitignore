@@ -16,3 +16,4 @@ __pycache__/
 
 # Git worktrees (superpowers isolated workspaces)
 .worktrees/
+deliverables/

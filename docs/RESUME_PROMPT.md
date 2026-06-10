@@ -1,6 +1,14 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-03 cont-16) — Light theme **deferred secondary-route sweep**: 6-агентный read-only АУДИТ ГОТОВ, билд НА ПАУЗЕ (Эльбик: «как агенты дойдут — пауза без потерь, продолжим через пару часов»). **`gorod-fm.html` НЕ тронут, рабочее дерево чистое, 13 коммитов локально ahead (HEAD `c6a192d`), PUSH ДЕРЖИТСЯ.**
+## ⚡ LATEST (2026-06-10) — Twinr + CRM Турбо: клиентские правки Кати (@k_t_v_23) ГОТОВЫ, ждут отправки
+
+Бриф снят telethon'ом из её чата (после `twinr-icons.zip` 08.06). **Два проекта, не путать:** Twinr=`twinr-liquid-glass.html`, CRM Турбо=`crm-glass.html`. Сделано+reviewer-verified+закоммичено (`698dade`/`54a2eee`/`8e0df6f`, PUSH держится до `sync`): **Twinr моб-адаптив** (приоритет №1 — она деплоится 10.06, Эльбик обещал «до конца дня»; off-canvas nav+бургер, таблицы скроллятся, тач≥40, LG-008 phantom-scroll закрыт) + **фавиконка/лого** (twin-panes, `assets/twinr-brand/`) + **CRM «Аудио Метрика»** (отчёт+«Выходы трека в эфир», данные 1:1 со скринов) + **кебаб** («Создание», «Медиа») + иконки `assets/crm-icons/` + подложка подтверждена (уже была). Полный трекер: DEBT.md «Twinr + CRM Турбо… 2026-06-10».
+
+**🔴 NEXT:** (1) 🔒 Эльбик шлёт Кате `deliverables/2026-06-10/{twinr,crm}-updates-2026-06-10.zip` (драфт сообщения: `.claude-memory/session_2026_06_10_twinr_crm_katya.md`); (2) push при `sync`; (3) TD-KTV-01/02 backlog.
+
+---
+
+## ⚡ PREV (2026-06-03 cont-16) — Light theme **deferred secondary-route sweep**: 6-агентный read-only АУДИТ ГОТОВ, билд НА ПАУЗЕ (Эльбик: «как агенты дойдут — пауза без потерь, продолжим через пару часов»). **`gorod-fm.html` НЕ тронут, рабочее дерево чистое, 13 коммитов локально ahead (HEAD `c6a192d`), PUSH ДЕРЖИТСЯ.**
 
 **📖 START NEXT: `docs/superpowers/HANDOFF-gorod-fm-cont-16.md`** — build-ready спек (Step 0 seam+inline edits · Step 1 готовые CSS-блоки по роутам · locked-решения · open-questions · execution order). **Raw аудит (НЕ перезапускать workflow — 537k токенов): `docs/superpowers/cont-16-light-sweep-analysis.json`** (6 роутов, каждое правило + rationale + line-hints).
 
