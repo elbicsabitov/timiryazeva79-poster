@@ -19,7 +19,7 @@
 | KTV-009 | Twinr: **Wordstat «Графики»** — её коммент 10.06 13:36 («Графики Вордстат очень выбиваются из стиля», dev.twinr.ru/cms/wordstat/…/graphs; Эльбик 🫡): placeholder `#page-wordstat` → дизайн вкладки «Графики» анализа «Активный гражданин»: 3 glass-карточки (по дням / по неделям / по месяцам), coral-бары + amber-пик, подписи с пиками, табы Данные(disabled)/Графики, responsive SVG (ок на 375) | done |
 | TD-KTV-01 | twinr: file-wide a11y — 37 полей без label/id (pre-existing, reviewer LOW) | backlog |
 | TD-KTV-02 | crm: sticky thead латентно не работает внутри `.t-wrap` скроллера (все таблицы CRM; всплывёт на длинных отчётах) | backlog |
-| TD-KTV-03 | push master (коммиты сессии 10.06) при `sync` | pending |
+| TD-KTV-03 | push master — выполнен при sync 10.06 (12 коммитов) | done |
 
 ## ⚡ Город ФМ — v1 SHIPPED · v2 в работе · AI-product pivot + Karpathy research (2026-06-02)
 
