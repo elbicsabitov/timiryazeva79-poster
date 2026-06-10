@@ -1,10 +1,12 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-10) — Twinr + CRM Турбо: клиентские правки Кати (@k_t_v_23) ГОТОВЫ, ждут отправки
+## ⚡ LATEST (2026-06-10) — Twinr + CRM Турбо: клиентские правки Татьяны (@k_t_v_23) ГОТОВЫ, ждут отправки
 
 Бриф снят telethon'ом из её чата (после `twinr-icons.zip` 08.06). **Два проекта, не путать:** Twinr=`twinr-liquid-glass.html`, CRM Турбо=`crm-glass.html`. Сделано+reviewer-verified+закоммичено (`698dade`/`54a2eee`/`8e0df6f`, PUSH держится до `sync`): **Twinr моб-адаптив** (приоритет №1 — она деплоится 10.06, Эльбик обещал «до конца дня»; off-canvas nav+бургер, таблицы скроллятся, тач≥40, LG-008 phantom-scroll закрыт) + **фавиконка/лого** (twin-panes, `assets/twinr-brand/`) + **CRM «Аудио Метрика»** (отчёт+«Выходы трека в эфир», данные 1:1 со скринов) + **кебаб** («Создание», «Медиа») + иконки `assets/crm-icons/` + подложка подтверждена (уже была). Полный трекер: DEBT.md «Twinr + CRM Турбо… 2026-06-10».
 
-**🔴 NEXT:** (1) 🔒 Эльбик шлёт Кате `deliverables/2026-06-10/{twinr,crm}-updates-2026-06-10.zip` (драфт сообщения: `.claude-memory/session_2026_06_10_twinr_crm_katya.md`); (2) push при `sync`; (3) TD-KTV-01/02 backlog.
+**Догон 10.06 15:00+:** её свежий коммент («Графики Вордстат выбиваются из стиля», Эльбик 🫡) → KTV-009 **Wordstat «Графики» отрисован** (3 glass-чарта «Активный гражданин», coral/amber, placeholder заменён), twinr-zip пересобран. Клиентку зовут **Татьяна** (не Катя).
+
+**🔴 NEXT:** (1) 🔒 Эльбик шлёт Татьяне `deliverables/2026-06-10/{twinr,crm}-updates-2026-06-10.zip` (драфт сообщения: `.claude-memory/session_2026_06_10_twinr_crm_katya.md`); (2) push при `sync`; (3) TD-KTV-01/02 backlog.
 
 ---
 

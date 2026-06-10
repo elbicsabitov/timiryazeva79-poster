@@ -2,9 +2,9 @@
 
 > **Status legend** (added 2026-05-27 evening): `done` = работа выполнена. `🔒 Эльбик-gate` = всё что в нашей власти сделано, дальше ждём внешнего ввода (показ клиенту, ответы, реквизиты, выбор направления, утверждение, реализация после approval). `pending` (без замка) = ещё в работе или ждёт следующей сессии. Цель: ноль настоящих `pending` на Claude'е.
 
-## ⚡ Twinr + CRM Турбо — клиентские правки Кати @k_t_v_23 (2026-06-10)
+## ⚡ Twinr + CRM Турбо — клиентские правки Татьяны @k_t_v_23 (2026-06-10)
 
-Бриф = скрины в её TG-чате 08–09.06 (всё, что после `twinr-icons.zip`). **Два проекта, НЕ путать:** Twinr = `designs/twinr-liquid-glass.html` (их прод живёт на нашем Liquid Glass), CRM Турбо = `designs/crm-glass.html`. Коммиты `698dade` / `54a2eee` / `8e0df6f`; design-implementation-reviewer пройден (1 HIGH + 3 MED → все закрыты, re-verified). Пакеты для Кати: `deliverables/2026-06-10/twinr-updates-2026-06-10.zip` + `crm-updates-2026-06-10.zip` (gitignored). Она деплоится 10.06 — Эльбик обещал прислать до конца дня.
+Бриф = скрины в её TG-чате 08–09.06 (всё, что после `twinr-icons.zip`). **Два проекта, НЕ путать:** Twinr = `designs/twinr-liquid-glass.html` (их прод живёт на нашем Liquid Glass), CRM Турбо = `designs/crm-glass.html`. Коммиты `698dade` / `54a2eee` / `8e0df6f`; design-implementation-reviewer пройден (1 HIGH + 3 MED → все закрыты, re-verified). Пакеты для Татьяны: `deliverables/2026-06-10/twinr-updates-2026-06-10.zip` + `crm-updates-2026-06-10.zip` (gitignored). Она деплоится 10.06 — Эльбик обещал прислать до конца дня.
 
 | ID | Задача | Статус |
 |----|--------|--------|
@@ -15,10 +15,11 @@
 | KTV-005 | CRM: кебаб ресурса «Создание ~~материала~~»→«Создание», «~~Дублировать~~»→«Медиа» (3 вхождения) | done (`54a2eee`) |
 | KTV-006 | CRM: подложка «как на Твинере» — УЖЕ в прототипе (тот же sunset на всех экранах, видна на Ресурсах); их вёрстка фон не взяла → просто забрать из standalone | done (подтверждено скринами) |
 | KTV-007 | Иконки для их nav: `audio-metrika` + `sluzhebnye-tg` (svg+png 512, стиль twinr-icons: lucide stroke-2 тёмный глиф) в `assets/crm-icons/` | done (`54a2eee`) |
-| KTV-008 | Отправить Кате оба zip + сообщение (драфт в session log) | 🔒 Эльбик-gate |
+| KTV-008 | Отправить Татьяне оба zip + сообщение (драфт в session log) | 🔒 Эльбик-gate |
+| KTV-009 | Twinr: **Wordstat «Графики»** — её коммент 10.06 13:36 («Графики Вордстат очень выбиваются из стиля», dev.twinr.ru/cms/wordstat/…/graphs; Эльбик 🫡): placeholder `#page-wordstat` → дизайн вкладки «Графики» анализа «Активный гражданин»: 3 glass-карточки (по дням / по неделям / по месяцам), coral-бары + amber-пик, подписи с пиками, табы Данные(disabled)/Графики, responsive SVG (ок на 375) | done |
 | TD-KTV-01 | twinr: file-wide a11y — 37 полей без label/id (pre-existing, reviewer LOW) | backlog |
 | TD-KTV-02 | crm: sticky thead латентно не работает внутри `.t-wrap` скроллера (все таблицы CRM; всплывёт на длинных отчётах) | backlog |
-| TD-KTV-03 | push master (4 коммита) при `sync` | pending |
+| TD-KTV-03 | push master (коммиты сессии 10.06) при `sync` | pending |
 
 ## ⚡ Город ФМ — v1 SHIPPED · v2 в работе · AI-product pivot + Karpathy research (2026-06-02)
 
@@ -265,7 +266,7 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | KIN-009 | Антигаллюцинация pass: фамилия Сундеева, убран LIFE, «2-3 площадки» → «несколько» | done |
 | KIN-010 | Семантика: убран прогресс-бар без смысла, seg-tag → реальные `<a>` ссылки | done |
 | KIN-011 | Standalone сборка через `tools/build_kinolog_standalone.py` | done |
-| KIN-012 | **Показ заказчику — Серёга/Катя/Настя** | 🔒 Эльбик-gate |
+| KIN-012 | **Показ заказчику — Серёга/Татьяна/Настя** | 🔒 Эльбик-gate |
 | KIN-013 | Дождаться ответов Насти на 7 уточнений (статистика, IAABC, кейсы) | 🔒 Эльбик-gate |
 | KIN-014 | Подключить реальные CTA — форма заявки / Telegram | 🔒 Эльбик-gate |
 | KIN-015 | Добавить дату старта потока когда будет известна | 🔒 Эльбик-gate |
