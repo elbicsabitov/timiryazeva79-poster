@@ -1995,6 +1995,117 @@ body[data-theme="dawn"]::after {
 }
 .btn.btn-danger:hover { filter: brightness(1.06); transform: translateY(-1px); }
 
+/* ═══ ХРАНИЛИЩЕ: загрузка + строки файлов + MD-конвертер ═══ */
+.upload-note { font-size: var(--t-caption-2); color: var(--ink-4); margin-top: 8px; }
+.doc-link { color: var(--coral); text-decoration: none; font-weight: 550; letter-spacing: -0.01em; }
+.doc-link:hover { text-decoration: underline; }
+.th-sort { display: inline-flex; align-items: center; gap: 4px; }
+.th-sort svg { width: 11px; height: 11px; opacity: 0.45; flex: none; }
+.th-sort.active svg { opacity: 1; color: var(--coral); }
+.row-actions { display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
+.row-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 32px; padding: 5px 13px;
+  border-radius: var(--r-pill);
+  font-family: inherit; font-size: var(--t-footnote); font-weight: 600;
+  letter-spacing: -0.01em; cursor: pointer; white-space: nowrap;
+  border: 1px solid transparent;
+  transition: transform var(--duration-fast) var(--ease-out-quart),
+              background var(--duration-fast) var(--ease-out-quart),
+              box-shadow var(--duration-fast) var(--ease-out-quart);
+}
+.row-btn svg { width: 12px; height: 12px; stroke-width: 2; flex: none; }
+.row-btn:active { transform: scale(0.95); }
+.row-btn.rb-soft {
+  background: rgba(255, 138, 110, 0.18); color: var(--coral);
+  border-color: rgba(255, 138, 110, 0.3);
+}
+.row-btn.rb-soft:hover { background: rgba(255, 138, 110, 0.28); }
+.row-btn.rb-md {
+  background: var(--glass-thin); color: var(--coral);
+  border-color: rgba(255, 138, 110, 0.35);
+  backdrop-filter: var(--blur-thin); -webkit-backdrop-filter: var(--blur-thin);
+}
+.row-btn.rb-md:hover { background: rgba(255, 138, 110, 0.12); border-color: var(--coral); }
+.row-btn.rb-glass {
+  background: var(--glass-thin); color: var(--ink-1);
+  border-color: var(--glass-border);
+  backdrop-filter: var(--blur-thin); -webkit-backdrop-filter: var(--blur-thin);
+}
+.row-btn.rb-glass:hover { background: var(--glass-regular); border-color: var(--glass-border-strong); }
+
+/* модалка конвертера */
+#modal-md-convert .modal-panel { width: min(560px, 100%); }
+#modal-md-convert .btn:disabled { opacity: 0.45; pointer-events: none; }
+.mdc-filerow {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px; margin-bottom: 16px;
+  background: var(--glass-thin); border: 1px solid var(--glass-border);
+  border-radius: var(--r-md); box-shadow: var(--spec-rim);
+}
+.mdc-file { display: flex; align-items: center; gap: 9px; min-width: 0; flex: 1; }
+.mdc-fname {
+  font-size: var(--t-subhead); color: var(--ink-1); font-weight: 550;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mdc-fic {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+  padding: 5px 8px; border-radius: 7px; flex: none;
+}
+.mdc-fic.src { background: rgba(255, 255, 255, 0.1); color: var(--ink-2); border: 1px solid var(--glass-border); }
+.mdc-fic.dst { background: rgba(255, 138, 110, 0.18); color: var(--coral); border: 1px solid rgba(255, 138, 110, 0.3); }
+.mdc-arrow { color: var(--ink-3); flex: none; display: flex; }
+.mdc-arrow svg { width: 15px; height: 15px; stroke-width: 2; }
+.mdc-done {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 14px; margin-bottom: 16px;
+  background: rgba(125, 211, 168, 0.1); border: 1px solid rgba(125, 211, 168, 0.22);
+  border-radius: var(--r-md);
+  font-size: var(--t-subhead); font-weight: 600; color: var(--success);
+}
+.mdc-done svg { width: 16px; height: 16px; stroke-width: 2; flex: none; }
+.mdc-dest-label {
+  font-size: var(--t-caption-2); color: var(--ink-3); font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;
+}
+.mdc-dest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mdc-dest {
+  font-family: inherit; text-align: left; cursor: pointer;
+  padding: 14px; border-radius: var(--r-md);
+  background: var(--glass-thin); border: 1px solid var(--glass-border);
+  box-shadow: var(--spec-rim);
+  transition: border-color var(--duration-fast) var(--ease-out-quart),
+              background var(--duration-fast) var(--ease-out-quart),
+              box-shadow var(--duration-fast) var(--ease-out-quart);
+}
+.mdc-dest:hover { background: var(--glass-regular); border-color: var(--glass-border-strong); }
+.mdc-dest.selected {
+  border-color: var(--coral);
+  background: rgba(255, 138, 110, 0.08);
+  box-shadow: 0 0 0 1px var(--coral) inset, var(--spec-rim);
+}
+.mdc-dest-ic {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border);
+  color: var(--ink-2); margin-bottom: 9px;
+  transition: background var(--duration-fast) var(--ease-out-quart), color var(--duration-fast) var(--ease-out-quart);
+}
+.mdc-dest-ic svg { width: 16px; height: 16px; stroke-width: 1.8; }
+.mdc-dest.selected .mdc-dest-ic { background: rgba(255, 138, 110, 0.18); border-color: rgba(255, 138, 110, 0.3); color: var(--coral); }
+.mdc-dest-name { font-size: var(--t-subhead); font-weight: 650; color: var(--ink-1); margin-bottom: 3px; }
+.mdc-dest-desc { font-size: var(--t-footnote); color: var(--ink-3); line-height: 1.4; }
+.mdc-proj { margin-top: 12px; }
+tr.mdc-new { animation: mdcRowIn 1.8s var(--ease-out-quart) both; }
+@keyframes mdcRowIn { from { background: rgba(125, 211, 168, 0.16); } to { background: transparent; } }
+[data-theme="dawn"] .mdc-fic.src { background: rgba(255, 255, 255, 0.45); }
+[data-theme="dawn"] .mdc-dest-ic { background: rgba(255, 255, 255, 0.45); }
+@media (max-width: 560px) {
+  .mdc-dest-grid { grid-template-columns: 1fr; }
+  .mdc-filerow { flex-direction: column; align-items: stretch; }
+  .mdc-arrow { transform: rotate(90deg); align-self: center; }
+}
+
 /* ═══ HIT-TARGET increases (Apple min 32px, рекомендуется 44px) ═══ */
 .tag-cell .tc-edit {
   width: 32px; height: 32px;
@@ -2860,6 +2971,10 @@ body[data-theme="dawn"]::after {
     <a href="#page-ai" class="nav-item" data-route="ai" data-tooltip="ИИ — инструменты">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
       <span class="label">ИИ</span>
+    </a>
+    <a href="#page-docs" class="nav-item" data-route="storage" data-tooltip="Хранилище">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+      <span class="label">Хранилище</span>
     </a>
     <a href="#page-guide" class="nav-item" data-route="guide" data-tooltip="Руководство">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -4364,10 +4479,13 @@ body[data-theme="dawn"]::after {
         <p>Ключевые слова для анализа можно ввести вручную или извлечь из аудио/видеофайла через вкладку «Анализ аудио/видео» в модалке «Ключевые слова».</p>
       </div>
 
-      <!-- Документы -->
-      <div class="droplet dr-heading" id="g-docs"><span class="dr-h-dot"></span>Документы</div>
+      <!-- Хранилище -->
+      <div class="droplet dr-heading" id="g-docs"><span class="dr-h-dot"></span>Хранилище</div>
       <div class="droplet dr-para">
-        <p>Хранилище файлов с тегами, поиском и пакетной обработкой. Каждый документ можно пометить несколькими тегами — это упрощает фильтрацию и поиск. Теги редактируются прямо в ячейке таблицы: клик по иконке карандаша открывает модалку с полным списком.</p>
+        <p>Хранилище файлов с тегами, поиском и пакетной обработкой. Каждый документ можно пометить несколькими тегами — это упрощает фильтрацию и поиск. Кнопка «Изменить теги» в строке файла открывает модалку с полным списком тегов.</p>
+      </div>
+      <div class="droplet dr-para">
+        <p>Кнопка «В Markdown» преобразует документ (PDF, DOCX) в файл .md. После преобразования результат можно сохранить в само хранилище или отправить в раздел «Документы» выбранного проекта — проект выбирается из выпадающего списка.</p>
       </div>
 
       <!-- FAQ -->
@@ -4407,7 +4525,7 @@ body[data-theme="dawn"]::after {
       <a href="#g-rewrite" data-toc="g-rewrite">Рерайтинг по источникам</a>
       <a href="#g-media" data-toc="g-media">Медиа</a>
       <a href="#g-wordstat" data-toc="g-wordstat">Ключевые слова</a>
-      <a href="#g-docs" data-toc="g-docs">Документы</a>
+      <a href="#g-docs" data-toc="g-docs">Хранилище</a>
       <a href="#g-faq" data-toc="g-faq">FAQ</a>
     </aside>
 
@@ -5110,75 +5228,97 @@ body[data-theme="dawn"]::after {
     <div class="sh-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
     </div>
-    <div class="sh-title">Документы</div>
+    <div class="sh-title">Хранилище</div>
   </div>
 
+  <!-- Загрузка файла (структура как в проде: файл + название + лимит) -->
+  <div class="card" style="margin-bottom: 14px;">
+    <div style="font-size: var(--t-subhead); font-weight: 600; color: var(--ink-1); margin-bottom: 12px; letter-spacing: -0.01em;">Загрузить файл</div>
+    <div class="row" style="flex-wrap: wrap; gap: 10px;">
+      <label class="input" style="flex: 1.2; min-width: 220px; width: auto; display: flex; align-items: center; gap: 9px; cursor: pointer; color: var(--ink-4);">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="flex: none;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        <span id="storageFileName" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Файл не выбран</span>
+        <input type="file" id="storageFileInput" style="display: none;">
+      </label>
+      <input class="input" type="text" placeholder="Название (опционально)" style="flex: 1; min-width: 200px; width: auto;">
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Загрузить
+      </button>
+    </div>
+    <div class="upload-note">Максимальный размер: 20 МБ</div>
+  </div>
+
+  <!-- Файлы хранилища -->
   <div class="card">
     <div style="overflow-x: auto;">
       <table class="t-table detail-table">
         <thead>
           <tr>
-            <th style="width: 36px;"></th>
-            <th style="width: 50px;">ID</th>
-            <th>Название</th>
-            <th style="width: 170px;">Дата загрузки</th>
-            <th style="width: 80px;">Размер</th>
-            <th>Тэги</th>
+            <th><span class="th-sort">Название <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span></th>
+            <th style="width: 110px;"><span class="th-sort">Размер <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span></th>
+            <th style="width: 150px;"><span class="th-sort active">Загружено <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span></th>
+            <th>Теги</th>
+            <th style="width: 250px;"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="storageTbody">
           <tr>
-            <td><input type="checkbox" class="check" checked></td>
-            <td class="mono">1</td>
-            <td>Тест название . docx</td>
-            <td class="mono muted">2026-03-18T 15:46:02</td>
-            <td class="mono">15051</td>
+            <td><a href="#page-docs" class="doc-link">Документ.pdf</a></td>
+            <td class="mono">281,8 КБ</td>
+            <td class="mono muted">11 июня, 13:12</td>
             <td>
               <div class="tag-cell">
-                <button class="tc-edit" aria-label="редактировать теги" onclick="openModal('modal-tag-select')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                </button>
                 <span class="tc-pill">Документы</span>
-                <span class="tc-pill">Личное</span>
-                <span class="tc-pill">Тэг 3</span>
-                <span class="tc-pill">Тэг 4</span>
-                <span class="tc-pill">Тэг 5</span>
-                <span class="tc-pill">Тэг 6</span>
-                <span class="tc-pill more">+2</span>
+                <button class="row-btn rb-soft" onclick="openModal('modal-tag-select')">Изменить теги</button>
+              </div>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button class="row-btn rb-md" onclick="openMdConvert(this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                  В Markdown
+                </button>
+                <button class="row-btn rb-glass">Удалить</button>
               </div>
             </td>
           </tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">2</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">3</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">4</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">5</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">6</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">7</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">8</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">9</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
-          <tr><td><input type="checkbox" class="check"></td><td class="mono">10</td><td>Тест название . docx</td><td class="mono muted">2026-03-18T 15:46:02</td><td class="mono">15051</td><td><div class="tag-cell"><button class="tc-add" onclick="openModal('modal-tag-select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить тег</button></div></td></tr>
+          <tr>
+            <td><a href="#page-docs" class="doc-link">14 АГ Фест Сады и Цветы_15 сек..mp3</a></td>
+            <td class="mono">582,7 КБ</td>
+            <td class="mono muted">11 июня, 13:11</td>
+            <td><div class="tag-cell"><button class="row-btn rb-soft" onclick="openModal('modal-tag-select')">Изменить теги</button></div></td>
+            <td><div class="row-actions"><button class="row-btn rb-glass">Удалить</button></div></td>
+          </tr>
+          <tr>
+            <td><a href="#page-docs" class="doc-link">Картиночка.png</a></td>
+            <td class="mono">1,6 МБ</td>
+            <td class="mono muted">11 июня, 13:11</td>
+            <td><div class="tag-cell"><button class="row-btn rb-soft" onclick="openModal('modal-tag-select')">Изменить теги</button></div></td>
+            <td><div class="row-actions"><button class="row-btn rb-glass">Удалить</button></div></td>
+          </tr>
+          <tr>
+            <td><a href="#page-docs" class="doc-link">Сценарий ролика_АГ.docx</a></td>
+            <td class="mono">24,3 КБ</td>
+            <td class="mono muted">10 июня, 18:40</td>
+            <td>
+              <div class="tag-cell">
+                <span class="tc-pill">АГ Фест</span>
+                <button class="row-btn rb-soft" onclick="openModal('modal-tag-select')">Изменить теги</button>
+              </div>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button class="row-btn rb-md" onclick="openMdConvert(this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                  В Markdown
+                </button>
+                <button class="row-btn rb-glass">Удалить</button>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
-    </div>
-
-    <div class="row" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap;">
-      <button class="btn btn-glass">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Загрузить файл
-      </button>
-      <button class="btn btn-ghost">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Удалить
-      </button>
-      <div style="flex: 1;"></div>
-      <div class="pagination" style="margin: 0;">
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">4</button>
-        <button class="page-btn">5</button>
-        <button class="page-btn" style="min-width: auto; padding: 0 14px;">Последняя</button>
-      </div>
     </div>
   </div>
 </section>
@@ -5500,6 +5640,79 @@ body[data-theme="dawn"]::after {
   </div>
 </div>
 
+<!-- Модалка: преобразователь в Markdown (Хранилище) -->
+<div class="modal-overlay" id="modal-md-convert">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Преобразование в Markdown</div>
+        <div class="modal-desc">Документ будет сконвертирован в .md — после преобразования выберите, куда сохранить результат</div>
+      </div>
+      <button class="modal-close" aria-label="Закрыть" onclick="closeModal('modal-md-convert')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="mdc-filerow">
+        <div class="mdc-file">
+          <span class="mdc-fic src" id="mdcSrcBadge">PDF</span>
+          <span class="mdc-fname" id="mdcSrcName">Документ.pdf</span>
+        </div>
+        <span class="mdc-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+        <div class="mdc-file">
+          <span class="mdc-fic dst">MD</span>
+          <span class="mdc-fname" id="mdcDstName">Документ.md</span>
+        </div>
+      </div>
+
+      <div id="mdcStep1">
+        <button class="btn btn-primary" id="mdcConvertBtn" style="width: 100%; justify-content: center;" onclick="mdcConvert()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          Преобразовать
+        </button>
+      </div>
+
+      <div id="mdcStep2" hidden>
+        <div class="mdc-done" id="mdcDoneNote">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Готово — файл преобразован в Markdown
+        </div>
+        <div class="mdc-dest-label">Куда сохранить результат?</div>
+        <div class="mdc-dest-grid">
+          <button type="button" class="mdc-dest selected" data-dest="storage" aria-pressed="true" onclick="mdcPick(this)">
+            <div class="mdc-dest-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div class="mdc-dest-name">В хранилище</div>
+            <div class="mdc-dest-desc">Файл .md появится в общем списке документов</div>
+          </button>
+          <button type="button" class="mdc-dest" data-dest="project" aria-pressed="false" onclick="mdcPick(this)">
+            <div class="mdc-dest-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <div class="mdc-dest-name">В проект</div>
+            <div class="mdc-dest-desc">Отправить в раздел «Документы» выбранного проекта</div>
+          </button>
+        </div>
+        <div class="mdc-proj" id="mdcProjWrap" hidden>
+          <div class="field-label" style="margin-bottom: 7px;">Проект</div>
+          <select class="select" id="mdcProjSelect">
+            <option>Аудио Метрика</option>
+            <option>Большой Цифровой</option>
+            <option>CRM Турбо</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-glass" onclick="closeModal('modal-md-convert')">Отмена</button>
+      <button class="btn btn-primary" id="mdcDoneBtn" disabled onclick="mdcFinish()">Сохранить в хранилище</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ═══ HASH ROUTING ═══ */
 const routeToTitle = {
@@ -5525,7 +5738,7 @@ const routeToTitle = {
   'page-transcribe': 'Транскрибация',
   'page-chat': 'Чат',
   'page-video-gen': 'Генерация видео',
-  'page-docs': 'Документы',
+  'page-docs': 'Хранилище',
   'page-keywords': 'Ключевые слова',
   'page-guide': 'Руководство'
 };
@@ -5551,7 +5764,8 @@ const routeToNav = {
   'page-transcribe': 'ai',
   'page-chat': 'ai',
   'page-video-gen': 'ai',
-  'page-docs': 'ai',
+  /* Хранилище — отдельный раздел (вынесен из ИИ, как в проде) */
+  'page-docs': 'storage',
   'page-keywords': 'ai',
   'page-guide': 'guide'
 };
@@ -5566,7 +5780,7 @@ const AI_TOOLS = [
   { id: 'page-chat',        group: 'Генерация',  label: 'Чат',                desc: 'Диалог с LLM-моделью: Deepseek, GPT-4o, Claude Sonnet',      icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' },
   { id: 'page-transcribe',  group: 'Медиа',      label: 'Транскрибация',       desc: 'Аудио, видео и PDF → текст, готовый к обработке',           icon: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/>' },
   { id: 'page-video-gen',   group: 'Медиа',      label: 'Генерация видео',     desc: 'Text-to-video: превращаем текст в готовый видео-ролик',      icon: '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>' },
-  { id: 'page-docs',        group: 'Анализ',     label: 'Документы',          desc: 'Хранилище файлов с тегами, поиском и пакетной обработкой',  icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
+  /* «Хранилище» (бывш. Документы) вынесено в отдельный раздел сайдбара — см. nav data-route="storage" */
   { id: 'page-keywords',    group: 'Анализ',     label: 'Ключевые слова',      desc: 'Wordstat-анализ запросов: частоты, тренды, сезонность',     icon: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>' }
 ];
 const AI_GROUPS = ['Контент', 'Генерация', 'Медиа', 'Анализ'];
@@ -6148,6 +6362,100 @@ document.querySelectorAll('.hs-track, [id="srcGroupTabs"]').forEach(track => {
     if (lg && lgToggle && !lg.classList.contains('is-collapsed')) lgToggle.click();
   }
 })();
+
+/* ═══ ХРАНИЛИЩЕ: выбор файла + MD-конвертер ═══ */
+(() => {
+  const fi = document.getElementById('storageFileInput');
+  const fn = document.getElementById('storageFileName');
+  if (!fi || !fn) return;
+  fi.addEventListener('change', () => {
+    if (!fi.files.length) return;
+    fn.textContent = fi.files[0].name;
+    fn.style.color = 'var(--ink-1)';
+  });
+})();
+
+const MDC_CONVERT_LABEL = document.getElementById('mdcConvertBtn').innerHTML;
+const MDC_DONE_DEFAULT = document.getElementById('mdcDoneNote').innerHTML;
+let mdcSrcSizeKb = 0;
+let mdcSrcExt = 'PDF';
+
+function openMdConvert(btn) {
+  const tr = btn.closest('tr');
+  const name = tr.querySelector('.doc-link').textContent.trim();
+  const size = tr.children[1].textContent.trim();
+  mdcSrcExt = (name.match(/\.([^.]+)$/) || [, 'pdf'])[1].toUpperCase();
+  const kb = parseFloat(size.replace(',', '.')) || 100;
+  mdcSrcSizeKb = /МБ/i.test(size) ? kb * 1024 : kb;
+  document.getElementById('mdcSrcBadge').textContent = mdcSrcExt;
+  document.getElementById('mdcSrcName').textContent = name;
+  document.getElementById('mdcDstName').textContent = name.replace(/\.[^.]+$/, '') + '.md';
+  /* сброс состояния до начального */
+  const cBtn = document.getElementById('mdcConvertBtn');
+  cBtn.disabled = false;
+  cBtn.classList.remove('is-loading');
+  cBtn.innerHTML = MDC_CONVERT_LABEL;
+  document.getElementById('mdcDoneNote').innerHTML = MDC_DONE_DEFAULT;
+  document.getElementById('mdcStep1').hidden = false;
+  document.getElementById('mdcStep2').hidden = true;
+  document.getElementById('mdcDoneBtn').disabled = true;
+  mdcPick(document.querySelector('.mdc-dest[data-dest="storage"]'));
+  openModal('modal-md-convert');
+}
+
+function mdcConvert() {
+  const b = document.getElementById('mdcConvertBtn');
+  b.disabled = true;
+  b.classList.add('is-loading');
+  b.innerHTML = '<span class="btn-spinner"></span>Преобразование…';
+  setTimeout(() => {
+    b.classList.remove('is-loading');
+    document.getElementById('mdcStep1').hidden = true;
+    document.getElementById('mdcStep2').hidden = false;
+    document.getElementById('mdcDoneBtn').disabled = false;
+  }, 900);
+}
+
+function mdcPick(el) {
+  if (!el) return;
+  document.querySelectorAll('.mdc-dest').forEach(d => {
+    const on = d === el;
+    d.classList.toggle('selected', on);
+    d.setAttribute('aria-pressed', String(on));
+  });
+  const isProj = el.dataset.dest === 'project';
+  document.getElementById('mdcProjWrap').hidden = !isProj;
+  document.getElementById('mdcDoneBtn').textContent = isProj ? 'Отправить в проект' : 'Сохранить в хранилище';
+}
+
+function mdcFinish() {
+  const dst = document.getElementById('mdcDstName').textContent;
+  const isProj = document.querySelector('.mdc-dest.selected')?.dataset.dest === 'project';
+  if (isProj) {
+    const proj = document.getElementById('mdcProjSelect').value;
+    document.getElementById('mdcDoneNote').innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
+      `Отправлено: «${dst}» → проект «${proj}», раздел «Документы»`;
+    document.getElementById('mdcDoneBtn').disabled = true;
+    setTimeout(() => closeModal('modal-md-convert'), 1100);
+    return;
+  }
+  /* в хранилище: md-файл появляется первой строкой */
+  const mdKb = Math.max(1.8, mdcSrcSizeKb * (mdcSrcExt === 'PDF' ? 0.05 : 0.33));
+  const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  const now = new Date();
+  const when = `${now.getDate()} ${months[now.getMonth()]}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const tr = document.createElement('tr');
+  tr.className = 'mdc-new';
+  tr.innerHTML =
+    `<td><a href="#page-docs" class="doc-link">${dst}</a></td>` +
+    `<td class="mono">${mdKb.toFixed(1).replace('.', ',')} КБ</td>` +
+    `<td class="mono muted">${when}</td>` +
+    '<td><div class="tag-cell"><span class="tc-pill">MD</span><button class="row-btn rb-soft" onclick="openModal(\'modal-tag-select\')">Изменить теги</button></div></td>' +
+    '<td><div class="row-actions"><button class="row-btn rb-glass">Удалить</button></div></td>';
+  document.getElementById('storageTbody').prepend(tr);
+  closeModal('modal-md-convert');
+}
 </script>
 
 </body>
