@@ -19,6 +19,7 @@
 - [session_2026_04_24_kinolog.md](session_2026_04_24_kinolog.md) — **Лендинг «Обучение кинологов»**: 3 варианта (paws / glass / material) для курса Анастасии Сундеевой под брендом Paws.kz. Контент из Telegram-чата через Telethon, стиль из FigMCP, 48 блоков ТЗ сверены, WCAG AA Large, standalone-файлы собраны
 - [session_2026_06_10_montecarlo_promo.md](session_2026_06_10_montecarlo_promo.md) — **Monte Carlo (РМГ) промо-блок на главной**: новый клиентский трек (чат «DFM»: Stas Skalaban/Alexei Shelest, montecarlo.ru); 8 итераций размещения 3×16:9 баннеров в клиентской Figma `l38kZVrZXzdNlBIIOLFX4g` + футер 1:1 с прода (векторные лого холдинга, бейджи сторов, live-токены) + карпати-ресёрч (4 агента) → 7 концептов (фаворит — ротатор 1 слот×3 креатива; жизненный цикл язычок↔peek 90px↔развёрнут; интеграции в плеер). Всё в фигме клиента, в репо кода нет. Ждём выбор клиента (DEBT MC-005..007)
 - [session_2026_06_10_twinr_crm_katya.md](session_2026_06_10_twinr_crm_katya.md) — **Twinr+CRM правки Татьяны (@k_t_v_23)**: бриф telethon'ом из её чата; twinr моб-адаптив (off-canvas+бургер) + favicon/лого twin-panes + Wordstat «Графики» + раздел «Аудио Метрика» (отчёт+выходы трека; СНАЧАЛА ошибочно в CRM — плитка «CRM Glass» у них = переиспользованный шелл, проект определять по семантике!); CRM кебаб «Создание»/«Медиа»; reviewer-агент 1HIGH+3MED закрыты; оба standalone+zip отправлены ей файлами без текста (msg 589661/589663)
+- [session_2026_06_11_twinr_storage_md.md](session_2026_06_11_twinr_storage_md.md) — **Twinr «Хранилище» + MD-конвертер (задача Татьяны)**: бывш. «ИИ — Документы» перестроен под их прод (upload-карточка 20 МБ + таблица с её скринов 1:1) и вынесен в **отдельную вкладку сайдбара** (data-route="storage", по команде Эльбика); **MD-конвертер** per-row «В Markdown» (PDF/DOCX) → модалка convert→выбор «В хранилище» (строка .md+флеш) / «В проект» (дропдаун Аудио Метрика/Большой Цифровой/CRM Турбо); фикс по ревью Эльбика: «Загрузить» оживлён (файл→строка, валидация 20 МБ) + .md скачивается (data:markdown, «Скачать»); real-click E2E в standalone, console 0; zip отправлен ей msg 590167 (серверная telethon-сессия — локальную лочил JRE-аплоад). Уроки: Chrome MCP same-URL navigate=no-op (нужен reload ignoreCache); «все прям в восторге от дизы» — фидбек барышень Татьяны
 - [session_2026_04_29_rutv_cinematic.md](session_2026_04_29_rutv_cinematic.md) — **Holy Grail integration + RU.TV showcase v1→v5**: Anthropic Design System Prompt vendored + DESIGN_PROTOCOL.md в 10 частях; RU.TV витрина-агрегатор с 104 реальными ассетами, чарт top-10 русской сцены, расписание week×hours, 3 темы (Glass/Apple Dark/Light) + cinematic второй вариант (Apple TV+ landing с full-screen hero, off-canvas drawer, bento layouts, scroll reveal). 2 файла на руках: dashboard 10MB + cinematic 4.5MB
 - [session_2026_05_13_rutv_landing_pixel_perfect.md](session_2026_05_13_rutv_landing_pixel_perfect.md) — **RU.TV landing v6**: Figma frame 3373:2073 mapped через FigMCP OAuth + Chrome MCP; реальный логотип inline SVG currentColor + masked TV; **2 версии** built: `rutv-landing-figma.html` (1-в-1 Figma 36KB) и `rutv-landing.html` (Karpathy-tier production-best 120KB) — SPA с 7 hash routes (home/live/news/poster/video/programs/schedule), Apple TV+ cinematic hero (Ken Burns + LIVE pulse + viewer count), Spotify now-playing chip, Netflix card hover, YouTube TV schedule grid с LIVE highlight, sticky frosted nav (HIG iOS 26), filter chips, modal player, dark mode auto, mobile bottom nav, full SEO+JSON-LD. Standalone 4.1MB / 11.2MB через `tools/build_rutv_landing_standalone.py`. RUTV-100..120 в DEBT.
 - [session_2026_06_03_gorod_fm_cont16_light_sweep_analysis.md](session_2026_06_03_gorod_fm_cont16_light_sweep_analysis.md) — **Город ФМ cont-16**: light theme deferred-sweep — 6-агентный read-only аудит (workflow `woi5kyh7a`, 537k токенов) всех вторичных роутов (#/track/#/profile/#/artist/#/podborki/#/lives/#/recap/shared-chrome) → build-ready override-спек (`HANDOFF-gorod-fm-cont-16.md` + verbatim `cont-16-light-sweep-analysis.json`). Билд НА ПАУЗЕ по директиве Эльбика «пауза без потерь» — `gorod-fm.html` НЕ тронут. Находки: #/podborki gallery=DEAD CODE, #/artist latent бел-на-бел track-cover, closed-box/recap-card остаются тёмными, seam byte-identity via fallback. Этот sync запушил cont-12→16.
@@ -67,8 +68,9 @@
 **Verified через chrome MCP** (real backdrop-filter работает): все 3 темы в обоих файлах, drawer cinematic с overlay backdrop blur, scroll reveal, mobile/TV viewports.
 
 ### Клиент: Twinr (Большой Цифровой)
-**Active prototype:** `designs/twinr-liquid-glass.html` (~267 KB, ~4990 строк, **22 страницы** + 5 модалок + **Liquid Glass Customizer** на #page-guide)
-**Client-facing standalone:** `designs/twinr-liquid-glass-standalone.html` (**1.7 MB**, base64 backdrop inline, открывается двойным кликом без сервера)
+**Active prototype:** `designs/twinr-liquid-glass.html` (~323 KB, 6526 строк, **22 страницы** + 6 модалок + **Liquid Glass Customizer** на #page-guide)
+**Client-facing standalone:** `designs/twinr-liquid-glass-standalone.html` (**1.69 MB**, base64 backdrop inline, открывается двойным кликом без сервера)
+**2026-06-11:** «Хранилище» (`#page-docs`, бывш. «ИИ — Документы») = **отдельная вкладка сайдбара** (data-route="storage") в структуре их прода: upload-карточка (живая: файл→строка таблицы, лимит 20 МБ) + таблица файлов (per-row «Изменить теги»/«Удалить») + **MD-конвертер** (`modal-md-convert`: per-row «В Markdown» для PDF/DOCX → convert со спиннером → выбор «В хранилище» [строка .md + «Скачать» data:markdown] / «В проект» [дропдаун проектов]). Доставлено Татьяне msg 590167.
 
 ### Клиент: Paws.kz / курс кинологов (Лендинг) — 2026-04-24
 **Active prototypes:**
@@ -138,21 +140,23 @@
 **Dropdowns:** user-menu (Профиль/Настройки/Помощь/Выйти), notifications (5 шт с coral pulse на unread), kebab ⋮ на rows (Создание/Файлы/Справки/Дублировать/Удалить).
 **Routing:** hash-based `#page-X`, localStorage persist `crm-glass.last-route`.
 
-**Sidebar — 4 пункта (Apple HIG):**
+**Sidebar — 7 пунктов (Apple HIG):**
 1. Рекламный кабинет (admin) — `page-advertisers` + вложенные (add, details, campaign, bind)
 2. Статистика — `page-stats` + `page-stats-clips` + `page-stats-detail`
-3. Wordstat — `page-wordstat` (placeholder)
-4. ИИ — hub для 9 AI-инструментов через chip-row sub-nav
-5. Руководство — `page-guide` (long-form docs)
+3. Аудио Метрика — `page-audio-metrics` + `page-audio-track` (добавлен 2026-06-10)
+4. Wordstat — `page-wordstat` (+вкладка «Графики» 2026-06-10)
+5. ИИ — hub для 8 AI-инструментов через chip-row sub-nav
+6. Хранилище — `page-docs` (вынесен из ИИ 2026-06-11, data-route="storage")
+7. Руководство — `page-guide` (long-form docs)
 
 **ИИ-модуль (внутри одной вкладки):**
 Discovery Hub на `#page-ai` (4 группы × карточки). Под-навигация chip-row на каждой AI-странице со slide-morph indicator, group separators между Контент/Генерация/Медиа/Анализ.
 
-9 AI-инструментов:
+8 AI-инструментов (`page-docs` выведен в отдельный раздел «Хранилище» 2026-06-11):
 - Контент: `page-sources`, `page-prompts`
 - Генерация: `page-source-work`, `page-rewrite`, `page-chat`
 - Медиа: `page-transcribe`, `page-video-gen`
-- Анализ: `page-docs`, `page-keywords`
+- Анализ: `page-keywords`
 
 **Плюс промо/auth**: `page-promo`, `page-login`, `page-register` (оригинал, не тронуты).
 
