@@ -5240,13 +5240,13 @@ tr.mdc-new { animation: mdcRowIn 1.8s var(--ease-out-quart) both; }
         <span id="storageFileName" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Файл не выбран</span>
         <input type="file" id="storageFileInput" style="display: none;">
       </label>
-      <input class="input" type="text" placeholder="Название (опционально)" style="flex: 1; min-width: 200px; width: auto;">
-      <button class="btn btn-primary">
+      <input class="input" type="text" id="storageNameInput" placeholder="Название (опционально)" style="flex: 1; min-width: 200px; width: auto;">
+      <button class="btn btn-primary" onclick="storageUpload()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         Загрузить
       </button>
     </div>
-    <div class="upload-note">Максимальный размер: 20 МБ</div>
+    <div class="upload-note" id="storageNote">Максимальный размер: 20 МБ</div>
   </div>
 
   <!-- Файлы хранилища -->
@@ -6363,7 +6363,32 @@ document.querySelectorAll('.hs-track, [id="srcGroupTabs"]').forEach(track => {
   }
 })();
 
-/* ═══ ХРАНИЛИЩЕ: выбор файла + MD-конвертер ═══ */
+/* ═══ ХРАНИЛИЩЕ: живая загрузка файла + MD-конвертер ═══ */
+const STORAGE_NOTE_DEFAULT = 'Максимальный размер: 20 МБ';
+const MD_ROW_BTN =
+  '<button class="row-btn rb-md" onclick="openMdConvert(this)">' +
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>' +
+  'В Markdown</button>';
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function fmtFileSize(bytes) {
+  const kb = bytes / 1024;
+  const n = kb >= 1024 ? kb / 1024 : kb;
+  return n.toFixed(1).replace('.', ',') + (kb >= 1024 ? ' МБ' : ' КБ');
+}
+function ruDateNow() {
+  const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  const now = new Date();
+  return `${now.getDate()} ${months[now.getMonth()]}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+}
+function storageSetNote(text, isError) {
+  const note = document.getElementById('storageNote');
+  note.textContent = text;
+  note.style.color = isError ? 'var(--coral)' : '';
+}
+
 (() => {
   const fi = document.getElementById('storageFileInput');
   const fn = document.getElementById('storageFileName');
@@ -6372,18 +6397,56 @@ document.querySelectorAll('.hs-track, [id="srcGroupTabs"]').forEach(track => {
     if (!fi.files.length) return;
     fn.textContent = fi.files[0].name;
     fn.style.color = 'var(--ink-1)';
+    storageSetNote(STORAGE_NOTE_DEFAULT, false);
   });
 })();
+
+/* «Загрузить»: файл из пикера появляется строкой в таблице (для PDF/DOC/DOCX — с кнопкой «В Markdown») */
+function storageUpload() {
+  const fi = document.getElementById('storageFileInput');
+  if (!fi.files.length) {
+    storageSetNote('Сначала выберите файл', true);
+    return;
+  }
+  const f = fi.files[0];
+  if (f.size > 20 * 1024 * 1024) {
+    storageSetNote('Файл больше 20 МБ — выберите файл поменьше', true);
+    return;
+  }
+  const typed = document.getElementById('storageNameInput').value.trim();
+  const srcExt = (f.name.match(/\.([^.]+)$/) || [, ''])[1];
+  let display = typed || f.name;
+  if (typed && srcExt && !/\.[^.]+$/.test(typed)) display = typed + '.' + srcExt;
+  const convertible = /^(pdf|docx?)$/i.test(srcExt);
+  const tr = document.createElement('tr');
+  tr.className = 'mdc-new';
+  tr.innerHTML =
+    `<td><a href="#page-docs" class="doc-link">${escapeHtml(display)}</a></td>` +
+    `<td class="mono">${fmtFileSize(f.size)}</td>` +
+    `<td class="mono muted">${ruDateNow()}</td>` +
+    '<td><div class="tag-cell"><button class="row-btn rb-soft" onclick="openModal(\'modal-tag-select\')">Изменить теги</button></div></td>' +
+    `<td><div class="row-actions">${convertible ? MD_ROW_BTN : ''}<button class="row-btn rb-glass">Удалить</button></div></td>`;
+  document.getElementById('storageTbody').prepend(tr);
+  /* сброс формы */
+  fi.value = '';
+  const fn = document.getElementById('storageFileName');
+  fn.textContent = 'Файл не выбран';
+  fn.style.color = '';
+  document.getElementById('storageNameInput').value = '';
+  storageSetNote(STORAGE_NOTE_DEFAULT, false);
+}
 
 const MDC_CONVERT_LABEL = document.getElementById('mdcConvertBtn').innerHTML;
 const MDC_DONE_DEFAULT = document.getElementById('mdcDoneNote').innerHTML;
 let mdcSrcSizeKb = 0;
 let mdcSrcExt = 'PDF';
+let mdcSrcFile = '';
 
 function openMdConvert(btn) {
   const tr = btn.closest('tr');
   const name = tr.querySelector('.doc-link').textContent.trim();
   const size = tr.children[1].textContent.trim();
+  mdcSrcFile = name;
   mdcSrcExt = (name.match(/\.([^.]+)$/) || [, 'pdf'])[1].toUpperCase();
   const kb = parseFloat(size.replace(',', '.')) || 100;
   mdcSrcSizeKb = /МБ/i.test(size) ? kb * 1024 : kb;
@@ -6440,19 +6503,20 @@ function mdcFinish() {
     setTimeout(() => closeModal('modal-md-convert'), 1100);
     return;
   }
-  /* в хранилище: md-файл появляется первой строкой */
+  /* в хранилище: md-файл появляется первой строкой; клик по имени скачивает готовый .md */
   const mdKb = Math.max(1.8, mdcSrcSizeKb * (mdcSrcExt === 'PDF' ? 0.05 : 0.33));
-  const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-  const now = new Date();
-  const when = `${now.getDate()} ${months[now.getMonth()]}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const mdBody = `# ${dst.replace(/\.md$/, '')}\n\n> Сконвертировано из «${mdcSrcFile}» (${mdcSrcExt} → Markdown).\n\n## Содержимое\n\nДемонстрационный результат преобразования — в продакшене здесь будет текст исходного документа, размеченный заголовками, списками и таблицами.\n`;
+  const href = 'data:text/markdown;charset=utf-8,' + encodeURIComponent(mdBody);
   const tr = document.createElement('tr');
   tr.className = 'mdc-new';
   tr.innerHTML =
-    `<td><a href="#page-docs" class="doc-link">${dst}</a></td>` +
+    `<td><a href="${href}" download="${escapeHtml(dst)}" class="doc-link" title="Скачать ${escapeHtml(dst)}">${escapeHtml(dst)}</a></td>` +
     `<td class="mono">${mdKb.toFixed(1).replace('.', ',')} КБ</td>` +
-    `<td class="mono muted">${when}</td>` +
+    `<td class="mono muted">${ruDateNow()}</td>` +
     '<td><div class="tag-cell"><span class="tc-pill">MD</span><button class="row-btn rb-soft" onclick="openModal(\'modal-tag-select\')">Изменить теги</button></div></td>' +
-    '<td><div class="row-actions"><button class="row-btn rb-glass">Удалить</button></div></td>';
+    `<td><div class="row-actions"><a class="row-btn rb-glass" href="${href}" download="${escapeHtml(dst)}" style="text-decoration: none;">` +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+    'Скачать</a><button class="row-btn rb-glass">Удалить</button></div></td>';
   document.getElementById('storageTbody').prepend(tr);
   closeModal('modal-md-convert');
 }
