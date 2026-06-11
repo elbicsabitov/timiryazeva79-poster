@@ -4485,7 +4485,7 @@ tr.mdc-new { animation: mdcRowIn 1.8s var(--ease-out-quart) both; }
         <p>Хранилище файлов с тегами, поиском и пакетной обработкой. Каждый документ можно пометить несколькими тегами — это упрощает фильтрацию и поиск. Кнопка «Изменить теги» в строке файла открывает модалку с полным списком тегов.</p>
       </div>
       <div class="droplet dr-para">
-        <p>Кнопка «В Markdown» преобразует документ (PDF, DOCX) в файл .md. После преобразования результат можно сохранить в само хранилище или отправить в раздел «Документы» выбранного проекта — проект выбирается из выпадающего списка.</p>
+        <p>Преобразователь в Markdown принимает файл прямо с компьютера — карточка «Преобразовать в Markdown» (PDF, DOC, DOCX). Исходный файл при этом в хранилище не сохраняется: после преобразования пользователь сам выбирает, куда положить результат — в хранилище или в раздел «Документы» одного из своих проектов (проект выбирается из выпадающего списка). Кнопка «В Markdown» в строке файла делает то же самое для документов, уже лежащих в хранилище.</p>
       </div>
 
       <!-- FAQ -->
@@ -5247,6 +5247,23 @@ tr.mdc-new { animation: mdcRowIn 1.8s var(--ease-out-quart) both; }
       </button>
     </div>
     <div class="upload-note" id="storageNote">Максимальный размер: 20 МБ</div>
+  </div>
+
+  <!-- Преобразователь в Markdown: файл с компьютера, исходник в хранилище НЕ сохраняется -->
+  <div class="card" style="margin-bottom: 14px;">
+    <div style="font-size: var(--t-subhead); font-weight: 600; color: var(--ink-1); margin-bottom: 12px; letter-spacing: -0.01em;">Преобразовать в Markdown</div>
+    <div class="row" style="flex-wrap: wrap; gap: 10px;">
+      <label class="input" style="flex: 1.2; min-width: 220px; width: auto; display: flex; align-items: center; gap: 9px; cursor: pointer; color: var(--ink-4);">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="flex: none;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span id="mdcFileName" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Файл не выбран</span>
+        <input type="file" id="mdcFileInput" accept=".pdf,.doc,.docx" style="display: none;">
+      </label>
+      <button class="btn btn-glass" style="color: var(--coral); border-color: rgba(255, 138, 110, 0.35);" onclick="mdcUploadConvert()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Преобразовать в MD
+      </button>
+    </div>
+    <div class="upload-note" id="mdcNote">PDF, DOC или DOCX — исходный файл не сохраняется в хранилище, только результат по вашему выбору</div>
   </div>
 
   <!-- Файлы хранилища -->
@@ -6438,22 +6455,19 @@ function storageUpload() {
 
 const MDC_CONVERT_LABEL = document.getElementById('mdcConvertBtn').innerHTML;
 const MDC_DONE_DEFAULT = document.getElementById('mdcDoneNote').innerHTML;
+const MDC_NOTE_DEFAULT = document.getElementById('mdcNote').textContent;
 let mdcSrcSizeKb = 0;
 let mdcSrcExt = 'PDF';
 let mdcSrcFile = '';
 
-function openMdConvert(btn) {
-  const tr = btn.closest('tr');
-  const name = tr.querySelector('.doc-link').textContent.trim();
-  const size = tr.children[1].textContent.trim();
+/* общий вход конвертера: заполнить модалку, сбросить состояние, открыть */
+function mdcOpenWith(name, sizeKb, autostart) {
   mdcSrcFile = name;
   mdcSrcExt = (name.match(/\.([^.]+)$/) || [, 'pdf'])[1].toUpperCase();
-  const kb = parseFloat(size.replace(',', '.')) || 100;
-  mdcSrcSizeKb = /МБ/i.test(size) ? kb * 1024 : kb;
+  mdcSrcSizeKb = sizeKb;
   document.getElementById('mdcSrcBadge').textContent = mdcSrcExt;
   document.getElementById('mdcSrcName').textContent = name;
   document.getElementById('mdcDstName').textContent = name.replace(/\.[^.]+$/, '') + '.md';
-  /* сброс состояния до начального */
   const cBtn = document.getElementById('mdcConvertBtn');
   cBtn.disabled = false;
   cBtn.classList.remove('is-loading');
@@ -6464,6 +6478,57 @@ function openMdConvert(btn) {
   document.getElementById('mdcDoneBtn').disabled = true;
   mdcPick(document.querySelector('.mdc-dest[data-dest="storage"]'));
   openModal('modal-md-convert');
+  if (autostart) mdcConvert();
+}
+
+/* per-row «В Markdown» — конвертация файла, уже лежащего в хранилище */
+function openMdConvert(btn) {
+  const tr = btn.closest('tr');
+  const name = tr.querySelector('.doc-link').textContent.trim();
+  const size = tr.children[1].textContent.trim();
+  const kb = parseFloat(size.replace(',', '.')) || 100;
+  mdcOpenWith(name, /МБ/i.test(size) ? kb * 1024 : kb, false);
+}
+
+/* карточка «Преобразовать в MD» — файл с компьютера, БЕЗ загрузки исходника в хранилище */
+function mdcSetNote(text, isError) {
+  const note = document.getElementById('mdcNote');
+  note.textContent = text;
+  note.style.color = isError ? 'var(--coral)' : '';
+}
+(() => {
+  const fi = document.getElementById('mdcFileInput');
+  const fn = document.getElementById('mdcFileName');
+  if (!fi || !fn) return;
+  fi.addEventListener('change', () => {
+    if (!fi.files.length) return;
+    fn.textContent = fi.files[0].name;
+    fn.style.color = 'var(--ink-1)';
+    mdcSetNote(MDC_NOTE_DEFAULT, false);
+  });
+})();
+function mdcUploadConvert() {
+  const fi = document.getElementById('mdcFileInput');
+  if (!fi.files.length) {
+    mdcSetNote('Сначала выберите файл', true);
+    return;
+  }
+  const f = fi.files[0];
+  const ext = (f.name.match(/\.([^.]+)$/) || [, ''])[1].toLowerCase();
+  if (!/^(pdf|docx?)$/.test(ext)) {
+    mdcSetNote('Поддерживаются PDF, DOC и DOCX', true);
+    return;
+  }
+  if (f.size > 20 * 1024 * 1024) {
+    mdcSetNote('Файл больше 20 МБ — выберите файл поменьше', true);
+    return;
+  }
+  mdcOpenWith(f.name, f.size / 1024, true);
+  /* сброс пикера карточки */
+  fi.value = '';
+  const fn = document.getElementById('mdcFileName');
+  fn.textContent = 'Файл не выбран';
+  fn.style.color = '';
 }
 
 function mdcConvert() {
