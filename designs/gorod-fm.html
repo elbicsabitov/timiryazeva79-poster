@@ -137,6 +137,12 @@
         --topbar-h:     64px;
         --player-mini-h: 72px;   /* calm now-playing bar: single «почему» caption + play/next (cont-11) */
         --tabbar-h:     64px;
+        /* — Chat rail (Twitch-style docked column, GOROD-chat-rail) —
+           Owner: rail is EXPANDED on every content route (не spine-by-default).
+           --rail-cur is the live width the grid reads; it tracks data-rail. */
+        --rail-w:       360px;   /* our decision (Onest 14-15px Cyrillic + reaction-rail), not a Twitch constant */
+        --rail-w-spine: 52px;    /* collapsed spine: 44px target + dot + chevron */
+        --rail-cur:     var(--rail-w);   /* expanded by default; data-rail (on <html>) overrides */
 
         /* — Transitions — */
         --t-fast:      180ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -178,6 +184,13 @@
         --accent-text: var(--accent-on-dark);
         --cover-mix-base: #111318;
       }
+
+      /* Resolve the live rail width from data-rail on <html> — owner default = EXPANDED.
+         data-rail is set by the router (off on #/onboarding #/recap #/map; spine when
+         the user collapses). Placed outside :root so html[...] selectors win. */
+      html[data-rail="expanded"] { --rail-cur: var(--rail-w); }
+      html[data-rail="spine"]    { --rail-cur: var(--rail-w-spine); }
+      html[data-rail="off"]      { --rail-cur: 0px; }
 
       /* Warm theme retired (Apple-polish §G3) — overlay keeps the cinema palette. */
 
@@ -271,16 +284,25 @@
        ========================================================================= */
     @layer layout {
 
-      /* App shell: sidebar | main area, with player-mini pinned at bottom */
+      /* App shell: sidebar | main | chat-rail, with player-mini pinned at bottom.
+         The rail is a REAL third grid track (in-flow sibling of #app → main reflows
+         beside it, never an overlay). --rail-cur tracks the data-rail state. */
       .app-shell {
         display: grid;
-        grid-template-columns: var(--sidebar-w) 1fr;
+        grid-template-columns: var(--sidebar-w) 1fr var(--rail-cur);
         grid-template-rows: 1fr;
         min-height: 100dvh;
         padding-bottom: var(--player-mini-h);
+        transition: grid-template-columns var(--t-slow);
+      }
+      /* data-rail (set on <html> by the router) resolves --rail-cur globally so
+         .app-shell, .topbar and .chat-rail all read the same live width. */
+      .app-shell[data-rail="off"]      { grid-template-columns: var(--sidebar-w) 1fr; }
+      @media (prefers-reduced-motion: reduce) {
+        .app-shell { transition: none; }   /* snap, not slide */
       }
 
-      /* Main content area fills remaining column */
+      /* Main content area fills the flexible middle column */
       #app {
         grid-column: 2;
         grid-row: 1;
@@ -441,6 +463,28 @@
         color: var(--text-pri);
         background: rgba(255, 255, 255, 0.28);
       }
+
+      /* ---- Topbar skin switcher (relocated from bottom-right) ----
+         Light segmented control: Обычный | Стекло. The skin JS paints
+         active/inactive states inline (same as before) over these base styles. */
+      .topbar-skin {
+        display: inline-flex; align-items: center; gap: 2px;
+        padding: 3px; border-radius: 999px; flex-shrink: 0;
+        background: var(--surf-glass-12, rgba(255,255,255,0.06));
+        border: 1px solid var(--hairline);
+      }
+      .topbar-skin .gfm-ss-btn {
+        min-height: 38px; padding: 0 14px; border: none; border-radius: 999px; cursor: pointer;
+        background: transparent; color: var(--text-sec);
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
+        display: inline-flex; align-items: center; justify-content: center;
+        transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+      }
+      .topbar-skin .gfm-ss-btn[aria-pressed="true"] {
+        background: var(--surf-active, rgba(255,255,255,0.16)); color: var(--text-pri);
+      }
+      .topbar-skin .gfm-ss-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      @media (max-width: 1024px) { .topbar-skin .gfm-ss-btn { padding: 0 10px; } }
 
       /* ---- Sidebar ------------------------------------------------------- */
 
@@ -2837,6 +2881,11 @@
         .ai-dock.is-speaking { box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(81, 104, 252, 0.5), 0 0 30px 3px rgba(81, 104, 252, 0.5); }
       }
 
+      /* Legacy floating dock + launcher RETIRED — the persistent .chat-rail is the
+         primary chat surface now (owner decision). Markup kept so onboarding-suppress
+         selectors and the greet handoff stay valid, but never rendered. */
+      .ai-dock, .ai-launcher { display: none !important; }
+
       .ai-dock {
         position: fixed;
         right: 20px;
@@ -3131,6 +3180,304 @@
       @media (max-width: 480px) {
         .ai-dock { right: 12px; left: 12px; width: auto; bottom: calc(var(--player-mini-h) + 12px); height: 70dvh; }
         .ai-launcher { right: 14px; }
+      }
+
+      /* =====================================================================
+         CHAT RAIL — persistent Twitch-style docked column (GOROD-chat-rail)
+         Replaces the floating .ai-dock as the primary chat surface on web.
+         In-flow grid sibling of #app (column 3) → MAIN reflows beside it.
+         Ends ABOVE the 72px mini-player (mirrors .sidebar). z BELOW mini-player.
+         Reuses the S0 composer classes (.ai-mode/.ai-seg/.ai-compose-target/
+         .ai-undo/.ai-msg*) — only the CONTAINER semantics are new (not a modal).
+         ===================================================================== */
+      .chat-rail {
+        grid-column: 3;
+        grid-row: 1;
+        height: calc(100dvh - var(--player-mini-h));   /* never under the mini-player */
+        position: sticky;
+        top: 0;
+        z-index: 45;                                    /* > topbar(40), < sidebar(50) < player-mini(60) */
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        background: rgba(15, 16, 20, 0.92);
+        backdrop-filter: blur(26px) saturate(1.2);
+        -webkit-backdrop-filter: blur(26px) saturate(1.2);
+        border-left: 1px solid var(--hairline);
+      }
+      /* Hidden entirely on off-routes (grid drops the track too) */
+      html[data-rail="off"] .chat-rail { display: none; }
+
+      /* ---- SPINE (collapsed 52px) — icon + unread-dot + expand chevron ---- */
+      html[data-rail="spine"] .chat-rail .rail-expanded-only { display: none !important; }
+      html[data-rail="spine"] .chat-rail { padding: 0; align-items: center; }
+      .rail-spine {
+        display: none;
+        flex-direction: column; align-items: center; gap: 14px;
+        padding: 14px 0; width: 100%;
+      }
+      html[data-rail="spine"] .chat-rail .rail-spine { display: flex; }
+      .rail-spine-btn {
+        position: relative;
+        width: 44px; height: 44px; border-radius: 12px; border: none; cursor: pointer;
+        background: rgba(255,255,255,0.06); color: var(--text-sec);
+        display: flex; align-items: center; justify-content: center;
+        transition: background var(--t-fast), color var(--t-fast);
+      }
+      .rail-spine-btn:hover { background: var(--tint-blue-light-20); color: #fff; }
+      .rail-spine-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .rail-spine-btn svg { width: 20px; height: 20px; }
+      .rail-spine-dot {
+        position: absolute; top: 4px; right: 4px; min-width: 16px; height: 16px;
+        padding: 0 4px; border-radius: 999px; background: var(--brand-blue-light);
+        color: #fff; font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; line-height: 1;
+        border: 1.5px solid rgba(15,16,20,0.92);
+      }
+
+      /* ---- HEADER — room switcher row + collapse chevron ---- */
+      .rail-head {
+        flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+        padding: 10px 10px 10px 14px;
+        border-bottom: 1px solid var(--hairline);
+        background: rgba(81, 104, 252, 0.10);
+      }
+      .rail-room-btn {
+        flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
+        min-height: 44px; padding: 6px 10px; border-radius: 11px; border: none; cursor: pointer;
+        background: transparent; color: #fff; text-align: left;
+        font-family: 'Onest', sans-serif; font-weight: 800; font-size: 15px;
+        transition: background var(--t-fast);
+      }
+      .rail-room-btn:hover { background: rgba(255,255,255,0.07); }
+      .rail-room-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .rail-room-pin { flex-shrink: 0; font-size: 14px; }
+      .rail-room-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .rail-room-caret { flex-shrink: 0; margin-left: auto; transition: transform var(--t-fast); }
+      .rail-room-caret svg { width: 16px; height: 16px; display: block; }
+      .rail-room-btn[aria-expanded="true"] .rail-room-caret { transform: rotate(180deg); }
+      .rail-collapse {
+        flex-shrink: 0; width: 44px; height: 44px; border-radius: 11px; border: none;
+        background: rgba(255,255,255,0.06); color: var(--text-sec); cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background var(--t-fast), color var(--t-fast);
+      }
+      .rail-collapse:hover { background: rgba(255,255,255,0.14); color: #fff; }
+      .rail-collapse:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .rail-collapse svg { width: 18px; height: 18px; }
+
+      /* ---- room-switcher dropdown ---- */
+      .rail-rooms {
+        position: absolute; top: 60px; left: 10px; right: 10px; z-index: 5;
+        background: rgba(22, 24, 32, 0.98);
+        backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+        border: 1px solid rgba(255,255,255,0.12); border-radius: 14px;
+        box-shadow: 0 18px 48px rgba(0,0,0,0.55); padding: 6px;
+        opacity: 0; transform: translateY(-6px); pointer-events: none;
+        transition: opacity var(--t-fast), transform var(--t-fast);
+      }
+      .rail-rooms.is-open { opacity: 1; transform: none; pointer-events: auto; }
+      .rail-room-item {
+        display: flex; align-items: center; gap: 9px; width: 100%;
+        min-height: 44px; padding: 8px 11px; border-radius: 10px; border: none; cursor: pointer;
+        background: transparent; color: #e7eaf3; text-align: left;
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600;
+        transition: background var(--t-fast);
+      }
+      .rail-room-item:hover { background: rgba(255,255,255,0.08); }
+      .rail-room-item:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: -2px; }
+      .rail-room-item[aria-current="true"] { background: var(--tint-blue-light-20); color: #fff; }
+      .rail-room-item-ico { flex-shrink: 0; font-size: 15px; }
+      .rail-room-item-meta { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--text-sec); }
+      .rail-room-item-dot {
+        margin-left: auto; width: 8px; height: 8px; border-radius: 50%;
+        background: var(--brand-blue-light); flex-shrink: 0;
+      }
+      .rail-rooms-divider { height: 1px; background: var(--hairline); margin: 5px 6px; }
+      .rail-rooms-label {
+        font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 700;
+        letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-ter, var(--text-sec));
+        padding: 7px 11px 4px;
+      }
+
+      /* ---- NOW-PLAYING CONTEXT (static, NOT a live-region) ---- */
+      .rail-ctx {
+        flex-shrink: 0; display: flex; align-items: flex-start; gap: 10px;
+        padding: 11px 14px; border-bottom: 1px solid var(--hairline);
+        background: rgba(255,255,255,0.02);
+      }
+      .rail-ctx-cover {
+        width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0;
+        background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark));
+        background-size: cover; background-position: center;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .rail-ctx-cover svg { width: 16px; height: 16px; opacity: 0.9; }
+      .rail-ctx-body { min-width: 0; }
+      .rail-ctx-title { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .rail-ctx-why { font-family: 'Onest', sans-serif; font-size: 12px; line-height: 1.35; color: var(--text-sec); text-wrap: pretty; }
+      .rail-ctx-why b { color: var(--accent-on-dark); font-weight: 600; }
+
+      /* ---- follow-the-station chip (non-destructive — appears only on divergence) ---- */
+      .rail-followchip {
+        flex-shrink: 0; display: none; align-items: center; gap: 8px;
+        margin: 8px 12px 0; padding: 8px 11px; border-radius: 11px;
+        background: var(--tint-blue-light-20); border: 1px solid rgba(81,104,252,0.35);
+        font-family: 'Onest', sans-serif; font-size: 12px; color: #d6dbf7;
+      }
+      .rail-followchip.is-show { display: flex; }
+      .rail-followchip b { color: #fff; font-weight: 700; }
+      .rail-followchip-go {
+        margin-left: auto; flex-shrink: 0; border: none; cursor: pointer;
+        background: var(--brand-blue-light); color: #fff; font-family: 'Onest', sans-serif;
+        font-size: 12px; font-weight: 700; padding: 6px 11px; border-radius: 999px; min-height: 30px;
+      }
+      .rail-followchip-go:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .rail-followchip-x {
+        flex-shrink: 0; border: none; cursor: pointer; background: transparent; color: var(--text-sec);
+        width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      }
+      .rail-followchip-x:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+      /* ---- MESSAGE LOG (the single scroller — reuses .ai-msgs styles) ---- */
+      .chat-rail .ai-msgs { flex: 1 1 auto; min-height: 0; }
+
+      /* "Новые ↓" pill (focusable, ≥44px, non-text blue bar + white count) */
+      .rail-newpill {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        bottom: 8px; z-index: 4;
+        display: none; align-items: center; gap: 7px;
+        min-height: 36px; padding: 7px 15px; border-radius: 999px; border: none; cursor: pointer;
+        background: var(--brand-blue-light); color: #fff;
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700;
+        box-shadow: 0 8px 24px rgba(81,104,252,0.45);
+      }
+      .rail-newpill.is-show { display: inline-flex; }
+      .rail-newpill:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+      .rail-log-wrap { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+
+      /* ---- PRESENCE + slow-mode strip (static, NOT a live-region) ---- */
+      .rail-presence {
+        flex-shrink: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        padding: 8px 14px; border-top: 1px solid var(--hairline);
+        font-family: 'Onest', sans-serif; font-size: 11.5px; color: var(--text-sec);
+      }
+      .rail-presence-live { display: inline-flex; align-items: center; gap: 6px; }
+      .rail-presence-live::before {
+        content: ''; width: 7px; height: 7px; border-radius: 50%;
+        background: var(--success, #34d399); box-shadow: 0 0 8px var(--success, #34d399);
+      }
+      .rail-presence-slow {
+        margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+        color: #c7d0ff;
+      }
+      .rail-presence-slow::before {
+        content: ''; width: 6px; height: 6px; border-radius: 2px; background: var(--brand-blue-light);
+      }
+
+      /* ---- COMPOSER zone in the rail (reuses .ai-compose-target/.ai-mode/.ai-input/.ai-undo) ---- */
+      .chat-rail .ai-compose-target,
+      .chat-rail .ai-mode,
+      .chat-rail .ai-undo,
+      .chat-rail .ai-input { flex-shrink: 0; }
+      .chat-rail .ai-input { border-top: 1px solid var(--hairline); }
+      /* per-mode reskin keyed off the rail's own data-mode (mirrors .ai-dock rules) */
+      .chat-rail[data-mode="ai"] .ai-compose-target { color: #aeb8ff; }
+      .chat-rail[data-mode="ai"] .ai-input-field { border-color: var(--brand-blue-light); }
+      .chat-rail[data-mode="ai"] .ai-input-field:focus { border-color: var(--brand-blue-light); box-shadow: 0 0 0 2px rgba(81,104,252,0.32); }
+      .chat-rail[data-mode="all"] .ai-send { background: rgba(255,255,255,0.16); color: #fff; }
+      .chat-rail[data-mode="all"] .ai-send:hover { background: rgba(255,255,255,0.24); }
+
+      /* Glass skin: rail surfaces pick up the family tokens (rail carries .gfm-glass-surface).
+         The .gfm-glass-surface utility supplies bg/blur/border; here we soften the
+         heavy border-left so it reads as a glass seam, not a hard line. */
+      html[data-skin="glass"] .chat-rail { border-left-color: var(--gfm-glass-border); }
+      html[data-skin="glass"] .chat-rail .rail-head { background: rgba(81,104,252,0.16); }
+
+      /* ---- NON-WEB surfaces (mobile/tv/carplay use data-surface, not media queries) ----
+         Those grids are forced to 1fr !important, so the rail's grid-column:3 would
+         spill an implicit track. Pull the rail OUT of the grid on every non-web surface.
+         - mobile: hidden until opened as a full-height role=dialog (rail-mobile-fab).
+         - tv / carplay: forward-guidance only (file is data-surface=web) → hide. */
+      html[data-surface="mobile"] .chat-rail,
+      html[data-surface="tv"] .chat-rail,
+      html[data-surface="carplay"] .chat-rail { display: none; }
+      html[data-surface="mobile"] .rail-spine { display: none !important; }
+
+      /* mobile chat FAB — opens the rail as a dialog (sits above the tabbar+mini-player) */
+      .rail-mobile-fab { display: none; }
+      html[data-surface="mobile"] .rail-mobile-fab {
+        display: inline-flex; align-items: center; justify-content: center;
+        position: fixed; right: 16px; z-index: 58;
+        bottom: calc(var(--tabbar-h) + var(--player-mini-h) + 14px);
+        width: 52px; height: 52px; border-radius: 50%; border: none; cursor: pointer;
+        background: linear-gradient(135deg, var(--brand-blue-light), var(--accent-on-dark));
+        color: #fff; box-shadow: 0 10px 30px rgba(81,104,252,0.5);
+      }
+      .rail-mobile-fab svg { width: 22px; height: 22px; }
+      .rail-mobile-fab-dot {
+        position: absolute; top: 2px; right: 2px; min-width: 16px; height: 16px; padding: 0 4px;
+        border-radius: 999px; background: #fff; color: var(--brand-blue-light);
+        font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--brand-blue-light);
+      }
+      /* mobile: rail opens as a full-height dialog BETWEEN topbar and mini-player+tabbar */
+      html[data-surface="mobile"][data-rail-mobile="open"] .chat-rail {
+        display: flex !important;
+        position: fixed; left: 0; right: 0; top: 0;
+        bottom: calc(var(--tabbar-h) + var(--player-mini-h));   /* never under transport */
+        height: auto; width: auto; z-index: 58;
+        border-left: none; border-radius: 0; grid-column: auto;
+      }
+      /* in the mobile dialog the full anatomy always shows even if data-rail=spine —
+         override ONLY the spine-hiding rule; leave each element's own display intact
+         (so .rail-followchip stays none until .is-show). */
+      html[data-rail-mobile="open"] .chat-rail .rail-spine { display: none !important; }
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .rail-head,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .rail-ctx,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .rail-log-wrap,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .rail-presence,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .ai-mode,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .ai-input,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .ai-chips,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .ai-compose-target,
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .ai-undo { display: flex !important; }
+      html[data-rail="spine"][data-rail-mobile="open"] .chat-rail .rail-rooms { display: block; }
+      .rail-mobile-close { display: none; }
+      html[data-surface="mobile"] .rail-mobile-close { display: inline-flex; }
+      /* in the mobile dialog the collapse-to-spine chevron is meaningless → hide it */
+      html[data-surface="mobile"] #rail-collapse,
+      html[data-rail-mobile="open"] #rail-collapse { display: none; }
+      @media (max-width: 640px) { html[data-surface="web"] #rail-collapse { display: none; } html[data-surface="web"] .rail-mobile-close { display: inline-flex; } }
+
+      /* ---- WEB responsive (real-browser breakpoints; defensive for narrow web) ----
+         Owner wants the rail visible, so we keep the column but never let MAIN
+         collapse unusably; the user can still manually collapse to a spine. */
+      @media (max-width: 1280px) and (min-width: 641px) {
+        :root { --rail-w: 320px; }            /* trim so MAIN stays usable */
+      }
+      @media (max-width: 900px) and (min-width: 641px) {
+        /* MAIN would get too tight at full rail → default to spine here unless the
+           user expanded; still visible (owner: chat on every page). */
+        html[data-surface="web"]:not([data-rail="off"]) { --rail-w: 300px; }
+      }
+      @media (max-width: 640px) {
+        /* true-narrow web (no data-surface emulation): rail leaves the grid and
+           becomes a full-height dialog between topbar and mini-player. */
+        html[data-surface="web"] .app-shell { grid-template-columns: var(--sidebar-w) 1fr !important; }
+        html[data-surface="web"] .chat-rail {
+          position: fixed; inset: var(--topbar-h) 0 var(--player-mini-h) 0;
+          height: auto; width: auto; z-index: 55; border-left: none; grid-column: auto;
+          transform: translateX(100%); transition: transform var(--t-mid);
+        }
+        html[data-surface="web"][data-rail-mobile="open"] .chat-rail { transform: none; }
+        html[data-surface="web"][data-rail="off"] .chat-rail { display: none; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .rail-room-caret, .rail-rooms, .rail-room-btn, .rail-collapse, .rail-spine-btn { transition: none; }
+        html[data-surface="web"] .chat-rail { transition: none; }
       }
 
       /* (cont-11) .player-why-pill + .player-steer-btn removed from the mini bar —
@@ -7578,9 +7925,20 @@
     html[data-surface="web"] .sidebar           { display: flex !important; }
     html[data-surface="web"] .topbar            { display: flex !important; }
     html[data-surface="web"] .mobile-tabbar     { display: none !important; }
-    html[data-surface="web"] .app-shell         { grid-template-columns: var(--sidebar-w) 1fr !important; }
+    /* WEB grid is rail-aware: third track follows data-rail (set on .app-shell).
+       These !important rules live outside @layer so they win the cascade; the
+       data-rail attribute selector keeps the rail column reflowing main. */
+    html[data-surface="web"] .app-shell                    { grid-template-columns: var(--sidebar-w) 1fr var(--rail-cur) !important; }
+    html[data-surface="web"] .app-shell[data-rail="off"]   { grid-template-columns: var(--sidebar-w) 1fr !important; }
     html[data-surface="web"] #app               { grid-column: 2 !important; }
+    /* Topbar inset so it never overlaps the rail (full-width minus the live rail width).
+       --rail-cur resolves from data-rail on <html>, so the topbar reads it directly;
+       on off-routes --rail-cur is 0 → topbar spans the full remaining width. */
+    html[data-surface="web"] .topbar            { right: var(--rail-cur) !important; transition: right var(--t-slow); }
     html[data-surface="web"] .player-mini       { display: flex !important; bottom: 0 !important; padding: 0 20px !important; padding-bottom: max(0px, env(safe-area-inset-bottom)) !important; }
+    @media (prefers-reduced-motion: reduce) {
+      html[data-surface="web"] .topbar          { transition: none !important; }
+    }
       /* G7 (cont-11) — tactile :active scale (reduced-motion gated) + 44px tap targets */
       @media (prefers-reduced-motion: no-preference) {
         .home-chip:active, .home-tile:active, .home-ctx-card:active,
@@ -7663,6 +8021,14 @@
         </svg>
         <span>Поиск</span>
       </button>
+
+      <!-- Skin switcher — light segmented control in the topbar (relocated from the
+           bottom-right corner so it never overlaps the chat rail composer). Same IDs
+           + localStorage gorodfm_skin behaviour as before; JS finds these. -->
+      <div id="gorodfm-skin-switcher" class="topbar-skin" role="group" aria-label="Переключатель темы интерфейса">
+        <button class="gfm-ss-btn" id="gfm-ss-default" type="button" aria-pressed="true">Обычный</button>
+        <button class="gfm-ss-btn" id="gfm-ss-glass" type="button" aria-pressed="false">Стекло</button>
+      </div>
 
       <!-- "Личный кабинет" pill -->
       <button
@@ -9990,6 +10356,120 @@
       <!-- /#/recap -->
 
     </main>
+
+    <!-- ====================================================================
+         CHAT RAIL — persistent Twitch-style docked column (in-flow grid col 3).
+         Sibling of #app so MAIN reflows beside it (NOT an overlay). Ends above
+         the mini-player. EXPANDED by default on every content route (owner).
+         Carries .gfm-glass-surface so it adopts the glass skin automatically.
+         ==================================================================== -->
+    <aside class="chat-rail gfm-glass-surface" id="chat-rail" aria-label="Чат — общий эфир, станции и Twinr AI">
+
+      <!-- SPINE (shown only when collapsed) — icon + unread dot + expand chevron -->
+      <div class="rail-spine" aria-hidden="false">
+        <button class="rail-spine-btn" id="rail-spine-expand" type="button" aria-label="Развернуть чат">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span class="rail-spine-dot" id="rail-spine-dot" hidden>0</span>
+        </button>
+        <button class="rail-spine-btn" id="rail-spine-chevron" type="button" aria-label="Развернуть чат">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+
+      <!-- HEADER — clickable room-switcher row + collapse chevron -->
+      <div class="rail-head rail-expanded-only">
+        <button class="rail-room-btn" id="rail-room-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="rail-rooms">
+          <span class="rail-room-pin" id="rail-room-pin" aria-hidden="true">📌</span>
+          <span class="rail-room-name" id="rail-room-name">Общий эфир</span>
+          <span class="rail-room-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <button class="rail-collapse" id="rail-collapse" type="button" aria-label="Свернуть чат в полосу">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="rail-collapse rail-mobile-close" id="rail-mobile-close" type="button" aria-label="Закрыть чат">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- room-switcher dropdown (📌 Общий эфир pinned + seeded demo station rooms) -->
+      <div class="rail-rooms rail-expanded-only" id="rail-rooms" role="menu" aria-label="Выбрать комнату чата"></div>
+
+      <!-- NOW-PLAYING CONTEXT — the «почему» of the active room (static, not live) -->
+      <div class="rail-ctx rail-expanded-only" id="rail-ctx">
+        <div class="rail-ctx-cover" id="rail-ctx-cover" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3" fill="#fff" stroke="none"/><circle cx="18" cy="16" r="3" fill="#fff" stroke="none"/></svg>
+        </div>
+        <div class="rail-ctx-body">
+          <div class="rail-ctx-title" id="rail-ctx-title">Общий эфир</div>
+          <div class="rail-ctx-why" id="rail-ctx-why">Здесь обсуждают то, что играет у каждого. <b>Демо-комната.</b></div>
+        </div>
+      </div>
+
+      <!-- follow-the-station chip (non-destructive; shown only when playing ≠ room) -->
+      <div class="rail-followchip rail-expanded-only" id="rail-followchip" role="status">
+        <span id="rail-followchip-text">Сейчас играет <b>—</b> · перейти в её чат?</span>
+        <button class="rail-followchip-go" id="rail-followchip-go" type="button">Перейти</button>
+        <button class="rail-followchip-x" id="rail-followchip-x" type="button" aria-label="Скрыть">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- MESSAGE LOG — the single scroller; one role="log" (polite, atomic=false) -->
+      <div class="rail-log-wrap rail-expanded-only">
+        <div class="ai-msgs" id="rail-msgs" role="log" aria-live="polite" aria-atomic="false" aria-label="Сообщения чата"></div>
+        <button class="rail-newpill" id="rail-newpill" type="button" hidden>
+          Новые <span id="rail-newpill-n">0</span> ↓
+        </button>
+      </div>
+
+      <!-- live Twinr taste profile strip (reused) shows only in Twinr mode -->
+      <div class="ai-profile rail-expanded-only" id="rail-profile" hidden>
+        <div class="ai-profile-label">Ваш <b>Twinr</b>-профиль · живой</div>
+        <div class="ai-profile-tags" id="rail-profile-tags"></div>
+      </div>
+
+      <!-- PRESENCE + slow-mode strip (static, NOT a live-region) -->
+      <div class="rail-presence rail-expanded-only" id="rail-presence">
+        <span class="rail-presence-live" id="rail-presence-live">1 240 слушают · 18 пишут</span>
+        <span class="rail-presence-slow" id="rail-presence-slow">Медленный режим · 5 сек</span>
+      </div>
+
+      <!-- chips (reused — Twinr default-chips / room reactions) -->
+      <div class="ai-chips rail-expanded-only" id="rail-chips"></div>
+
+      <!-- undo-toast after a human broadcast (focusable, ~6s, polite live region) -->
+      <div class="ai-undo rail-expanded-only" id="rail-undo" role="status" hidden></div>
+
+      <!-- armed-destination banner: where the NEXT message goes -->
+      <div class="ai-compose-target rail-expanded-only" id="rail-compose-target"></div>
+
+      <!-- composer mode toggle — single-select radiogroup (NOT tablist / aria-pressed) -->
+      <div class="ai-mode rail-expanded-only" role="radiogroup" aria-label="Кому отправить сообщение">
+        <label class="ai-seg ai-seg--all">
+          <input type="radio" name="rail-mode" value="all" checked>
+          <span class="ai-seg-ico" aria-hidden="true">👥</span><span>Всем</span>
+        </label>
+        <label class="ai-seg ai-seg--ai">
+          <input type="radio" name="rail-mode" value="ai">
+          <span class="ai-seg-ico" aria-hidden="true">✦</span><span>Twinr</span>
+        </label>
+      </div>
+
+      <form class="ai-input rail-expanded-only" id="rail-input-form">
+        <input class="ai-input-field" id="rail-input" type="text" placeholder="Написать всем в «Общий эфир»…" autocomplete="off" aria-label="Сообщение всем в комнате «Общий эфир»">
+        <button class="ai-send" type="submit" aria-label="Отправить всем в «Общий эфир»">
+          <span class="ai-send-label" id="rail-send-label">Отправить</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
+    </aside>
+    <!-- /.chat-rail -->
+
+    <!-- Mobile chat FAB — opens the rail as a full-height dialog (mobile surface / <640px web) -->
+    <button class="rail-mobile-fab" id="rail-mobile-fab" type="button" aria-label="Открыть чат" aria-controls="chat-rail" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      <span class="rail-mobile-fab-dot" id="rail-mobile-fab-dot" hidden>0</span>
+    </button>
   </div>
   <!-- /.app-shell -->
 
@@ -11072,6 +11552,17 @@
         // (e.g. dark home bg, blue-tinted player bar)
         document.documentElement.setAttribute('data-active-route', route);
 
+        // ---- Chat rail route-gating (owner: EXPANDED on every content route) ----
+        // OFF on single-goal / export-clean / internal routes; otherwise honour the
+        // user's manual collapse (gorodfm_rail), defaulting to EXPANDED.
+        var RAIL_OFF = { '#/onboarding': 1, '#/recap': 1, '#/map': 1 };
+        if (RAIL_OFF[route]) {
+          document.documentElement.setAttribute('data-rail', 'off');
+        } else {
+          var saved = lsGet('gorodfm_rail', 'expanded');
+          document.documentElement.setAttribute('data-rail', (saved === 'spine') ? 'spine' : 'expanded');
+        }
+
         // Deactivate all sections
         document.querySelectorAll('[data-page]').forEach(function (sec) {
           sec.removeAttribute('data-page-current');
@@ -11694,6 +12185,9 @@
             if (span) span.textContent = info.track.toUpperCase().slice(0, 7);
           }
         });
+        // Auto-follow the playing station in the chat rail (owner decision 2).
+        // Non-destructive: the rail's per-room store preserves draft/scroll on switch.
+        document.dispatchEvent(new CustomEvent('gorodfm:station-change', { detail: { station: stationId } }));
       }
 
       var stationsGrid = document.getElementById('home-stations-grid');
@@ -11704,6 +12198,18 @@
           setActiveStation(btn.getAttribute('data-station'));
         });
         // Keyboard: Enter/Space already trigger click via native button
+      }
+
+      // Lives grid → also drives the playing station (auto-follow in the chat rail).
+      // Each .lives-card has data-station; clicking it "plays" that station for the demo.
+      var livesGrid = document.querySelector('.lives-grid');
+      if (livesGrid) {
+        livesGrid.addEventListener('click', function (e) {
+          var card = e.target.closest('.lives-card[data-station]');
+          if (!card) return;
+          var st = card.getAttribute('data-station');
+          document.dispatchEvent(new CustomEvent('gorodfm:station-change', { detail: { station: st } }));
+        });
       }
 
       /* ---- Home page — FAB + panels --------------------------------------- */
@@ -13037,26 +13543,64 @@
   (function () {
     'use strict';
     var SPARK = '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>';
-    var dock, launcher, msgs, chipsEl, profileTags, inputForm, input;
+    /* rail = the persistent docked column (replaces the floating dock).
+       msgs/input/etc. now point at the rail's elements. */
+    var rail, msgs, chipsEl, profileTags, profileWrap, inputForm, input, logWrap;
     var profile = ['Арена-рок', 'Хип-хоп 2010-х', 'Электро-поп'];
     var greeted = false;
     var speakTimer = 0;
 
-    // ---- S0 chat-layer: composer mode (ЛЮДЯМ ↔ Twinr) ----
-    var modeRadios, banner, sendLabel, sendBtn, undoEl, dockSub;
-    var mode = 'ai', roomSeeded = false, undoTimer = 0, lastBroadcast = null;
-    var ROOM_NAME = 'Общий эфир';
-    var PEERS = [
-      { h: 'ночная_сова', c: '#6d6af6', t: 'эта волна прям под ночь 🔥' },
-      { h: 'mef_88',      c: '#f6a26a', t: 'кто ставил Niletto до этого? зашло' },
-      { h: 'гость_2841',  c: '#3fb6a8', t: 'плюсую, тёплая подборка' }
-    ];
+    // ---- composer mode (Всем ↔ Twinr) ----
+    var modeRadios, banner, sendLabel, sendBtn, undoEl;
+    var mode = 'all', undoTimer = 0, lastBroadcast = null;
     var REACTIONS = ['🔥', '❤️', '🎧', '😮'];
 
-    // GOROD-049 — edge-glow signal: launcher/dock "breathe" only while Twinr talks.
+    /* ============================ ROOMS + per-room store ============================
+       Auto-follow the PLAYING station (owner decision 2) is non-destructive: each
+       room keeps {html, scrollTop, draft, mode, seeded} so switching back restores
+       the draft and scroll. 📌 Общий эфир is pinned; the rest are seeded demo
+       station rooms. The rail follows the STATION, never the #/route. */
+    var ROOMS = {
+      global: { id: 'global', pin: '📌', name: 'Общий эфир', station: null,
+        ctxTitle: 'Общий эфир', ctxWhy: 'Здесь обсуждают то, что играет у каждого. <b>Демо-комната.</b>',
+        presence: '1 240 слушают · 18 пишут', slow: 'Медленный режим · 5 сек',
+        peers: [
+          { h: 'guest_4471', c: '#6d6af6', t: 'эта волна прям под ночь 🔥' },
+          { h: 'guest_0192', c: '#f6a26a', t: 'кто ставил Niletto до этого? зашло' },
+          { h: 'guest_8830', c: '#3fb6a8', t: 'плюсую, тёплая подборка' }
+        ] },
+      lofi: { id: 'lofi', pin: '#', name: 'LoFi Ночь', station: 'chill',
+        ctxTitle: 'LoFi Ночь — «Midnight Tape»', ctxWhy: '<b>Меланхоличное инди</b> — ты часто слушаешь такое ночью. Демо.',
+        presence: '612 слушают · 9 пишут', slow: 'Медленный режим · 5 сек',
+        peers: [
+          { h: 'guest_3310', c: '#8aa0ff', t: 'идеально под учёбу' },
+          { h: 'guest_7782', c: '#caa6ff', t: 'этот бит залип 🎧' }
+        ] },
+      synth: { id: 'synth', pin: '#', name: 'Синтвейв', station: 'disko',
+        ctxTitle: 'Синтвейв — «Neon Drive»', ctxWhy: 'Ретро-синты 80-х под твой <b>вечерний драйв</b>. Демо.',
+        presence: '438 слушают · 6 пишут', slow: 'Медленный режим · 8 сек',
+        peers: [
+          { h: 'guest_5521', c: '#f6a26a', t: 'врубай погромче 🔥' },
+          { h: 'guest_2098', c: '#6df6c0', t: 'Kavinsky vibes' }
+        ] },
+      rock: { id: 'rock', pin: '#', name: 'Город Рок', station: 'rock',
+        ctxTitle: 'Город Рок — «Believer»', ctxWhy: 'Стадион-рок и громкие припевы. Демо-комната станции.',
+        presence: '4 832 слушают · 41 пишут', slow: 'Медленный режим · 5 сек',
+        peers: [
+          { h: 'guest_1144', c: '#ff8a8a', t: 'imagine dragons топ' }
+        ] }
+    };
+    /* maps a playing station id (data-station / home data-station) → room id */
+    var STATION_TO_ROOM = { chill: 'lofi', disko: 'synth', rock: 'rock', pop: 'global', hiphop: 'global', lirika: 'global' };
+    var STATION_LABEL = { chill: 'Город CHILL', disko: 'Город Диско', rock: 'Город Рок', pop: 'Город Поп', hiphop: 'Город Хип-Хоп', lirika: 'Город Лирика' };
+    var store = {};                 // roomId → {html, scrollTop, draft, mode, seeded}
+    var currentRoom = 'global';
+    var playingRoom = 'global';     // room of the station currently playing
+    var followDismissed = false;
+
+    // GOROD-049 — edge-glow signal: rail "breathes" only while Twinr talks.
     function setSpeaking(on) {
-      if (dock) dock.classList.toggle('is-speaking', !!on);
-      if (launcher) launcher.classList.toggle('is-speaking', !!on);
+      if (rail) rail.classList.toggle('is-speaking', !!on);
     }
     function pulse(ms) {
       setSpeaking(true);
@@ -13066,53 +13610,169 @@
 
     function $(id) { return document.getElementById(id); }
     function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-    function scrollDown() { msgs.scrollTop = msgs.scrollHeight; }
+    function scrollDown() { if (msgs) msgs.scrollTop = msgs.scrollHeight; }
+
+    /* ---- DOM-node-cap so a 12-route always-mounted log can't grow unbounded ---- */
+    var NODE_CAP = 200;
+    function capLog() {
+      if (!msgs) return;
+      while (msgs.children.length > NODE_CAP) msgs.removeChild(msgs.firstChild);
+    }
+
+    /* ---- "Новые ↓" pill: freeze auto-follow on scroll-up, surface a count ---- */
+    var newCount = 0, atBottom = true, newpillEl, newpillN;
+    function nearBottom() {
+      if (!msgs) return true;
+      return (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight) < 100;
+    }
+    function onLogScroll() {
+      atBottom = nearBottom();
+      if (atBottom) clearNewPill();
+    }
+    function bumpNewPill() {
+      if (atBottom) { scrollDown(); return; }
+      newCount++;
+      if (newpillEl) { newpillEl.hidden = false; newpillEl.classList.add('is-show'); }
+      if (newpillN) newpillN.textContent = String(newCount);
+    }
+    function clearNewPill() {
+      newCount = 0;
+      if (newpillEl) { newpillEl.hidden = true; newpillEl.classList.remove('is-show'); }
+    }
 
     function init() {
-      dock = $('ai-dock'); launcher = $('ai-launcher'); msgs = $('ai-msgs');
-      chipsEl = $('ai-chips'); profileTags = $('ai-profile-tags');
-      inputForm = $('ai-input-form'); input = $('ai-input');
-      banner = $('ai-compose-target'); sendLabel = $('ai-send-label'); undoEl = $('ai-undo');
-      dockSub = $('ai-dock-sub');
+      rail = $('chat-rail'); msgs = $('rail-msgs'); logWrap = $('rail-msgs');
+      chipsEl = $('rail-chips'); profileTags = $('rail-profile-tags'); profileWrap = $('rail-profile');
+      inputForm = $('rail-input-form'); input = $('rail-input');
+      banner = $('rail-compose-target'); sendLabel = $('rail-send-label'); undoEl = $('rail-undo');
+      newpillEl = $('rail-newpill'); newpillN = $('rail-newpill-n');
+      if (!rail) return;
       sendBtn = inputForm.querySelector('.ai-send');
-      modeRadios = dock ? dock.querySelectorAll('input[name="ai-mode"]') : [];
-      if (!dock) return;
-      launcher.addEventListener('click', open);
-      $('ai-collapse').addEventListener('click', collapse);
+      modeRadios = rail.querySelectorAll('input[name="rail-mode"]');
+
       inputForm.addEventListener('submit', function (e) {
         e.preventDefault();
         var v = input.value.trim();
         if (!v) return;
         input.value = '';
+        store[currentRoom] && (store[currentRoom].draft = '');
         send(v);
       });
+      input.addEventListener('input', function () { if (store[currentRoom]) store[currentRoom].draft = input.value; });
       [].forEach.call(modeRadios, function (r) {
-        r.addEventListener('change', function () { if (r.checked) setMode(r.value); });
+        r.addEventListener('change', function () { if (r.checked) setMode(r.value, true); });
       });
-      setMode('ai');   // safe default: dock is an AI-only surface
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dock.classList.contains('is-open')) collapse(); });
-      // Native AI: the player itself is the entry point (research 07 — "AI is a layer")
+      if (msgs) msgs.addEventListener('scroll', onLogScroll);
+      if (newpillEl) newpillEl.addEventListener('click', function () { scrollDown(); clearNewPill(); });
+
+      wireRailChrome();
+      buildRoomDropdown();
+
+      // Native AI: the player itself is an entry point (research 07 — "AI is a layer")
       var pw = document.getElementById('player-track-reason');
       if (pw) pw.addEventListener('click', function (e) { e.stopPropagation(); if (window.TwinrWhy) window.TwinrWhy.open(); else ask('why', 'Почему именно этот трек?'); });
       var ps = document.getElementById('player-steer');
       if (ps) ps.addEventListener('click', function (e) { e.stopPropagation(); if (window.WaveDials) window.WaveDials.open(); else ask('different', '🔀 Сделай по-другому'); });
+
+      // Auto-follow the playing station (non-destructive). Fired by setActiveStation +
+      // lives-card clicks via the GorodStation bridge below.
+      document.addEventListener('gorodfm:station-change', function (e) {
+        followStation((e.detail && e.detail.station) || null);
+      });
+
       renderProfile();
+      // initial room render — default Всем in the global/station room
+      switchRoom('global', { silent: true });
+      // On #/home the toggle defaults to ✦ Twinr (AI anchor surface); elsewhere Всем.
+      if ((window.location.hash || '') === '#/home') { setMode('ai', false); if (!greeted) { greeted = true; greet(); } }
     }
 
+    /* ---- rail chrome wiring: collapse chevron, spine expand, room dropdown ---- */
+    function wireRailChrome() {
+      var collapseBtn = $('rail-collapse');
+      var spineExpand = $('rail-spine-expand');
+      var spineChevron = $('rail-spine-chevron');
+      if (collapseBtn) collapseBtn.addEventListener('click', function () { setRail('spine'); });
+      [spineExpand, spineChevron].forEach(function (b) { if (b) b.addEventListener('click', function () { setRail('expanded'); }); });
+
+      var roomBtn = $('rail-room-btn');
+      var roomsEl = $('rail-rooms');
+      if (roomBtn && roomsEl) {
+        roomBtn.addEventListener('click', function () {
+          var open = roomsEl.classList.toggle('is-open');
+          roomBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        document.addEventListener('click', function (e) {
+          if (!roomsEl.contains(e.target) && e.target !== roomBtn && !roomBtn.contains(e.target)) {
+            roomsEl.classList.remove('is-open'); roomBtn.setAttribute('aria-expanded', 'false');
+          }
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && roomsEl.classList.contains('is-open')) {
+            roomsEl.classList.remove('is-open'); roomBtn.setAttribute('aria-expanded', 'false'); roomBtn.focus();
+          }
+        });
+      }
+
+      var fgo = $('rail-followchip-go'), fx = $('rail-followchip-x');
+      if (fgo) fgo.addEventListener('click', function () { switchRoom(playingRoom); hideFollowChip(); });
+      if (fx) fx.addEventListener('click', function () { followDismissed = true; hideFollowChip(); });
+
+      // mobile dialog: FAB opens, close button + Escape close, focus-trap + focus-return
+      var fab = $('rail-mobile-fab'), mclose = $('rail-mobile-close');
+      if (fab) fab.addEventListener('click', openMobile);
+      if (mclose) mclose.addEventListener('click', closeMobile);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && document.documentElement.getAttribute('data-rail-mobile') === 'open') { e.preventDefault(); closeMobile(); }
+        if (e.key === 'Tab' && document.documentElement.getAttribute('data-rail-mobile') === 'open') trapFocus(e);
+      });
+    }
+
+    /* mobile chat dialog (mobile surface / <640px web) — modal semantics ONLY here;
+       the desktop rail is a persistent region, never a modal. */
+    var mobileTrigger = null;
+    function openMobile() {
+      mobileTrigger = document.activeElement;
+      document.documentElement.setAttribute('data-rail-mobile', 'open');
+      rail.setAttribute('role', 'dialog'); rail.setAttribute('aria-modal', 'true');
+      var fab = $('rail-mobile-fab'); if (fab) fab.setAttribute('aria-expanded', 'true');
+      clearNewPill();
+      setTimeout(function () { var f = rail.querySelector('button, [href], input, [tabindex]'); if (f) f.focus(); }, 60);
+    }
+    function closeMobile() {
+      document.documentElement.removeAttribute('data-rail-mobile');
+      rail.removeAttribute('aria-modal');
+      // restore the native <aside> (complementary) landmark — dialog was mobile-only
+      rail.removeAttribute('role');
+      var fab = $('rail-mobile-fab'); if (fab) fab.setAttribute('aria-expanded', 'false');
+      if (mobileTrigger && mobileTrigger.focus) mobileTrigger.focus();
+    }
+    function trapFocus(e) {
+      var f = rail.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      f = [].filter.call(f, function (el) { return el.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    /* set the rail collapse state on <html> (router owns route-gating to off) */
+    function setRail(state) {
+      var cur = document.documentElement.getAttribute('data-rail');
+      if (cur === 'off') return;   // off is route-controlled, don't override
+      document.documentElement.setAttribute('data-rail', state);
+      try { localStorage.setItem('gorodfm_rail', state); } catch (_) {}
+      if (state === 'expanded') { clearNewPill(); }
+    }
+
+    /* expose for the player deep-links / onboarding handoff — "open" = expand + Twinr */
     function open() {
-      dock.classList.add('is-open');
-      launcher.classList.add('is-hidden');
-      launcher.setAttribute('aria-expanded', 'true');
-      hideUndo();
-      if (mode !== 'ai') setMode('ai');   // reopen always lands on the safe default
+      setRail('expanded');
+      setMode('ai', true);
       if (!greeted) { greeted = true; greet(); }
-      setTimeout(function () { if (input) input.focus(); }, 260);
+      setTimeout(function () { if (input) input.focus(); }, 200);
     }
-    function collapse() {
-      dock.classList.remove('is-open');
-      launcher.classList.remove('is-hidden');
-      launcher.setAttribute('aria-expanded', 'false');
-    }
+    function collapse() { setRail('spine'); }
 
     function renderProfile() {
       profileTags.innerHTML = '';
@@ -13133,12 +13793,12 @@
     function addUser(text) {
       var m = document.createElement('div'); m.className = 'ai-msg ai-msg--user';
       var b = document.createElement('div'); b.className = 'ai-msg-bubble'; b.textContent = text;
-      m.appendChild(b); msgs.appendChild(m); scrollDown();
+      m.appendChild(b); msgs.appendChild(m); capLog(); scrollDown();   // own messages always pin
     }
     function addAI(html) {
       var m = document.createElement('div'); m.className = 'ai-msg ai-msg--ai';
       m.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div><div class="ai-msg-bubble">' + html + '</div>';
-      msgs.appendChild(m); scrollDown(); return m;
+      msgs.appendChild(m); capLog(); scrollDown(); return m;          // AI replies pin (user is engaged)
     }
     function aiSay(html, delay) {
       return new Promise(function (res) {
@@ -13167,7 +13827,114 @@
       });
     }
 
-    /* ---- S0 chat-layer: mode-aware send + room (human) lane -------------- */
+    /* ====================== ROOMS — dropdown, switching, auto-follow ====================== */
+    function roomName() { return ROOMS[currentRoom] ? ROOMS[currentRoom].name : 'Общий эфир'; }
+
+    function buildRoomDropdown() {
+      var el = $('rail-rooms'); if (!el) return;
+      el.innerHTML = '';
+      function item(r, pinned) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'rail-room-item'; b.setAttribute('role', 'menuitemradio');
+        b.setAttribute('data-room', r.id);
+        b.setAttribute('aria-current', r.id === currentRoom ? 'true' : 'false');
+        b.innerHTML = '<span class="rail-room-item-ico" aria-hidden="true">' + (pinned ? '📌' : '#') + '</span>' +
+          '<span>' + esc(r.name) + '</span>' +
+          (r.id === currentRoom ? '' : '<span class="rail-room-item-dot" aria-hidden="true"></span>');
+        b.addEventListener('click', function () { switchRoom(r.id); var rm = $('rail-rooms'); rm.classList.remove('is-open'); $('rail-room-btn').setAttribute('aria-expanded', 'false'); });
+        el.appendChild(b);
+      }
+      item(ROOMS.global, true);
+      var div = document.createElement('div'); div.className = 'rail-rooms-divider'; el.appendChild(div);
+      var lbl = document.createElement('div'); lbl.className = 'rail-rooms-label'; lbl.textContent = 'Комнаты станций · демо'; el.appendChild(lbl);
+      ['lofi', 'synth', 'rock'].forEach(function (id) { item(ROOMS[id], false); });
+    }
+
+    /* snapshot current room state before leaving (non-destructive scroll/draft/mode) */
+    function saveRoomState() {
+      if (!store[currentRoom]) store[currentRoom] = {};
+      store[currentRoom].html = msgs ? msgs.innerHTML : '';
+      store[currentRoom].scrollTop = msgs ? msgs.scrollTop : 0;
+      store[currentRoom].draft = input ? input.value : '';
+      store[currentRoom].mode = mode;
+    }
+
+    function switchRoom(id, opts) {
+      opts = opts || {};
+      if (!ROOMS[id]) return;
+      if (currentRoom && !opts.silent) saveRoomState();
+      currentRoom = id;
+      var r = ROOMS[id];
+      // header
+      var pin = $('rail-room-pin'), nm = $('rail-room-name');
+      if (pin) pin.textContent = r.pin; if (nm) nm.textContent = r.name;
+      // now-playing context (static)
+      renderRoomContext(r);
+      // restore or seed messages
+      clearNewPill();
+      if (store[id] && store[id].html != null) {
+        msgs.innerHTML = store[id].html;
+        rebindRoom();
+        msgs.scrollTop = store[id].scrollTop || msgs.scrollHeight;
+        mode = store[id].mode || 'all';
+        if (input) input.value = store[id].draft || '';
+      } else {
+        msgs.innerHTML = '';
+        store[id] = { seeded: false };
+        seedRoom();
+        // toggle resets to Всем on ROOM change (not screen change)
+        mode = 'all';
+        if (input) input.value = '';
+      }
+      // presence + slow-mode strip (static)
+      var pl = $('rail-presence-live'), ps = $('rail-presence-slow');
+      if (pl) pl.textContent = r.presence; if (ps) ps.textContent = r.slow;
+      buildRoomDropdown();
+      setMode(mode, false);
+      // follow-chip: hide if we're now IN the playing room
+      if (id === playingRoom) hideFollowChip();
+    }
+
+    function renderRoomContext(r) {
+      var t = $('rail-ctx-title'), w = $('rail-ctx-why');
+      if (t) t.textContent = r.ctxTitle;
+      if (w) w.innerHTML = r.ctxWhy;
+    }
+
+    /* AUTO-FOLLOW: station changed → switch the rail's active room to that station's
+       room automatically (owner decision 2). Non-destructive: switchRoom saves the
+       leaving room's draft/scroll/mode first. */
+    function followStation(stationId) {
+      var room = STATION_TO_ROOM[stationId] || 'global';
+      playingRoom = room;
+      followDismissed = false;
+      if (room === currentRoom) { hideFollowChip(); return; }
+      // auto-follow (owner wants auto, not a chip). Draft/scroll preserved via store.
+      switchRoom(room);
+      hideFollowChip();
+    }
+    function showFollowChip(stationId) {
+      if (followDismissed) return;
+      var chip = $('rail-followchip'), txt = $('rail-followchip-text');
+      if (!chip) return;
+      if (txt) txt.innerHTML = 'Сейчас играет <b>' + esc(STATION_LABEL[stationId] || '—') + '</b> · перейти в её чат?';
+      chip.classList.add('is-show');
+    }
+    function hideFollowChip() { var c = $('rail-followchip'); if (c) c.classList.remove('is-show'); }
+
+    /* re-attach listeners to restored room DOM (share buttons, undo) */
+    function rebindRoom() {
+      [].forEach.call(msgs.querySelectorAll('.ai-share-btn'), function (btn) {
+        if (btn.__bound) return; btn.__bound = true;
+        btn.addEventListener('click', function () {
+          var bubble = btn.closest('.ai-msg-bubble');
+          var clone = bubble ? bubble.cloneNode(true) : null;
+          if (clone) { var tag = clone.querySelector('.ai-private-tag'); if (tag) tag.remove(); var sb = clone.querySelector('.ai-share-btn'); if (sb) sb.remove(); }
+          shareToChat(clone ? (clone.textContent || '') : '');
+        });
+      });
+    }
+
+    /* ---- mode-aware send + room (human) lane -------------- */
     function send(text) {
       if (mode === 'ai') { addUser(text); chipsEl.innerHTML = ''; handleText(text); return; }
       // mode 'all' — broadcasting to people. '@Twinr' / '/' redirect to a PRIVATE AI reply.
@@ -13176,26 +13943,25 @@
       showUndo(addRoomUser(text));
     }
 
-    function setMode(m) {
+    function setMode(m, fromUser) {
       mode = (m === 'all') ? 'all' : 'ai';
-      dock.setAttribute('data-mode', mode);
+      if (rail) rail.setAttribute('data-mode', mode);
       [].forEach.call(modeRadios, function (r) { r.checked = (r.value === mode); });
+      var NAME = roomName();
+      if (profileWrap) profileWrap.hidden = (mode !== 'ai');
       if (mode === 'ai') {
         input.placeholder = 'Спросите Twinr…';
         input.setAttribute('aria-label', 'Сообщение для Twinr AI — видно только вам');
         sendLabel.textContent = 'Спросить';
         sendBtn.setAttribute('aria-label', 'Спросить Twinr');
-        if (dockSub) dockSub.textContent = '✦ Twinr · музыкальный директор';
         banner.innerHTML = '<span class="ai-ct-icon" aria-hidden="true">✦</span> Говорите с <b>Twinr</b> · видно только вам';
-        if (msgs.children.length) setChips(DEFAULT_CHIPS);
+        if (msgs.children.length) setChips(DEFAULT_CHIPS); else setChips(DEFAULT_CHIPS);
       } else {
-        input.placeholder = 'Написать всем в «' + ROOM_NAME + '»…';
-        input.setAttribute('aria-label', 'Сообщение всем в комнате «' + ROOM_NAME + '»');
+        input.placeholder = 'Написать всем в «' + NAME + '»…';
+        input.setAttribute('aria-label', 'Сообщение всем в комнате «' + NAME + '»');
         sendLabel.textContent = 'Отправить';
-        sendBtn.setAttribute('aria-label', 'Отправить всем в «' + ROOM_NAME + '»');
-        if (dockSub) dockSub.textContent = '👥 ' + ROOM_NAME + ' · 1 240 слушают';
-        banner.innerHTML = '<span class="ai-ct-icon" aria-hidden="true">👥</span> Сообщение всем в «<b>' + ROOM_NAME + '</b>»<span class="ai-ct-presence">1 240 слушают</span>';
-        seedRoom();
+        sendBtn.setAttribute('aria-label', 'Отправить всем в «' + NAME + '»');
+        banner.innerHTML = '<span class="ai-ct-icon" aria-hidden="true">👥</span> Сообщение всем в «<b>' + esc(NAME) + '</b>»<span class="ai-ct-presence">' + esc((ROOMS[currentRoom] && ROOMS[currentRoom].presence) || '') + '</span>';
         setRoomChips();
       }
     }
@@ -13218,24 +13984,27 @@
       m.innerHTML = '<div class="ai-room-av" style="background:' + p.c + '" aria-hidden="true">' + esc(p.h.charAt(0).toUpperCase()) + '</div>' +
         '<div class="ai-room-col"><div class="ai-room-handle">' + esc(p.h) + '</div>' +
         '<div class="ai-msg-bubble">' + esc(p.t) + '</div></div>';
-      msgs.appendChild(m); scrollDown();
+      msgs.appendChild(m); capLog(); bumpNewPill();
     }
     function seedRoom() {
-      if (roomSeeded) return; roomSeeded = true;
-      addRoomDivider('Вы в «' + ROOM_NAME + '» · демо-сообщения');
-      PEERS.forEach(addRoomPeer);
+      var st = store[currentRoom] || (store[currentRoom] = {});
+      if (st.seeded) return; st.seeded = true;
+      var r = ROOMS[currentRoom];
+      addRoomDivider('Вы в «' + r.name + '» · демо-сообщения');
+      (r.peers || []).forEach(addRoomPeer);
+      scrollDown();
     }
     function addRoomUser(text) {
       var m = document.createElement('div'); m.className = 'ai-msg ai-msg--mine';
       var b = document.createElement('div'); b.className = 'ai-msg-bubble'; b.textContent = text;
       var s = document.createElement('div'); s.className = 'ai-msg-sent'; s.textContent = 'отправлено всем · 🟢';
-      m.appendChild(b); m.appendChild(s); msgs.appendChild(m); scrollDown(); return m;
+      m.appendChild(b); m.appendChild(s); msgs.appendChild(m); capLog(); scrollDown(); return m;
     }
 
     function showUndo(node) {
       lastBroadcast = node;
       undoEl.hidden = false;
-      undoEl.innerHTML = '<span>Отправлено в «<b>' + esc(ROOM_NAME) + '</b>»</span><button type="button" class="ai-undo-btn">Отменить</button>';
+      undoEl.innerHTML = '<span>Отправлено в «<b>' + esc(roomName()) + '</b>»</span><button type="button" class="ai-undo-btn">Отменить</button>';
       undoEl.querySelector('.ai-undo-btn').addEventListener('click', undoBroadcast);
       clearTimeout(undoTimer); undoTimer = setTimeout(hideUndo, 6000);
     }
@@ -16431,77 +17200,7 @@
     }
   </style>
 
-  <!-- Skin switcher element — always visible, both skins -->
-  <div
-    id="gorodfm-skin-switcher"
-    role="group"
-    aria-label="Переключатель темы интерфейса"
-    style="
-      position: fixed;
-      bottom: calc(var(--player-mini-h) + 16px + 44px + 12px);
-      right: 20px;
-      z-index: 97;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      padding: 3px;
-      background: rgba(18, 18, 24, 0.88);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 999px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08);
-      transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-    "
-  >
-    <button
-      class="gfm-ss-btn"
-      id="gfm-ss-default"
-      type="button"
-      aria-pressed="true"
-      style="
-        min-width: 44px; min-height: 44px;
-        padding: 0 14px;
-        border: none;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.12);
-        color: #ffffff;
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        letter-spacing: 0.01em;
-        transition: background 180ms ease, box-shadow 180ms ease;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      "
-    >Обычный</button>
-    <button
-      class="gfm-ss-btn"
-      id="gfm-ss-glass"
-      type="button"
-      aria-pressed="false"
-      style="
-        min-width: 44px; min-height: 44px;
-        padding: 0 14px;
-        border: none;
-        border-radius: 999px;
-        background: transparent;
-        color: rgba(255, 255, 255, 0.60);
-        font-family: 'Onest', sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        letter-spacing: 0.01em;
-        transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      "
-    >Стекло</button>
-  </div>
+  <!-- Skin switcher relocated into the topbar (see #gorodfm-skin-switcher there). -->
 
   <script>
     /* ── Skin switcher — gorodfm_skin in localStorage ── */
