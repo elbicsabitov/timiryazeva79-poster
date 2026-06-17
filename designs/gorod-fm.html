@@ -7999,6 +7999,201 @@
     /* light is dev-gated (incomplete on secondary routes) → hide the light/system pills in prod (review w5iwcj491 MED) */
     html[data-dev="false"] .account-pill[data-theme-set="light"],
     html[data-dev="false"] .account-pill[data-theme-set="system"] { display: none; }
+
+    /* ====================================================================
+       SHARED RADIO (collaborative) — session header · suggestion cards ·
+       share sheet · taste-card · invite · recipient preview · friend bubbles.
+       Brand #5168FC non-text only; all text → --accent-on-dark. 44px targets,
+       focus-visible 3px, reduced-motion safe. Opaque enough to read in glass.
+       ==================================================================== */
+
+    /* monogram avatar (reuses .ai-room-av idea) */
+    .sr-av { display: inline-block; border-radius: 50%; text-align: center; color: #fff; font-weight: 800; font-family: 'Onest', sans-serif; vertical-align: middle; flex: none; }
+    .sr-av--me { background: linear-gradient(135deg, #5168FC, #3a4ed0); }
+
+    /* ---- session header in the rail ---- */
+    .sr-hdr { margin: 8px 12px 0; padding: 12px; border-radius: 14px; background: rgba(81,104,252,0.12); border: 1px solid rgba(81,104,252,0.34); display: flex; flex-direction: column; gap: 9px; }
+    .sr-hdr[hidden] { display: none !important; }
+    .sr-hdr-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .sr-live-chip { display: inline-flex; align-items: center; gap: 6px; font: 800 13px 'Onest', sans-serif; color: var(--accent-on-dark); }
+    .sr-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #5168FC; box-shadow: 0 0 0 0 rgba(81,104,252,0.6); animation: sr-breath var(--dur-breathe, 1600ms) ease-in-out infinite; }
+    @keyframes sr-breath { 0%,100% { box-shadow: 0 0 0 0 rgba(81,104,252,0.55); } 50% { box-shadow: 0 0 0 6px rgba(81,104,252,0); } }
+    .sr-priv-pill { font: 700 11px 'Onest', sans-serif; color: var(--text-sec); background: rgba(255,255,255,0.06); border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+    .sr-hdr-avs { display: flex; align-items: center; gap: 4px; }
+    .sr-member { position: relative; display: inline-flex; }
+    .sr-member-x { position: relative; background: none; border: none; padding: 0; cursor: pointer; border-radius: 50%; line-height: 0; }
+    .sr-member-x:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-member-x-mark { position: absolute; top: -3px; right: -3px; width: 14px; height: 14px; line-height: 13px; text-align: center; font-size: 11px; color: #fff; background: #c0455a; border-radius: 50%; opacity: 0; transition: opacity var(--t-fast); }
+    .sr-member-x:hover .sr-member-x-mark, .sr-member-x:focus-visible .sr-member-x-mark { opacity: 1; }
+    .sr-dial { display: flex; flex-direction: column; gap: 5px; }
+    .sr-dial-cap { font: 600 11px 'Onest', sans-serif; color: var(--text-sec); }
+    .sr-dial-track { display: flex; gap: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--hairline); border-radius: 10px; padding: 3px; }
+    .sr-dial-opt { flex: 1; min-height: 32px; background: none; border: none; border-radius: 7px; font: 700 12px 'Onest', sans-serif; color: var(--text-sec); cursor: pointer; transition: background var(--t-fast), color var(--t-fast); }
+    .sr-dial-opt.is-on { background: rgba(81,104,252,0.28); color: #fff; }
+    .sr-dial-opt:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-demo-bar { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sr-demo-btn { min-height: 30px; padding: 4px 10px; background: rgba(255,255,255,0.06); border: 1px solid var(--hairline); border-radius: 999px; font: 700 11px 'Onest', sans-serif; color: var(--text-pri); cursor: pointer; transition: background var(--t-fast); }
+    .sr-demo-btn:hover { background: rgba(81,104,252,0.2); }
+    .sr-demo-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-demo-btn--guard { color: var(--text-sec); }
+    .sr-hdr-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .sr-end { min-height: 32px; padding: 5px 12px; background: rgba(192,69,90,0.16); border: 1px solid rgba(192,69,90,0.4); border-radius: 999px; font: 700 12px 'Onest', sans-serif; color: #ff9aa9; cursor: pointer; }
+    .sr-end:hover { background: rgba(192,69,90,0.26); }
+    .sr-end:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+
+    /* room-dropdown session row */
+    .rail-room-item--session .rail-room-item-ico { color: #5168FC; }
+    .sr-room-live { margin-left: auto; font: 700 10px 'Onest', sans-serif; color: var(--accent-on-dark); }
+
+    /* ---- friend "asks Twinr" line ---- */
+    .sr-ask .ai-room-handle { color: var(--accent-on-dark); font-weight: 800; }
+
+    /* ---- pending suggestion card (new AI-lane message type) ---- */
+    .ai-msg-bubble.sr-sugg { display: flex; flex-direction: column; gap: 9px; }
+    .sr-sugg-head { display: flex; }
+    .sr-sugg-track { display: flex; align-items: center; gap: 10px; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--hairline); border-radius: 10px; }
+    .sr-cover { width: 44px; height: 44px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+    .sr-cover svg { width: 22px; height: 22px; }
+    .sr-prevote { font: 700 11px 'Onest', sans-serif; color: var(--text-sec); margin-top: 3px; }
+    .sr-attr { display: flex; align-items: center; gap: 7px; font: 700 12px 'Onest', sans-serif; color: var(--accent-on-dark); }
+    .sr-why { font: 400 12.5px/1.5 'Onest', sans-serif; color: var(--text-sec); border-left: 2px solid #5168FC; padding-left: 9px; position: relative; }
+    .sr-why-mark { font-weight: 700; color: var(--accent-on-dark); }
+    .sr-why b { color: var(--text-pri); font-weight: 600; }
+    .sr-counter { display: block; margin-top: 4px; font-size: 11.5px; color: var(--text-quat, var(--text-sec)); opacity: 0; max-height: 0; overflow: hidden; transition: opacity var(--t-fast), max-height var(--t-fast); }
+    .sr-why:hover .sr-counter, .sr-why:focus-within .sr-counter, .sr-why:focus .sr-counter { opacity: 1; max-height: 60px; }
+    .sr-gate { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .sr-btn { min-height: 36px; padding: 7px 14px; border-radius: 999px; font: 700 13px 'Onest', sans-serif; cursor: pointer; border: 1px solid var(--hairline); background: rgba(255,255,255,0.06); color: var(--text-pri); transition: background var(--t-fast), transform var(--t-fast); }
+    .sr-btn:hover { background: rgba(255,255,255,0.12); }
+    .sr-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-btn--accept, .sr-btn--primary { background: #5168FC; border-color: #5168FC; color: #fff; }
+    .sr-btn--accept:hover, .sr-btn--primary:hover { background: #6478ff; }
+    .sr-btn--taste { border-color: rgba(81,104,252,0.5); color: var(--accent-on-dark); }
+    .sr-btn--later { color: var(--text-sec); }
+    .sr-btn--undo { background: none; border-color: var(--hairline); color: var(--accent-on-dark); }
+    .sr-foot { font: 400 10.5px/1.4 'Onest', sans-serif; color: var(--text-quat, var(--text-sec)); }
+    .sr-guard { display: inline-block; font-weight: 800; color: #ffb27a; }
+    .sr-resolved .sr-sugg-track { opacity: 0.66; }
+    .sr-accepted { font: 800 12px 'Onest', sans-serif; color: #6fe0c0; }
+    .sr-later { font: 700 12px 'Onest', sans-serif; color: var(--text-sec); }
+    .sr-fromchip { display: inline-flex; align-items: center; font: 700 11px 'Onest', sans-serif; color: var(--accent-on-dark); background: rgba(81,104,252,0.14); border: 1px solid rgba(81,104,252,0.34); border-radius: 999px; padding: 3px 9px; cursor: help; }
+    .sr-undone { opacity: 0.6; }
+
+    /* in-session track row + compat */
+    .ai-track.sr-track { background: rgba(255,255,255,0.05); border: 1px solid var(--hairline); border-radius: 10px; padding: 7px; margin-top: 6px; }
+    .sr-forboth { font: 700 10px 'Onest', sans-serif; color: var(--accent-on-dark); background: rgba(81,104,252,0.14); border-radius: 999px; padding: 3px 8px; white-space: nowrap; }
+    .sr-compat { font-weight: 800; color: var(--accent-on-dark); }
+
+    /* ---- «слушаем вместе» transport pill near the player ---- */
+    .sr-sync-pill { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font: 700 11px 'Onest', sans-serif; color: var(--accent-on-dark); background: rgba(81,104,252,0.14); border: 1px solid rgba(81,104,252,0.34); border-radius: 999px; padding: 3px 10px; max-width: max-content; }
+    .sr-sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #5168FC; animation: sr-breath var(--dur-breathe, 1600ms) ease-in-out infinite; }
+    .sr-sync-demo { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-sec); }
+
+    /* ---- SHARE FORK SHEET (modal) ---- */
+    .sr-scrim { position: fixed; inset: 0; background: rgba(8,9,18,0.62); backdrop-filter: blur(4px); z-index: 1200; }
+    .sr-sheet { position: fixed; z-index: 1201; left: 50%; top: 50%; transform: translate(-50%,-50%); width: min(440px, 92vw); max-height: 88dvh; overflow-y: auto; background: #14162a; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; padding: 20px; box-shadow: 0 28px 70px -20px rgba(0,0,0,0.8); font-family: 'Onest', sans-serif; }
+    .sr-sheet--narrow { width: min(380px, 92vw); }
+    .sr-sheet-head { display: flex; align-items: center; justify-content: space-between; }
+    .sr-sheet-title { font: 800 20px 'Onest', sans-serif; color: var(--text-pri); margin: 0; }
+    .sr-sheet-x { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid var(--hairline); color: var(--text-sec); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .sr-sheet-x svg { width: 18px; height: 18px; }
+    .sr-sheet-x:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    .sr-sheet-x:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-sheet-sub { font: 400 13px 'Onest', sans-serif; color: var(--text-sec); margin: 8px 0 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .sr-fork { display: flex; flex-direction: column; gap: 10px; }
+    .sr-fork-branch { display: flex; align-items: center; gap: 14px; text-align: left; padding: 16px; background: rgba(255,255,255,0.04); border: 1px solid var(--hairline); border-radius: 14px; cursor: pointer; transition: background var(--t-fast), border-color var(--t-fast); }
+    .sr-fork-branch:hover { background: rgba(81,104,252,0.12); border-color: rgba(81,104,252,0.4); }
+    .sr-fork-branch:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-fork-ico { width: 44px; height: 44px; flex: none; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; color: #5168FC; background: rgba(81,104,252,0.14); border-radius: 12px; }
+    .sr-fork-txt { display: flex; flex-direction: column; gap: 3px; }
+    .sr-fork-name { font: 800 15px 'Onest', sans-serif; color: var(--text-pri); }
+    .sr-fork-desc { font: 400 12px 'Onest', sans-serif; color: var(--text-sec); }
+
+    /* ---- taste/Волна card (Wrapped-style 9:16) ---- */
+    .sr-cardview, .sr-inviteview { display: flex; flex-direction: column; gap: 16px; }
+    /* [hidden] must win over the flex display above (attribute < class specificity) */
+    .sr-cardview[hidden], .sr-inviteview[hidden], .sr-fork[hidden], .sr-sheet[hidden], .sr-scrim[hidden], .sr-sync-pill[hidden] { display: none !important; }
+    .sr-card { width: min(280px, 80%); aspect-ratio: 9/16; margin: 0 auto; background: linear-gradient(160deg, #11142b, #0a0c1a); border: 1.5px solid rgba(81,104,252,0.45); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; box-shadow: 0 20px 50px -18px rgba(0,0,0,0.7); }
+    .sr-card-top { display: flex; align-items: center; justify-content: space-between; }
+    .sr-card-brand { display: inline-flex; align-items: center; gap: 6px; font: 800 14px 'Onest', sans-serif; color: var(--accent-on-dark); }
+    .sr-card-dot { width: 8px; height: 8px; border-radius: 50%; background: #5168FC; }
+    .sr-card-demo { font: 700 10px 'Onest', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); }
+    .sr-card-title { font: 800 15px/1.2 'Onest', sans-serif; color: #fff; margin-top: 14px; }
+    .sr-card-cloud { flex: 1; display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 4px 10px; padding: 8px 0; }
+    .sr-cloud-word { font-family: 'Onest', sans-serif; font-weight: 800; color: #fff; }
+    .sr-cloud-word:nth-child(even) { color: var(--accent-on-dark); }
+    .sr-card-now { font: 600 12px 'Onest', sans-serif; color: #fff; }
+    .sr-card-now-label { color: rgba(255,255,255,0.55); }
+    .sr-card-tagline { font: 500 11.5px/1.4 'Onest', sans-serif; color: var(--accent-on-dark); margin-top: 5px; }
+    .sr-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.12); }
+    .sr-card-link { font: 600 11px 'Onest', sans-serif; color: rgba(255,255,255,0.75); }
+    .sr-card-qr, .sr-invite-qr { width: 38px; height: 38px; flex: none; background: rgba(255,255,255,0.06); border: 1px solid rgba(81,104,252,0.4); border-radius: 8px; padding: 4px; display: inline-block; }
+    .sr-invite-qr { width: 120px; height: 120px; padding: 10px; }
+    .sr-qr-grid { display: grid; width: 100%; height: 100%; gap: 1px; }
+    .sr-qr-grid > span { background: var(--accent-on-dark); border-radius: 1px; }
+    .sr-card-priv { font: 400 9.5px 'Onest', sans-serif; color: rgba(255,255,255,0.45); margin-top: 8px; text-align: center; }
+    .sr-cardview-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    /* ---- invite card ---- */
+    .sr-invite-card { display: flex; flex-direction: column; gap: 16px; padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--hairline); border-radius: 14px; }
+    .sr-invite-label { display: block; font: 700 12px 'Onest', sans-serif; color: var(--accent-on-dark); margin-bottom: 7px; }
+    .sr-invite-linkrow { display: flex; gap: 8px; }
+    .sr-invite-link { flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--hairline); border-radius: 10px; padding: 9px 12px; font: 600 13px 'Onest', sans-serif; color: var(--text-pri); }
+    .sr-invite-link:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-invite-codewrap { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+    .sr-invite-codehint { font: 400 11px 'Onest', sans-serif; color: var(--text-sec); }
+    .sr-invite-friendrow { display: flex; gap: 8px; flex-wrap: wrap; }
+    .sr-invite-friend { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 9px; min-width: 74px; background: rgba(255,255,255,0.04); border: 1px solid var(--hairline); border-radius: 12px; cursor: pointer; transition: background var(--t-fast); }
+    .sr-invite-friend:hover { background: rgba(81,104,252,0.14); }
+    .sr-invite-friend:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-invite-friend.is-in { border-color: rgba(81,104,252,0.45); }
+    .sr-invite-friend-name { font: 700 12px 'Onest', sans-serif; color: var(--text-pri); }
+    .sr-invite-friend-act { font: 700 10px 'Onest', sans-serif; color: var(--accent-on-dark); }
+
+    /* ---- taste-preview sheet ---- */
+    .sr-tp-preview { display: flex; align-items: center; gap: 10px; justify-content: center; margin: 6px 0; }
+    .sr-tp-bubble { font: 800 16px 'Onest', sans-serif; color: #fff; background: rgba(81,104,252,0.22); border: 1px solid rgba(81,104,252,0.5); border-radius: 999px; padding: 8px 18px; }
+    .sr-tp-from { font: 700 13px 'Onest', sans-serif; color: var(--accent-on-dark); }
+    .sr-tp-why { font: 400 13px/1.5 'Onest', sans-serif; color: var(--text-sec); text-align: center; margin: 4px 0 16px; }
+
+    /* ---- friend-attributed taste bubbles in #/taste ---- */
+    .tcloud-bubble--friend { box-shadow: inset 0 0 0 2px rgba(81,104,252,0.55); }
+    .tcloud-friend-pill { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); font: 700 9px 'Onest', sans-serif; color: var(--accent-on-dark); background: rgba(20,22,42,0.85); border-radius: 999px; padding: 2px 7px; white-space: nowrap; }
+    .tcloud-friend-x { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; line-height: 18px; text-align: center; font-size: 14px; color: #fff; background: rgba(192,69,90,0.85); border-radius: 50%; cursor: pointer; }
+    .tcloud-friend-x:hover { background: #c0455a; }
+    .tcloud-friend-x:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+
+    /* ---- #/together recipient preview ---- */
+    .tg-stage { max-width: 560px; margin: 0 auto; padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 24px) 120px; font-family: 'Onest', sans-serif; }
+    .tg-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .tg-back { font: 700 14px 'Onest', sans-serif; color: var(--accent-on-dark); text-decoration: none; }
+    .tg-back:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; border-radius: 6px; }
+    .tg-card { background: #14162a; border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 24px 60px -24px rgba(0,0,0,0.7); }
+    .tg-host { display: flex; align-items: center; gap: 14px; }
+    .tg-host-av { width: 52px; height: 52px; line-height: 52px; font-size: 22px; background: linear-gradient(135deg,#5168FC,#3a4ed0); }
+    .tg-host-name { font: 800 18px 'Onest', sans-serif; color: var(--text-pri); }
+    .tg-host-sub { font: 400 13px 'Onest', sans-serif; color: var(--text-sec); margin-top: 3px; }
+    .tg-section-cap { font: 700 11px 'Onest', sans-serif; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-on-dark); margin-bottom: 10px; }
+    .tg-cloud { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+    .tg-cloud .sr-cloud-word { font-size: 16px; }
+    .tg-track { display: flex; align-items: center; gap: 12px; }
+    .tg-track .sr-cover { width: 52px; height: 52px; }
+    .tg-track-title { font: 800 16px 'Onest', sans-serif; color: var(--text-pri); }
+    .tg-track-artist { font: 400 13px 'Onest', sans-serif; color: var(--text-sec); }
+    .tg-why { font: 400 13px/1.5 'Onest', sans-serif; color: var(--text-sec); margin: 10px 0 0; border-left: 2px solid #5168FC; padding-left: 12px; }
+    .tg-why-mark { font-weight: 700; color: var(--accent-on-dark); }
+    .tg-why-diff { display: block; margin-top: 6px; font-size: 12px; color: var(--text-quat, var(--text-sec)); }
+    .tg-members { display: flex; gap: 16px; }
+    .tg-member { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .tg-member-name { font: 600 12px 'Onest', sans-serif; color: var(--text-sec); }
+    .tg-cta { width: 100%; min-height: 52px; background: #5168FC; border: none; border-radius: 14px; font: 800 16px 'Onest', sans-serif; color: #fff; cursor: pointer; transition: background var(--t-fast); }
+    .tg-cta:hover { background: #6478ff; }
+    .tg-cta:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; }
+    .tg-foot { font: 400 11px/1.5 'Onest', sans-serif; color: var(--text-quat, var(--text-sec)); text-align: center; margin: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sr-live-dot, .sr-sync-dot { animation: none; }
+      .sr-btn, .sr-fork-branch, .sr-demo-btn { transition: none; }
+    }
   </style>
 
   <!-- Surface overrides: outside @layer to guarantee cascade win at desktop viewports.
@@ -10461,6 +10656,56 @@
       </section>
       <!-- /#/recap -->
 
+      <!-- ====================================================================
+           #/together — RECIPIENT PREVIEW (deep-link target). Scripted, read-only.
+           Host avatar + taste-cloud snapshot + now-playing WITH the host's «почему»
+           + who's already in → one CTA «Присоединиться и слушать вместе». Open (no
+           signup); join opens the session locally (demo — no real device pairing).
+           ==================================================================== -->
+      <section data-page="together" aria-labelledby="page-together-heading" aria-hidden="true">
+        <div class="tg-stage">
+          <div class="tg-nav">
+            <a class="tg-back" href="#/home">← На главную</a>
+            <span class="demo-tag">демо · откроет сессию у вас</span>
+          </div>
+          <div class="tg-card gfm-glass-surface">
+            <div class="tg-host">
+              <span class="sr-av tg-host-av" aria-hidden="true">Э</span>
+              <div class="tg-host-meta">
+                <div class="tg-host-name">Эльбик зовёт слушать вместе</div>
+                <div class="tg-host-sub">волна «меланхоличное электро» · частная, по ссылке</div>
+              </div>
+            </div>
+
+            <div class="tg-section">
+              <div class="tg-section-cap">Вкус хоста</div>
+              <div class="tg-cloud" id="tg-cloud" aria-label="Снимок вкусового облака хоста (демо)"></div>
+            </div>
+
+            <div class="tg-section tg-now">
+              <div class="tg-section-cap">Сейчас в эфире</div>
+              <div class="tg-track">
+                <span class="sr-cover" style="background:linear-gradient(135deg,#5168FC,#2b2f6b)" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3" fill="#fff" stroke="none"/><circle cx="18" cy="16" r="3" fill="#fff" stroke="none"/></svg></span>
+                <div class="tg-track-meta">
+                  <div class="tg-track-title">Звёзды</div>
+                  <div class="tg-track-artist">Buerak</div>
+                </div>
+              </div>
+              <p class="tg-why"><span class="tg-why-mark">почему этот трек:</span> рядом с darkwave-ядром хоста — он часто дослушивает такое до конца. <span class="tg-why-diff">Это вы видите ещё до входа — у других плееров только название.</span></p>
+            </div>
+
+            <div class="tg-section">
+              <div class="tg-section-cap">Уже слушают</div>
+              <div class="tg-members" id="tg-members" aria-label="Участники сессии (демо)"></div>
+            </div>
+
+            <button class="tg-cta" type="button" id="tg-join">Присоединиться и слушать вместе</button>
+            <p class="tg-foot">Превью открыто без входа. Подключение откроет сессию <b>у вас</b> — реального соединения устройств в демо нет.</p>
+          </div>
+        </div>
+      </section>
+      <!-- /#/together -->
+
     </main>
 
     <!-- ====================================================================
@@ -10520,6 +10765,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
+
+      <!-- SHARED RADIO — live session header (shown only while a session is active) -->
+      <div class="sr-hdr rail-expanded-only gfm-glass-surface" id="rail-session-hdr" role="group" aria-label="Сессия «Слушаем вместе»" hidden></div>
 
       <!-- MESSAGE LOG — the single scroller; one role="log" (polite, atomic=false) -->
       <div class="rail-log-wrap rail-expanded-only">
@@ -10587,6 +10835,108 @@
       </form>
     </aside>
     <!-- /.chat-rail -->
+
+    <!-- ====================================================================
+         SHARE FORK SHEET — «Поделиться» from #/taste & #/home headers.
+         Two branches: (A) Карточка вкуса/волны (DOM/canvas-to-image) ·
+         (B) Слушать вместе (raises the live session room in the rail + invite).
+         Modal: focus-trap + Esc. Glass-legible (opaque surface).
+         ==================================================================== -->
+    <div class="sr-scrim" id="sr-share-scrim" hidden></div>
+    <div class="sr-sheet gfm-glass-surface" id="sr-share-sheet" role="dialog" aria-modal="true" aria-labelledby="sr-share-h" hidden>
+      <div class="sr-sheet-head">
+        <h2 class="sr-sheet-title" id="sr-share-h">Поделиться</h2>
+        <button class="sr-sheet-x" id="sr-share-x" type="button" aria-label="Закрыть">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p class="sr-sheet-sub">Два способа поделиться. <span class="demo-tag">демо: друзья смоделированы</span></p>
+
+      <!-- main fork view -->
+      <div class="sr-fork" id="sr-fork">
+        <button class="sr-fork-branch" id="sr-branch-card" type="button">
+          <span class="sr-fork-ico" aria-hidden="true">▤</span>
+          <span class="sr-fork-txt"><span class="sr-fork-name" id="sr-branch-card-name">Карточка вкуса</span>
+            <span class="sr-fork-desc">статичная картинка волны/вкуса · видно только по ссылке</span></span>
+        </button>
+        <button class="sr-fork-branch" id="sr-branch-session" type="button">
+          <span class="sr-fork-ico" aria-hidden="true">◉</span>
+          <span class="sr-fork-txt"><span class="sr-fork-name">Слушать вместе</span>
+            <span class="sr-fork-desc">живая сессия в чате · позвать друзей по ссылке</span></span>
+        </button>
+      </div>
+
+      <!-- branch A — card preview (DOM render → canvas-to-image) -->
+      <div class="sr-cardview" id="sr-cardview" hidden>
+        <div class="sr-card" id="sr-share-card">
+          <div class="sr-card-top">
+            <span class="sr-card-brand"><span class="sr-card-dot" aria-hidden="true"></span>Город.fm</span>
+            <span class="sr-card-demo">демо</span>
+          </div>
+          <div class="sr-card-title" id="sr-card-title">ВОЛНА ЭЛЬБИКА · «меланхоличное электро»</div>
+          <div class="sr-card-cloud" id="sr-card-cloud" aria-hidden="true"></div>
+          <div class="sr-card-now">
+            <span class="sr-card-now-label">Сейчас:</span> <b id="sr-card-track">«Звёзды» — Buerak</b>
+          </div>
+          <div class="sr-card-tagline" id="sr-card-tagline">почему: рядом с твоим darkwave-ядром</div>
+          <div class="sr-card-foot">
+            <span class="sr-card-link">gorod.fm/w/elbik</span>
+            <span class="sr-card-qr" aria-label="Город-код (демо)"></span>
+          </div>
+          <div class="sr-card-priv">видно только по ссылке · друзья смоделированы (демо)</div>
+        </div>
+        <canvas id="sr-card-canvas" width="540" height="960" hidden></canvas>
+        <div class="sr-cardview-actions">
+          <button class="sr-btn sr-btn--primary" id="sr-card-download" type="button">Скачать карточку</button>
+          <button class="sr-btn" id="sr-card-back" type="button">← Назад</button>
+        </div>
+      </div>
+
+      <!-- branch B — invite card (after raising the session) -->
+      <div class="sr-inviteview" id="sr-inviteview" hidden>
+        <div class="sr-invite-card">
+          <div class="sr-invite-row">
+            <span class="sr-invite-label">Ссылка-приглашение</span>
+            <div class="sr-invite-linkrow">
+              <input class="sr-invite-link" id="sr-invite-link" type="text" value="gorod.fm/w/elbik" readonly aria-label="Ссылка приглашения">
+              <button class="sr-btn sr-btn--primary" id="sr-invite-copy" type="button">Копировать</button>
+            </div>
+          </div>
+          <div class="sr-invite-codewrap">
+            <span class="sr-invite-label">Город-код</span>
+            <span class="sr-invite-qr" id="sr-invite-qr" aria-label="Город-код — отсканируй, чтобы войти (демо)"></span>
+            <span class="sr-invite-codehint">наведи камеру · демо-код, открывает сессию локально</span>
+          </div>
+          <div class="sr-invite-friends">
+            <span class="sr-invite-label">Позвать друзей</span>
+            <div class="sr-invite-friendrow" id="sr-invite-friendrow"></div>
+          </div>
+        </div>
+        <div class="sr-cardview-actions">
+          <button class="sr-btn sr-btn--primary" id="sr-invite-open" type="button">Открыть сессию в чате</button>
+          <button class="sr-btn" id="sr-invite-back" type="button">← Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASTE-PREVIEW sheet — preview «+ во вкус» change BEFORE confirm (taste mutates
+         only on explicit accept; guarded by the «training wave doesn't rewrite taste» rule) -->
+    <div class="sr-scrim" id="sr-tp-scrim" hidden></div>
+    <div class="sr-sheet sr-sheet--narrow gfm-glass-surface" id="sr-taste-preview" role="dialog" aria-modal="true" aria-labelledby="sr-tp-h" hidden>
+      <div class="sr-sheet-head">
+        <h2 class="sr-sheet-title" id="sr-tp-h">Добавить во вкус?</h2>
+      </div>
+      <p class="sr-sheet-sub">Это добавит новую грань в твой <b>Twinr-профиль</b> (#/taste). Меняется только при твоём явном согласии — тренировочная волна вкус не переписывает.</p>
+      <div class="sr-tp-preview">
+        <span class="sr-tp-bubble" id="sr-tp-facet">+ darkwave</span>
+        <span class="sr-tp-from" id="sr-tp-from">от Ани</span>
+      </div>
+      <p class="sr-tp-why" id="sr-tp-why">ложится в твоё меланхоличное электро</p>
+      <div class="sr-cardview-actions">
+        <button class="sr-btn sr-btn--primary" id="sr-tp-confirm" type="button">Добавить во вкус</button>
+        <button class="sr-btn" id="sr-tp-cancel" type="button">Только в волну</button>
+      </div>
+    </div>
 
     <!-- Mobile chat FAB — opens the rail as a full-height dialog (mobile surface / <640px web) -->
     <button class="rail-mobile-fab" id="rail-mobile-fab" type="button" aria-label="Открыть чат" aria-controls="chat-rail" aria-expanded="false">
@@ -10855,6 +11205,8 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
         <span>Ты дослушал <b>Егора Крида</b> до конца 3 раза</span>
       </button>
+      <!-- SHARED RADIO — «слушаем вместе» transport pill (shown only while a session is active) -->
+      <span class="sr-sync-pill" id="sr-sync-pill" hidden onclick="event.stopPropagation()"><span class="sr-sync-dot" aria-hidden="true"></span>слушаем вместе · в синхроне <span class="sr-sync-demo">демо</span></span>
     </div>
 
     <!-- Transport controls — stop propagation so they don't trigger full overlay -->
@@ -11446,7 +11798,7 @@
         trackView:    'gorod-fm.track-view',
       };
 
-      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste', '#/profile', '#/recap'];
+      const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste', '#/profile', '#/recap', '#/together'];
       const DEFAULT_ROUTE = '#/map';
 
       /* ---- localStorage helpers -------------------------------------------- */
@@ -11491,7 +11843,7 @@
         // ---- Chat rail route-gating (owner: EXPANDED on every content route) ----
         // OFF on single-goal / export-clean / internal routes; otherwise honour the
         // user's manual collapse (gorodfm_rail), defaulting to EXPANDED.
-        var RAIL_OFF = { '#/onboarding': 1, '#/recap': 1, '#/map': 1 };
+        var RAIL_OFF = { '#/onboarding': 1, '#/recap': 1, '#/map': 1, '#/together': 1 };
         if (RAIL_OFF[route]) {
           document.documentElement.setAttribute('data-rail', 'off');
         } else {
@@ -13528,6 +13880,32 @@
     var playingRoom = 'global';     // room of the station currently playing
     var followDismissed = false;
 
+    /* ============================ SHARED RADIO (collaborative) ============================
+       Everything group = SCRIPTED / SEEDED demo. No backend, no real device sync. Honestly
+       labelled «демо: друзья смоделированы». The session is a SPECIAL RAIL ROOM (not a new
+       page); friend suggestions are a NEW message type in this same AI lane. Owner-anchored:
+       Twinr proposes WITH a «почему» tied to the owner's taste; the OWNER accepts/declines.
+       The rail follows the STATION normally; while session.active, auto-follow is suspended. */
+    // 2-3 seeded demo friends — fixed taste vectors, art-tint monogram avatars (reuses .ai-room-av).
+    var FRIENDS = {
+      anya: { id: 'anya', name: 'Аня', gen: 'Ани', c: '#8b6df6', vec: ['пост-панк', 'darkwave', 'dream-pop'], compat: 73 },
+      timur:{ id: 'timur', name: 'Тимур', gen: 'Тимура', c: '#f6a26a', vec: ['синтвейв', 'IDM', 'ретровейв'], compat: 61 },
+      lera: { id: 'lera', name: 'Лера', gen: 'Леры', c: '#3fb6a8', vec: ['инди', 'дрим-поп', 'эмбиент'], compat: 68 }
+    };
+    // owner ↔ guest mix dial: 'owner' = «Моя станция» (tighter), 'even' = «Поровну» (more adventurous).
+    // In the scripted demo this only SWAPS which pre-authored suggestion Twinr surfaces (no recompute).
+    var session = {
+      active: false,
+      prevRoom: 'global',           // room to restore on end
+      members: [],                  // [{id,name,c}] — seeded friends present
+      blend: 0,                     // remember dial position: 0 = Моя станция, 1 = Поровну
+      pendingByFriend: {},          // per-friend pending suggestion cap (spam control)
+      muted: {},                    // friendId → true (muted contributor; accepted credit kept)
+      acceptedCount: 0
+    };
+    var SESSION_ROOM = 'session';
+    var FRIEND_CAP = 2;             // max simultaneous pending suggestions per friend
+
     // GOROD-049 — edge-glow signal: rail "breathes" only while Twinr talks.
     function setSpeaking(on) {
       if (rail) rail.classList.toggle('is-speaking', !!on);
@@ -13876,6 +14254,16 @@
         b.addEventListener('click', function () { switchRoom(r.id); var rm = $('rail-rooms'); rm.classList.remove('is-open'); $('rail-room-btn').setAttribute('aria-expanded', 'false'); });
         el.appendChild(b);
       }
+      // SHARED RADIO — pin the live session room at the very top while active
+      if (session.active && ROOMS[SESSION_ROOM]) {
+        var sb = document.createElement('button'); sb.type = 'button'; sb.className = 'rail-room-item rail-room-item--session'; sb.setAttribute('role', 'menuitemradio');
+        sb.setAttribute('data-room', SESSION_ROOM);
+        sb.setAttribute('aria-current', SESSION_ROOM === currentRoom ? 'true' : 'false');
+        sb.innerHTML = '<span class="rail-room-item-ico" aria-hidden="true">◉</span><span>Слушаем вместе</span><span class="sr-room-live">в синхроне</span>';
+        sb.addEventListener('click', function () { switchRoom(SESSION_ROOM); var rm = $('rail-rooms'); rm.classList.remove('is-open'); $('rail-room-btn').setAttribute('aria-expanded', 'false'); });
+        el.appendChild(sb);
+        var sdiv = document.createElement('div'); sdiv.className = 'rail-rooms-divider'; el.appendChild(sdiv);
+      }
       item(ROOMS.global, true);
       var div = document.createElement('div'); div.className = 'rail-rooms-divider'; el.appendChild(div);
       var lbl = document.createElement('div'); lbl.className = 'rail-rooms-label'; lbl.textContent = 'Комнаты станций · демо'; el.appendChild(lbl);
@@ -13926,6 +14314,8 @@
       autoGrow();
       // follow-chip: hide if we're now IN the playing room
       if (id === playingRoom) hideFollowChip();
+      // SHARED RADIO — show/hide the session header for this room
+      if (typeof paintSessionChrome === 'function') paintSessionChrome();
     }
 
     function renderRoomContext(r) {
@@ -13941,6 +14331,10 @@
       var room = STATION_TO_ROOM[stationId] || 'global';
       playingRoom = room;
       followDismissed = false;
+      // SHARED RADIO (Stage 2): while a live session is active, auto-follow is
+      // SUSPENDED-not-destroyed — the session room keeps focus; playingRoom is
+      // still recorded so the auto-follow room is RESTORED on «завершить сессию».
+      if (session.active) { hideFollowChip(); return; }
       if (room === currentRoom) { hideFollowChip(); return; }
       // auto-follow (owner wants auto, not a chip). Draft/scroll preserved via store.
       switchRoom(room);
@@ -14183,7 +14577,688 @@
       if (intents[intent]) intents[intent]();
     }
 
+    /* ===================================================================================
+       SHARED RADIO ENGINE (Stages 2-6) — all scripted/seeded, reuses the rail machinery.
+       =================================================================================== */
+
+    var SR_SPARK = SPARK;  // reuse the Twinr spark glyph
+
+    function friendAvatar(f, sz) {
+      sz = sz || 26;
+      return '<span class="sr-av" style="background:' + f.c + ';width:' + sz + 'px;height:' + sz + 'px;line-height:' + sz + 'px;font-size:' + Math.round(sz * 0.46) + 'px" aria-hidden="true">' + esc(f.name.charAt(0)) + '</span>';
+    }
+
+    /* ---- owner taste vector (read live from the editable cloud / picks) ---- */
+    function ownerVector() {
+      var v = [];
+      try { v = (JSON.parse(localStorage.getItem('gorodfm_taste') || '[]') || []).map(function (x) { return String(x).toLowerCase(); }); } catch (e) {}
+      // always include the canonical wave-words so the demo reads coherently even cold
+      ['darkwave', 'пост-панк', 'меланхоличное электро', 'синтвейв', 'инди'].forEach(function (w) { if (v.indexOf(w) === -1) v.push(w); });
+      return v;
+    }
+
+    /* ---- pre-authored suggestions keyed by friend × blend-dial (no live recompute) ----
+       Each entry carries a two-sided «почему» (ask clause + owner-vector clause) +
+       a counterfactual (shown on hover) + an owner_fit floor flag. The dial swaps which
+       pre-authored card surfaces: blend 0 = «Моя станция» (tighter to owner),
+       blend 1 = «Поровну» (a touch more adventurous). */
+    var SUGG = {
+      anya: {
+        ask: 'больше пост-панка под вечер',
+        owner: [   // blend 0 — closest to owner core
+          { title: 'Звёзды', artist: 'Buerak', cover: '#5168FC',
+            askClause: 'Аня просила пост-панк под вечер',
+            ownerClause: 'ложится в твоё «меланхоличное электро» — рядом с darkwave-ядром',
+            counter: 'без вкуса Ани Twinr предложил бы более тёплый синти-поп',
+            tasteFacet: 'darkwave', floor: true },
+          { title: 'Холода', artist: 'Молчат Дома', cover: '#6d6af6',
+            askClause: 'Аня хотела пост-панк погуще',
+            ownerClause: 'это твоё ядро — пост-панк ты уже часто дослушиваешь',
+            counter: 'без её запроса Twinr оставил бы текущий синтвейв',
+            tasteFacet: 'пост-панк', floor: true }
+        ],
+        even: [    // blend 1 — a touch more adventurous (still owner-floored)
+          { title: 'Tarantula', artist: 'Молчат Дома', cover: '#8b6df6',
+            askClause: 'Аня тянет в сырой пост-панк',
+            ownerClause: 'смелее обычного, но всё ещё в твоём тёмном электро — порог вкуса пройден',
+            counter: 'на «Моей станции» Twinr взял бы вариант поспокойнее',
+            tasteFacet: 'darkwave', floor: true }
+        ],
+        // a seeded OFF-VIBE ask used once to demo the guardrail
+        offvibe: { title: 'Сладкий поп-хит', artist: 'демо', why: 'уводит станцию от твоего вкуса' },
+        dupe:   { title: 'Звёзды', artist: 'Buerak' }
+      },
+      timur: {
+        ask: 'добавь синтвейва для драйва',
+        owner: [
+          { title: 'Nightcall', artist: 'Kavinsky', cover: '#f6a26a',
+            askClause: 'Тимур просил синтвейв для драйва',
+            ownerClause: 'ретро-синты 80-х — твой вечерний драйв, уже в волне',
+            counter: 'без его запроса Twinr держал бы темп ниже',
+            tasteFacet: 'синтвейв', floor: true }
+        ],
+        even: [
+          { title: 'Tech Noir', artist: 'Gunship', cover: '#ffb27a',
+            askClause: 'Тимур хочет синтвейв поярче',
+            ownerClause: 'чуть энергичнее твоего ядра, но в том же неон-ретро — порог пройден',
+            counter: 'на «Моей станции» Twinr взял бы более тёмный синт',
+            tasteFacet: 'ретровейв', floor: true }
+        ]
+      },
+      lera: {
+        ask: 'что-нибудь воздушное',
+        owner: [
+          { title: 'Space Song', artist: 'Beach House', cover: '#3fb6a8',
+            askClause: 'Лера просила воздушное',
+            ownerClause: 'дрим-поп граничит с твоим инди — мягкий мостик к ядру',
+            counter: 'без её вкуса Twinr предложил бы более плотный бит',
+            tasteFacet: 'дрим-поп', floor: true }
+        ],
+        even: [
+          { title: 'Cherry-coloured Funk', artist: 'Cocteau Twins', cover: '#5fcabd',
+            askClause: 'Лера тянет в эфирный дрим-поп',
+            ownerClause: 'дальше от центра, но эмбиент-грань у тебя есть — порог пройден',
+            counter: 'на «Моей станции» Twinr остался бы ближе к инди',
+            tasteFacet: 'эмбиент', floor: true }
+        ]
+      }
+    };
+
+    /* track Twinr cover SVG (reuses the .ai-track-cover look) */
+    function srCoverSvg(tint) {
+      return '<span class="sr-cover" style="background:linear-gradient(135deg,' + (tint || '#5168FC') + ',#2b2f6b)" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3" fill="#fff" stroke="none"/><circle cx="18" cy="16" r="3" fill="#fff" stroke="none"/></svg></span>';
+    }
+
+    /* ---- session lifecycle ---- */
+    function startSession() {
+      if (session.active) { switchRoom(SESSION_ROOM); open(); return; }
+      session.active = true;
+      session.prevRoom = currentRoom;
+      session.members = [];
+      session.pendingByFriend = {};
+      session.muted = {};
+      session.acceptedCount = 0;
+      // register the session room so switchRoom/store work unchanged
+      ROOMS[SESSION_ROOM] = {
+        id: SESSION_ROOM, pin: '◉', name: 'Слушаем вместе', station: null,
+        ctxTitle: 'Слушаем вместе · твоя волна',
+        ctxWhy: 'Друзья слушают <b>твою</b> волну и предлагают треки через Twinr — ты решаешь. <b>Демо: друзья смоделированы.</b>',
+        presence: '1 слушает · в синхроне', slow: 'Частная · по ссылке',
+        peers: [], __session: true
+      };
+      delete store[SESSION_ROOM];
+      switchRoom(SESSION_ROOM);
+      open();
+      paintSessionChrome();
+      // intro line
+      addRoomDivider('◉ Сессия открыта · демо: друзья смоделированы');
+      aiSay('Сессия «Слушаем вместе» открыта. Друзья услышат <b>твою</b> волну. Они могут предлагать треки — но через меня, и решаешь ты. <span class="ai-why">я держу станцию в твоём вкусе</span>.', 500);
+      // seed two friends joining shortly after (scripted)
+      setTimeout(function () { if (session.active) friendJoins('anya'); }, 1400);
+      setTimeout(function () { if (session.active) friendJoins('timur'); }, 3200);
+      syncPill(true);
+      if (window.SharedRadio) window.SharedRadio.refreshSheets();
+    }
+
+    function endSession() {
+      if (!session.active) return;
+      session.active = false;
+      var back = session.prevRoom || playingRoom || 'global';
+      // tear down the session room (host ends for all)
+      saveRoomState();
+      delete ROOMS[SESSION_ROOM];
+      delete store[SESSION_ROOM];
+      session.members = [];
+      // RESTORE auto-follow target
+      if (!ROOMS[back]) back = 'global';
+      switchRoom(back);
+      paintSessionChrome();
+      syncPill(false);
+      buildRoomDropdown();
+      if (window.SharedRadio) window.SharedRadio.refreshSheets();
+      if (window.TwinrRibbon) window.TwinrRibbon.show('Сессия завершена — вернул тебя в <b>«' + esc(ROOMS[back] ? ROOMS[back].name : 'эфир') + '»</b>. <span class="ai-why">авто-следование за станцией снова включено</span>.');
+    }
+
+    function friendJoins(fid) {
+      var f = FRIENDS[fid]; if (!f || !session.active) return;
+      if (session.members.some(function (m) { return m.id === fid; })) return;
+      session.members.push({ id: f.id, name: f.name, c: f.c });
+      // scripted compatibility (Blend-style, NOT computed)
+      addRoomDivider(f.name + ' присоединилась · демо');
+      var seedTrack = (SUGG[fid] && SUGG[fid].owner[0]) ? SUGG[fid].owner[0] : null;
+      var compatLine = '<b>' + esc(f.name) + '</b> в сессии. <span class="sr-compat">совместимость вкусов · ' + f.compat + '%</span> <span class="ai-why">демо — не вычислено вживую</span>.';
+      if (seedTrack) compatLine += '<br>Первый общий трек по максимальному пересечению:' + srTrackRow(seedTrack.title, seedTrack.artist, seedTrack.cover, 'для вас двоих');
+      aiSay(compatLine, 600);
+      paintSessionChrome();
+      if (window.SharedRadio) window.SharedRadio.refreshSheets();
+    }
+
+    function srTrackRow(title, artist, tint, chip) {
+      return '<div class="ai-track sr-track">' + srCoverSvg(tint) +
+        '<div class="ai-track-meta"><div class="ai-track-title">' + esc(title) + '</div><div class="ai-track-artist">' + esc(artist) + '</div></div>' +
+        (chip ? '<span class="sr-forboth">' + esc(chip) + '</span>' : '') + '</div>';
+    }
+
+    function removeMember(fid) {
+      session.members = session.members.filter(function (m) { return m.id !== fid; });
+      paintSessionChrome();
+      addRoomDivider('Участник удалён · принятые треки сохранены');
+      if (window.SharedRadio) window.SharedRadio.refreshSheets();
+    }
+
+    /* ---- the SESSION CHROME: header chip + presence + «в синхроне» pill ---- */
+    function paintSessionChrome() {
+      var hdr = $('rail-session-hdr');
+      if (!hdr) return;
+      // session header lives IN the session room (blueprint §4.1); hidden elsewhere
+      if (!session.active || currentRoom !== SESSION_ROOM) { hdr.hidden = true; return; }
+      hdr.hidden = false;
+      var n = session.members.length + 1; // +owner
+      var avs = '<span class="sr-av sr-av--me" style="width:26px;height:26px;line-height:26px;font-size:12px" aria-hidden="true">Я</span>' +
+        session.members.map(function (m) {
+          return '<span class="sr-member"><button type="button" class="sr-member-x" data-rm="' + m.id + '" aria-label="Убрать ' + esc(m.name) + ' из сессии">' +
+            friendAvatar(FRIENDS[m.id], 26) + '<span class="sr-member-x-mark" aria-hidden="true">×</span></button></span>';
+        }).join('');
+      // owner dial «насколько подстраиваться под гостей» — swaps which pre-authored
+      // suggestion surfaces (Моя станция ↔ Поровну). Scripted; no live recompute.
+      var dial =
+        '<div class="sr-dial" role="group" aria-label="Насколько подстраиваться под гостей">' +
+          '<span class="sr-dial-cap">Подстройка под гостей</span>' +
+          '<div class="sr-dial-track">' +
+            '<button type="button" class="sr-dial-opt' + (session.blend === 0 ? ' is-on' : '') + '" data-blend="0" aria-pressed="' + (session.blend === 0) + '">Моя станция</button>' +
+            '<button type="button" class="sr-dial-opt' + (session.blend === 1 ? ' is-on' : '') + '" data-blend="1" aria-pressed="' + (session.blend === 1) + '">Поровну</button>' +
+          '</div>' +
+        '</div>';
+      // scripted demo triggers — drive the suggestion → accept hero loop
+      var demoBar =
+        '<div class="sr-demo-bar" role="group" aria-label="Демо-сценарии сессии">' +
+          '<button type="button" class="sr-demo-btn" data-sugg="anya">✦ Аня предложит</button>' +
+          '<button type="button" class="sr-demo-btn" data-sugg="timur">✦ Тимур предложит</button>' +
+          '<button type="button" class="sr-demo-btn sr-demo-btn--guard" data-dupe="anya">дубль (гард)</button>' +
+          '<button type="button" class="sr-demo-btn sr-demo-btn--guard" data-offvibe="anya">офф-вайб (гард)</button>' +
+        '</div>';
+      hdr.innerHTML =
+        '<div class="sr-hdr-row">' +
+          '<span class="sr-live-chip"><span class="sr-live-dot" aria-hidden="true"></span>◉ ' + n + ' слушают · в синхроне</span>' +
+          '<span class="sr-priv-pill">частная · по ссылке</span>' +
+        '</div>' +
+        '<div class="sr-hdr-avs" aria-label="Участники сессии">' + avs + '</div>' +
+        dial +
+        demoBar +
+        '<div class="sr-hdr-actions">' +
+          '<button type="button" class="sr-end" id="sr-end-btn">завершить сессию</button>' +
+          '<span class="demo-tag">демо: друзья смоделированы</span>' +
+        '</div>';
+      var endb = $('sr-end-btn'); if (endb) endb.addEventListener('click', endSession);
+      [].forEach.call(hdr.querySelectorAll('.sr-member-x'), function (b) {
+        b.addEventListener('click', function () { removeMember(b.getAttribute('data-rm')); });
+      });
+      [].forEach.call(hdr.querySelectorAll('.sr-dial-opt'), function (b) {
+        b.addEventListener('click', function () { setBlend(parseInt(b.getAttribute('data-blend'), 10)); paintSessionChrome(); });
+      });
+      [].forEach.call(hdr.querySelectorAll('.sr-demo-btn'), function (b) {
+        b.addEventListener('click', function () {
+          if (b.getAttribute('data-sugg')) friendSuggests(b.getAttribute('data-sugg'));
+          else if (b.getAttribute('data-dupe')) friendSuggests(b.getAttribute('data-dupe'), { dupe: true });
+          else if (b.getAttribute('data-offvibe')) friendSuggests(b.getAttribute('data-offvibe'), { offvibe: true });
+        });
+      });
+      // presence strip → intimate count while in the session room
+      if (currentRoom === SESSION_ROOM) {
+        var pl = $('rail-presence-live'); if (pl) pl.textContent = n + ' слушают · в синхроне';
+      }
+    }
+
+    function syncPill(on) {
+      var pill = document.getElementById('sr-sync-pill');
+      if (pill) pill.hidden = !on;
+      // «в синхроне» breath reuses the --dur-breathe token (new context; demo)
+      if (pill) pill.classList.toggle('is-on', !!on);
+    }
+
+    /* ---- SUGGESTION → ACCEPT (the hero) ---- */
+    // owner-anchored: score = owner_fit (hard floor) × friend_ask_fit. Guardrail rejects
+    // dupes / off-vibe AT GENERATION (visible), else posts a pending suggestion card.
+    function friendSuggests(fid, opts) {
+      opts = opts || {};
+      var f = FRIENDS[fid]; if (!f || !session.active) return;
+      if (session.muted[fid]) { return; }
+      var pend = session.pendingByFriend[fid] || 0;
+      if (pend >= FRIEND_CAP) {
+        aiSay('У <b>' + esc(f.name) + '</b> уже ' + FRIEND_CAP + ' предложения в очереди — подожди, пока решишь по ним. <span class="ai-why">защита от флуда</span>.', 500);
+        return;
+      }
+      var blendKey = session.blend ? 'even' : 'owner';
+      var S = SUGG[fid];
+      // friend "asks Twinr" — visible in the lane
+      addFriendAsk(f, opts.dupe ? 'поставь ещё раз «Звёзды»' : (opts.offvibe ? 'врубай сладкий поп-хит' : S.ask));
+
+      // GUARDRAIL at generation (owner-anchored): reject dupe / off-vibe with a visible reason
+      if (opts.dupe && S.dupe) {
+        aiSay('<span class="sr-guard">⛔ это уже в твоей волне</span> — «' + esc(S.dupe.title) + '» (' + esc(S.dupe.artist) + ') я уже добавил по просьбе ' + esc(f.gen || f.name) + '. Не дублирую. <span class="ai-why">owner-anchored: чищу повторы на входе</span>.', 700);
+        return;
+      }
+      if (opts.offvibe && S.offvibe) {
+        aiSay('<span class="sr-guard">⚠ уводит станцию от твоего вкуса</span> — «' + esc(S.offvibe.title) + '» ' + esc(S.offvibe.why) + '. Предложить ближе к ядру?' , 700)
+          .then(function () { setChips([{ label: '✦ Ближе к вкусу', intent: 'sr-closer-' + fid }]); });
+        return;
+      }
+      var card = (S[blendKey] || S.owner)[0];
+      if (!card) return;
+      session.pendingByFriend[fid] = pend + 1;
+      postSuggestionCard(f, card);
+    }
+
+    function addFriendAsk(f, text) {
+      var m = document.createElement('div'); m.className = 'ai-msg ai-msg--room sr-ask';
+      m.innerHTML = friendAvatar(f, 30) +
+        '<div class="ai-room-col"><div class="ai-room-handle">✦ ' + esc(f.name) + ' → Twinr</div>' +
+        '<div class="ai-msg-bubble">' + esc(text) + '</div></div>';
+      msgs.appendChild(m); capLog(); bumpNewPill();
+    }
+
+    function postSuggestionCard(f, card) {
+      setSpeaking(true);
+      var wrap = document.createElement('div'); wrap.className = 'ai-msg ai-msg--ai';
+      var fire = 2 + (card.title.length % 4); // seeded pre-vote count
+      wrap.innerHTML =
+        '<div class="ai-msg-avatar" aria-hidden="true">' + SR_SPARK + '</div>' +
+        '<div class="ai-msg-bubble sr-sugg">' +
+          '<div class="sr-sugg-head"><span class="ai-private-tag">✦ Twinr · предложение · видно вам</span></div>' +
+          '<div class="sr-sugg-track">' + srCoverSvg(card.cover) +
+            '<div class="ai-track-meta"><div class="ai-track-title">' + esc(card.title) + '</div><div class="ai-track-artist">' + esc(card.artist) + '</div>' +
+            '<div class="sr-prevote" aria-label="' + fire + ' тоже хотят (информативно)">🔥 ' + fire + ' тоже хотят</div></div>' +
+          '</div>' +
+          '<div class="sr-attr">' + friendAvatar(f, 22) + '<span>' + esc(f.name) + ' предложила через Twinr</span></div>' +
+          '<div class="sr-why" tabindex="0">' +
+            '<span class="sr-why-mark">почему:</span> ' + esc(card.askClause) + '; <b>' + esc(card.ownerClause) + '</b>' +
+            '<span class="sr-counter">контрфакт: ' + esc(card.counter) + '</span>' +
+          '</div>' +
+          '<div class="sr-gate" role="group" aria-label="Решение по предложению — только владелец">' +
+            '<button type="button" class="sr-btn sr-btn--accept">Принять</button>' +
+            '<button type="button" class="sr-btn sr-btn--taste">+ во вкус</button>' +
+            '<button type="button" class="sr-btn sr-btn--later">Не сейчас</button>' +
+          '</div>' +
+          '<div class="sr-foot">принятие добавит трек в волну · «+ во вкус» добавит «+ ' + esc(card.tasteFacet) + ' — от ' + esc(f.gen || f.name) + '» во #/taste · можно отменить</div>' +
+        '</div>';
+      msgs.appendChild(wrap); capLog(); scrollDown();
+      clearTimeout(speakTimer); speakTimer = setTimeout(function () { setSpeaking(false); }, 700);
+      var acc = wrap.querySelector('.sr-btn--accept'), tas = wrap.querySelector('.sr-btn--taste'), lat = wrap.querySelector('.sr-btn--later');
+      acc.addEventListener('click', function () { acceptSuggestion(f, card, wrap, false); });
+      tas.addEventListener('click', function () { acceptSuggestion(f, card, wrap, true); });
+      lat.addEventListener('click', function () { declineSuggestion(f, card, wrap); });
+    }
+
+    function acceptSuggestion(f, card, wrap, alsoTaste) {
+      session.pendingByFriend[f.id] = Math.max(0, (session.pendingByFriend[f.id] || 1) - 1);
+      session.acceptedCount++;
+      // mark the card resolved (not removed — keeps the trail), show «принято + от Ани» chip
+      wrap.classList.add('sr-resolved');
+      var gate = wrap.querySelector('.sr-gate');
+      if (gate) gate.innerHTML = '<span class="sr-accepted">✓ в волне</span> <span class="sr-fromchip" tabindex="0" title="' + esc(card.askClause + '; ' + card.ownerClause) + '">от ' + esc(f.gen || f.name) + '</span>' +
+        '<button type="button" class="sr-btn sr-btn--undo">Отменить</button>';
+      var undo = gate ? gate.querySelector('.sr-btn--undo') : null;
+      // track enters the Волна (scripted): rail line + ribbon + the «Сейчас у всех» transport line
+      addRoomDivider('▶ Сейчас у всех: «' + card.title + '» — добавил по просьбе ' + (f.gen || f.name));
+      if (window.TwinrRibbon) window.TwinrRibbon.show('Принял <b>' + esc(card.title) + '</b> — ' + esc(card.artist) + ' <span class="ai-why">по просьбе ' + esc(f.gen || f.name) + ', в твоём вкусе</span>.');
+      if (window.TwinrWave) window.TwinrWave.bump();
+
+      var tasteApplied = false;
+      if (alsoTaste) {
+        // «+ во вкус» — PREVIEW the change BEFORE confirm (taste mutates only on explicit accept)
+        previewTasteAdd(f, card, function () {
+          tasteApplied = true;
+          applyTasteAdd(f, card);
+        });
+      }
+      if (undo) undo.addEventListener('click', function () {
+        // undo: remove from Волна (the line) + remove taste bubble if added
+        addRoomDivider('↩ Отменено: «' + card.title + '» убран из волны');
+        if (window.TwinrWave) window.TwinrWave.bump();
+        if (tasteApplied) removeTasteAdd(card.tasteFacet);
+        session.acceptedCount = Math.max(0, session.acceptedCount - 1);
+        wrap.classList.remove('sr-resolved'); wrap.classList.add('sr-undone');
+        if (gate) gate.innerHTML = '<span class="sr-later">↩ отменено</span>';
+      });
+    }
+
+    function declineSuggestion(f, card, wrap) {
+      session.pendingByFriend[f.id] = Math.max(0, (session.pendingByFriend[f.id] || 1) - 1);
+      wrap.classList.add('sr-resolved', 'sr-softdecline');
+      var gate = wrap.querySelector('.sr-gate');
+      // soft / quiet — never a red "rejected". The suggester sees only «на потом».
+      if (gate) gate.innerHTML = '<span class="sr-later">на потом · ' + esc(f.name) + ' не увидит отказа</span>';
+    }
+
+    /* ---- TASTE MUTATION via the SAME path "сделай по-другому" feeds (gorodfm_taste +
+       a parallel attribution map gorodfm_taste_friend) → dispatch gorodfm-taste-changed.
+       GorodTaste re-seeds and renders an attributed, removable bubble. Preview→confirm. ---- */
+    var TASTE_KEY = 'gorodfm_taste', ATTR_KEY = 'gorodfm_taste_friend';
+    function previewTasteAdd(f, card, onConfirm) {
+      var sheet = document.getElementById('sr-taste-preview');
+      if (!sheet) { onConfirm(); return; }
+      sheet.querySelector('#sr-tp-facet').textContent = '+ ' + card.tasteFacet;
+      sheet.querySelector('#sr-tp-from').textContent = 'от ' + (f.gen || f.name);
+      sheet.querySelector('#sr-tp-why').textContent = card.ownerClause;
+      sheet.hidden = false;
+      sheet.classList.add('is-open');
+      var confirm = sheet.querySelector('#sr-tp-confirm'), cancel = sheet.querySelector('#sr-tp-cancel');
+      function close() { sheet.classList.remove('is-open'); sheet.hidden = true; document.removeEventListener('keydown', onKey, true); confirm.onclick = null; cancel.onclick = null; }
+      function onKey(e) { if (e.key === 'Escape') { e.preventDefault(); close(); } }
+      document.addEventListener('keydown', onKey, true);
+      setTimeout(function () { try { confirm.focus(); } catch (e) {} }, 30);
+      confirm.onclick = function () { close(); onConfirm(); };
+      cancel.onclick = function () { close(); addRoomDivider('Трек принят — вкус не тронут (отменил «+ во вкус»)'); };
+    }
+    function applyTasteAdd(f, card) {
+      var facet = card.tasteFacet;
+      var list = []; try { list = JSON.parse(localStorage.getItem(TASTE_KEY) || '[]') || []; } catch (e) {}
+      if (list.indexOf(facet) === -1) { list.push(facet); try { localStorage.setItem(TASTE_KEY, JSON.stringify(list)); } catch (e) {} }
+      var attr = {}; try { attr = JSON.parse(localStorage.getItem(ATTR_KEY) || '{}') || {}; } catch (e) {}
+      attr[facet] = { from: (f.gen || f.name), c: f.c, why: card.ownerClause };
+      try { localStorage.setItem(ATTR_KEY, JSON.stringify(attr)); } catch (e) {}
+      try { window.dispatchEvent(new Event('gorodfm-taste-changed')); } catch (e) {}
+      addRoomDivider('✦ Вкус обновлён: «+ ' + facet + ' — от ' + (f.gen || f.name) + '» (можно убрать в #/taste)');
+    }
+    function removeTasteAdd(facet) {
+      var list = []; try { list = JSON.parse(localStorage.getItem(TASTE_KEY) || '[]') || []; } catch (e) {}
+      list = list.filter(function (x) { return x !== facet; });
+      try { localStorage.setItem(TASTE_KEY, JSON.stringify(list)); } catch (e) {}
+      var attr = {}; try { attr = JSON.parse(localStorage.getItem(ATTR_KEY) || '{}') || {}; } catch (e) {}
+      delete attr[facet];
+      try { localStorage.setItem(ATTR_KEY, JSON.stringify(attr)); } catch (e) {}
+      try { window.dispatchEvent(new Event('gorodfm-taste-changed')); } catch (e) {}
+    }
+
+    /* ---- blend dial: swap which pre-authored suggestion surfaces (no recompute) ---- */
+    function setBlend(v) {
+      session.blend = v ? 1 : 0;
+      if (window.SharedRadio) window.SharedRadio.refreshSheets();
+    }
+
+    // wire the "closer to taste" reframe chips (from the off-vibe guardrail)
+    Object.keys(FRIENDS).forEach(function (fid) {
+      intents['sr-closer-' + fid] = function () {
+        var blendKey = session.blend ? 'even' : 'owner';
+        var card = (SUGG[fid][blendKey] || SUGG[fid].owner)[0];
+        if (card) postSuggestionCard(FRIENDS[fid], card);
+      };
+    });
+
     window.TwinrChat = { open: open, greetFromOnboarding: greetFromOnboarding, ask: ask, pulse: pulse };
+    // SHARED RADIO public surface (consumed by the share-sheet / preview modules)
+    window.SharedRadio = {
+      start: startSession, end: endSession,
+      isActive: function () { return session.active; },
+      friendSuggests: friendSuggests,
+      setBlend: setBlend, getBlend: function () { return session.blend; },
+      friends: FRIENDS,
+      members: function () { return session.members.slice(); },
+      addFriend: friendJoins,
+      ownerVector: ownerVector,
+      switchToSession: function () { if (session.active) { switchRoom(SESSION_ROOM); open(); } },
+      refreshSheets: function () {}  // overwritten by the share-sheet module once it loads
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  })();
+  </script>
+
+  <!-- ====================================================================
+       SHARE-SHEET + INVITE + RECIPIENT PREVIEW module (Stages 1, 3).
+       Wires «Поделиться» in #/taste & #/home → fork (card A / session B);
+       renders the DOM/canvas-to-image taste/Волна card; builds the invite
+       (copy-link + «Город-код» QR placeholder + seeded friends); seeds the
+       #/together read-only preview. All scripted/seeded, demo-labelled.
+       ==================================================================== -->
+  <script>
+  (function () {
+    'use strict';
+    function $(id) { return document.getElementById(id); }
+    var sheet, scrim, fork, cardView, inviteView, lastTrigger = null, ctxKind = 'taste';
+
+    // canonical demo taste-cloud words (matches the wedge copy)
+    var CLOUD = ['darkwave', 'пост-панк', 'dream-pop', 'synthwave', 'IDM', 'ambient', 'инди'];
+    var CLOUD_W = [4, 3, 2, 3, 2, 1, 2];
+
+    function init() {
+      sheet = $('sr-share-sheet'); scrim = $('sr-share-scrim');
+      fork = $('sr-fork'); cardView = $('sr-cardview'); inviteView = $('sr-inviteview');
+      if (!sheet) return;
+
+      // entry points — repurpose #taste-share (was → #/recap) + add a home affordance
+      var tasteShare = $('taste-share');
+      if (tasteShare) {
+        // keep its label generic and open the fork instead of jumping to recap
+        var lbl = tasteShare.querySelector('svg') ? null : null;
+        tasteShare.addEventListener('click', function (e) { e.stopImmediatePropagation(); openSheet('taste', tasteShare); }, true);
+      }
+      // #/home — add a «Поделиться» button into the radio controls if not present
+      injectHomeShare();
+
+      // sheet controls
+      $('sr-share-x').addEventListener('click', closeSheet);
+      scrim.addEventListener('click', closeSheet);
+      $('sr-branch-card').addEventListener('click', showCard);
+      $('sr-branch-session').addEventListener('click', showInvite);
+      $('sr-card-back').addEventListener('click', showFork);
+      $('sr-invite-back').addEventListener('click', showFork);
+      $('sr-card-download').addEventListener('click', downloadCard);
+      $('sr-invite-copy').addEventListener('click', copyLink);
+      $('sr-invite-open').addEventListener('click', function () {
+        if (window.SharedRadio) window.SharedRadio.start();
+        closeSheet();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sheet && !sheet.hidden) { e.preventDefault(); closeSheet(); }
+        else if (e.key === 'Tab' && sheet && !sheet.hidden) trapTab(e);
+      }, true);
+
+      buildInviteFriends();
+      buildCardCloud($('sr-card-cloud'));
+      drawQR(document.querySelector('#sr-share-card .sr-card-qr'));
+      // #/together preview seeding
+      window.addEventListener('hashchange', seedTogether);
+      seedTogether();
+      // expose for SharedRadio to refresh invite-friend rows when session changes
+      if (window.SharedRadio) window.SharedRadio.refreshSheets = function () { buildInviteFriends(); };
+    }
+
+    function injectHomeShare() {
+      var controls = document.querySelector('#home-radio .home-radio-controls');
+      if (!controls || $('home-radio-share')) return;
+      var b = document.createElement('button');
+      b.className = 'home-radio-share'; b.id = 'home-radio-share'; b.type = 'button';
+      b.setAttribute('aria-label', 'Поделиться волной — карточка или слушать вместе');
+      b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+      b.addEventListener('click', function () { openSheet('home', b); });
+      controls.appendChild(b);
+    }
+
+    function focusables() {
+      return [].filter.call(sheet.querySelectorAll('button:not([disabled]), a[href], input:not([disabled])'),
+        function (el) { return el.offsetParent !== null; });
+    }
+    function trapTab(e) {
+      var f = focusables(); if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    function openSheet(kind, trigger) {
+      ctxKind = kind; lastTrigger = trigger || document.activeElement;
+      // retitle the card branch + card per source
+      var bn = $('sr-branch-card-name'), ct = $('sr-card-title'), tr = $('sr-card-track'), tg = $('sr-card-tagline');
+      if (kind === 'home') {
+        if (bn) bn.textContent = 'Карточка волны';
+        if (ct) ct.textContent = 'ВОЛНА ЭЛЬБИКА · вечер ~95 BPM';
+        if (tr) tr.textContent = '«Любимка» — Niletto';
+        if (tg) tg.textContent = 'почему: тёплый поп — ты дослушиваешь до конца';
+      } else {
+        if (bn) bn.textContent = 'Карточка вкуса';
+        if (ct) ct.textContent = 'ВОЛНА ЭЛЬБИКА · «меланхоличное электро»';
+        if (tr) tr.textContent = '«Звёзды» — Buerak';
+        if (tg) tg.textContent = 'почему: рядом с твоим darkwave-ядром';
+      }
+      showFork();
+      scrim.hidden = false; sheet.hidden = false;
+      setTimeout(function () { var f = focusables(); if (f[0]) f[0].focus(); }, 30);
+    }
+    function closeSheet() {
+      if (!sheet) return;
+      sheet.hidden = true; scrim.hidden = true;
+      // only return focus if the trigger is still visible (its page wasn't route-hidden) —
+      // refocusing an element inside an aria-hidden section is an a11y violation.
+      if (lastTrigger && lastTrigger.offsetParent !== null && !lastTrigger.closest('[aria-hidden="true"]')) {
+        try { lastTrigger.focus(); } catch (e) {}
+      }
+    }
+    function showFork() { fork.hidden = false; cardView.hidden = true; inviteView.hidden = true; }
+    function showCard() {
+      fork.hidden = true; cardView.hidden = false; inviteView.hidden = true;
+      drawQR(document.querySelector('#sr-share-card .sr-card-qr'));
+      setTimeout(function () { $('sr-card-download').focus(); }, 20);
+    }
+    function showInvite() {
+      fork.hidden = true; cardView.hidden = true; inviteView.hidden = false;
+      drawQR($('sr-invite-qr'));
+      buildInviteFriends();
+      setTimeout(function () { $('sr-invite-copy').focus(); }, 20);
+    }
+
+    function buildCardCloud(host) {
+      if (!host) return;
+      host.innerHTML = '';
+      CLOUD.forEach(function (w, i) {
+        var s = document.createElement('span');
+        s.className = 'sr-cloud-word';
+        s.style.fontSize = (12 + CLOUD_W[i] * 4) + 'px';
+        s.style.opacity = String(0.55 + CLOUD_W[i] * 0.1);
+        s.textContent = w;
+        host.appendChild(s);
+      });
+    }
+
+    // brand-glass «Город-код» QR placeholder (net-new) — deterministic decorative grid
+    function drawQR(host) {
+      if (!host || host.__qr) return; host.__qr = true;
+      var N = 9, cells = '';
+      for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+        // deterministic pattern + corner finders
+        var corner = (r < 3 && c < 3) || (r < 3 && c > N - 4) || (r > N - 4 && c < 3);
+        var on = corner ? ((r + c) % 2 === 0 || (r % 3 === 0)) : ((r * 7 + c * 3 + (r ^ c)) % 3 === 0);
+        if (on) cells += '<span style="grid-row:' + (r + 1) + ';grid-column:' + (c + 1) + '"></span>';
+      }
+      host.innerHTML = '<span class="sr-qr-grid" style="grid-template-columns:repeat(' + N + ',1fr);grid-template-rows:repeat(' + N + ',1fr)">' + cells + '</span>';
+    }
+
+    function buildInviteFriends() {
+      var row = $('sr-invite-friendrow'); if (!row || !window.SharedRadio) return;
+      row.innerHTML = '';
+      var FR = window.SharedRadio.friends || {};
+      var present = (window.SharedRadio.members ? window.SharedRadio.members() : []).map(function (m) { return m.id; });
+      Object.keys(FR).forEach(function (fid) {
+        var f = FR[fid];
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'sr-invite-friend';
+        var here = present.indexOf(fid) !== -1;
+        b.innerHTML = '<span class="sr-av" style="background:' + f.c + ';width:30px;height:30px;line-height:30px;font-size:14px" aria-hidden="true">' + f.name.charAt(0) + '</span>' +
+          '<span class="sr-invite-friend-name">' + f.name + '</span>' +
+          '<span class="sr-invite-friend-act">' + (here ? 'в сессии' : 'позвать') + '</span>';
+        if (here) b.classList.add('is-in');
+        b.addEventListener('click', function () {
+          if (!window.SharedRadio.isActive()) window.SharedRadio.start();
+          window.SharedRadio.addFriend(fid);
+          buildInviteFriends();
+        });
+        row.appendChild(b);
+      });
+    }
+
+    function copyLink() {
+      var inp = $('sr-invite-link'); if (!inp) return;
+      try { inp.select(); document.execCommand && document.execCommand('copy'); } catch (e) {}
+      if (navigator.clipboard) { try { navigator.clipboard.writeText(inp.value); } catch (e) {} }
+      var btn = $('sr-invite-copy'); if (btn) { var t = btn.textContent; btn.textContent = 'Скопировано ✓'; setTimeout(function () { btn.textContent = t; }, 1500); }
+    }
+
+    // DOM-card → canvas-to-image (NOT a raw screenshot — purpose-built 9:16)
+    function downloadCard() {
+      var cv = $('sr-card-canvas'); if (!cv) return;
+      var g = cv.getContext('2d'), W = cv.width, H = cv.height;
+      // dark glass backdrop
+      var grd = g.createLinearGradient(0, 0, W, H);
+      grd.addColorStop(0, '#11142b'); grd.addColorStop(1, '#0a0c1a');
+      g.fillStyle = grd; g.fillRect(0, 0, W, H);
+      // accent frame
+      g.strokeStyle = 'rgba(81,104,252,0.45)'; g.lineWidth = 3; g.strokeRect(14, 14, W - 28, H - 28);
+      g.fillStyle = '#8094ff'; g.font = '700 26px Onest, sans-serif'; g.fillText('● Город.fm', 40, 60);
+      g.fillStyle = 'rgba(255,255,255,0.5)'; g.font = '700 18px Onest, sans-serif'; g.fillText('демо', W - 90, 60);
+      // title
+      g.fillStyle = '#fff'; g.font = '800 30px Onest, sans-serif';
+      wrapText(g, ($('sr-card-title') || {}).textContent || 'ВОЛНА', 40, 150, W - 80, 38);
+      // cloud words
+      var y = 320; g.textAlign = 'center';
+      CLOUD.forEach(function (w, i) {
+        g.font = '700 ' + (22 + CLOUD_W[i] * 6) + 'px Onest, sans-serif';
+        g.fillStyle = i % 2 ? '#8094ff' : 'rgba(255,255,255,0.85)';
+        g.fillText(w, W / 2, y); y += 50 + CLOUD_W[i] * 6;
+      });
+      g.textAlign = 'left';
+      // now-playing + tagline
+      g.fillStyle = '#fff'; g.font = '700 24px Onest, sans-serif';
+      g.fillText('▸ ' + (($('sr-card-track') || {}).textContent || ''), 40, H - 220);
+      g.fillStyle = '#8094ff'; g.font = '500 19px Onest, sans-serif';
+      wrapText(g, (($('sr-card-tagline') || {}).textContent || ''), 40, H - 180, W - 80, 26);
+      // footer
+      g.strokeStyle = 'rgba(255,255,255,0.12)'; g.beginPath(); g.moveTo(40, H - 120); g.lineTo(W - 40, H - 120); g.stroke();
+      g.fillStyle = 'rgba(255,255,255,0.7)'; g.font = '600 18px Onest, sans-serif';
+      g.fillText('gorod.fm/w/elbik', 40, H - 80);
+      g.fillStyle = 'rgba(255,255,255,0.45)'; g.font = '500 14px Onest, sans-serif';
+      g.fillText('видно только по ссылке · друзья смоделированы (демо)', 40, H - 44);
+      // download
+      try {
+        var url = cv.toDataURL('image/png');
+        var a = document.createElement('a'); a.href = url; a.download = 'gorod-fm-card.png'; a.click();
+      } catch (e) {}
+      var btn = $('sr-card-download'); if (btn) { var t = btn.textContent; btn.textContent = 'Готово ✓'; setTimeout(function () { btn.textContent = t; }, 1500); }
+    }
+    function wrapText(g, text, x, y, maxW, lh) {
+      var words = String(text).split(' '), line = '', yy = y;
+      for (var i = 0; i < words.length; i++) {
+        var test = line + words[i] + ' ';
+        if (g.measureText(test).width > maxW && i > 0) { g.fillText(line, x, yy); line = words[i] + ' '; yy += lh; }
+        else line = test;
+      }
+      g.fillText(line, x, yy);
+    }
+
+    // ---- #/together preview seeding ----
+    function seedTogether() {
+      if ((window.location.hash || '') !== '#/together') return;
+      var cloud = $('tg-cloud');
+      if (cloud && !cloud.__seeded) { cloud.__seeded = true; buildCardCloud(cloud); }
+      var mem = $('tg-members');
+      if (mem && window.SharedRadio) {
+        mem.innerHTML = '';
+        var FR = window.SharedRadio.friends || {};
+        ['anya', 'timur'].forEach(function (fid) {
+          var f = FR[fid]; if (!f) return;
+          var s = document.createElement('span'); s.className = 'tg-member';
+          s.innerHTML = '<span class="sr-av" style="background:' + f.c + ';width:34px;height:34px;line-height:34px;font-size:15px" aria-hidden="true">' + f.name.charAt(0) + '</span><span class="tg-member-name">' + f.name + '</span>';
+          mem.appendChild(s);
+        });
+      }
+      var join = $('tg-join');
+      if (join && !join.__wired) {
+        join.__wired = true;
+        join.addEventListener('click', function () {
+          location.hash = '#/home';
+          setTimeout(function () { if (window.SharedRadio) window.SharedRadio.start(); }, 120);
+        });
+      }
+    }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
@@ -14393,10 +15468,16 @@
     function seed() {
       data = JSON.parse(JSON.stringify(DEFAULT));
       var pickSet = {}, hadPicks = false;
+      // SHARED RADIO: friend-attributed facets (accepted via «+ во вкус») render as a
+      // distinct, removable bubble «+ darkwave — от Ани». They live in gorodfm_taste
+      // (membership) + gorodfm_taste_friend (attribution). Handled separately so they
+      // don't get mis-classified as artists by the picks loop below.
+      var friendAttr = {}; try { friendAttr = JSON.parse(localStorage.getItem('gorodfm_taste_friend') || '{}') || {}; } catch (e) {}
       try {
-        var picks = (JSON.parse(localStorage.getItem('gorodfm_taste') || '[]')).slice(0, 8);
-        hadPicks = picks.length > 0;
+        var picks = (JSON.parse(localStorage.getItem('gorodfm_taste') || '[]')).slice(0, 12);
+        hadPicks = picks.filter(function (p) { return !friendAttr[p]; }).length > 0;
         picks.forEach(function (p, i) {
+          if (friendAttr[p]) return;                                  // friend facets handled below
           var grp = (p === p.toUpperCase()) ? 'Жанры' : 'Артисты';   // uppercase = genre
           pickSet[p] = true;                                          // real per-facet selection signal (honest 'pick' provenance)
           // deterministic weight by pick order — same profile must render byte-identically (fidelity, no Math.random)
@@ -14405,6 +15486,14 @@
       } catch (e) {}
       // keep each group readable
       Object.keys(data).forEach(function (g) { if (data[g].length > 6) data[g] = data[g].slice(0, 6); });
+      // inject friend-attributed bubbles into «Жанры» (after the trim so they always show)
+      Object.keys(friendAttr).forEach(function (facet) {
+        if (data['Жанры'].some(function (r) { return r.n === facet; })) {
+          data['Жанры'].forEach(function (r) { if (r.n === facet) { r.src = 'friend'; r.from = friendAttr[facet].from; } });
+        } else {
+          data['Жанры'].unshift({ n: facet, w: 48, src: 'friend', from: friendAttr[facet].from });
+        }
+      });
       applyRejections();   // W1 — reflect player-rejections in the editable vector (close the fidelity loop)
       mergeWeights(pickSet);                                          // weight-cloud: user-set weights survive reload + honest provenance
       coldStart = !hadPicks && rejList.length === 0;                  // no real signal → cloud shows "пример" empty state
@@ -14416,6 +15505,10 @@
       Object.keys(data).forEach(function (g) {
         data[g].forEach(function (r) {
           if (r.rej) { r.src = 'rejected'; return; }                  // rejection wins
+          if (r.src === 'friend') {                                   // SHARED RADIO — friend attribution survives; you can still re-size it
+            var fk = keyFor(g, r.n); if (saved[fk]) r.w = saved[fk].w;
+            return;
+          }
           var key = keyFor(g, r.n);
           if (saved[key]) { r.w = saved[key].w; r.src = 'you'; }      // you sized it → survives reload, shows exact value
           else if (pickSet[r.n]) r.src = 'pick';                      // you chose it (real selection) — size still default, no number
@@ -14423,6 +15516,21 @@
         });
       });
     }
+    // SHARED RADIO — remove a friend-attributed facet from the editable cloud (undo path
+    // for «+ во вкус»). Strips membership + attribution, then re-seeds via the same event.
+    function removeFriendFacet(facet) {
+      var list = []; try { list = JSON.parse(localStorage.getItem('gorodfm_taste') || '[]') || []; } catch (e) {}
+      list = list.filter(function (x) { return x !== facet; });
+      try { localStorage.setItem('gorodfm_taste', JSON.stringify(list)); } catch (e) {}
+      var attr = {}; try { attr = JSON.parse(localStorage.getItem('gorodfm_taste_friend') || '{}') || {}; } catch (e) {}
+      delete attr[facet];
+      try { localStorage.setItem('gorodfm_taste_friend', JSON.stringify(attr)); } catch (e) {}
+      closeStripSilent();
+      seed(); render();
+      var d = document.getElementById('taste-delta'); if (d) d.textContent = 'Убрал «' + facet + '» из вкуса — волна перестроится без неё.';
+      try { window.dispatchEvent(new Event('gorodfm-taste-changed')); } catch (e) {}
+    }
+
     // W1 (fidelity loop): GorodTaste now READS gorodfm_rejected (TwinrWhy writes it on «почему?»→«не моё»).
     // A matching facet is struck + lowered with provenance; every rejection also surfaces in a dedicated card.
     function applyRejections() {
@@ -14578,7 +15686,8 @@
       var el = document.createElement('button');
       el.type = 'button';
       el.className = 'tcloud-bubble tcloud-bubble--tweak ' + (img ? 'tcloud-bubble--artist' : 'tcloud-bubble--genre') +
-        (r.src === 'you' && !r.rej ? ' tcloud-bubble--you' : '') + (r.rej ? ' tcloud-bubble--rejected' : '');
+        (r.src === 'you' && !r.rej ? ' tcloud-bubble--you' : '') + (r.rej ? ' tcloud-bubble--rejected' : '') +
+        (r.src === 'friend' ? ' tcloud-bubble--friend' : '');
       el.style.setProperty('--size', size + 'px');
       if (img) el.style.backgroundImage = 'url(' + tasset() + img + ')';
       el.setAttribute('role', 'slider');
@@ -14591,8 +15700,15 @@
       if (r.rej) el.setAttribute('aria-disabled', 'true');
       el.innerHTML = innerHtml(r, lvl, lblId);
       var b = { rec: r, group: g, el: el, lblId: lblId, focused: false, r: size / 2, x: 0, y: 0, vx: 0, vy: 0 };
-      el.addEventListener('click', function () { focusBubble(b); });
-      el.addEventListener('keydown', function (e) { onKey(b, e); });
+      el.addEventListener('click', function (e) {
+        var x = e.target.closest('[data-rmfriend]');
+        if (x) { e.stopPropagation(); e.preventDefault(); removeFriendFacet(x.getAttribute('data-rmfriend')); return; }
+        focusBubble(b);
+      });
+      el.addEventListener('keydown', function (e) {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('[data-rmfriend]')) { e.stopPropagation(); e.preventDefault(); removeFriendFacet(e.target.getAttribute('data-rmfriend')); return; }
+        onKey(b, e);
+      });
       cField.appendChild(el);
       cBubbles.push(b);
       return b;
@@ -14600,12 +15716,14 @@
     function innerHtml(r, lvl, lblId) {
       var s = '<span class="tcloud-bubble-label" id="' + lblId + '">' + r.n + '</span>';
       if (r.rej) s += '<span class="tcloud-lock" aria-hidden="true">' + ICON_LOCK + '</span>';
+      else if (r.src === 'friend') s += '<span class="tcloud-friend-pill" aria-hidden="true">от ' + (r.from || 'друга') + '</span><span class="tcloud-friend-x" data-rmfriend="' + r.n + '" role="button" tabindex="0" aria-label="Убрать «' + r.n + '» из вкуса">×</span>';
       else if (r.src === 'you') s += '<span class="tcloud-bubble-num" aria-hidden="true">' + lvl + '/4</span>';
       else s += '<span class="tcloud-prov-pill" aria-hidden="true">' + provLabel(r.src) + '</span>';
       return s;
     }
     function valueText(r, lvl) {   // STATE only; the facet name is supplied via aria-labelledby
       if (r.rej) return 'отклонено в плеере — заморожено. Вернуть можно в плеере.';
+      if (r.src === 'friend') return 'добавлено другом (' + (r.from || '') + '), вес ' + lvl + ' из 4. Настрой стрелками или убери крестиком.';
       if (r.src === 'you') return 'вес ' + lvl + ' из 4 — ты задал.';
       return provLabel(r.src) + ', размер не задан. Настрой стрелками.';
     }
@@ -17276,6 +18394,39 @@
       background: rgba(81, 104, 252, 0.32);
       box-shadow: var(--gfm-spec-rim-strong);
     }
+
+    /* ── SHARED RADIO — glass legibility (opaque-enough surfaces; menus not translucent) ── */
+    /* the share / taste-preview sheets carry .gfm-glass-surface but must stay readable:
+       keep a near-opaque base + the glass blur for the backdrop-feel, not see-through. */
+    html[data-skin="glass"] .sr-sheet {
+      background: rgba(20, 22, 42, 0.94);
+      backdrop-filter: var(--gfm-glass-blur);
+      -webkit-backdrop-filter: var(--gfm-glass-blur);
+      border-color: var(--gfm-glass-border-strong);
+      box-shadow: var(--gfm-spec-rim-strong), var(--gfm-shadow-card);
+    }
+    /* session header — accent-tinted but opaque enough over the dusk-lake backdrop */
+    html[data-skin="glass"] .sr-hdr {
+      background: rgba(38, 44, 92, 0.78);
+      backdrop-filter: var(--gfm-glass-blur);
+      -webkit-backdrop-filter: var(--gfm-glass-blur);
+      border-color: var(--gfm-glass-border-accent);
+    }
+    html[data-skin="glass"] .sr-scrim { background: rgba(8, 9, 18, 0.5); }
+    /* suggestion card track + the card surfaces — lift opacity so they don't dissolve */
+    html[data-skin="glass"] .sr-sugg-track,
+    html[data-skin="glass"] .ai-track.sr-track { background: rgba(255, 255, 255, 0.1); border-color: var(--gfm-glass-border-strong); }
+    html[data-skin="glass"] .sr-card { background: linear-gradient(160deg, rgba(20, 24, 54, 0.96), rgba(12, 14, 30, 0.96)); }
+    html[data-skin="glass"] .sr-invite-card { background: rgba(255, 255, 255, 0.07); border-color: var(--gfm-glass-border-strong); }
+    /* recipient preview card */
+    html[data-skin="glass"] .tg-card {
+      background: rgba(20, 22, 42, 0.92);
+      backdrop-filter: var(--gfm-glass-blur);
+      -webkit-backdrop-filter: var(--gfm-glass-blur);
+      border-color: var(--gfm-glass-border-strong);
+    }
+    /* friend-attribution pill stays readable on glass */
+    html[data-skin="glass"] .tcloud-friend-pill { background: rgba(12, 14, 30, 0.9); }
   </style>
 
   <!-- Skin switcher relocated into the topbar (see #gorodfm-skin-switcher there). -->
