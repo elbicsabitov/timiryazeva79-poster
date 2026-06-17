@@ -16114,5 +16114,464 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
   })();
   </script>
+
+  <!-- ======================================================================
+       GLASS SKIN — additive layer; activates only under html[data-skin="glass"]
+       Default skin (absent / "default") is byte-identical to before.
+       Insertion point: L15851, before </body>.
+       Integration note for chat rail: apply .gfm-glass-surface utility class
+       (defined below) to the rail container — it picks up --gfm-glass-bg,
+       --gfm-glass-border, --gfm-glass-blur automatically.
+       ====================================================================== -->
+  <style id="gorodfm-glass-skin">
+    /* ── GLASS DESIGN TOKENS (Город ФМ × Twinr Liquid Glass family)
+       Reuse these in any new surface (chat rail, sheets, modals):
+         background:        var(--gfm-glass-bg)
+         border:            1px solid var(--gfm-glass-border)
+         backdrop-filter:   var(--gfm-glass-blur)
+         box-shadow:        var(--gfm-glass-highlight)
+         highlight inset:   var(--gfm-spec-rim)
+    ── */
+    html[data-skin="glass"] {
+      /* Material fills — grey-tint Apple system, tuned for cinema-dark base */
+      --gfm-glass-bg:           rgba(51, 51, 51, 0.28);
+      --gfm-glass-bg-strong:    rgba(51, 51, 51, 0.42);
+      --gfm-glass-bg-subtle:    rgba(51, 51, 51, 0.16);
+      --gfm-glass-bg-card:      rgba(40, 40, 52, 0.32);
+
+      /* Blur / saturate scale */
+      --gfm-glass-blur:         blur(28px) saturate(180%);
+      --gfm-glass-blur-heavy:   blur(44px) saturate(200%);
+      --gfm-glass-blur-light:   blur(16px) saturate(150%);
+
+      /* Borders — 1px light rim, stronger on focused/interactive surfaces */
+      --gfm-glass-border:       rgba(255, 255, 255, 0.14);
+      --gfm-glass-border-strong:rgba(255, 255, 255, 0.26);
+      --gfm-glass-border-accent:rgba(81, 104, 252, 0.45);
+
+      /* Specular highlight — Apple-style top-edge rim light */
+      --gfm-spec-rim:
+        inset 0 1px 0 rgba(255, 255, 255, 0.36),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+        inset 0 0 0 0.5px rgba(255, 255, 255, 0.07);
+      --gfm-spec-rim-strong:
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.50),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.07),
+        inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+
+      /* highlight alias (for external consumers) */
+      --gfm-glass-highlight:    var(--gfm-spec-rim);
+
+      /* Depth shadows on glass panels */
+      --gfm-shadow-panel:       0 8px 32px -6px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.30);
+      --gfm-shadow-card:        0 4px 20px -4px rgba(0, 0, 0, 0.45);
+      --gfm-shadow-bar:         0 -1px 24px rgba(0, 0, 0, 0.38);
+
+      /* Ambient ambiance — subtle blue glow behind the near-black base */
+      --gfm-ambiance-bg: radial-gradient(
+        ellipse 70% 40% at 30% 100%,
+        rgba(81, 104, 252, 0.09) 0%,
+        transparent 70%
+      ), radial-gradient(
+        ellipse 50% 30% at 80% 0%,
+        rgba(81, 104, 252, 0.06) 0%,
+        transparent 65%
+      );
+
+      /* Motion easing shared with family */
+      --gfm-ease-glass: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    /* ── REDUCED-TRANSPARENCY fallback — heavier fills, no blur ── */
+    @media (prefers-reduced-transparency: reduce) {
+      html[data-skin="glass"] {
+        --gfm-glass-bg:        rgba(26, 28, 36, 0.96);
+        --gfm-glass-bg-strong: rgba(18, 20, 28, 0.98);
+        --gfm-glass-bg-card:   rgba(22, 24, 33, 0.96);
+        --gfm-glass-blur:      none;
+        --gfm-glass-blur-heavy:none;
+        --gfm-glass-blur-light:none;
+      }
+    }
+
+    /* ── UTILITY — .gfm-glass-surface for any new surface (chat rail hook point) ── */
+    html[data-skin="glass"] .gfm-glass-surface {
+      background: var(--gfm-glass-bg);
+      backdrop-filter: var(--gfm-glass-blur);
+      -webkit-backdrop-filter: var(--gfm-glass-blur);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
+    }
+
+    /* ── PAGE BACKGROUND — ambient blue shimmer over cinema base ── */
+    html[data-skin="glass"] .bg-cinema {
+      background: var(--bg-base);
+    }
+    html[data-skin="glass"] .bg-cinema::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: var(--gfm-ambiance-bg);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* ── SIDEBAR ── */
+    html[data-skin="glass"] .sidebar {
+      background: var(--gfm-glass-bg);
+      backdrop-filter: var(--gfm-glass-blur-heavy);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-heavy);
+      border-right: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-panel);
+    }
+
+    html[data-skin="glass"] .sidebar-footer {
+      border-top-color: var(--gfm-glass-border);
+    }
+
+    html[data-skin="glass"] .sidebar-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: var(--gfm-spec-rim);
+      border-radius: var(--r-base);
+    }
+
+    html[data-skin="glass"] .sidebar-item[aria-current="page"] {
+      background: rgba(81, 104, 252, 0.18);
+      border: 1px solid rgba(81, 104, 252, 0.30);
+      box-shadow: var(--gfm-spec-rim), inset 3px 0 0 var(--brand-blue-light);
+    }
+
+    /* ── TOPBAR ── */
+    html[data-skin="glass"] .topbar {
+      background: var(--gfm-glass-bg-strong);
+      backdrop-filter: var(--gfm-glass-blur);
+      -webkit-backdrop-filter: var(--gfm-glass-blur);
+      border-bottom: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim-strong), 0 1px 24px rgba(0, 0, 0, 0.30);
+    }
+
+    html[data-skin="glass"] .topbar-search,
+    html[data-skin="glass"] .topbar-account {
+      background: var(--gfm-glass-bg-subtle);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim);
+    }
+
+    html[data-skin="glass"] .topbar-search:hover,
+    html[data-skin="glass"] .topbar-account:hover {
+      background: var(--gfm-glass-bg);
+      border-color: var(--gfm-glass-border-strong);
+    }
+
+    /* ── MINI-PLAYER ── */
+    html[data-skin="glass"] .player-mini {
+      background: var(--gfm-glass-bg-strong);
+      backdrop-filter: var(--gfm-glass-blur-heavy);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-heavy);
+      border-top: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim-strong), var(--gfm-shadow-bar);
+    }
+
+    html[data-skin="glass"] .player-mini:hover {
+      background: rgba(51, 51, 51, 0.48);
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      html[data-skin="glass"] .player-mini {
+        background: var(--surface-0);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      html[data-skin="glass"] .player-mini { background: var(--surface-0); }
+    }
+
+    html[data-skin="glass"] .player-mini-art {
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
+    }
+
+    /* ── HOME TILES — glass overlay on the label area ── */
+    html[data-skin="glass"] .home-tile-label-wrap {
+      /* subtle glassy panel behind vertical label text */
+    }
+
+    /* ── HOME CTX CARDS — glass cards ── */
+    html[data-skin="glass"] .home-ctx-card {
+      background: var(--gfm-glass-bg-card);
+      backdrop-filter: var(--gfm-glass-blur-light);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-light);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
+    }
+
+    html[data-skin="glass"] .home-ctx-card:hover {
+      background: rgba(81, 104, 252, 0.18);
+      border-color: var(--gfm-glass-border-accent);
+      box-shadow: var(--gfm-spec-rim-strong), var(--gfm-shadow-card);
+    }
+
+    /* ── LIVES CARDS ── */
+    html[data-skin="glass"] .lives-card {
+      background: var(--gfm-glass-bg-card);
+      backdrop-filter: var(--gfm-glass-blur-light);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-light);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
+    }
+
+    html[data-skin="glass"] .lives-card:hover {
+      background: var(--gfm-glass-bg);
+      border-color: var(--gfm-glass-border-accent);
+      box-shadow: var(--gfm-spec-rim-strong), var(--gfm-shadow-card);
+    }
+
+    /* ── TASTE PAGE — chips, cards ── */
+    html[data-skin="glass"] .taste-card,
+    html[data-skin="glass"] .taste-genre-pill,
+    html[data-skin="glass"] .taste-saved-chip {
+      background: var(--gfm-glass-bg-card);
+      backdrop-filter: var(--gfm-glass-blur-light);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-light);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim);
+    }
+
+    /* ── WHY POPOVER ── */
+    html[data-skin="glass"] .why-pop {
+      background: var(--gfm-glass-bg-strong);
+      backdrop-filter: var(--gfm-glass-blur-heavy);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-heavy);
+      border: 1px solid var(--gfm-glass-border-strong);
+      box-shadow: var(--gfm-spec-rim-strong), var(--gfm-shadow-panel);
+    }
+
+    html[data-skin="glass"] .why-row {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--gfm-glass-border);
+    }
+
+    /* ── TWEAKS FAB — glass treatment ── */
+    html[data-skin="glass"] .tweaks-fab {
+      background: var(--gfm-glass-bg);
+      border-color: var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim);
+      backdrop-filter: var(--gfm-glass-blur-light);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-light);
+    }
+
+    /* ── DISCOVER / WAVE dials and cards ── */
+    html[data-skin="glass"] .discover-card,
+    html[data-skin="glass"] .discover-near-card,
+    html[data-skin="glass"] .wave-card {
+      background: var(--gfm-glass-bg-card);
+      backdrop-filter: var(--gfm-glass-blur-light);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-light);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
+    }
+
+    /* ── GENERIC cards / panels (catch-all for misc surfaces) ── */
+    html[data-skin="glass"] .card,
+    html[data-skin="glass"] .panel,
+    html[data-skin="glass"] .recap-card,
+    html[data-skin="glass"] .profile-card,
+    html[data-skin="glass"] .library-section,
+    html[data-skin="glass"] .favorites-section {
+      background: var(--gfm-glass-bg-card);
+      backdrop-filter: var(--gfm-glass-blur-light);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-light);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
+    }
+
+    /* ── BUTTONS / PILLS / CHIPS ── */
+    html[data-skin="glass"] .home-chip,
+    html[data-skin="glass"] .discover-chip,
+    html[data-skin="glass"] .wave-chip,
+    html[data-skin="glass"] .taste-ctrl {
+      background: var(--gfm-glass-bg-subtle);
+      border: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-spec-rim);
+      backdrop-filter: var(--gfm-glass-blur-light);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-light);
+    }
+
+    html[data-skin="glass"] .home-chip.is-active,
+    html[data-skin="glass"] .discover-chip.is-active,
+    html[data-skin="glass"] .wave-chip.is-active {
+      background: rgba(81, 104, 252, 0.22);
+      border-color: var(--gfm-glass-border-accent);
+      box-shadow: var(--gfm-spec-rim-strong);
+    }
+
+    /* ── ACCOUNT PANEL (modal/sheet) ── */
+    html[data-skin="glass"] .account-panel {
+      background: var(--gfm-glass-bg-strong);
+      backdrop-filter: var(--gfm-glass-blur-heavy);
+      -webkit-backdrop-filter: var(--gfm-glass-blur-heavy);
+      border-left: 1px solid var(--gfm-glass-border);
+      box-shadow: var(--gfm-shadow-panel);
+    }
+
+    /* ── SKIN SWITCHER itself — glass style ── */
+    html[data-skin="glass"] #gorodfm-skin-switcher {
+      background: var(--gfm-glass-bg-strong);
+      backdrop-filter: var(--gfm-glass-blur);
+      -webkit-backdrop-filter: var(--gfm-glass-blur);
+      border-color: var(--gfm-glass-border-strong);
+      box-shadow: var(--gfm-spec-rim-strong), var(--gfm-shadow-card);
+    }
+
+    html[data-skin="glass"] #gorodfm-skin-switcher .gfm-ss-btn[aria-pressed="true"] {
+      background: rgba(81, 104, 252, 0.32);
+      box-shadow: var(--gfm-spec-rim-strong);
+    }
+  </style>
+
+  <!-- Skin switcher element — always visible, both skins -->
+  <div
+    id="gorodfm-skin-switcher"
+    role="group"
+    aria-label="Переключатель темы интерфейса"
+    style="
+      position: fixed;
+      bottom: calc(var(--player-mini-h) + 16px + 44px + 12px);
+      right: 20px;
+      z-index: 97;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      background: rgba(18, 18, 24, 0.88);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08);
+      transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    "
+  >
+    <button
+      class="gfm-ss-btn"
+      id="gfm-ss-default"
+      type="button"
+      aria-pressed="true"
+      style="
+        min-width: 44px; min-height: 44px;
+        padding: 0 14px;
+        border: none;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition: background 180ms ease, box-shadow 180ms ease;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >Обычный</button>
+    <button
+      class="gfm-ss-btn"
+      id="gfm-ss-glass"
+      type="button"
+      aria-pressed="false"
+      style="
+        min-width: 44px; min-height: 44px;
+        padding: 0 14px;
+        border: none;
+        border-radius: 999px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.60);
+        font-family: 'Onest', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >Стекло</button>
+  </div>
+
+  <script>
+    /* ── Skin switcher — gorodfm_skin in localStorage ── */
+    (function () {
+      'use strict';
+      var LS_KEY = 'gorodfm_skin';
+      var SKINS = { 'default': 'default', 'glass': 'glass' };
+
+      function applySkin(skin) {
+        var s = SKINS[skin] ? skin : 'default';
+        document.documentElement.setAttribute('data-skin', s);
+        var btnDefault = document.getElementById('gfm-ss-default');
+        var btnGlass   = document.getElementById('gfm-ss-glass');
+        if (btnDefault && btnGlass) {
+          var isGlass = s === 'glass';
+          btnDefault.setAttribute('aria-pressed', isGlass ? 'false' : 'true');
+          btnGlass.setAttribute('aria-pressed', isGlass ? 'true' : 'false');
+          /* Active segment: white fill; inactive: transparent dim */
+          btnDefault.style.background = isGlass ? 'transparent' : 'rgba(255,255,255,0.12)';
+          btnDefault.style.color      = isGlass ? 'rgba(255,255,255,0.60)' : '#ffffff';
+          btnDefault.style.boxShadow  = isGlass ? 'none' : 'inset 0 1px 0 rgba(255,255,255,0.18)';
+          btnGlass.style.background   = isGlass ? 'rgba(81,104,252,0.28)' : 'transparent';
+          btnGlass.style.color        = isGlass ? '#ffffff' : 'rgba(255,255,255,0.60)';
+          btnGlass.style.boxShadow    = isGlass ? 'inset 0 1px 0 rgba(255,255,255,0.18)' : 'none';
+        }
+      }
+
+      function lsGet(k, fb) {
+        try { var v = localStorage.getItem(k); return v !== null ? v : fb; } catch(_) { return fb; }
+      }
+      function lsSet(k, v) {
+        try { localStorage.setItem(k, v); } catch(_) {}
+      }
+
+      /* Apply saved skin immediately (no flash — runs synchronously after parse) */
+      applySkin(lsGet(LS_KEY, 'default'));
+
+      function wire() {
+        var btnDefault = document.getElementById('gfm-ss-default');
+        var btnGlass   = document.getElementById('gfm-ss-glass');
+        if (!btnDefault || !btnGlass) return;
+
+        btnDefault.addEventListener('click', function () {
+          lsSet(LS_KEY, 'default');
+          applySkin('default');
+        });
+        btnGlass.addEventListener('click', function () {
+          lsSet(LS_KEY, 'glass');
+          applySkin('glass');
+        });
+
+        /* Focus-visible ring — 3px brand-accent ring, 44px targets already set by min-width/height */
+        [btnDefault, btnGlass].forEach(function (btn) {
+          btn.addEventListener('focusin', function () {
+            btn.style.outline = '3px solid #8094ff';
+            btn.style.outlineOffset = '2px';
+          });
+          btn.addEventListener('focusout', function () {
+            btn.style.outline = '';
+            btn.style.outlineOffset = '';
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', wire);
+      } else {
+        wire();
+      }
+    })();
+  </script>
 </body>
 </html>
