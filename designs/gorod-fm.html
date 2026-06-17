@@ -3015,6 +3015,119 @@
       .ai-send:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
       .ai-send svg { width: 18px; height: 18px; }
 
+      /* =====================================================================
+         CHAT-LAYER S0 — composer mode toggle (ЛЮДЯМ ↔ Twinr) — prototype
+         Evolves the single AI dock into a two-lane composer:
+           • Twinr lane (default — dock is an AI-only surface): private assistant.
+           • Всем lane: broadcast to a room ("Общий эфир", seeded demo).
+         Mode is signalled by NON-COLOR means (icon + word + placeholder +
+         send-label + banner + role-state); #5168FC is redundant-decorative.
+         ===================================================================== */
+
+      /* send button → pill that RESTATES the target (not color-only) */
+      .ai-send {
+        width: auto; min-width: 44px; height: 44px; border-radius: var(--r-pill);
+        padding: 0 15px; gap: 7px;
+      }
+      .ai-send-label { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; }
+      @media (max-width: 360px) { .ai-send-label { display: none; } }
+
+      /* armed-destination banner (echoes where the next message goes) */
+      .ai-compose-target {
+        flex-shrink: 0; display: flex; align-items: center; gap: 7px;
+        padding: 9px 16px 4px; font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600;
+        color: var(--text-sec);
+      }
+      .ai-compose-target b { color: #fff; font-weight: 700; }
+      .ai-compose-target .ai-ct-icon { font-size: 13px; line-height: 1; }
+      .ai-compose-target .ai-ct-presence {
+        margin-left: auto; color: var(--text-sec); font-weight: 600;
+        display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+      }
+      .ai-compose-target .ai-ct-presence::before {
+        content: ''; width: 7px; height: 7px; border-radius: 50%;
+        background: var(--success, #34d399); box-shadow: 0 0 8px var(--success, #34d399);
+      }
+      .ai-dock[data-mode="ai"] .ai-compose-target { color: #aeb8ff; }
+
+      /* segmented single-select toggle (real radios → free keyboard + SR semantics) */
+      .ai-mode { flex-shrink: 0; display: flex; gap: 6px; padding: 0 14px; }
+      .ai-seg {
+        position: relative; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+        height: 40px; border-radius: 11px; cursor: pointer; user-select: none;
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-sec);
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.10);
+        transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+      }
+      .ai-seg input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+      .ai-seg .ai-seg-ico { font-size: 14px; line-height: 1; }
+      .ai-seg:hover { color: #fff; border-color: rgba(255, 255, 255, 0.22); }
+      .ai-seg:has(input:checked) { color: #fff; }
+      .ai-seg--all:has(input:checked) { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.34); }
+      .ai-seg--ai:has(input:checked) { background: var(--brand-blue-light); border-color: var(--brand-blue-light); }
+      .ai-seg:has(input:focus-visible) { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+
+      /* input + send reskin per mode (redundant over the non-color signals above) */
+      .ai-dock[data-mode="ai"] .ai-input-field { border-color: var(--brand-blue-light); }
+      .ai-dock[data-mode="ai"] .ai-input-field:focus { border-color: var(--brand-blue-light); box-shadow: 0 0 0 2px rgba(81, 104, 252, 0.32); }
+      .ai-dock[data-mode="all"] .ai-send { background: rgba(255, 255, 255, 0.16); color: #fff; }
+      .ai-dock[data-mode="all"] .ai-send:hover { background: rgba(255, 255, 255, 0.24); }
+
+      /* room (human) messages — visually distinct from the AI conversation */
+      .ai-msg--room { align-self: flex-start; flex-direction: row; max-width: 90%; }
+      .ai-room-av {
+        width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; margin-top: 18px;
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 800; color: #fff;
+      }
+      .ai-room-col { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+      .ai-room-handle { font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 700; color: var(--text-sec); padding-left: 2px; }
+      .ai-msg--mine { align-self: flex-end; flex-direction: column; align-items: flex-end; max-width: 86%; }
+      .ai-msg--mine .ai-msg-bubble { background: rgba(255, 255, 255, 0.16); color: #fff; border-top-left-radius: 14px; border-top-right-radius: 4px; }
+      .ai-msg-sent { font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 600; color: var(--text-sec); margin-top: 3px; }
+      .ai-room-divider {
+        align-self: center; font-family: 'Onest', sans-serif; font-size: 11px; font-weight: 600; color: var(--text-sec);
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 5px 12px; border-radius: var(--r-pill); margin: 2px 0;
+      }
+
+      /* private Twinr reply inside a room ("видно только вам") */
+      .ai-msg--private .ai-msg-bubble { border: 1px dashed rgba(81, 104, 252, 0.55); background: rgba(81, 104, 252, 0.10); }
+      .ai-private-tag {
+        font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 700; color: var(--brand-blue-light);
+        display: flex; align-items: center; gap: 4px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;
+      }
+      .ai-share-btn {
+        display: block; margin-top: 9px; font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 600;
+        padding: 6px 11px; border-radius: var(--r-pill); background: transparent; color: #cdd4f5;
+        border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
+      }
+      .ai-share-btn:hover { border-color: var(--brand-blue-light); color: #fff; }
+      .ai-share-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+
+      /* undo-toast after a human broadcast (Gmail send-delay pattern, not a confirm dialog) */
+      .ai-undo {
+        flex-shrink: 0; display: flex; align-items: center; gap: 10px; margin: 4px 14px 0;
+        padding: 9px 13px; border-radius: 12px; background: rgba(20, 22, 30, 0.97);
+        border: 1px solid rgba(255, 255, 255, 0.14); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 600; color: #e7eaf3;
+        animation: ai-undo-in 0.2s ease;
+      }
+      .ai-undo[hidden] { display: none; }
+      .ai-undo b { color: #fff; }
+      .ai-undo-btn {
+        margin-left: auto; font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 700;
+        color: var(--brand-blue-light); background: transparent; border: none; cursor: pointer; padding: 6px 8px; border-radius: 7px;
+      }
+      .ai-undo-btn:hover { text-decoration: underline; }
+      .ai-undo-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      @keyframes ai-undo-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ai-undo { animation: none; }
+        .ai-seg { transition: none; }
+      }
+
       @media (max-width: 480px) {
         .ai-dock { right: 12px; left: 12px; width: auto; bottom: calc(var(--player-mini-h) + 12px); height: 70dvh; }
         .ai-launcher { right: 14px; }
@@ -12862,21 +12975,21 @@
 
   <!-- ===================== Twinr AI chat — launcher + dock ==================== -->
   <button class="ai-launcher" id="ai-launcher" type="button"
-          aria-label="Открыть Twinr AI — музыкальный помощник" aria-expanded="false" aria-controls="ai-dock">
+          aria-label="Открыть чат — Twinr AI и общий эфир" aria-expanded="false" aria-controls="ai-dock">
     <span class="ai-launcher-spark" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
     </span>
-    Twinr AI
+    Чат
   </button>
 
-  <aside class="ai-dock" id="ai-dock" role="dialog" aria-label="Twinr AI — музыкальный помощник">
+  <aside class="ai-dock" id="ai-dock" role="dialog" aria-label="Чат — Twinr AI и общий эфир">
     <div class="ai-dock-head">
       <div class="ai-dock-avatar" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z"/></svg>
       </div>
       <div class="ai-dock-titles">
-        <div class="ai-dock-title">Twinr AI</div>
-        <div class="ai-dock-sub">ваш музыкальный директор</div>
+        <div class="ai-dock-title">Чат</div>
+        <div class="ai-dock-sub" id="ai-dock-sub">✦ Twinr · музыкальный директор</div>
       </div>
       <button class="ai-dock-btn" id="ai-collapse" type="button" aria-label="Свернуть чат">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -12892,10 +13005,29 @@
 
     <div class="ai-chips" id="ai-chips"></div>
 
+    <!-- undo-toast after a human broadcast (focusable, ~6s, polite live region) -->
+    <div class="ai-undo" id="ai-undo" role="status" hidden></div>
+
+    <!-- armed-destination banner: where the NEXT message goes -->
+    <div class="ai-compose-target" id="ai-compose-target"></div>
+
+    <!-- composer mode toggle — single-select (radiogroup), NOT tablist/aria-pressed -->
+    <div class="ai-mode" role="radiogroup" aria-label="Кому отправить сообщение">
+      <label class="ai-seg ai-seg--ai">
+        <input type="radio" name="ai-mode" value="ai" checked>
+        <span class="ai-seg-ico" aria-hidden="true">✦</span><span>Twinr</span>
+      </label>
+      <label class="ai-seg ai-seg--all">
+        <input type="radio" name="ai-mode" value="all">
+        <span class="ai-seg-ico" aria-hidden="true">👥</span><span>Всем</span>
+      </label>
+    </div>
+
     <form class="ai-input" id="ai-input-form">
-      <input class="ai-input-field" id="ai-input" type="text" placeholder="Скажите, что поставить…" autocomplete="off" aria-label="Сообщение для Twinr AI">
-      <button class="ai-send" type="submit" aria-label="Отправить">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      <input class="ai-input-field" id="ai-input" type="text" placeholder="Спросите Twinr…" autocomplete="off" aria-label="Сообщение для Twinr AI — видно только вам">
+      <button class="ai-send" type="submit" aria-label="Спросить Twinr">
+        <span class="ai-send-label" id="ai-send-label">Спросить</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
     </form>
   </aside>
@@ -12909,6 +13041,17 @@
     var profile = ['Арена-рок', 'Хип-хоп 2010-х', 'Электро-поп'];
     var greeted = false;
     var speakTimer = 0;
+
+    // ---- S0 chat-layer: composer mode (ЛЮДЯМ ↔ Twinr) ----
+    var modeRadios, banner, sendLabel, sendBtn, undoEl, dockSub;
+    var mode = 'ai', roomSeeded = false, undoTimer = 0, lastBroadcast = null;
+    var ROOM_NAME = 'Общий эфир';
+    var PEERS = [
+      { h: 'ночная_сова', c: '#6d6af6', t: 'эта волна прям под ночь 🔥' },
+      { h: 'mef_88',      c: '#f6a26a', t: 'кто ставил Niletto до этого? зашло' },
+      { h: 'гость_2841',  c: '#3fb6a8', t: 'плюсую, тёплая подборка' }
+    ];
+    var REACTIONS = ['🔥', '❤️', '🎧', '😮'];
 
     // GOROD-049 — edge-glow signal: launcher/dock "breathe" only while Twinr talks.
     function setSpeaking(on) {
@@ -12929,6 +13072,10 @@
       dock = $('ai-dock'); launcher = $('ai-launcher'); msgs = $('ai-msgs');
       chipsEl = $('ai-chips'); profileTags = $('ai-profile-tags');
       inputForm = $('ai-input-form'); input = $('ai-input');
+      banner = $('ai-compose-target'); sendLabel = $('ai-send-label'); undoEl = $('ai-undo');
+      dockSub = $('ai-dock-sub');
+      sendBtn = inputForm.querySelector('.ai-send');
+      modeRadios = dock ? dock.querySelectorAll('input[name="ai-mode"]') : [];
       if (!dock) return;
       launcher.addEventListener('click', open);
       $('ai-collapse').addEventListener('click', collapse);
@@ -12936,8 +13083,13 @@
         e.preventDefault();
         var v = input.value.trim();
         if (!v) return;
-        addUser(v); input.value = ''; chipsEl.innerHTML = ''; handleText(v);
+        input.value = '';
+        send(v);
       });
+      [].forEach.call(modeRadios, function (r) {
+        r.addEventListener('change', function () { if (r.checked) setMode(r.value); });
+      });
+      setMode('ai');   // safe default: dock is an AI-only surface
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dock.classList.contains('is-open')) collapse(); });
       // Native AI: the player itself is the entry point (research 07 — "AI is a layer")
       var pw = document.getElementById('player-track-reason');
@@ -12951,6 +13103,8 @@
       dock.classList.add('is-open');
       launcher.classList.add('is-hidden');
       launcher.setAttribute('aria-expanded', 'true');
+      hideUndo();
+      if (mode !== 'ai') setMode('ai');   // reopen always lands on the safe default
       if (!greeted) { greeted = true; greet(); }
       setTimeout(function () { if (input) input.focus(); }, 260);
     }
@@ -13011,6 +13165,118 @@
         b.addEventListener('click', function () { addUser(c.label); chipsEl.innerHTML = ''; intents[c.intent](); });
         chipsEl.appendChild(b);
       });
+    }
+
+    /* ---- S0 chat-layer: mode-aware send + room (human) lane -------------- */
+    function send(text) {
+      if (mode === 'ai') { addUser(text); chipsEl.innerHTML = ''; handleText(text); return; }
+      // mode 'all' — broadcasting to people. '@Twinr' / '/' redirect to a PRIVATE AI reply.
+      var redirect = text.replace(/^\s*(@twinr|\/twinr|\/)\s*/i, '');
+      if (redirect !== text && redirect) { addUser(redirect); chipsEl.innerHTML = ''; privateAI(redirect); return; }
+      showUndo(addRoomUser(text));
+    }
+
+    function setMode(m) {
+      mode = (m === 'all') ? 'all' : 'ai';
+      dock.setAttribute('data-mode', mode);
+      [].forEach.call(modeRadios, function (r) { r.checked = (r.value === mode); });
+      if (mode === 'ai') {
+        input.placeholder = 'Спросите Twinr…';
+        input.setAttribute('aria-label', 'Сообщение для Twinr AI — видно только вам');
+        sendLabel.textContent = 'Спросить';
+        sendBtn.setAttribute('aria-label', 'Спросить Twinr');
+        if (dockSub) dockSub.textContent = '✦ Twinr · музыкальный директор';
+        banner.innerHTML = '<span class="ai-ct-icon" aria-hidden="true">✦</span> Говорите с <b>Twinr</b> · видно только вам';
+        if (msgs.children.length) setChips(DEFAULT_CHIPS);
+      } else {
+        input.placeholder = 'Написать всем в «' + ROOM_NAME + '»…';
+        input.setAttribute('aria-label', 'Сообщение всем в комнате «' + ROOM_NAME + '»');
+        sendLabel.textContent = 'Отправить';
+        sendBtn.setAttribute('aria-label', 'Отправить всем в «' + ROOM_NAME + '»');
+        if (dockSub) dockSub.textContent = '👥 ' + ROOM_NAME + ' · 1 240 слушают';
+        banner.innerHTML = '<span class="ai-ct-icon" aria-hidden="true">👥</span> Сообщение всем в «<b>' + ROOM_NAME + '</b>»<span class="ai-ct-presence">1 240 слушают</span>';
+        seedRoom();
+        setRoomChips();
+      }
+    }
+
+    function setRoomChips() {
+      chipsEl.innerHTML = '';
+      REACTIONS.forEach(function (r) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = r;
+        b.setAttribute('aria-label', 'Отправить реакцию ' + r + ' всем');
+        b.addEventListener('click', function () { showUndo(addRoomUser(r)); });
+        chipsEl.appendChild(b);
+      });
+    }
+
+    function addRoomDivider(text) {
+      var d = document.createElement('div'); d.className = 'ai-room-divider'; d.textContent = text; msgs.appendChild(d);
+    }
+    function addRoomPeer(p) {
+      var m = document.createElement('div'); m.className = 'ai-msg ai-msg--room';
+      m.innerHTML = '<div class="ai-room-av" style="background:' + p.c + '" aria-hidden="true">' + esc(p.h.charAt(0).toUpperCase()) + '</div>' +
+        '<div class="ai-room-col"><div class="ai-room-handle">' + esc(p.h) + '</div>' +
+        '<div class="ai-msg-bubble">' + esc(p.t) + '</div></div>';
+      msgs.appendChild(m); scrollDown();
+    }
+    function seedRoom() {
+      if (roomSeeded) return; roomSeeded = true;
+      addRoomDivider('Вы в «' + ROOM_NAME + '» · демо-сообщения');
+      PEERS.forEach(addRoomPeer);
+    }
+    function addRoomUser(text) {
+      var m = document.createElement('div'); m.className = 'ai-msg ai-msg--mine';
+      var b = document.createElement('div'); b.className = 'ai-msg-bubble'; b.textContent = text;
+      var s = document.createElement('div'); s.className = 'ai-msg-sent'; s.textContent = 'отправлено всем · 🟢';
+      m.appendChild(b); m.appendChild(s); msgs.appendChild(m); scrollDown(); return m;
+    }
+
+    function showUndo(node) {
+      lastBroadcast = node;
+      undoEl.hidden = false;
+      undoEl.innerHTML = '<span>Отправлено в «<b>' + esc(ROOM_NAME) + '</b>»</span><button type="button" class="ai-undo-btn">Отменить</button>';
+      undoEl.querySelector('.ai-undo-btn').addEventListener('click', undoBroadcast);
+      clearTimeout(undoTimer); undoTimer = setTimeout(hideUndo, 6000);
+    }
+    function undoBroadcast() {
+      if (lastBroadcast && lastBroadcast.parentNode) lastBroadcast.parentNode.removeChild(lastBroadcast);
+      lastBroadcast = null; hideUndo(); if (input) input.focus();
+    }
+    function hideUndo() {
+      clearTimeout(undoTimer);
+      if (undoEl) { undoEl.hidden = true; undoEl.innerHTML = ''; }
+      lastBroadcast = null;
+    }
+
+    function privateAI(q) {
+      setSpeaking(true);
+      var t = document.createElement('div'); t.className = 'ai-msg ai-msg--ai ai-msg--private';
+      t.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div>' +
+        '<div class="ai-msg-bubble"><div class="ai-private-tag">✦ Twinr · видно только вам</div>' +
+        '<div class="ai-typing"><span></span><span></span><span></span></div></div>';
+      msgs.appendChild(t); scrollDown();
+      setTimeout(function () {
+        var ans = privateAnswer(q);
+        t.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div>' +
+          '<div class="ai-msg-bubble"><div class="ai-private-tag">✦ Twinr · видно только вам</div>' + ans +
+          '<button type="button" class="ai-share-btn">Поделиться с чатом</button></div>';
+        t.querySelector('.ai-share-btn').addEventListener('click', function () { shareToChat(ans); });
+        scrollDown();
+        clearTimeout(speakTimer); speakTimer = setTimeout(function () { setSpeaking(false); }, 700);
+      }, 760);
+    }
+    function privateAnswer(q) {
+      var s = q.toLowerCase();
+      if (/почему|why/.test(s)) return 'Сейчас в комнате тёплый поп-вокал ~95 BPM — под него ставлю похожее. Виден только тебе.';
+      if (/спокойн|грустн|чилл|тих|расслаб/.test(s)) return 'Могу собрать тебе спокойную ветку отдельно — не сбивая общий эфир комнаты.';
+      return 'Уловил: «' + esc(q) + '». В проде отвечу из твоего вкусового вектора. Этот ответ приватный — в комнате его никто не видит.';
+    }
+    function shareToChat(ansHtml) {
+      var tmp = document.createElement('div'); tmp.innerHTML = ansHtml;
+      var node = addRoomUser(tmp.textContent || '');
+      var sent = node.querySelector('.ai-msg-sent'); if (sent) sent.textContent = 'поделился ответом Twinr · 🟢';
+      showUndo(node);
     }
 
     var DEFAULT_CHIPS = [
