@@ -8095,6 +8095,14 @@
     .sr-sync-pill { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font: 700 11px 'Onest', sans-serif; color: var(--accent-on-dark); background: rgba(81,104,252,0.14); border: 1px solid rgba(81,104,252,0.34); border-radius: 999px; padding: 3px 10px; max-width: max-content; }
     .sr-sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #5168FC; animation: sr-breath var(--dur-breathe, 1600ms) ease-in-out infinite; }
     .sr-sync-demo { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-sec); }
+    /* While a shared-radio session is active the player meta grows by one line
+       (title+artist+«почему»+«слушаем вместе» pill = ~76px > the calm 72px bar).
+       Bump the SINGLE --player-mini-h token so the bar AND every calc()-derived
+       offset (content padding, AI dock, sheets, sticky bars) grow together — the
+       pill/text then sits cleanly inside the bar instead of spilling under it.
+       Scoped to the session state so the resting calm bar stays 72px. */
+    html[data-sr-sync="on"] { --player-mini-h: 86px; }
+    html[data-sr-sync="on"] .player-mini { align-items: center; }
 
     /* ---- SHARE FORK SHEET (modal) ---- */
     .sr-scrim { position: fixed; inset: 0; background: rgba(8,9,18,0.62); backdrop-filter: blur(4px); z-index: 1200; }
@@ -14857,6 +14865,9 @@
       if (pill) pill.hidden = !on;
       // «в синхроне» breath reuses the --dur-breathe token (new context; demo)
       if (pill) pill.classList.toggle('is-on', !!on);
+      // Grow the mini-player (and all --player-mini-h offsets) so the extra
+      // «слушаем вместе» line fits inside the bar instead of spilling under it.
+      document.documentElement.setAttribute('data-sr-sync', on ? 'on' : 'off');
     }
 
     /* ---- SUGGESTION → ACCEPT (the hero) ---- */
