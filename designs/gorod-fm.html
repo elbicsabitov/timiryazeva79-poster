@@ -11311,186 +11311,7 @@
     </button>
   </nav>
 
-  <!-- ======================================================================
-       TWEAKS PANEL — internal review, bottom-right floating
-       ====================================================================== -->
-  <aside
-    class="tweaks"
-    id="tweaks-panel"
-    role="complementary"
-    aria-label="Настройки прототипа"
-  >
-    <!-- Header: title + collapse + close -->
-    <div
-      class="tweaks-header"
-      id="tweaks-header"
-      role="button"
-      tabindex="0"
-      aria-expanded="true"
-      aria-controls="tweaks-body"
-      aria-label="Свернуть/развернуть панель настроек"
-    >
-      <span class="tweaks-header-label">Tweaks</span>
-      <div class="tweaks-header-actions">
-        <button
-          class="tweaks-header-btn"
-          type="button"
-          id="tweaks-collapse-btn"
-          aria-label="Свернуть панель"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="18 15 12 9 6 15"/>
-          </svg>
-        </button>
-        <button
-          class="tweaks-header-btn"
-          type="button"
-          id="tweaks-close-btn"
-          aria-label="Закрыть панель настроек"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Body: groups of controls -->
-    <div class="tweaks-body" id="tweaks-body">
-
-      <!-- Theme group -->
-      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-theme">
-        <div class="tweaks-group-label" id="tweak-label-theme">Тема</div>
-        <div class="tweaks-row" role="group" aria-label="Выбор темы">
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="theme"
-            data-value="cinema"
-            aria-pressed="true"
-            aria-label="Тема Cinema (по умолчанию)"
-          >Cinema</button>
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="theme"
-            data-value="warm"
-            aria-pressed="false"
-            aria-label="Тема Warm sunset"
-          >Warm</button>
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="theme"
-            data-value="light"
-            aria-pressed="false"
-            aria-label="Светлая тема (Apple-grade, бета)"
-          >Light</button>
-        </div>
-      </div>
-
-      <!-- Surface group -->
-      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-surface">
-        <div class="tweaks-group-label" id="tweak-label-surface">Поверхность</div>
-        <div class="tweaks-row" role="group" aria-label="Выбор поверхности">
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="surface"
-            data-value="web"
-            aria-pressed="true"
-            aria-label="Поверхность Web"
-          >Web</button>
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="surface"
-            data-value="mobile"
-            aria-pressed="false"
-            aria-label="Поверхность Mobile"
-          >Mobile</button>
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="surface"
-            data-value="tv"
-            aria-pressed="false"
-            aria-label="Поверхность TV"
-          >TV</button>
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="surface"
-            data-value="carplay"
-            aria-pressed="false"
-            aria-label="Поверхность CarPlay"
-          >CarPlay</button>
-        </div>
-      </div>
-
-      <!-- Home variant group -->
-      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-home">
-        <div class="tweaks-group-label" id="tweak-label-home">Главная — вариант</div>
-        <div class="tweaks-row" role="group" aria-label="Вариант экрана Главная">
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="home-variant"
-            data-value="fab"
-            aria-pressed="true"
-            aria-label="Вариант A: угловая FAB кнопка → нижний sheet"
-          >FAB → нижняя шторка</button>
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="home-variant"
-            data-value="drawer"
-            aria-pressed="false"
-            aria-label="Вариант B: боковая шторка слева"
-          >Боковая шторка слева</button>
-        </div>
-      </div>
-
-      <!-- Карта флоу group -->
-      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-flow-map">
-        <div class="tweaks-group-label" id="tweak-label-flow-map">Карта флоу</div>
-        <div class="tweaks-row" role="group" aria-label="Видимость карты флоу">
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="hide-flow-map"
-            data-value="false"
-            aria-pressed="true"
-            aria-label="Показать карту флоу (по умолчанию)"
-          >Показать</button>
-          <button
-            class="tweak-btn"
-            type="button"
-            data-tweak="hide-flow-map"
-            data-value="true"
-            aria-pressed="false"
-            aria-label="Скрыть карту флоу в проде"
-          >Скрыть</button>
-        </div>
-      </div>
-
-    </div>
-    <!-- /.tweaks-body -->
-  </aside>
-
-  <!-- FAB to reopen tweaks after close -->
-  <button
-    class="tweaks-fab"
-    id="tweaks-fab"
-    type="button"
-    aria-label="Открыть панель настроек прототипа"
-  >
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
-    </svg>
-  </button>
+  <!-- (removed) старая Tweaks-панель/шторка с настройками убрана по запросу — тема в sidebar, skin-switcher в topbar -->
 
   <!-- ======================================================================
        SCRIPT — hash router + tweaks + player toggle
@@ -16936,15 +16757,19 @@
       --gfm-shadow-card:        0 4px 20px -4px rgba(0, 0, 0, 0.45);
       --gfm-shadow-bar:         0 -1px 24px rgba(0, 0, 0, 0.38);
 
-      /* Ambient ambiance — subtle blue glow behind the near-black base */
+      /* Ambient ambiance — fitting glass backdrop (glass skin ONLY) so frosted panels read */
       --gfm-ambiance-bg: radial-gradient(
-        ellipse 70% 40% at 30% 100%,
-        rgba(81, 104, 252, 0.09) 0%,
-        transparent 70%
+        ellipse 90% 60% at 14% 0%,
+        rgba(81, 104, 252, 0.34) 0%,
+        transparent 58%
       ), radial-gradient(
-        ellipse 50% 30% at 80% 0%,
-        rgba(81, 104, 252, 0.06) 0%,
-        transparent 65%
+        ellipse 85% 60% at 92% 100%,
+        rgba(120, 99, 241, 0.28) 0%,
+        transparent 60%
+      ), radial-gradient(
+        ellipse 75% 55% at 56% 44%,
+        rgba(128, 148, 255, 0.13) 0%,
+        transparent 72%
       );
 
       /* Motion easing shared with family */
@@ -16972,9 +16797,9 @@
       box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
     }
 
-    /* ── PAGE BACKGROUND — ambient blue shimmer over cinema base ── */
+    /* ── PAGE BACKGROUND — fitting ambient backdrop (glass skin ONLY; normal stays flat near-black) ── */
     html[data-skin="glass"] .bg-cinema {
-      background: var(--bg-base);
+      background: linear-gradient(155deg, #1c2138 0%, #14172a 42%, #0b0c13 100%);
     }
     html[data-skin="glass"] .bg-cinema::after {
       content: '';
