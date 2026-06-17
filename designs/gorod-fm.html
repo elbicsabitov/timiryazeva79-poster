@@ -3032,6 +3032,17 @@
         flex-shrink: 0; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 8px;
         border-top: 1px solid rgba(255, 255, 255, 0.07);
       }
+      /* RAIL ONLY (change #1): quick-actions = ONE horizontal scroll-row, never wrap.
+         Legacy .ai-dock keeps the wrapping behavior above. */
+      .chat-rail .ai-chips {
+        flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
+        scroll-snap-type: x proximity; gap: 6px; padding: 8px 14px;
+        border-top: none;                     /* de-layer-cake: no internal divider */
+        -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      }
+      .chat-rail .ai-chips::-webkit-scrollbar { display: none; height: 0; }
+      .chat-rail .ai-chips:empty { display: none; }   /* no empty padding when 0 actions */
+      .chat-rail .ai-chip { flex: 0 0 auto; scroll-snap-align: start; min-height: 44px; display: inline-flex; align-items: center; }
       .ai-chip {
         font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600;
         padding: 8px 13px; border-radius: var(--r-pill); cursor: pointer;
@@ -3318,6 +3329,23 @@
       .rail-ctx-title { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .rail-ctx-why { font-family: 'Onest', sans-serif; font-size: 12px; line-height: 1.35; color: var(--text-sec); text-wrap: pretty; }
       .rail-ctx-why b { color: var(--accent-on-dark); font-weight: 600; }
+      /* RAIL ONLY (change #3): blurb collapses to ONE truncated line; tap-to-expand.
+         The whole .rail-ctx becomes a button (set in markup), no top divider clutter. */
+      .chat-rail .rail-ctx {
+        cursor: pointer; width: 100%; text-align: left; border: none;
+        background: rgba(255,255,255,0.02);
+      }
+      .chat-rail .rail-ctx:hover { background: rgba(255,255,255,0.04); }
+      .chat-rail .rail-ctx:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: -3px; }
+      .chat-rail .rail-ctx-why {
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        transition: none;
+      }
+      .chat-rail .rail-ctx.is-open .rail-ctx-why { white-space: normal; overflow: visible; }
+      .chat-rail .rail-ctx-expand { flex-shrink: 0; margin-left: auto; align-self: center; color: var(--text-sec); transition: transform var(--t-fast); }
+      .chat-rail .rail-ctx-expand svg { width: 16px; height: 16px; display: block; }
+      .chat-rail .rail-ctx.is-open .rail-ctx-expand { transform: rotate(180deg); }
+      @media (prefers-reduced-motion: reduce) { .chat-rail .rail-ctx-expand { transition: none; } }
 
       /* ---- follow-the-station chip (non-destructive — appears only on divergence) ---- */
       .rail-followchip {
@@ -3363,37 +3391,142 @@
         padding: 8px 14px; border-top: 1px solid var(--hairline);
         font-family: 'Onest', sans-serif; font-size: 11.5px; color: var(--text-sec);
       }
-      .rail-presence-live { display: inline-flex; align-items: center; gap: 6px; }
+      /* RAIL ONLY (change #3): presence + slow-mode on ONE line, no wrap, no top divider. */
+      .chat-rail .rail-presence {
+        flex-wrap: nowrap; gap: 8px; padding: 6px 14px 4px; border-top: none;
+        white-space: nowrap; overflow: hidden;
+      }
+      .rail-presence-live { display: inline-flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
       .rail-presence-live::before {
-        content: ''; width: 7px; height: 7px; border-radius: 50%;
+        content: ''; flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%;
         background: var(--success, #34d399); box-shadow: 0 0 8px var(--success, #34d399);
       }
       .rail-presence-slow {
-        margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+        margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px;
         color: #c7d0ff;
       }
       .rail-presence-slow::before {
         content: ''; width: 6px; height: 6px; border-radius: 2px; background: var(--brand-blue-light);
       }
 
-      /* ---- COMPOSER zone in the rail (reuses .ai-compose-target/.ai-mode/.ai-input/.ai-undo) ---- */
-      .chat-rail .ai-compose-target,
-      .chat-rail .ai-mode,
-      .chat-rail .ai-undo,
-      .chat-rail .ai-input { flex-shrink: 0; }
-      .chat-rail .ai-input { border-top: 1px solid var(--hairline); }
-      /* per-mode reskin keyed off the rail's own data-mode (mirrors .ai-dock rules) */
-      .chat-rail[data-mode="ai"] .ai-compose-target { color: #aeb8ff; }
-      .chat-rail[data-mode="ai"] .ai-input-field { border-color: var(--brand-blue-light); }
-      .chat-rail[data-mode="ai"] .ai-input-field:focus { border-color: var(--brand-blue-light); box-shadow: 0 0 0 2px rgba(81,104,252,0.32); }
+      /* ---- Twinr-profile strip — RAIL ONLY: compress to ONE line (change #3) ---- */
+      .chat-rail .ai-profile {
+        padding: 6px 14px; border-bottom: none; background: transparent;
+        display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .chat-rail .ai-profile::-webkit-scrollbar { display: none; }
+      .chat-rail .ai-profile-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+      .chat-rail .ai-profile-tags { flex-wrap: nowrap; }
+      .chat-rail .ai-profile-tag { flex: 0 0 auto; }
+
+      /* =====================================================================
+         RAIL COMPOSER CAPSULE (change #2) — merges armed-banner + mode toggle
+         + input into ONE rounded capsule. The mode-chip restates the armed
+         target AND opens a role=menu popover (radiogroup + menu-actions).
+         Scoped to .chat-rail so legacy .ai-dock composer is untouched.
+         ===================================================================== */
+      /* capsule = 2 rows (research §5.1: "2 строки"): mode-chip strip on top, the
+         field+send row below. Guarantees the textarea gets full width and the
+         Cyrillic mode/send labels stay legible inside a 360px rail. */
+      .rail-composer {
+        flex-shrink: 0; margin: 4px 12px 12px;
+        border: 1px solid var(--border-strong); border-radius: 16px; padding: 6px;
+        background: rgba(255, 255, 255, 0.04);
+        display: flex; flex-direction: column; gap: 4px;
+      }
+      .chat-rail[data-mode="ai"] .rail-composer { border-color: rgba(81, 104, 252, 0.45); }
+      .chat-rail[data-mode="ai"] .rail-composer:focus-within { box-shadow: 0 0 0 2px rgba(81, 104, 252, 0.32); }
+      .chat-rail .rail-composer:focus-within { border-color: var(--accent-on-dark); }
+
+      /* mode-chip = armed-target + popover trigger (top strip of the capsule).
+         Replaces both the banner floor AND the .ai-mode toggle floor. */
+      .rail-mode-chip {
+        flex-shrink: 0; align-self: stretch; display: inline-flex; align-items: center; gap: 6px;
+        min-height: 44px; padding: 0 10px; border-radius: 11px; cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.10); background: rgba(255, 255, 255, 0.05);
+        font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent-on-dark);
+        transition: background var(--t-fast), border-color var(--t-fast);
+      }
+      .rail-mode-chip:hover { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.22); }
+      .rail-mode-chip:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .rail-mode-chip-ico { font-size: 14px; line-height: 1; flex-shrink: 0; }
+      .rail-mode-chip-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .rail-mode-chip-caret { width: 14px; height: 14px; flex-shrink: 0; margin-left: auto; transition: transform var(--t-fast); }
+      .rail-mode-chip[aria-expanded="true"] .rail-mode-chip-caret { transform: rotate(180deg); }
+      /* non-color dot accent for the armed mode (brand blue allowed only as a non-text dot) */
+      .rail-mode-chip-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: transparent; }
+      .chat-rail[data-mode="ai"] .rail-mode-chip-dot { background: var(--brand-blue-light); box-shadow: 0 0 6px rgba(81,104,252,0.7); }
+
+      /* the popover (role=menu): radiogroup (Всем/Twinr) + menu-actions */
+      .rail-mode-pop {
+        position: absolute; bottom: 60px; left: 12px; right: 12px; z-index: 6;
+        background: rgba(22, 24, 32, 0.98);
+        backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+        border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px;
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55); padding: 6px;
+        opacity: 0; transform: translateY(6px); pointer-events: none;
+        transition: opacity var(--t-fast), transform var(--t-fast);
+      }
+      .rail-mode-pop.is-open { opacity: 1; transform: none; pointer-events: auto; }
+      .rail-mode-pop .ai-mode { display: flex; gap: 6px; padding: 4px; }
+      .rail-mode-pop .ai-seg { flex: 1; height: 44px; }
+      .rail-mode-pop-divider { height: 1px; background: var(--hairline); margin: 5px 6px; }
+      .rail-mode-pop-label {
+        font-family: 'Onest', sans-serif; font-size: 10px; font-weight: 700;
+        letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-sec);
+        padding: 6px 11px 4px;
+      }
+      .rail-menu-action {
+        display: flex; align-items: center; gap: 9px; width: 100%;
+        min-height: 44px; padding: 8px 11px; border-radius: 10px; border: none; cursor: pointer;
+        background: transparent; color: #e7eaf3; text-align: left;
+        font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 600;
+        transition: background var(--t-fast);
+      }
+      .rail-menu-action:hover { background: rgba(255, 255, 255, 0.08); }
+      .rail-menu-action:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: -2px; }
+
+      /* textarea (auto-grow 1→4 lines) inside the capsule */
+      .rail-composer .ai-input {
+        flex: 1 1 auto; min-width: 0; display: flex; align-items: flex-end; gap: 6px;
+        padding: 0; border-top: none;
+      }
+      .rail-composer .ai-input-field {
+        flex: 1 1 auto; width: 100%; min-width: 0; box-sizing: border-box;
+        height: 44px; min-height: 44px; max-height: 132px;
+        padding: 11px 8px; border-radius: 11px; border: none; background: transparent;
+        resize: none; overflow-y: auto; line-height: 1.4; scrollbar-width: thin;
+        font-family: 'Onest', sans-serif; font-size: 14px;
+      }
+      .rail-composer .ai-input-field:focus { outline: none; background: transparent; box-shadow: none; }
+      .chat-rail[data-mode="ai"] .rail-composer .ai-input-field { border-color: transparent; }
+      .rail-composer .ai-send { flex-shrink: 0; align-self: flex-end; margin-bottom: 1px; }
       .chat-rail[data-mode="all"] .ai-send { background: rgba(255,255,255,0.16); color: #fff; }
       .chat-rail[data-mode="all"] .ai-send:hover { background: rgba(255,255,255,0.24); }
+
+      /* ---- COMPOSER misc (undo toast still flex-shrink) ---- */
+      .chat-rail .ai-undo { flex-shrink: 0; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .rail-mode-pop, .rail-mode-chip-caret { transition: none; }
+      }
 
       /* Glass skin: rail surfaces pick up the family tokens (rail carries .gfm-glass-surface).
          The .gfm-glass-surface utility supplies bg/blur/border; here we soften the
          heavy border-left so it reads as a glass seam, not a hard line. */
       html[data-skin="glass"] .chat-rail { border-left-color: var(--gfm-glass-border); }
       html[data-skin="glass"] .chat-rail .rail-head { background: rgba(81,104,252,0.16); }
+      /* glass: composer capsule + mode popover reuse the family glass tokens (no new accent) */
+      html[data-skin="glass"] .rail-composer {
+        background: var(--gfm-glass-bg-subtle); border-color: var(--gfm-glass-border);
+        box-shadow: var(--gfm-spec-rim);
+      }
+      html[data-skin="glass"] .rail-mode-chip { background: var(--gfm-glass-bg-subtle); border-color: var(--gfm-glass-border); }
+      html[data-skin="glass"] .rail-mode-pop {
+        background: var(--gfm-glass-bg-strong); border-color: var(--gfm-glass-border);
+        backdrop-filter: var(--gfm-glass-blur); -webkit-backdrop-filter: var(--gfm-glass-blur);
+      }
 
       /* ---- NON-WEB surfaces (mobile/tv/carplay use data-surface, not media queries) ----
          Those grids are forced to 1fr !important, so the rail's grid-column:3 would
@@ -4182,60 +4315,25 @@
 
       /* ---- Home page — corner FAB ----------------------------------------- */
 
-      .home-fab {
-        position: fixed;
-        /* anchor above mini player bar, left of tweaks panel */
-        bottom: calc(var(--player-mini-h) + 20px);
-        right: 24px;
-        z-index: 55;
-        width: 56px;
-        height: 56px;
-        border-radius: var(--r-pill);
-        background: var(--surf-glass-20);
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        color: #ffffff;
-        display: none; /* shown when home page is active */
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        backdrop-filter: blur(20px) saturate(1.3);
-        -webkit-backdrop-filter: blur(20px) saturate(1.3);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-        transition: background var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+      /* .home-fab RETIRED (change #4) — the floating corner FAB overlapped the rail's
+         bottom-right. Now-playing/history opens from the mini-player's left up-chevron
+         (.player-mini-expand). Selector kept inert so route-suppress rules stay valid. */
+      .home-fab { display: none !important; }
+
+      /* mini-player left up-chevron — opens the station/now-playing panel UPWARD.
+         Whole left zone reads as one ≥44px hit-target; chevron is the visual cue. */
+      .player-mini-expand {
+        flex-shrink: 0; width: 44px; height: 44px; margin-left: -6px;
+        display: flex; align-items: center; justify-content: center;
+        border: none; background: transparent; color: var(--text-sec);
+        cursor: pointer; border-radius: var(--r-sm);
+        transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);
       }
-
-      .home-fab:hover {
-        background: rgba(255, 255, 255, 0.30);
-        transform: scale(1.06);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-      }
-
-      .home-fab:active {
-        transform: scale(0.96);
-      }
-
-      .home-fab:focus-visible {
-        outline: 3px solid var(--accent-on-dark);
-        outline-offset: 2px;
-      }
-
-      .home-fab svg {
-        width: 22px;
-        height: 22px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        flex-shrink: 0;
-      }
-
-      /* Each icon inside FAB — shown/hidden by variant */
-      .home-fab-icon-fab    { display: block; }
-      .home-fab-icon-drawer { display: none; }
-
-      [data-home-variant="drawer"] .home-fab-icon-fab    { display: none; }
-      [data-home-variant="drawer"] .home-fab-icon-drawer { display: block; }
+      .player-mini-expand:hover { background: rgba(255,255,255,0.10); color: #fff; }
+      .player-mini-expand:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+      .player-mini-expand-chev { width: 20px; height: 20px; transition: transform var(--t-fast); }
+      .player-mini-expand[aria-expanded="true"] .player-mini-expand-chev { transform: rotate(180deg); }
+      @media (prefers-reduced-motion: reduce) { .player-mini-expand-chev { transition: none; } }
 
       /* ---- Home page — track-file shared content -------------------------- */
 
@@ -4568,6 +4666,13 @@
         transition: transform var(--t-mid);
         /* hidden by default via transform; open state restores translateY(0) below */
       }
+
+      /* BOUND the sheet before the chat rail (change #4): right edge stops at the rail
+         so it never overlaps. On web the rail lives in the grid (width var(--rail-cur));
+         when rail is OFF (off-routes / <640px dialog) the sheet spans to the edge. */
+      html[data-surface="web"] .home-bottom-sheet { right: var(--rail-cur, 0px); }
+      html[data-surface="web"][data-rail="off"] .home-bottom-sheet { right: 0; }
+      @media (max-width: 640px) { html[data-surface="web"] .home-bottom-sheet { right: 0; } }
 
       /* The sheet's drag handle strip */
       .home-bottom-sheet-handle {
@@ -10394,8 +10499,8 @@
       <!-- room-switcher dropdown (📌 Общий эфир pinned + seeded demo station rooms) -->
       <div class="rail-rooms rail-expanded-only" id="rail-rooms" role="menu" aria-label="Выбрать комнату чата"></div>
 
-      <!-- NOW-PLAYING CONTEXT — the «почему» of the active room (static, not live) -->
-      <div class="rail-ctx rail-expanded-only" id="rail-ctx">
+      <!-- NOW-PLAYING CONTEXT — room «почему» collapsed to 1 line; tap-to-expand (static, not live) -->
+      <button class="rail-ctx rail-expanded-only" id="rail-ctx" type="button" aria-expanded="false" aria-label="Описание комнаты — раскрыть">
         <div class="rail-ctx-cover" id="rail-ctx-cover" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3" fill="#fff" stroke="none"/><circle cx="18" cy="16" r="3" fill="#fff" stroke="none"/></svg>
         </div>
@@ -10403,7 +10508,8 @@
           <div class="rail-ctx-title" id="rail-ctx-title">Общий эфир</div>
           <div class="rail-ctx-why" id="rail-ctx-why">Здесь обсуждают то, что играет у каждого. <b>Демо-комната.</b></div>
         </div>
-      </div>
+        <span class="rail-ctx-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
 
       <!-- follow-the-station chip (non-destructive; shown only when playing ≠ room) -->
       <div class="rail-followchip rail-expanded-only" id="rail-followchip" role="status">
@@ -10434,33 +10540,49 @@
         <span class="rail-presence-slow" id="rail-presence-slow">Медленный режим · 5 сек</span>
       </div>
 
-      <!-- chips (reused — Twinr default-chips / room reactions) -->
+      <!-- quick-actions: 1 horizontal row (≤2 contextual chips) + ✦ menu has the rest -->
       <div class="ai-chips rail-expanded-only" id="rail-chips"></div>
 
       <!-- undo-toast after a human broadcast (focusable, ~6s, polite live region) -->
       <div class="ai-undo rail-expanded-only" id="rail-undo" role="status" hidden></div>
 
-      <!-- armed-destination banner: where the NEXT message goes -->
-      <div class="ai-compose-target rail-expanded-only" id="rail-compose-target"></div>
-
-      <!-- composer mode toggle — single-select radiogroup (NOT tablist / aria-pressed) -->
-      <div class="ai-mode rail-expanded-only" role="radiogroup" aria-label="Кому отправить сообщение">
-        <label class="ai-seg ai-seg--all">
-          <input type="radio" name="rail-mode" value="all" checked>
-          <span class="ai-seg-ico" aria-hidden="true">👥</span><span>Всем</span>
-        </label>
-        <label class="ai-seg ai-seg--ai">
-          <input type="radio" name="rail-mode" value="ai">
-          <span class="ai-seg-ico" aria-hidden="true">✦</span><span>Twinr</span>
-        </label>
-      </div>
-
-      <form class="ai-input rail-expanded-only" id="rail-input-form">
-        <input class="ai-input-field" id="rail-input" type="text" placeholder="Написать всем в «Общий эфир»…" autocomplete="off" aria-label="Сообщение всем в комнате «Общий эфир»">
-        <button class="ai-send" type="submit" aria-label="Отправить всем в «Общий эфир»">
-          <span class="ai-send-label" id="rail-send-label">Отправить</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      <!-- COMPOSER CAPSULE (change #2): mode-chip (armed target + popover) + textarea + send -->
+      <form class="rail-composer rail-expanded-only" id="rail-input-form">
+        <!-- mode-chip: restates the armed target AND opens the role=menu popover -->
+        <button class="rail-mode-chip" id="rail-mode-chip" type="button"
+                aria-haspopup="menu" aria-expanded="false" aria-controls="rail-mode-pop"
+                aria-label="Кому отправить · сменить режим или открыть действия Twinr">
+          <span class="rail-mode-chip-dot" aria-hidden="true"></span>
+          <span class="rail-mode-chip-ico" id="rail-mode-chip-ico" aria-hidden="true">✦</span>
+          <span class="rail-mode-chip-label" id="rail-mode-chip-label">Twinr</span>
+          <svg class="rail-mode-chip-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
+
+        <!-- popover: radiogroup (Всем/Twinr — real radios) + menu-actions -->
+        <div class="rail-mode-pop" id="rail-mode-pop" role="menu" aria-label="Режим и действия">
+          <div class="ai-mode" role="radiogroup" aria-label="Кому отправить сообщение">
+            <label class="ai-seg ai-seg--all">
+              <input type="radio" name="rail-mode" value="all" checked>
+              <span class="ai-seg-ico" aria-hidden="true">👥</span><span>Всем</span>
+            </label>
+            <label class="ai-seg ai-seg--ai">
+              <input type="radio" name="rail-mode" value="ai">
+              <span class="ai-seg-ico" aria-hidden="true">✦</span><span>Twinr</span>
+            </label>
+          </div>
+          <div class="rail-mode-pop-divider" aria-hidden="true"></div>
+          <div class="rail-mode-pop-label">Действия Twinr</div>
+          <div id="rail-menu-actions"><!-- menu-action buttons injected by JS --></div>
+        </div>
+
+        <!-- the field — textarea (auto-grow) + send pill -->
+        <div class="ai-input">
+          <textarea class="ai-input-field" id="rail-input" rows="1" placeholder="Спросите Twinr — видно только вам…" autocomplete="off" aria-label="Сообщение для Twinr AI — видно только вам"></textarea>
+          <button class="ai-send" type="submit" aria-label="Спросить Twinr">
+            <span class="ai-send-label" id="rail-send-label">Спросить Twinr</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
       </form>
     </aside>
     <!-- /.chat-rail -->
@@ -10474,27 +10596,10 @@
   <!-- /.app-shell -->
 
   <!-- ======================================================================
-       HOME PAGE — corner FAB + panels (outside app-shell to use fixed pos)
+       NOW-PLAYING / STATION+HISTORY PANEL — opened by the mini-player's left
+       up-chevron (change #4: .home-fab retired). Bottom-sheet animates UPWARD
+       from the player bar, bounded before the chat rail.
        ====================================================================== -->
-
-  <!-- Corner expand FAB — visible only on #/home -->
-  <button
-    class="home-fab"
-    id="home-fab"
-    type="button"
-    aria-label="Открыть файл трека"
-    aria-expanded="false"
-  >
-    <!-- Icon for variant A (bottom-sheet) -->
-    <svg class="home-fab-icon-fab" viewBox="0 0 24 24" aria-hidden="true">
-      <polyline points="17 11 12 6 7 11"/>
-      <line x1="12" y1="6" x2="12" y2="18"/>
-    </svg>
-    <!-- Icon for variant B (side drawer) -->
-    <svg class="home-fab-icon-drawer" viewBox="0 0 24 24" aria-hidden="true">
-      <polyline points="9 18 15 12 9 6"/>
-    </svg>
-  </button>
 
   <!-- Backdrop for both variants -->
   <div
@@ -10726,6 +10831,15 @@
     <div class="player-mini-progress-bar" aria-hidden="true">
       <div class="player-mini-progress-fill" id="mini-progress-fill"></div>
     </div>
+
+    <!-- Up-chevron affordance (change #4): whole LEFT zone (art+title) opens the
+         station/now-playing+history panel UPWARD. ≥44px hit-target, stops propagation
+         so it doesn't trigger the full-player overlay. -->
+    <button class="player-mini-expand" id="player-mini-expand" type="button"
+            aria-label="Открыть карточку трека и историю станции" aria-expanded="false"
+            aria-controls="home-bottom-sheet">
+      <svg class="player-mini-expand-chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
 
     <!-- Album art — real cover; color-from-art tints the player (GOROD-042/043) -->
     <div class="player-mini-art">
@@ -12035,7 +12149,8 @@
 
       /* ---- Home page — FAB + panels --------------------------------------- */
 
-      var homeFab          = document.getElementById('home-fab');
+      var homeFab          = document.getElementById('home-fab');         // retired (change #4) — may be null
+      var miniExpand       = document.getElementById('player-mini-expand'); // new affordance
       var homeBackdrop     = document.getElementById('home-panel-backdrop');
       var homeBottomSheet  = document.getElementById('home-bottom-sheet');
       var homeSideDrawer   = document.getElementById('home-side-drawer');
@@ -12095,12 +12210,11 @@
           }
         }
         if (homeBackdrop)  homeBackdrop.setAttribute('data-open', '');
-        if (homeFab) {
-          homeFab.setAttribute('aria-expanded', 'true');
-        }
+        if (homeFab)     homeFab.setAttribute('aria-expanded', 'true');
+        if (miniExpand)  miniExpand.setAttribute('aria-expanded', 'true');
       }
 
-      function closeHomePanel() {
+      function closeHomePanel(returnFocus) {
         if (homeBottomSheet) {
           homeBottomSheet.removeAttribute('data-open');
           homeBottomSheet.setAttribute('aria-hidden', 'true');
@@ -12110,19 +12224,23 @@
           homeSideDrawer.setAttribute('aria-hidden', 'true');
         }
         if (homeBackdrop)  homeBackdrop.removeAttribute('data-open');
-        if (homeFab) {
-          homeFab.setAttribute('aria-expanded', 'false');
-          homeFab.focus();
+        if (homeFab)     homeFab.setAttribute('aria-expanded', 'false');
+        if (miniExpand) {
+          miniExpand.setAttribute('aria-expanded', 'false');
+          if (returnFocus !== false && miniExpand.focus) miniExpand.focus();
         }
       }
 
+      // change #4: the mini-player left chevron opens the station/now-playing panel UPWARD
+      if (miniExpand) {
+        miniExpand.addEventListener('click', function (e) {
+          e.stopPropagation();   // don't trigger the full-player overlay
+          if (isHomePanelOpen()) closeHomePanel(); else openHomePanel();
+        });
+      }
       if (homeFab) {
         homeFab.addEventListener('click', function () {
-          if (isHomePanelOpen()) {
-            closeHomePanel();
-          } else {
-            openHomePanel();
-          }
+          if (isHomePanelOpen()) { closeHomePanel(); } else { openHomePanel(); }
         });
       }
 
@@ -12168,21 +12286,11 @@
         }
       });
 
-      // Show/hide the FAB based on active page
-      function updateHomeFabVisibility(route) {
-        if (!homeFab) return;
-        if (route === '#/home') {
-          homeFab.style.display = 'flex';
-        } else {
-          homeFab.style.display = 'none';
-          // Also close panels if we navigated away
-          closeHomePanel();
-        }
-      }
-
-      // Hook into hash router events
+      // change #4: the .home-fab is retired; the mini-player chevron (always present
+      // on content routes) owns this panel. Close any open panel on navigation so it
+      // never lingers over a different route. (No FAB display toggling anymore.)
       window.addEventListener('hashchange', function () {
-        updateHomeFabVisibility(window.location.hash);
+        if (isHomePanelOpen()) closeHomePanel(false);
       });
 
       /* ---- Подборки page — chip row + tile gallery ----------------------- */
@@ -12552,9 +12660,8 @@
         var savedTrackView = lsGet(LS_KEYS.trackView, 'cover');
         setTrackView(savedTrackView);
 
-        // 7. Init home page state
+        // 7. Init home page state (home-fab retired — panel is mini-player-driven, change #4)
         setActiveStation('rock');
-        updateHomeFabVisibility(initialRoute);
       }
 
       boot();
@@ -13373,6 +13480,7 @@
 
     // ---- composer mode (Всем ↔ Twinr) ----
     var modeRadios, banner, sendLabel, sendBtn, undoEl;
+    var modeChip, modePop, modeChipIco, modeChipLabel, menuActionsEl, modePopTrigger = null;
     var mode = 'all', undoTimer = 0, lastBroadcast = null;
     var REACTIONS = ['🔥', '❤️', '🎧', '😮'];
 
@@ -13467,25 +13575,31 @@
       inputForm = $('rail-input-form'); input = $('rail-input');
       banner = $('rail-compose-target'); sendLabel = $('rail-send-label'); undoEl = $('rail-undo');
       newpillEl = $('rail-newpill'); newpillN = $('rail-newpill-n');
+      modeChip = $('rail-mode-chip'); modePop = $('rail-mode-pop');
+      modeChipIco = $('rail-mode-chip-ico'); modeChipLabel = $('rail-mode-chip-label');
+      menuActionsEl = $('rail-menu-actions');
       if (!rail) return;
       sendBtn = inputForm.querySelector('.ai-send');
       modeRadios = rail.querySelectorAll('input[name="rail-mode"]');
 
       inputForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        var v = input.value.trim();
-        if (!v) return;
-        input.value = '';
-        store[currentRoom] && (store[currentRoom].draft = '');
-        send(v);
+        submitComposer();
       });
-      input.addEventListener('input', function () { if (store[currentRoom]) store[currentRoom].draft = input.value; });
+      // textarea: auto-grow 1→4 lines + Enter=send, Shift+Enter=newline
+      input.addEventListener('input', function () { autoGrow(); if (store[currentRoom]) store[currentRoom].draft = input.value; });
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComposer(); }
+      });
       [].forEach.call(modeRadios, function (r) {
         r.addEventListener('change', function () { if (r.checked) setMode(r.value, true); });
       });
       if (msgs) msgs.addEventListener('scroll', onLogScroll);
       if (newpillEl) newpillEl.addEventListener('click', function () { scrollDown(); clearNewPill(); });
 
+      wireModePopover();
+      wireCtxBlurb();
+      renderMenuActions();
       wireRailChrome();
       buildRoomDropdown();
 
@@ -13639,12 +13753,109 @@
         '<div class="ai-track-meta"><div class="ai-track-title">' + esc(title) + '</div><div class="ai-track-artist">' + esc(artist) + '</div></div>' +
         '<button class="ai-track-play" type="button" aria-label="Слушать ' + esc(title) + '"><svg viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 20 12 6 20"/></svg></button></div>';
     }
+    /* run a Twinr intent (from a quick-action chip OR the ✦ menu) */
+    function runIntent(c) {
+      closeModePop();
+      addUser(c.label); chipsEl.innerHTML = '';
+      if (intents[c.intent]) intents[c.intent]();
+    }
+
+    /* quick-actions row — RAIL caps at 2 chips in ONE horizontal row (change #1);
+       the rest live in the ✦ menu (MENU_ACTIONS). Dynamic follow-up sets (2-3) fit too. */
     function setChips(list) {
       chipsEl.innerHTML = '';
-      list.forEach(function (c) {
+      list.slice(0, 2).forEach(function (c) {
         var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = c.label;
-        b.addEventListener('click', function () { addUser(c.label); chipsEl.innerHTML = ''; intents[c.intent](); });
+        b.addEventListener('click', function () { runIntent(c); });
         chipsEl.appendChild(b);
+      });
+    }
+
+    /* textarea auto-grow (1→4 lines, then internal scroll). Measure with overflow
+       hidden + height reset to the 1-row min so scrollHeight reflects content only. */
+    function autoGrow() {
+      if (!input) return;
+      if (!input.value) { input.style.height = '44px'; return; }  // empty → exact 1-row min
+      input.style.height = '0px';                  // collapse before measuring content
+      var h = Math.min(Math.max(input.scrollHeight, 44), 132);
+      input.style.height = h + 'px';
+    }
+
+    /* submit path shared by the form submit + Enter key */
+    function submitComposer() {
+      var v = (input.value || '').trim();
+      if (!v) return;
+      input.value = '';
+      autoGrow();
+      if (store[currentRoom]) store[currentRoom].draft = '';
+      send(v);
+    }
+
+    /* ---- ✦ menu popover (role=menu): radiogroup + MENU_ACTIONS; focus-trap + Esc ---- */
+    function renderMenuActions() {
+      if (!menuActionsEl) return;
+      menuActionsEl.innerHTML = '';
+      MENU_ACTIONS.forEach(function (c) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'rail-menu-action';
+        b.setAttribute('role', 'menuitem'); b.textContent = c.label;
+        b.addEventListener('click', function () { runIntent(c); });
+        menuActionsEl.appendChild(b);
+      });
+    }
+    function modePopFocusables() {
+      if (!modePop) return [];
+      return [].filter.call(
+        modePop.querySelectorAll('button:not([disabled]), input:not([disabled])'),
+        function (el) { return el.offsetParent !== null; }
+      );
+    }
+    function openModePop() {
+      if (!modePop || !modeChip) return;
+      modePopTrigger = document.activeElement;
+      modePop.classList.add('is-open');
+      modeChip.setAttribute('aria-expanded', 'true');
+      var f = modePopFocusables();
+      // focus the currently-armed radio first (keyboard/SR land on the active mode)
+      var armed = modePop.querySelector('input[name="rail-mode"]:checked');
+      setTimeout(function () { (armed || f[0] || modeChip).focus(); }, 30);
+      document.addEventListener('keydown', onModePopKey, true);
+      document.addEventListener('click', onModePopOutside, true);
+    }
+    function closeModePop(returnFocus) {
+      if (!modePop) return;
+      if (!modePop.classList.contains('is-open')) return;
+      modePop.classList.remove('is-open');
+      if (modeChip) modeChip.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('keydown', onModePopKey, true);
+      document.removeEventListener('click', onModePopOutside, true);
+      if (returnFocus !== false && modeChip) modeChip.focus();
+    }
+    function onModePopKey(e) {
+      if (e.key === 'Escape') { e.preventDefault(); closeModePop(); return; }
+      if (e.key === 'Tab') {
+        var f = modePopFocusables(); if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    function onModePopOutside(e) {
+      if (!modePop.contains(e.target) && e.target !== modeChip && !modeChip.contains(e.target)) closeModePop(false);
+    }
+    function wireModePopover() {
+      if (!modeChip) return;
+      modeChip.addEventListener('click', function () {
+        if (modePop.classList.contains('is-open')) closeModePop(); else openModePop();
+      });
+    }
+
+    /* ---- room blurb: tap-to-expand the one-line «почему» (change #3) ---- */
+    function wireCtxBlurb() {
+      var ctx = $('rail-ctx'); if (!ctx) return;
+      ctx.addEventListener('click', function () {
+        var open = ctx.classList.toggle('is-open');
+        ctx.setAttribute('aria-expanded', open ? 'true' : 'false');
+        ctx.setAttribute('aria-label', open ? 'Описание комнаты — свернуть' : 'Описание комнаты — раскрыть');
       });
     }
 
@@ -13711,6 +13922,7 @@
       if (pl) pl.textContent = r.presence; if (ps) ps.textContent = r.slow;
       buildRoomDropdown();
       setMode(mode, false);
+      autoGrow();
       // follow-chip: hide if we're now IN the playing room
       if (id === playingRoom) hideFollowChip();
     }
@@ -13771,18 +13983,29 @@
       var NAME = roomName();
       if (profileWrap) profileWrap.hidden = (mode !== 'ai');
       if (mode === 'ai') {
-        input.placeholder = 'Спросите Twinr…';
-        input.setAttribute('aria-label', 'Сообщение для Twinr AI — видно только вам');
-        sendLabel.textContent = 'Спросить';
-        sendBtn.setAttribute('aria-label', 'Спросить Twinr');
-        banner.innerHTML = '<span class="ai-ct-icon" aria-hidden="true">✦</span> Говорите с <b>Twinr</b> · видно только вам';
-        if (msgs.children.length) setChips(DEFAULT_CHIPS); else setChips(DEFAULT_CHIPS);
+        // PRIVATE Twinr — unmistakable it does NOT go to the room (non-color: icon+word+placeholder+send)
+        input.placeholder = 'Спросите Twinr — видно только вам…';
+        input.setAttribute('aria-label', 'Сообщение для Twinr AI — видно только вам, в эфир не уйдёт');
+        sendLabel.textContent = 'Спросить Twinr';
+        sendBtn.setAttribute('aria-label', 'Спросить Twinr — приватно, в эфир не уйдёт');
+        if (modeChipIco) modeChipIco.textContent = '✦';
+        if (modeChipLabel) modeChipLabel.textContent = 'Только вы · Twinr';
+        if (modeChip) {
+          modeChip.title = 'Только вы · Twinr — в эфир не уйдёт';
+          modeChip.setAttribute('aria-label', 'Режим: только вы · Twinr — в эфир не уйдёт. Нажмите, чтобы сменить или открыть действия.');
+        }
+        setChips(DEFAULT_CHIPS);
       } else {
-        input.placeholder = 'Написать всем в «' + NAME + '»…';
+        input.placeholder = 'Сообщение в общий эфир…';
         input.setAttribute('aria-label', 'Сообщение всем в комнате «' + NAME + '»');
-        sendLabel.textContent = 'Отправить';
+        sendLabel.textContent = 'Отправить всем';
         sendBtn.setAttribute('aria-label', 'Отправить всем в «' + NAME + '»');
-        banner.innerHTML = '<span class="ai-ct-icon" aria-hidden="true">👥</span> Сообщение всем в «<b>' + esc(NAME) + '</b>»<span class="ai-ct-presence">' + esc((ROOMS[currentRoom] && ROOMS[currentRoom].presence) || '') + '</span>';
+        if (modeChipIco) modeChipIco.textContent = '👥';
+        if (modeChipLabel) modeChipLabel.textContent = 'Всем · ' + NAME;
+        if (modeChip) {
+          modeChip.title = '👥 Всем · общий эфир «' + NAME + '»';
+          modeChip.setAttribute('aria-label', 'Режим: всем в «' + NAME + '» · общий эфир. Нажмите, чтобы сменить или открыть действия.');
+        }
         setRoomChips();
       }
     }
@@ -13869,11 +14092,16 @@
       showUndo(node);
     }
 
+    /* change #1: DEFAULT row = the 2 highest-value contextual actions (1 line).
+       The rest live in the ✦ menu. 📉 Меньше рекламы removed from default
+       (duplicates #taste-sponsor-less) — kept only in the menu. */
     var DEFAULT_CHIPS = [
-      { label: 'Почему именно он?', intent: 'why' },
-      { label: '🔀 Сделай по-другому', intent: 'different' },
+      { label: 'Почему он?', intent: 'why' },
+      { label: '🔀 По-другому', intent: 'different' }
+    ];
+    var MENU_ACTIONS = [
       { label: '➕ Больше такого', intent: 'more' },
-      { label: '🎓 Путь к Imagine Dragons', intent: 'tour' },
+      { label: '🎓 Путь к артисту', intent: 'tour' },
       { label: '📉 Меньше рекламы', intent: 'ads' }
     ];
 
@@ -16797,10 +17025,19 @@
       box-shadow: var(--gfm-spec-rim), var(--gfm-shadow-card);
     }
 
-    /* ── PAGE BACKGROUND — fitting ambient backdrop (glass skin ONLY; normal stays flat near-black) ── */
+    /* ── PAGE BACKGROUND — fixed atmospheric COVER IMAGE + dark scrim (glass skin ONLY,
+         every page; normal skin stays flat near-black, untouched). The frosted panels'
+         backdrop-filter blurs this low-detail dusk-lake photo. (change #5) ── */
     html[data-skin="glass"] .bg-cinema {
-      background: linear-gradient(155deg, #1c2138 0%, #14172a 42%, #0b0c13 100%);
+      background: linear-gradient(rgba(10, 12, 16, 0.62), rgba(10, 12, 16, 0.74)),
+                  url('assets/dusk-lake.jpg') center / cover fixed no-repeat;
     }
+    /* #/home suppresses .bg-layer (pure-black home stage) — but in GLASS the image must
+       show every page (change #5). Restore the bg layer + make the home stage transparent
+       so the dusk-lake reads through on #/home too. Normal skin stays pure-black. */
+    html[data-skin="glass"][data-active-route="#/home"] .bg-layer.bg-cinema { opacity: 1; }
+    html[data-skin="glass"][data-active-route="#/home"] { background: transparent; }
+    /* keep the soft brand-ambiance wash on TOP of the photo for cohesion (non-blocking) */
     html[data-skin="glass"] .bg-cinema::after {
       content: '';
       position: fixed;
@@ -16808,6 +17045,21 @@
       background: var(--gfm-ambiance-bg);
       pointer-events: none;
       z-index: -1;
+    }
+    /* reduced-transparency: drop the photo (and ambiance), fall back to a solid surface,
+       and remove backdrop-filter on surfaces that hardcode it (rail / composer popover)
+       so the whole glass skin reads opaque + image-free (change #5). */
+    @media (prefers-reduced-transparency: reduce) {
+      html[data-skin="glass"] .bg-cinema {
+        background: var(--gfm-glass-bg-strong, #12141c);
+      }
+      html[data-skin="glass"] .bg-cinema::after { display: none; }
+      html[data-skin="glass"] .chat-rail,
+      html[data-skin="glass"] .rail-composer,
+      html[data-skin="glass"] .rail-mode-pop {
+        backdrop-filter: none; -webkit-backdrop-filter: none;
+        background: var(--gfm-glass-bg-strong, rgba(18,20,28,0.98));
+      }
     }
 
     /* ── SIDEBAR ── */
