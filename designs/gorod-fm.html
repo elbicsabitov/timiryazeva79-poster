@@ -3084,13 +3084,13 @@
          send-label + banner + role-state); #5168FC is redundant-decorative.
          ===================================================================== */
 
-      /* send button → pill that RESTATES the target (not color-only) */
+      /* send button → compact icon-only circle; the target is restated by the mode-chip
+         + placeholder + aria-label, so the textarea gets full width (WhatsApp/Telegram/ChatGPT pattern) */
       .ai-send {
-        width: auto; min-width: 44px; height: 44px; border-radius: var(--r-pill);
-        padding: 0 15px; gap: 7px;
+        width: 44px; min-width: 44px; height: 44px; border-radius: 50%;
+        padding: 0; gap: 0; flex: none;
       }
-      .ai-send-label { font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; }
-      @media (max-width: 360px) { .ai-send-label { display: none; } }
+      .ai-send-label { display: none; }
 
       /* armed-destination banner (echoes where the next message goes) */
       .ai-compose-target {
@@ -8020,6 +8020,14 @@
     @keyframes sr-breath { 0%,100% { box-shadow: 0 0 0 0 rgba(81,104,252,0.55); } 50% { box-shadow: 0 0 0 6px rgba(81,104,252,0); } }
     .sr-priv-pill { font: 700 11px 'Onest', sans-serif; color: var(--text-sec); background: rgba(255,255,255,0.06); border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
     .sr-hdr-avs { display: flex; align-items: center; gap: 4px; }
+    /* ⋯ toggle keeps the session header a slim row; secondary controls collapse so the chat log stays dominant */
+    .sr-hdr-toggle { margin-left: auto; flex: none; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; border: 1px solid var(--hairline); background: rgba(255,255,255,0.05); color: var(--text-sec); cursor: pointer; transition: background var(--t-fast), color var(--t-fast); }
+    .sr-hdr-toggle:hover { background: rgba(255,255,255,0.12); color: var(--text-pri); }
+    .sr-hdr-toggle.is-on, .sr-hdr-toggle.is-open { background: rgba(81,104,252,0.24); color: #fff; }
+    .sr-hdr-toggle:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .sr-hdr-toggle svg { width: 18px; height: 18px; }
+    .sr-hdr-more { display: flex; flex-direction: column; gap: 9px; margin-top: 2px; }
+    .sr-hdr-more[hidden] { display: none; }
     .sr-member { position: relative; display: inline-flex; }
     .sr-member-x { position: relative; background: none; border: none; padding: 0; cursor: pointer; border-radius: 50%; line-height: 0; }
     .sr-member-x:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
@@ -13994,6 +14002,8 @@
         followStation((e.detail && e.detail.station) || null);
       });
 
+      scheduleDrip(3500);  // live-chat drip — scripted "constant conversation" for client demos
+
       renderProfile();
       // initial room render — default Всем in the global/station room
       switchRoom('global', { silent: true });
@@ -14440,6 +14450,31 @@
       m.appendChild(b); m.appendChild(s); msgs.appendChild(m); capLog(); scrollDown(); return m;
     }
 
+    /* ---- live-chat drip — scripted "constant conversation" so client demos read as a live room
+       (peer "печатает…" → message). Seeded/demo, near-bottom-aware, pauses when tab hidden. ---- */
+    var DRIP_WHO = [{ h: 'ночная_сова', c: '#6d6af6' }, { h: 'mef_88', c: '#f6a26a' }, { h: 'гость_2841', c: '#3fb6a8' }, { h: 'lena_k', c: '#c0455a' }, { h: 'dimon_v', c: '#5168FC' }, { h: 'kira', c: '#34d399' }];
+    var DRIP_LINES = ['кто это поёт? 🔥', 'прям мой вайб', 'на репите уже', '🎧🎧', 'топ подборка сегодня', 'а дальше что поставят?', 'ностальгия 🥹', 'качает 💯', 'согласен', 'можно поэнергичнее?', '+1', 'обожаю этот трек', 'кто добавил? спасибо', 'под это работается', '😍', 'наконец хороший эфир', 'о, недавно нашёл это', 'тоже слушаю!'];
+    var dripTimer = 0, dripIdx = 0;
+    function dripActive() { return !!(msgs && currentRoom && ROOMS[currentRoom] && (ROOMS[currentRoom].peers || currentRoom === SESSION_ROOM)); }
+    function dripNearBottom() { return !!(msgs && (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight) < 90); }
+    function scheduleDrip(ms) { clearTimeout(dripTimer); dripTimer = setTimeout(dripTick, ms); }
+    function dripTick() {
+      dripTimer = 0;
+      if (document.hidden || !dripActive()) { scheduleDrip(6000); return; }
+      var who = DRIP_WHO[dripIdx % DRIP_WHO.length]; dripIdx++;
+      var atBottom = dripNearBottom();
+      var t = document.createElement('div'); t.className = 'ai-msg ai-msg--room';
+      t.innerHTML = '<div class="ai-room-av" style="background:' + who.c + '" aria-hidden="true">' + esc(who.h.charAt(0).toUpperCase()) + '</div>' +
+        '<div class="ai-room-col"><div class="ai-room-handle">' + esc(who.h) + '</div><div class="ai-msg-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div></div>';
+      msgs.appendChild(t); if (atBottom) scrollDown();
+      setTimeout(function () {
+        if (t.parentNode) t.parentNode.removeChild(t);
+        addRoomPeer({ h: who.h, c: who.c, t: DRIP_LINES[(dripIdx * 7) % DRIP_LINES.length] });
+        if (atBottom) scrollDown();
+        scheduleDrip(4500 + (dripIdx % 5) * 1100);
+      }, 1100 + (dripIdx % 4) * 320);
+    }
+
     function showUndo(node) {
       lastBroadcast = node;
       undoEl.hidden = false;
@@ -14777,18 +14812,26 @@
           '<button type="button" class="sr-demo-btn sr-demo-btn--guard" data-dupe="anya">дубль (гард)</button>' +
           '<button type="button" class="sr-demo-btn sr-demo-btn--guard" data-offvibe="anya">офф-вайб (гард)</button>' +
         '</div>';
+      // slim row always visible (chip + avatars + ⋯); secondary controls collapse so the chat log stays dominant
+      var open = !!session.hdrOpen;
       hdr.innerHTML =
         '<div class="sr-hdr-row">' +
           '<span class="sr-live-chip"><span class="sr-live-dot" aria-hidden="true"></span>◉ ' + n + ' слушают · в синхроне</span>' +
-          '<span class="sr-priv-pill">частная · по ссылке</span>' +
+          '<div class="sr-hdr-avs" aria-label="Участники сессии">' + avs + '</div>' +
+          '<button type="button" class="sr-hdr-toggle' + (open ? ' is-open' : '') + '" id="sr-hdr-toggle" aria-expanded="' + open + '" aria-controls="sr-hdr-more" aria-label="Управление сессией">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg>' +
+          '</button>' +
         '</div>' +
-        '<div class="sr-hdr-avs" aria-label="Участники сессии">' + avs + '</div>' +
-        dial +
-        demoBar +
-        '<div class="sr-hdr-actions">' +
-          '<button type="button" class="sr-end" id="sr-end-btn">завершить сессию</button>' +
+        '<div class="sr-hdr-more" id="sr-hdr-more"' + (open ? '' : ' hidden') + '>' +
+          '<div class="sr-hdr-actions">' +
+            '<span class="sr-priv-pill">частная · по ссылке</span>' +
+            '<button type="button" class="sr-end" id="sr-end-btn">завершить сессию</button>' +
+          '</div>' +
+          dial +
+          demoBar +
           '<span class="demo-tag">демо: друзья смоделированы</span>' +
         '</div>';
+      var tg = $('sr-hdr-toggle'); if (tg) tg.addEventListener('click', function () { session.hdrOpen = !session.hdrOpen; paintSessionChrome(); });
       var endb = $('sr-end-btn'); if (endb) endb.addEventListener('click', endSession);
       [].forEach.call(hdr.querySelectorAll('.sr-member-x'), function (b) {
         b.addEventListener('click', function () { removeMember(b.getAttribute('data-rm')); });
