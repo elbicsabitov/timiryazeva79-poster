@@ -1,6 +1,20 @@
 # Resume Design — Активация сессии
 
-## ⚡ LATEST (2026-06-11) — Twinr: «Хранилище» = отдельный раздел + MD-конвертер (задача Татьяны) — СДЕЛАНО, отправка ждёт «гоу»
+## ⚡ LATEST (2026-06-17 built · 2026-06-24 closed-out) — Город ФМ: CHAT-LAYER track (живой эфир) ВЕРИФИЦИРОВАН + 2 фикса. Ветка `feat/gorod-chat-layer` на origin (UNMERGED to master); 2 фикс/docs-коммита LOCAL, PUSH ДЕРЖИТСЯ
+
+**📖 START: `docs/superpowers/HANDOFF-gorod-fm-cont-17.md`** (полный хендофф — что построено, верификация, фиксы, owner-judgment, NEXT).
+
+**Контекст:** 2026-06-17 сессия построила новый трек «Город ФМ как живой эфир» (12 коммитов) но **НЕ написала handoff и НЕ обновила DEBT/RESUME** (оба стопались на cont-16). 2026-06-24 `resume gorod fm` реконструировал из git+ресёрча+скринов, верифицировал live в Chrome, починил 2 бага, закрыл.
+
+**Построено (ветка `feat/gorod-chat-layer` УЖЕ на origin @ `755ab63` — запушена 06-17, UNMERGED to master = 14 ahead of origin/master = dark; этой сессии 2 коммита `18d375d`+docs = local-only, не запушены):** ubiquitous «Чат» (composer тумблер **ЛЮДЯМ↔Twinr**) · glass skin «Стекло» (аддитивный `html[data-skin="glass"]` + свитчер **Обычный↔Стекло** + dusk-lake ambient) · persistent Twitch-style docked rail **«Общий эфир»** (live chat + Twinr-хост + now-playing карточка + живой TWINR-профиль + композер-капсула) · collaborative **shared radio** (share→session→suggest→accept→listen-together + sync-pill «слушаем вместе»). Ресёрч: `RESEARCH-gorod-fm-{ubiquitous-chat,chat-rail,chat-rail-uiux,shared-radio}.md`.
+
+**✅ Верифицировано (Chrome :8770, glass+normal):** switcher→glass работает, ambient рендерится, rail полный, now-playing консистентен, **0 console errors**. **🐛 2 фикса `18d375d`:** (B1) typo «IMAGINE DRAGON»→«IMAGINE DRAGONS» ×3; (B2) track-file expand sheet показывал STALE «Believer» при играющей Слеза → `syncTrackFileFromNowPlaying()` в `openHomePanel()`. Gate green (26 script-блоков 0 ошибок), standalone 3.86 MB. **🟡 owner-judgment (не фиксить вслепую):** demo «Следующие в эфире» queue (не track-aware — не фабрикую) · rail profile-tags hidden-scroll discoverability (НЕ баг — пробовал wrap, откатил).
+
+**🔴 NEXT:** PUSH при `sync` (⚠️ репо шарен с Twinr master=`1eab466` → держать ветку изолированной). Опц. полировка 2 owner-judgment пунктов перед показом. Standing gates: GOROD-029 позиционирование · GOROD-030 лицензии.
+
+---
+
+## ⚡ PREV (2026-06-11) — Twinr: «Хранилище» = отдельный раздел + MD-конвертер (задача Татьяны) — СДЕЛАНО, отправка ждёт «гоу»
 
 **Бриф (чат @k_t_v_23 11.06 15:05–15:13 + скрины прода `.scratch/ktv/msg_590113.jpg`/`msg_590130.jpg` + Эльбик «вынеси в отдельную вкладку»):** их прод переделал бывш. «ИИ — Документы» в самостоятельный раздел «Хранилище»; ТЗ — «конвертор-преобразователь md: после преобразования пользователь сам выбирает — сохранить md в хранилище или отправить в раздел Документы одного из своих проектов (выпадающий список)».
 
