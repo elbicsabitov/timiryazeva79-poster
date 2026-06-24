@@ -11141,7 +11141,7 @@
         </div>
         <div class="home-tf-meta">
           <div class="home-tf-title" id="home-bs-title">Believer</div>
-          <div class="home-tf-artist" id="home-bs-artist">IMAGINE DRAGON</div>
+          <div class="home-tf-artist" id="home-bs-artist">IMAGINE DRAGONS</div>
         </div>
       </div>
 
@@ -11243,7 +11243,7 @@
         </div>
         <div class="home-tf-meta">
           <div class="home-tf-title" id="home-sd-title">Believer</div>
-          <div class="home-tf-artist" id="home-sd-artist">IMAGINE DRAGON</div>
+          <div class="home-tf-artist" id="home-sd-artist">IMAGINE DRAGONS</div>
         </div>
       </div>
 
@@ -12535,7 +12535,7 @@
       /* ---- Home page — data ---------------------------------------------- */
 
       var STATION_TRACKS = {
-        rock:    { track: 'Believer',           artist: 'IMAGINE DRAGON · Z. CITY SHOW',  overline: 'СЕЙЧАС В ЭФИРЕ · РОК',    coverClass: 'home-tf-cover-rock'    },
+        rock:    { track: 'Believer',           artist: 'IMAGINE DRAGONS · Z. CITY SHOW', overline: 'СЕЙЧАС В ЭФИРЕ · РОК',    coverClass: 'home-tf-cover-rock'    },
         pop:     { track: 'Blinding Lights',    artist: 'THE WEEKND · РАДИО ПОП',          overline: 'СЕЙЧАС В ЭФИРЕ · ПОП',    coverClass: 'home-tf-cover-pop'     },
         disko:   { track: 'Stayin\' Alive',     artist: 'BEE GEES · DISCO GOLD',           overline: 'СЕЙЧАС В ЭФИРЕ · ДИСКО',  coverClass: 'home-tf-cover-disko'   },
         hiphop:  { track: 'HUMBLE.',            artist: 'KENDRICK LAMAR · HIP CITY',       overline: 'СЕЙЧАС В ЭФИРЕ · ХИП-ХОП', coverClass: 'home-tf-cover-hiphop' },
@@ -12693,7 +12693,26 @@
                (homeSideDrawer  && homeSideDrawer.hasAttribute('data-open'));
       }
 
+      // cont-17: the track-file sheet hardcoded a stale "Believer" header — sync it to
+      // the live now-playing track on open (mirrors syncFullPlayerFromMini for #player-full).
+      function syncTrackFileFromNowPlaying() {
+        var srcT = document.getElementById('player-track-title');
+        var srcA = document.getElementById('player-track-artist');
+        var title  = srcT ? srcT.textContent.trim() : '';
+        var artist = srcA ? srcA.textContent.trim() : '';
+        if (!title) return;
+        ['home-bs', 'home-sd'].forEach(function (p) {
+          var elT = document.getElementById(p + '-title');
+          var elA = document.getElementById(p + '-artist');
+          var elC = document.getElementById(p + '-cover');
+          if (elT) elT.textContent = title;
+          if (elA && artist) elA.textContent = artist;   // .home-tf-artist CSS uppercases
+          if (elC) { var lbl = elC.querySelector('span'); if (lbl) lbl.textContent = title.toUpperCase(); }
+        });
+      }
+
       function openHomePanel() {
+        syncTrackFileFromNowPlaying();
         var variant = document.documentElement.getAttribute('data-home-variant') || 'fab';
         if (variant === 'fab') {
           if (homeBottomSheet) {
