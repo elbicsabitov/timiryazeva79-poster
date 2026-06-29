@@ -17,3 +17,6 @@ __pycache__/
 # Git worktrees (superpowers isolated workspaces)
 .worktrees/
 deliverables/
+
+# Claude Code local tooling state
+.claude/

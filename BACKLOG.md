@@ -6,7 +6,7 @@
      or a session note, it is NOT tracked — put it here.
      Resume greps OPEN/WIP only (stays lean). Move DONE to BACKLOG_ARCHIVE.md only if >40KB.
      Convergence: project is "finished" when OPEN+WIP = 0 (GATED items excepted). -->
-_updated: 2026-06-28_ · _seeded from DEBT.md (worktree) + session files; reconcile fully on next sync_ · _next id: B051_
+_updated: 2026-06-29 (sync — rusradio гео added; feat/gorod-chat-layer pushed)_ · _next id: B052_
 
 ---
 
@@ -18,10 +18,11 @@ _updated: 2026-06-28_ · _seeded from DEBT.md (worktree) + session files; reconc
 - **B004** `OPEN` — **RU.TV: показ заказчику + выбор направления** — два production-ready файла готовы (dashboard aggregator 10 MB + cinematic 4.5 MB; 3 темы; Figma 1-в-1 + Karpathy-best), заказчик не выбрал ни одно из трёх решений (RUTV-009/RUTV-021/RUTV-119) _(src: DEBT RUTV-009/021/119 · gate: заказчик RU.TV)_
 - **B005** `OPEN` — **Лендинг кинологов (Настя/Paws): показ Серёге/Кате/Насте** — 3 варианта (paws / glass / material, standalone) готовы; 7 открытых уточнений от Насти (статистика, IAABC, кейсы, дата старта, CTA) _(src: DEBT KIN-012/013 · gate: Серёга/Катя/Настя)_
 - **B006** `OPEN` — **Smartwatch RMG: ревью Stas/Alexei** — 5 станций готовы (treки, подкасты, избранное, плеер) _(src: DEBT SW-007 · gate: Stas/Alexei RMG)_
-- **B007** `OPEN` — **Город ФМ (cont-17): push 2 local commits + решение о мерже** — 2 коммита `18d375d` (bug fixes B1+B2) + docs LOCAL-ONLY, не запушены; ветка `feat/gorod-chat-layer` (14 коммитов) не смержена в master; merge-or-keep — owner-call _(src: HANDOFF-gorod-fm-cont-17 · gate: Эльбик "sync")_
+- **B007** `OPEN` — **Город ФМ (cont-17): merge-or-keep ветки** — ✅ push DONE на sync 2026-06-29 (`feat/gorod-chat-layer` на origin со всеми local-коммитами 18d375d/90adb11/b12ff6d); остаётся owner-call merge-or-keep в master (репо шарен → держать изолированной) _(src: HANDOFF-gorod-fm-cont-17 · gate: Эльбик merge-decision)_
 - **B008** `OPEN` — **Город ФМ: GOROD-030 лицензии** — #1 bottleneck, standing gate из предыдущих сессий _(src: HANDOFF-gorod-fm-cont-17 / cont-16 · gate: внешнее/юридическое)_
 - **B009** `OPEN` — **Город ФМ: GOROD-029 позиционирование** — standing gate _(src: HANDOFF-gorod-fm-cont-17 · gate: owner)_
 - **B010** `OPEN` — **Bootstrap port: merge `feat/bootstrap-port` → master** — CRM DONE, Twinr pending Phase 4-6; мерж-поезд Эльбик-gated _(src: HANDOFF-bootstrap-port · gate: Эльбик, после завершения Twinr)_
+- **B051** `OPEN` — **rusradio (РМГ): показ гео-подсказки в DFM + выбор варианта** — 4 десктоп + мобайл готовы в Figma «Русское Радио - солянка» (`XxJR3WmxhUxaQE9NlYGHU7` node 1460:218); клиент выбирает стекло (свет/тёмн) · текст (кратко/с городом) · размещение (поповер/плашка); после выбора — доработка + домобилить _(src: DEBT RR-005/006 · gate: клиент DFM)_
 
 ---
 
