@@ -5,7 +5,7 @@
 **Research:** `docs/superpowers/RESEARCH-gorod-fm-home-carousel-feed-search.md` (wave-1) · `…-home-feed-frontier-wave2.md` (wave-2, feed frontier)
 
 ## 0. Intent
-Turn the home from a lean-back single-stream "Волна" into a **lean-forward radio storefront**: a hero carousel that IS the live эфир (tune across the РМГ family), a persistent live-aware player, and — on scroll — a **frontier, explainable discovery feed**. The AI-radio wedge is preserved (Город ФМ's own card = the AI wave; «Моя волна» is a feed shelf). Skin unchanged; only the home's structure changes.
+Turn the home from a lean-back single-stream "Волна" into a **lean-forward radio storefront**: a hero carousel that IS the live эфир (tune across the РМГ family), a persistent live-aware player, and — on scroll — a **frontier, explainable music витрина** (friends' recommendations, categories/genres, collections, personal picks — a storefront of all music). The AI-radio wedge is preserved (Город ФМ's own card = the AI wave; «Моя волна» is a feed shelf). Skin unchanged; only the home's structure changes.
 
 ## 1. Locked decisions (owner, 2026-07-01)
 1. **D1 — keep the shipped dark skin** (`#0B0C0F` / accent `#5168FC` / Onest / anti-slop). Structure changes, not skin.
@@ -62,14 +62,15 @@ Docked bottom, mounted across route changes (keep the `<audio>` element alive so
 On focus, a full-width panel over the hero. **Empty:** `Недавние запросы` (last ~8, ×-removable, «Очистить историю») + `Часто ищут` chips. **Typing (debounce ~160ms):** a «Лучший результат» card (96px art, name, type badge, inline Play) then grouped, capped sections with «Показать все →»: **Станции · Шоу и DJ · Жанры · Подборки · Треки и артисты** (order radio-biased; live stations get an accent dot). **Browse-all grid** = **real cover art on dark tiles** + `#0B0C0F` bottom scrim + Onest label; genre tiles without art = `--surface-1` + 1px `--accent-on-dark`@12% + ghost letterform. **Never Spotify's rainbow tiles** — accent spent only on meaning. **Scopes** (sticky chips): `Всё · Станции · Треки · Артисты · Подборки · Подкасты` (Всё floats stations/live above tracks). No-results = suggestion + fallback popular stations (never a dead end). Mobile overlay sits above the docked player (`padding-bottom` = player h + safe-area); **opening search never stops playback**.
 
 ## 8. Discovery feed — FRONTIER (the owner's focus)
-The differentiator: a feed that is **explainable, steerable, context-aware, and honest** — which is exactly the 2025-26 frontier (Spotify "steer the algorithm", Apple algo-torial, Yandex Моя волна, DSA Art. 27) and 1:1 with Город ФМ's wedge. Radio-first: shelves segregate by **time-state** (live / scheduled / on-demand), not media type.
+The feed is a **music-discovery витрина** — a storefront of ALL music: friends' recommendations, categories/genres, collections, and personal picks, so the user browses «всё что есть» and picks what they like. Radio/эфир lives in the carousel above; radio shows are one minor accent shelf, not the focus. On top of that витрина we layer the frontier make-it-best-in-class mechanics — **explainable, steerable, context-aware, honest** (the 2025-26 frontier: Spotify "steer the algorithm", Apple algo-torial, Yandex Моя волна, DSA Art. 27) — which is 1:1 with Город ФМ's wedge.
 
-### 8.1 Canonical shelf catalog (grouped; each shelf = provenance chip + one honest "why" + one control)
-Provenance chips: **`Эфир` · `Подбор ИИ` · `Куратор` · `Микс`**.
-**Live/эфир (radio-unique):** `Сейчас в эфире` (**song-level** bridge — the tracks the stations are playing right now, each savable; distinct from the carousel, which switches stations. Complementary/mobile-first and subject to the §8.2 adaptive-hide rule so it never just duplicates the carousel) · `Программы и ведущие` (daypart badges «сейчас»/«в 18:00») · `Записи эфира · Пропущенное` (catch-up replays — the ONLY shelf with a real progress bar) · `Сегодня в эфире` (compact schedule strip, optional).
-**Personal AI (`Подбор ИИ`):** `Моя волна` (the one "just play" adaptive stream + dials настроение/язык/активность — reuses `TwinrWave`/`GorodContext`; the surrender core beside the carousel's control) · `Похоже на [станцию]` (station-seeded, NOT РМГ-walled) · `Дежавю` (from the user's own history) · `Не ваш обычный выбор` (labeled exploration ~20-30%).
-**Editorial (`Куратор`/`Микс`):** `Выбор редакции ГОРОДА` (human picks; leads cold-start) · `Волна дня` (daily-refresh mix, real timestamp) · `Премьера` (Fri new releases) · `Коллекции` (deep rubrics).
-**Cross/social:** `Из эфира — песни` (save/identify tracks the stations just played — live-radio↔AI-music bridge) · `Друзья слушают` (**honest empty/onboarding state** — no social graph yet; never fake friends).
+### 8.1 Canonical shelf catalog — a витрина of ALL music (each shelf = provenance chip + one honest "why" + one control)
+The feed is a **music-discovery storefront**: friends' recommendations, categories/genres, collections, and personal picks — the user browses «всё что есть» and picks what they like. Radio shows are one minor accent shelf; radio/эфир itself is the carousel above. Provenance chips: **`Друзья` · `Подбор ИИ` · `Куратор` · `Микс`**.
+**Друзья и рекомендации (lead — the owner's core ask):** `Друзья слушают` (what friends play + their подборки; **first-class shelf** — prototype shows clearly-representative example activity, the real version needs accounts + social graph + privacy defaults per 152-ФЗ; never present demo as real user stats) · `Для вас` / `Потому что вы слушали…` (personalized picks) · `Моя волна` (AI adaptive stream + dials настроение/язык/активность; reuses `TwinrWave`/`GorodContext`) · `Дежавю` (from your own history).
+**Категории и жанры («всякие категории»):** `Категории и жанры` (the browse-all system — жанры · настроения · активности · эпохи · языки; pick anything, витрина of the whole catalog) · `Не ваш обычный выбор` (labeled exploration/serendipity ~20-30%).
+**Подборки и редакция («подборки»):** `Подборки` (ready-made collections/playlists — editorial + algorithmic) · `Выбор редакции ГОРОДА` (human picks; leads cold-start) · `Новинки` · `Популярное · Чарты` (real counts or none) · `Коллекции` (deep rubrics — по десятилетиям / языку / городу).
+**Артисты:** `Исполнители` (browse by artist).
+**Радио-контент (minor accent — эфир is the carousel):** `Программы и ведущие` (radio shows/DJs, daypart badge «сейчас»/«в 18:00») · optional `Из эфира — песни` (save the tracks the stations just played — the live-radio ↔ music bridge).
 
 ### 8.2 Adaptive shelf selection & ordering (the frontier move)
 Meta-rank the SHELVES, not just cards (Spotify BaRT: the shelf title is the explanation AND the constraint). MVP is fully client-side and ships in the single-file SPA:
@@ -107,6 +108,7 @@ Cold-start (no history) → carousel + 100% editorial feed, no faked personaliza
 IN: `#/home` structure (carousel, player upgrade, feed, search). OUT: all other routes, the sidebar/tab IA and its labels (home tab stays «Волна» unless owner renames — optional micro-decision), real backend ML/ICY/social (wired when available), the cont-17 chat-layer (independent). Repo shared with Twinr → stay on `feat/gorod-home-rmg-storefront`, keep isolated.
 
 ## 12. Deviations from research (documented)
+- **Feed = music-discovery витрина, NOT a radio-schedule feed** (owner clarification 2026-07-01): friends' recommendations + categories/genres + collections + personal picks lead; wave-2's radio-first "time-state" shelves (schedule strip, catch-up, «Сейчас в эфире») are demoted to one minor «Программы и ведущие» accent. Radio/эфир is the carousel above; the feed is «витрина всего что есть по музыке».
 - **РМГ siblings in the carousel** (owner D2) overrides wave-1's "de-emphasize siblings" recommendation. Consequence: dropped the generic "station directory" shelf (the carousel already is the directory).
 - **Now-playing merged into the carousel center** (owner model) — no separate now-playing block.
 - Themed streams (POP GOLD / K-POP / CHILL / ДИСКАЧ 90-Х) are NOT the carousel; they live in the feed («Коллекции» / genre) if used.
@@ -122,7 +124,7 @@ IN: `#/home` structure (carousel, player upgrade, feed, search). OUT: all other 
 - [ ] Center card = playing station; Город ФМ shows AI wave + steer, siblings show live now-playing; switching cross-fades and updates the player (one active).
 - [ ] Player: LIVE badge, no scrubber on live, MediaSession play/pause only, survives route changes.
 - [ ] Search: persistent, `/`/Ctrl-K, typeahead + scopes, mono-accent browse grid (no rainbow), never stops playback.
-- [ ] Feed: the §8.1 shelves render with provenance chips + honest "why" + a control; order adapts by time-of-day with a real timestamp; thin shelves hidden; **no fabricated counts**; «Друзья слушают» = honest empty state.
+- [ ] Feed: the §8.1 shelves render with provenance chips + honest "why" + a control; order adapts by time-of-day with a real timestamp; thin shelves hidden; **no fabricated counts**; «Друзья слушают», категории, подборки и рекомендации present and populated (representative in prototype; real friends need a social graph).
 - [ ] Anti-slop gate (DESIGN_PROTOCOL §2/§9) passes; single accent; Onest; WCAG AA; verified via `design-implementation-reviewer`.
 - [ ] `#/home` only; other routes byte-unaffected; standalone rebuilt.
 
