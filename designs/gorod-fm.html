@@ -2216,6 +2216,44 @@
         .home-hero:hover, .home-radio-like:hover, .home-radio-steer:hover { transform: none; }
       }
 
+      /* ===================================================================
+         Home page — RMG station carousel (flat, no-tilt; replaces AI hero above)
+         =================================================================== */
+      .rmg-rail{ position:relative; }
+      .rmg-track{ list-style:none; margin:0; padding:0; display:flex; gap:20px;
+        overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory;
+        scroll-behavior:smooth; padding-inline:calc(50% - var(--rmg-card,320px)/2);
+        scrollbar-width:none; }
+      .rmg-track::-webkit-scrollbar{ display:none; }
+      .rmg-card{ flex:0 0 var(--rmg-card,320px); scroll-snap-align:center; }
+      .rmg-card > button{ all:unset; box-sizing:border-box; display:block; width:100%; cursor:pointer;
+        border-radius:20px; background:var(--surface-1); padding:14px; }
+      .rmg-card-art{ aspect-ratio:1; border-radius:14px; background:var(--surface-2);
+        display:grid; place-items:center; font:600 40px Onest,sans-serif; color:var(--text-sec); overflow:hidden; }
+      .rmg-card-name{ font:700 20px Onest,sans-serif; color:var(--text-pri); margin-top:12px; }
+      .rmg-card-freq{ font:500 14px Onest,sans-serif; color:var(--text-sec); }
+      .rmg-card-np{ font:500 14px Onest,sans-serif; color:var(--text-sec);
+        white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:6px; }
+      .rmg-card-live{ display:none; }
+      .rmg-card[aria-current="true"] .rmg-card-live{ display:inline-flex; align-items:center; gap:6px;
+        font:600 12px Onest,sans-serif; color:var(--accent-on-dark); }
+      .rmg-card[aria-current="true"] .rmg-card-live::before{ content:''; width:8px; height:8px; border-radius:50%;
+        background:var(--brand-blue-light); animation:rmg-pulse 1.6s ease-in-out infinite; }
+      @keyframes rmg-focus{ 0%,100%{opacity:.45; transform:scale(.82)} 50%{opacity:1; transform:scale(1)} }
+      @keyframes rmg-pulse{ 0%,100%{opacity:1} 50%{opacity:.4} }
+      @supports (animation-timeline: view()){
+        .rmg-card{ animation:rmg-focus linear both; animation-timeline:view(inline); will-change:transform,opacity; }
+      }
+      @supports not (animation-timeline: view()){
+        .rmg-card{ opacity:.45; transform:scale(.82); transition:opacity .25s, transform .25s; }
+        .rmg-card.is-centered{ opacity:1; transform:scale(1); }
+      }
+      @media (prefers-reduced-motion: reduce){
+        .rmg-track{ scroll-behavior:auto; }
+        .rmg-card{ animation:none !important; opacity:1 !important; transform:none !important; }
+        .rmg-card-live::before{ animation:none; }
+      }
+
       /* =====================================================================
          ONBOARDING (#/onboarding) — собери свой вкус (floating bubble picker)
          First-run taste capture for the "First AI-driven music" narrative.
@@ -7882,7 +7920,8 @@
       <section data-page="home" aria-labelledby="page-home-heading">
         <h1 id="page-home-heading" class="visually-hidden">Главная</h1>
 
-        <!-- GOROD-045 — ВОЛНА как РАДИО (3 зоны). Default-вид; плитки = alt-browse ниже. -->
+        <!-- MOVED TO «Моя волна» tab (AI wave/steer) — see spec
+             GOROD-045 — ВОЛНА как РАДИО (3 зоны); kept intact below (commented, not deleted) for relocation.
         <div class="home-radio" id="home-radio">
           <div class="home-radio-top">
             <button class="home-ctx-card" type="button" id="home-ctx-card"
@@ -7926,7 +7965,11 @@
             </div>
           </div>
         </div>
-        <!-- /.home-radio -->
+        /.home-radio /MOVED -->
+
+        <section class="rmg-rail" id="rmg-rail" role="group" aria-roledescription="карусель" aria-label="Радиостанции">
+          <ul class="rmg-track" id="rmg-track" role="list"><!-- cards injected by Task 3 --></ul>
+        </section>
 
         <div class="home-tiles" hidden>
         <!-- Figma 2174:422 — dark home with 8 tiles + featured central card + blue player -->
