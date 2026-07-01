@@ -2219,7 +2219,7 @@
       /* ===================================================================
          Home page — RMG station carousel (flat, no-tilt; replaces AI hero above)
          =================================================================== */
-      .rmg-rail{ position:relative; }
+      .rmg-rail{ position:relative; --rmg-card:320px; }
       .rmg-track{ list-style:none; margin:0; padding:0; display:flex; gap:20px;
         overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory;
         scroll-behavior:smooth; padding-inline:calc(50% - var(--rmg-card,320px)/2);
@@ -2251,7 +2251,7 @@
       @media (prefers-reduced-motion: reduce){
         .rmg-track{ scroll-behavior:auto; }
         .rmg-card{ animation:none !important; opacity:1 !important; transform:none !important; }
-        .rmg-card-live::before{ animation:none; }
+        .rmg-card[aria-current="true"] .rmg-card-live::before{ animation:none !important; }
       }
 
       /* =====================================================================
