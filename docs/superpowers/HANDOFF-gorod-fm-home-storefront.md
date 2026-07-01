@@ -39,6 +39,7 @@ Home = non-AI **radio storefront**: (1) hero **carousel = the эфир** — 6 �
 9. **Standalone regen (Task 11):** rebuild `designs/gorod-fm-standalone.html` (re-grep `rebuild_standalone_full.py`).
 10. **Real assets (owner-supplied):** 6 station **logos** (have Monte Carlo; need Русское Радио/ХИТ FM/DFM/MAXIMUM from brand books B018), Город ФМ **frequency**, live **stream URLs + ICY metadata**, real catalog for the витрина.
 11. **Separate follow-up (out of this scope):** the **«Моя волна» AI tab** — relocate the commented-out `#home-radio` wave/steer there + wire the wave-2 frontier recsys research.
+12. **Chat rail «Общий эфир» — OWNER DECISION** (owner flagged its absence 2026-07-01). It was DROPPED when this branch rebased onto clean `master` (option A); the full chat-layer is intact on `feat/gorod-chat-layer`. Decide: **(a) restore it on the new home** — needs layout reconciliation (the витрина is currently full-width; either narrow the витрина to leave a right rail, or make the rail a toggle/overlay) — cherry-pick the chat-rail feature from `feat/gorod-chat-layer` into this branch; **(b) keep it parked** (separate experiment). Owner leans toward wanting it back — confirm layout approach first.
 
 ## Key anchors (RE-GREP — they drift)
 - Carousel: CSS `.rmg-rail` (~L2220), markup `id="rmg-rail"` (in `data-page="home"`), JS `window.GorodRail` (trailing script). `#home-radio` = commented-out AI hero.
