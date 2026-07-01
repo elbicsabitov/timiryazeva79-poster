@@ -2283,9 +2283,11 @@
         background:var(--brand-blue-light); animation:rmg-pulse 1.6s ease-in-out infinite; }
       /* Center-card transport — owner: play/like/skip on the station playing now */
       .rmg-card-controls{ display:flex; gap:14px; justify-content:center; align-items:center;
-        height:0; margin-top:0; opacity:0; overflow:hidden; pointer-events:none;
-        transition:opacity .25s ease, height .25s ease, margin-top .25s ease; }
-      .rmg-card[aria-current="true"] .rmg-card-controls{ height:56px; margin-top:12px; opacity:1; pointer-events:auto; }
+        height:0; margin-top:0; opacity:0; overflow:hidden; pointer-events:none; visibility:hidden;
+        transition:opacity .25s ease, height .25s ease, margin-top .25s ease, visibility 0s linear .25s; }
+      /* visibility:hidden on non-centered cards keeps their transport buttons out of the tab order
+         and the a11y tree (review M5); reveal is immediate (delay 0), hide waits for the fade. */
+      .rmg-card[aria-current="true"] .rmg-card-controls{ height:56px; margin-top:12px; opacity:1; pointer-events:auto; visibility:visible; transition-delay:0s; }
       .rmg-ctrl{ all:unset; box-sizing:border-box; cursor:pointer; width:44px; height:44px; border-radius:50%;
         display:grid; place-items:center; background:var(--surface-3); color:var(--text-pri);
         transition:background .18s, transform .12s, color .18s; }
@@ -4667,6 +4669,8 @@
       /* in the mobile dialog the collapse-to-spine chevron is meaningless → hide it */
       html[data-surface="mobile"] #rail-collapse,
       html[data-rail-mobile="open"] #rail-collapse { display: none; }
+      /* when the rail is open as a mobile dialog its launcher FAB is redundant (× closes it) → hide it */
+      html[data-rail-mobile="open"] .rail-mobile-fab { display: none !important; }
       @media (max-width: 640px) { html[data-surface="web"] #rail-collapse { display: none; } html[data-surface="web"] .rail-mobile-close { display: inline-flex; } }
 
       /* ---- WEB responsive (real-browser breakpoints; defensive for narrow web) ----
@@ -11959,7 +11963,8 @@
 
     <!-- Album art — real cover; color-from-art tints the player (GOROD-042/043) -->
     <div class="player-mini-art">
-      <img id="mini-art-img" src="assets/gorod-fm/home-featured-egor-krid.png" alt="Обложка: Слеза — Егор Крид">
+      <!-- Honest neutral station monogram (matches GorodPlayer.stationArt); paint() swaps per station. No stale/wrong track cover. (review L9) -->
+      <img id="mini-art-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect width='96' height='96' fill='%231B1E26'/%3E%3Ctext x='48' y='50' font-family='Onest, sans-serif' font-size='44' font-weight='700' fill='%238094ff' text-anchor='middle' dominant-baseline='central'%3E%D0%93%3C/text%3E%3C/svg%3E" alt="Обложка станции">
     </div>
 
     <!-- Track meta — title, artist, + always-on behavioral «почему» (GOROD-040) -->
@@ -14906,8 +14911,11 @@
       renderProfile();
       // initial room render — default Всем in the global/station room
       switchRoom('global', { silent: true });
-      // On #/home the toggle defaults to ✦ Twinr (AI anchor surface); elsewhere Всем.
-      if ((window.location.hash || '') === '#/home') { setMode('ai', false); if (!greeted) { greeted = true; greet(); } }
+      // Storefront home is a NON-AI surface (owner-locked model: home = radio storefront, all AI →
+      // «Моя волна»). So lead its rail with the «Общий эфир» community lane (Всем), NOT the Twinr AI
+      // composer + greeting — that foregrounded AI on home and conflicted with the retire-AI pass
+      // (review M3). Twinr stays one tap away via the mode toggle. Other routes keep their default.
+      if ((window.location.hash || '') === '#/home') { setMode('all', false); }
     }
 
     /* ---- rail chrome wiring: collapse chevron, spine expand, room dropdown ---- */
@@ -18837,7 +18845,18 @@
   // `hashchange` observers (e.g. updateHomeFabVisibility) rather than editing the
   // shared activatePage()/routeFromHash() router.
   window.addEventListener('hashchange', function(){
-    if ((window.location.hash || '') === '#/home') { window.GorodRail && GorodRail.render(); }
+    if ((window.location.hash || '') === '#/home') {
+      if (window.GorodRail) {
+        GorodRail.render();
+        // offsetLeft/clientWidth are 0 while [data-page=home] is display:none, so the initial
+        // center at boot is a no-op when the app cold-starts on another route. Re-center on the
+        // ACTIVE station once home is visible so the full-scale/aria-current card matches the
+        // visually-centered one (review M4).
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){
+          GorodRail.center((window.GorodStations && GorodStations.active) || 'gorod', true);
+        }); });
+      }
+    }
   });
 })();
 </script>
@@ -19853,6 +19872,12 @@
     overlay.innerHTML =
       '<button type="button" class="gs-close" aria-label="Закрыть поиск">' + CLOSE_SVG + '</button>' +
       '<div class="gs-wrap">' +
+        /* In-overlay input — the topbar #gorod-search-field is display:none on mobile,
+           so the overlay carries its own typable field there (shown via CSS on mobile). (item 6 / H1) */
+        '<div class="gs-overlay-search">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+          '<input id="gs-overlay-input" type="search" class="gs-overlay-input" placeholder="Поиск станций, шоу, треков…" aria-label="Поиск" autocomplete="off">' +
+        '</div>' +
         '<div class="gs-scopes" data-role="scopes"></div>' +
         '<div class="gs-body" data-role="body"></div>' +
       '</div>';
@@ -19931,7 +19956,11 @@
         requestAnimationFrame(function () { if (overlay) overlay.classList.add('is-open'); });
       });
     }
-    if (document.activeElement !== field) field.focus();
+    /* Focus the visible input: topbar field on desktop, in-overlay input on mobile (field hidden). */
+    var oi = overlay.querySelector('#gs-overlay-input');
+    var fieldHidden = !field.offsetParent; /* offsetParent null => display:none ancestor (mobile topbar) */
+    if (fieldHidden && oi) { oi.value = field.value; if (document.activeElement !== oi) oi.focus(); }
+    else if (document.activeElement !== field) field.focus();
   }
 
   function closeSearch() {
@@ -19987,6 +20016,24 @@
        screens, so the storefront home shows a search pill that opens the overlay. (item 6) */
     var mobilePill = document.getElementById('home-search-mobile');
     if (mobilePill) mobilePill.addEventListener('click', openSearch);
+
+    /* In-overlay input (used on mobile, where #gorod-search-field is hidden) drives the SAME
+       render/typeahead pipeline by mirroring its value into `field`. Delegated so it survives
+       render()'s innerHTML rebuilds. (item 6 / review H1) */
+    var overlayDebounce = null;
+    overlay.addEventListener('input', function (e) {
+      if (!e.target || e.target.id !== 'gs-overlay-input') return;
+      field.value = e.target.value;
+      clearTimeout(overlayDebounce);
+      overlayDebounce = setTimeout(function () { state.expanded = {}; render(); }, 160);
+    });
+    overlay.addEventListener('keydown', function (e) {
+      if (!e.target || e.target.id !== 'gs-overlay-input') return;
+      if (e.key === 'ArrowDown') { var l = optionEls(); if (l.length) { e.preventDefault(); setActiveIndex(Math.min(activeIndex + 1, l.length - 1)); } }
+      else if (e.key === 'ArrowUp') { var l2 = optionEls(); if (l2.length) { e.preventDefault(); setActiveIndex(Math.max(activeIndex - 1, 0)); } }
+      else if (e.key === 'Enter') { var l3 = optionEls(); if (l3.length) { e.preventDefault(); selectItem(l3[activeIndex >= 0 ? activeIndex : 0]); } }
+      else if (e.key === 'Escape') { e.preventDefault(); closeSearch(); }
+    });
 
     var debounceTimer = null;
     field.addEventListener('input', function () {
@@ -20072,6 +20119,16 @@
   .home-search-mobile svg { width:20px; height:20px; flex:none; }
   .home-search-mobile:active { background:var(--surface-2); }
 
+  /* In-overlay search input — shown on mobile, where the topbar #gorod-search-field is hidden. (H1) */
+  .gs-overlay-search { display:none; align-items:center; gap:10px; margin:0 0 14px; padding:12px 16px;
+    border-radius:14px; background:var(--surface-1); border:1px solid var(--hairline, rgba(255,255,255,.10)); }
+  .gs-overlay-search svg { width:20px; height:20px; flex:none; color:var(--text-sec); }
+  .gs-overlay-input { flex:1 1 auto; min-width:0; border:none; background:transparent; color:var(--text-pri);
+    font:500 16px 'Onest', sans-serif; outline:none; }
+  .gs-overlay-input::placeholder { color:var(--text-sec); }
+  [data-surface="mobile"] .gs-overlay-search { display:flex; }
+  [data-surface="mobile"] .gorod-search-overlay { inset: 0 0 calc(var(--tabbar-h) + var(--player-mini-h)) 0; }
+
   @media (max-width: 768px) {
     /* topbar is hidden on mobile → drop the home full-bleed negative margins so the
        search pill + carousel aren't clipped off the top / sides. */
@@ -20088,7 +20145,11 @@
      the initial surface; the dev TWEAKS toggle still works between resizes. */
   (function () {
     var mq = window.matchMedia('(max-width: 768px)');
-    function apply() { document.documentElement.setAttribute('data-surface', mq.matches ? 'mobile' : 'web'); }
+    function apply() {
+      var cur = document.documentElement.getAttribute('data-surface');
+      if (cur === 'tv' || cur === 'carplay') return; /* respect explicit tv/carplay surfaces — only auto-manage web<->mobile (review M2) */
+      document.documentElement.setAttribute('data-surface', mq.matches ? 'mobile' : 'web');
+    }
     apply();
     if (mq.addEventListener) mq.addEventListener('change', apply);
     else if (mq.addListener) mq.addListener(apply);
