@@ -8646,7 +8646,7 @@
       <div class="gorod-search">
     <input id="gorod-search-field" type="search" class="gorod-search-input" placeholder="Поиск станций, шоу, треков…" aria-label="Поиск" autocomplete="off">
   </div>
-  <div id="gorod-search-overlay" class="gorod-search-overlay" hidden role="dialog" aria-label="Поиск"></div>
+  <!-- #gorod-search-overlay moved out of .topbar (backdrop-filter made it the fixed containing block → 0-height; also hidden on mobile). Now a direct child of <body>. (item 6) -->
 
       <!-- "Личный кабинет" pill -->
       <button
@@ -9025,6 +9025,11 @@
           </div>
         </div>
         /.home-radio /MOVED -->
+
+        <button type="button" class="home-search-mobile" id="home-search-mobile" aria-label="Открыть поиск">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Поиск станций, шоу, треков…</span>
+        </button>
 
         <section class="rmg-rail" id="rmg-rail" role="group" aria-roledescription="карусель" aria-label="Радиостанции">
           <ul class="rmg-track" id="rmg-track" role="list"><!-- cards injected by Task 3 --></ul>
@@ -18244,6 +18249,11 @@
 
     field.addEventListener('focus', openSearch);
 
+    /* Mobile entry point — the topbar (with #gorod-search-field) is hidden on narrow
+       screens, so the storefront home shows a search pill that opens the overlay. (item 6) */
+    var mobilePill = document.getElementById('home-search-mobile');
+    if (mobilePill) mobilePill.addEventListener('click', openSearch);
+
     var debounceTimer = null;
     field.addEventListener('input', function () {
       clearTimeout(debounceTimer);
@@ -18314,6 +18324,41 @@
   };
 })();
 
+</script>
+
+<!-- Search overlay — top-level (viewport-fixed), moved out of .topbar. (item 6) -->
+<div id="gorod-search-overlay" class="gorod-search-overlay" hidden role="dialog" aria-label="Поиск"></div>
+
+<!-- Storefront home: mobile search pill (item 6) + narrow-screen storefront tweaks (items 6+7).
+     Trailing <style> (unlayered) so it is independent of the main stylesheet's cascade layers. -->
+<style>
+  .home-search-mobile { display:none; align-items:center; gap:10px; width:100%; margin:0 0 6px; padding:13px 16px;
+    border:none; border-radius:14px; background:var(--surface-1); color:var(--text-sec);
+    font:500 15px 'Onest', sans-serif; cursor:pointer; text-align:left; }
+  .home-search-mobile svg { width:20px; height:20px; flex:none; }
+  .home-search-mobile:active { background:var(--surface-2); }
+
+  @media (max-width: 768px) {
+    /* topbar is hidden on mobile → drop the home full-bleed negative margins so the
+       search pill + carousel aren't clipped off the top / sides. */
+    [data-page="home"] { margin: 0 !important; }
+    .rmg-rail { padding-top: 8px; --rmg-card: 76vw; }
+    .rmg-card-name { font-size:18px; }
+    .home-search-mobile { display:flex; }
+  }
+</style>
+<script>
+  /* Responsive surface (items 6+7): narrow screens/phones adopt the app's built-in mobile shell
+     (sidebar → bottom tabbar, mini-player above tabbar) by toggling data-surface, instead of
+     fighting the [data-surface="web"] cascade. Desktop (>768px) stays "web". Runs last so it wins
+     the initial surface; the dev TWEAKS toggle still works between resizes. */
+  (function () {
+    var mq = window.matchMedia('(max-width: 768px)');
+    function apply() { document.documentElement.setAttribute('data-surface', mq.matches ? 'mobile' : 'web'); }
+    apply();
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+    else if (mq.addListener) mq.addListener(apply);
+  })();
 </script>
 </body>
 </html>
