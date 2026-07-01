@@ -507,3 +507,26 @@ Liquid Glass → Bootstrap 5.3 dev-handoff порт. **Полный трекер
 | CRM-021 | Тёмный/светлый переключатель темы (если попросят) | 🔒 Эльбик-gate |
 | CRM-022 | Реализация в Next.js на базе утверждённой темы | 🔒 Эльбик-gate |
 | CRM-023 | Интеграция с реальным API turbo-performance.ru | 🔒 Эльбик-gate |
+
+## Город ФМ — home storefront finalize + images + card actions (2026-07-01)
+
+Branch `feat/gorod-home-rmg-storefront` (master = Twinr). HEAD после сессии, standalone пересобран.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| GHS-001 | Карусель: ♥/⏸/⏭ на центр-карте + синхрон с мини-плеером | done |
+| GHS-002 | Карусель: отступ сверху + центрирование + усиленный фокус + re-center на входе | done |
+| GHS-003 | Друзья слушают → ▶/＋ иконки (buildFriendRow) | done |
+| GHS-004 | Витрина: 122-элем RU-контент, eager-render | done |
+| GHS-005 | Убрать AI-хром на #/home (scoped html[data-active-route]) | done |
+| GHS-006 | Поиск: fix overlay 0-height (в body) + моб-pill + in-overlay input | done |
+| GHS-007 | Моб-адаптив (surface-flip matchMedia) | done |
+| GHS-008 | Чат-рейл «Общий эфир» восстановлен (Option A global grid) | done |
+| GHS-009 | Честная монограмма-обложка мини-плеера | done |
+| GHS-010 | Adversarial review → 6 фиксов (H1/M2-M5/L9) + standalone regen | done |
+| GHS-011 | Две версии: gorod-fm.html (монограммы) + gorod-fm-images.html (фото) | done |
+| GHS-012 | ♥ like + ＋ add на каждой карточке (toggle) | done |
+| GHS-013 | Owner-confirm: home-рейл default (community vs Twinr) + рейл global vs home-only | 🔒 Эльбик-gate |
+| GHS-014 | Привязать ♥/＋/▶ к реальному сохранению (Мой вкус/избранное) | pending |
+| GHS-015 | Реальные РМГ-ассеты (лого/частоты/стримы) | 🔒 Эльбик-gate |
+| GHS-016 | «Моя волна» AI-таб (relocate #home-radio) | pending |
