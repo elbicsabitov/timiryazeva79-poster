@@ -2262,6 +2262,512 @@
       @media (prefers-reduced-motion: reduce){ .player-live-badge::before{ animation:none; } }
       [data-live="true"] .player-mini-progress-bar, [data-live="true"] .player-progress, [data-live="true"] .player-scrubber { display:none !important; }
 
+      /* ---- Город ФМ home: search field + overlay (Tasks 5+6) ---- */
+/* ==========================================================================
+   GOROD SEARCH — module.css
+   Persistent topbar search field + full-takeover search overlay.
+
+   DEPENDENCIES (must already exist on :root / html[data-theme] in
+   gorod-fm.html — confirmed present, values match exactly, nothing new
+   invented):
+     --surface-1        #15171D
+     --surface-2         #1B1E26
+     --text-pri          #FFFFFF
+     --text-sec          rgba(255,255,255,.62)
+     --brand-blue-light   #5168FC
+     --accent-on-dark     #8094ff
+     --hairline           rgba(255,255,255,.08)
+     --player-mini-h      72px
+     font-family 'Onest', sans-serif
+
+   Dark theme only — no [data-theme="light"] branch. Single accent
+   (--brand-blue-light / --accent-on-dark) — no gradients used decoratively
+   anywhere below; the one linear-gradient present (.gs-tile--art scrim) is
+   a functional legibility scrim over a photo, matching the existing
+   .tcloud-bubble--artist::before pattern already shipped in gorod-fm.html
+   (not a decorative background gradient).
+   ========================================================================== */
+
+/* ---- Persistent field (mounts in .topbar, before .topbar-account) ------ */
+
+.gorod-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 1 340px;
+  min-width: 0;
+}
+
+.gorod-search::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  background-color: var(--text-sec);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+  transition: background-color .15s ease;
+}
+
+.gorod-search:focus-within::before {
+  background-color: var(--accent-on-dark);
+}
+
+.gorod-search-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 44px;
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  color: var(--text-pri);
+  font-family: 'Onest', sans-serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.gorod-search-input::-webkit-search-decoration,
+.gorod-search-input::-webkit-search-cancel-button,
+.gorod-search-input::-webkit-search-results-button,
+.gorod-search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gorod-search-input::placeholder {
+  color: var(--text-sec);
+  opacity: 1;
+}
+
+.gorod-search-input:hover {
+  background: var(--surface-2);
+}
+
+.gorod-search-input:focus,
+.gorod-search-input:focus-visible {
+  outline: none;
+  border-color: var(--accent-on-dark);
+  box-shadow: 0 0 0 1px var(--accent-on-dark);
+  background: var(--surface-2);
+}
+
+/* ---- Overlay shell ------------------------------------------------------ */
+/* inset top (56px) is the exact bottom edge of the 48px-tall field
+   vertically centered inside the 64px topbar (--topbar-h) — the field
+   stays visible/usable above the overlay, no z-index fight needed there.
+   Bottom inset (--player-mini-h) leaves the docked mini-player visible. */
+
+.gorod-search-overlay {
+  position: fixed;
+  inset: 56px 0 var(--player-mini-h) 0;
+  z-index: 75; /* above .sidebar (50) / .topbar (40) / .player-mini (60); below popovers (89+) and sheets (250+) */
+  background: rgba(11, 12, 15, .98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.gorod-search-overlay.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .gorod-search-overlay { background: #0B0C0F; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .gorod-search-overlay { background: #0B0C0F; backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gorod-search-overlay { transition: none; }
+}
+
+.gs-close {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  color: var(--text-sec);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+.gs-close:hover { color: var(--text-pri); }
+.gs-close:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 2px; }
+.gs-close svg { width: 18px; height: 18px; }
+
+.gs-wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 64px clamp(20px, 4vw, 40px) 60px;
+  font-family: 'Onest', sans-serif;
+}
+
+/* ---- Scope chips (fixed set/order/labels) ------------------------------- */
+
+.gs-scopes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.gs-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: var(--surface-1);
+  color: rgba(255, 255, 255, .70);
+  font-family: 'Onest', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+/* 36px visual, 44px hit-area (host-file convention: ::before inset trick) */
+.gs-chip::before { content: ""; position: absolute; inset: -4px; }
+
+.gs-chip:hover { border-color: var(--accent-on-dark); color: var(--text-pri); }
+.gs-chip:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 2px; }
+
+.gs-chip.is-active {
+  background: var(--brand-blue-light);
+  border-color: var(--brand-blue-light);
+  color: #fff;
+}
+
+/* ---- "Лучший результат" ------------------------------------------------- */
+
+.gs-best {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 26px;
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+.gs-best:hover, .gs-best:focus-visible, .gs-best.is-active { border-color: var(--accent-on-dark); outline: none; }
+
+.gs-best-thumb {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: var(--surface-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Onest', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, .32);
+}
+.gs-best-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.gs-best-body { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.gs-best-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--accent-on-dark); }
+.gs-best-title { font-size: 18px; font-weight: 800; color: var(--text-pri); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gs-best-sub { font-size: 13px; color: var(--text-sec); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- Grouped sections ---------------------------------------------------- */
+
+.gs-section { margin-bottom: 22px; }
+.gs-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.gs-section-title { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-sec); }
+.gs-section-more {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--accent-on-dark);
+  font-family: 'Onest', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+.gs-section-more::before { content: ""; position: absolute; inset: -6px -4px; }
+.gs-section-more:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 2px; }
+
+.gs-section-list { display: flex; flex-direction: column; gap: 2px; }
+
+.gs-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  color: var(--text-pri);
+  font-family: 'Onest', sans-serif;
+  cursor: pointer;
+  transition: background .12s ease;
+}
+.gs-row:hover, .gs-row.is-active { background: var(--surface-1); }
+.gs-row:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: -2px; }
+
+.gs-row-thumb {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--surface-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.gs-row-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gs-row-thumb-letter { font-size: 15px; font-weight: 800; color: rgba(255, 255, 255, .32); }
+
+.gs-row-body { min-width: 0; flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; }
+.gs-row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-pri);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gs-row-sub { font-size: 12.5px; color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.gs-row-type {
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--text-sec);
+  padding: 3px 8px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+}
+
+/* ---- Live dot (stations only — never color-alone; paired with sr-only text) */
+
+.gs-live-dot {
+  flex: none;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-blue-light);
+}
+
+/* ---- Browse-all grid ----------------------------------------------------- */
+
+.gs-browse-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-sec);
+  margin: 4px 0 10px;
+}
+
+.gs-browse-empty { font-size: 13.5px; color: var(--text-sec); padding: 8px 0 4px; }
+
+.gs-browse {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+@media (max-width: 1240px) { .gs-browse { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 720px)  { .gs-browse { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+
+.gs-tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s ease;
+}
+.gs-tile:hover, .gs-tile:focus-visible, .gs-tile.is-active { border-color: var(--accent-on-dark); outline: none; }
+
+/* Art-less tile: flat surface-1 + faint accent border + ghosted letterform.
+   Accent is spent ONLY on the border here — never as a tile fill. */
+.gs-tile--noart {
+  background: var(--surface-1);
+  border: 1px solid rgba(128, 148, 255, .12);
+  border: 1px solid color-mix(in srgb, var(--accent-on-dark) 12%, transparent);
+}
+.gs-tile-ghost {
+  position: absolute;
+  right: -8px;
+  bottom: -18px;
+  font-family: 'Onest', sans-serif;
+  font-weight: 800;
+  font-size: 88px;
+  line-height: 1;
+  color: rgba(255, 255, 255, .06);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Real-art tile (forward-compat — unused today: every current demo entry has
+   art:null, so only .gs-tile--noart renders in practice; wired for the day
+   real station logos / cover art exist, per GorodStations.list[].logo). */
+.gs-tile--art { border: 1px solid transparent; }
+.gs-tile--art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.gs-tile-scrim {
+  position: absolute;
+  inset: 0;
+  /* functional legibility scrim over a photo, not a decorative gradient —
+     mirrors the existing .tcloud-bubble--artist::before pattern */
+  background: linear-gradient(180deg, rgba(11, 12, 15, 0) 40%, rgba(11, 12, 15, .92) 100%);
+}
+
+.gs-tile-label {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Onest', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-pri);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---- Recent searches ------------------------------------------------------ */
+
+.gs-recent { margin-bottom: 22px; }
+.gs-recent-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.gs-recent-title { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-sec); }
+.gs-recent-clear {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--accent-on-dark);
+  font-family: 'Onest', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+.gs-recent-clear::before { content: ""; position: absolute; inset: -6px -4px; }
+.gs-recent-clear:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 2px; }
+
+.gs-recent-row { display: flex; align-items: center; gap: 8px; border-radius: 10px; }
+.gs-recent-row:hover { background: var(--surface-1); }
+
+.gs-recent-term {
+  flex: 1 1 auto;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--text-pri);
+  font-family: 'Onest', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.gs-recent-term:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: -2px; border-radius: 8px; }
+
+.gs-recent-remove {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: var(--text-sec);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.gs-recent-remove::before { content: ""; position: absolute; inset: -8px; }
+.gs-recent-remove:hover { color: var(--text-pri); background: var(--surface-2); }
+.gs-recent-remove:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 2px; }
+.gs-recent-remove svg { width: 13px; height: 13px; }
+
+/* ---- "Часто ищут" ---------------------------------------------------------- */
+
+.gs-suggest { margin-bottom: 26px; }
+.gs-suggest-title { display: block; font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 10px; }
+.gs-suggest-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+/* .gs-suggest-chip reuses .gs-chip visuals but is never a "scope" — no is-active state */
+
+/* ---- No-results ------------------------------------------------------------ */
+
+.gs-empty { padding: 32px 0 8px; }
+.gs-empty-title { font-size: 16px; font-weight: 700; color: var(--text-pri); margin: 0 0 20px; }
+.gs-empty-fallback-label { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-sec); margin: 0 0 10px; }
+
+/* ---- Utility --------------------------------------------------------------- */
+
+.gs-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Tactile :active (reduced-motion gated — matches host-file G7 pattern) */
+@media (prefers-reduced-motion: no-preference) {
+  .gs-tile:active, .gs-row:active, .gs-best:active, .gs-chip:active { transform: scale(0.98); }
+}
+
+
+
       /* ---- Город ФМ home: music витрина feed (Tasks 7+8) ---- */
 /* =========================================================================
    GOROD FM — Витрина (non-AI music storefront feed)
@@ -8026,18 +8532,10 @@
     <header class="topbar" role="banner">
       <div class="topbar-spacer"></div>
 
-      <!-- Search icon-pill -->
-      <button
-        class="topbar-search"
-        type="button"
-        aria-label="Открыть поиск"
-      >
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <span>Поиск</span>
-      </button>
+      <div class="gorod-search">
+    <input id="gorod-search-field" type="search" class="gorod-search-input" placeholder="Поиск станций, шоу, треков…" aria-label="Поиск" autocomplete="off">
+  </div>
+  <div id="gorod-search-overlay" class="gorod-search-overlay" hidden role="dialog" aria-label="Поиск"></div>
 
       <!-- "Личный кабинет" pill -->
       <button
@@ -16860,6 +17358,528 @@
   } else {
     boot();
   }
+})();
+
+</script>
+<script>
+/* GorodSearch — Tasks 5+6: persistent field + overlay */
+/* ==========================================================================
+   GOROD SEARCH — module.js
+   Persistent search field (#gorod-search-field) + full-takeover overlay
+   (#gorod-search-overlay). Exposes window.GorodSearch = { open, close }.
+
+   Depends on window.GorodStations = { list:[{id,name,freq,logo}], nowPlaying(id) }
+   (already implemented in gorod-fm.html). Never calls play/pause/tune —
+   opening or closing search must not affect playback.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* ---- Demo content the task asked us to define (not in GorodStations) --
+     Tracks/artists are deliberately NOT hardcoded here — they're derived at
+     index-build time from GorodStations.nowPlaying(id) so nothing is
+     fabricated / can drift from the real now-playing data. */
+
+  var DEMO_SHOWS = [
+    { title: 'Z.CITY SHOW',       subtitle: 'Город ФМ · вечернее шоу' },
+    { title: 'Вечерний Джаз',     subtitle: 'Radio Monte Carlo · 20:00' },
+    { title: 'Утренний драйв',    subtitle: 'Русское Радио · утро' },
+    { title: 'Топ-40 недели',     subtitle: 'ХИТ FM · выходные' },
+    { title: 'Ночной эфир',       subtitle: 'MAXIMUM · ночь' }
+  ];
+
+  var DEMO_GENRES = ['Поп', 'Рок', 'Хип-хоп', 'Электроника', 'Джаз'];
+
+  var DEMO_COLLECTIONS = [
+    { title: 'Тёплый вечер',   subtitle: 'Подборка' },
+    { title: 'Дорога',         subtitle: 'Подборка' },
+    { title: 'Утренний заряд', subtitle: 'Подборка' },
+    { title: 'Фокус',          subtitle: 'Подборка' }
+  ];
+
+  /* Curated so every chip is guaranteed to resolve to a real index entry. */
+  var SUGGEST_TERMS = ['Поп', 'Город ФМ', 'Дорога', 'Z.CITY SHOW', 'Джаз'];
+
+  var SCOPES = [
+    { id: 'all',        label: 'Всё' },
+    { id: 'station',    label: 'Станции' },
+    { id: 'track',      label: 'Треки' },
+    { id: 'artist',     label: 'Артисты' },
+    { id: 'collection', label: 'Подборки' },
+    { id: 'podcast',    label: 'Подкасты' }
+  ];
+
+  /* Fixed section order for the "Всё" view — Станции/live first. */
+  var TYPE_SECTIONS = [
+    { type: 'station',    title: 'Станции' },
+    { type: 'show',       title: 'Шоу и DJ' },
+    { type: 'genre',      title: 'Жанры' },
+    { type: 'collection', title: 'Подборки' },
+    { type: 'track',      title: 'Треки и артисты' } /* combines type:track + type:artist */
+  ];
+
+  var TYPE_LABEL = {
+    station: 'Станция', show: 'Шоу', genre: 'Жанр',
+    collection: 'Подборка', track: 'Трек', artist: 'Артист'
+  };
+
+  var RECENT_KEY = 'gorod_recent';
+  var RECENT_MAX = 8;
+  var SECTION_CAP = 4;
+
+  var CLOSE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/>' +
+    '<line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+  var field = null;
+  var overlay = null;
+  var INDEX = [];
+  var state = { scope: 'all', expanded: {} };
+  var activeIndex = -1;
+  var lastFocus = null;
+
+  /* ---- small helpers ------------------------------------------------- */
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function norm(s) {
+    return String(s == null ? '' : s).toLowerCase().replace(/ё/g, 'е');
+  }
+
+  function getNowPlaying(id) {
+    try {
+      return (window.GorodStations && typeof GorodStations.nowPlaying === 'function')
+        ? GorodStations.nowPlaying(id) : null;
+    } catch (e) { return null; }
+  }
+
+  /* ---- index ------------------------------------------------------------ */
+
+  function buildIndex() {
+    var idx = [];
+    var stations = (window.GorodStations && GorodStations.list) ? GorodStations.list : [];
+
+    stations.forEach(function (s) {
+      var np = getNowPlaying(s.id);
+      idx.push({
+        type: 'station', id: 'station:' + s.id,
+        title: s.name,
+        subtitle: (np && np.title) ? (np.title + ' · ' + np.artist) : 'В эфире',
+        live: true, art: s.logo || null
+      });
+    });
+
+    DEMO_SHOWS.forEach(function (sh, i) {
+      idx.push({ type: 'show', id: 'show:' + i, title: sh.title, subtitle: sh.subtitle, live: false, art: null });
+    });
+    DEMO_GENRES.forEach(function (g, i) {
+      idx.push({ type: 'genre', id: 'genre:' + i, title: g, subtitle: 'Жанр', live: false, art: null });
+    });
+    DEMO_COLLECTIONS.forEach(function (c, i) {
+      idx.push({ type: 'collection', id: 'collection:' + i, title: c.title, subtitle: c.subtitle, live: false, art: null });
+    });
+
+    var seenArtists = {};
+    stations.forEach(function (s) {
+      var np = getNowPlaying(s.id);
+      if (!np || !np.title) return;
+      idx.push({ type: 'track', id: 'track:' + s.id, title: np.title, subtitle: np.artist, live: false, art: null });
+      if (np.artist && !seenArtists[np.artist]) {
+        seenArtists[np.artist] = true;
+        idx.push({ type: 'artist', id: 'artist:' + np.artist, title: np.artist, subtitle: 'Артист', live: false, art: null });
+      }
+    });
+
+    return idx;
+  }
+
+  /* ---- recent searches (localStorage, honest — empty until real use) --- */
+
+  function getRecent() {
+    try {
+      var v = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+      return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+  }
+  function saveRecentTerm(q) {
+    q = (q || '').trim();
+    if (!q) return;
+    try {
+      var list = getRecent().filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); });
+      list.unshift(q);
+      if (list.length > RECENT_MAX) list.length = RECENT_MAX;
+      localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+  function removeRecentTerm(q) {
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(getRecent().filter(function (x) { return x !== q; }))); }
+    catch (e) {}
+  }
+  function clearRecentTerms() {
+    try { localStorage.removeItem(RECENT_KEY); } catch (e) {}
+  }
+
+  /* ---- matching ----------------------------------------------------------- */
+
+  function matchesQuery(item, q) {
+    var nq = norm(q);
+    return norm(item.title).indexOf(nq) > -1 || norm(item.subtitle).indexOf(nq) > -1;
+  }
+  function pickBest(list, q) {
+    if (!list.length) return null;
+    var nq = norm(q);
+    var starts = list.filter(function (it) { return norm(it.title).indexOf(nq) === 0; });
+    return starts[0] || list[0];
+  }
+  function sectionItemsFor(type, list) {
+    if (type === 'track') return list.filter(function (it) { return it.type === 'track' || it.type === 'artist'; });
+    return list.filter(function (it) { return it.type === type; });
+  }
+  function scopeFilter(list, scope) {
+    if (scope === 'all') return list;
+    return list.filter(function (it) {
+      if (scope === 'track') return it.type === 'track' || it.type === 'artist';
+      return it.type === scope;
+    });
+  }
+
+  /* ---- markup builders ------------------------------------------------------ */
+
+  function renderScopeChips() {
+    return SCOPES.map(function (s) {
+      var active = state.scope === s.id;
+      return '<button type="button" class="gs-chip' + (active ? ' is-active' : '') + '" ' +
+        'data-scope="' + s.id + '" aria-pressed="' + active + '">' + esc(s.label) + '</button>';
+    }).join('');
+  }
+
+  function tileMarkup(item) {
+    var letter = esc((item.title || '?').trim().charAt(0).toUpperCase());
+    var liveDot = item.live ? '<span class="gs-live-dot" aria-hidden="true"></span>' : '';
+    var liveSr = item.live ? '<span class="gs-sr-only"> — в эфире</span>' : '';
+    var hasArt = !!item.art;
+    var cls = 'gs-tile ' + (hasArt ? 'gs-tile--art' : 'gs-tile--noart');
+    var inner = hasArt
+      ? ('<img src="' + esc(item.art) + '" alt="" />' +
+         '<span class="gs-tile-scrim" aria-hidden="true"></span>' +
+         '<span class="gs-tile-label">' + liveDot + esc(item.title) + liveSr + '</span>')
+      : ('<span class="gs-tile-ghost" aria-hidden="true">' + letter + '</span>' +
+         '<span class="gs-tile-label">' + liveDot + esc(item.title) + liveSr + '</span>');
+    return '<button type="button" class="' + cls + '" data-gs-select ' +
+      'data-id="' + esc(item.id) + '" data-title="' + esc(item.title) + '" data-type="' + esc(item.type) + '">' +
+      inner + '</button>';
+  }
+
+  function renderBrowseGrid(list) {
+    return '<div class="gs-browse">' + list.map(tileMarkup).join('') + '</div>';
+  }
+
+  function rowMarkup(item) {
+    var letter = esc((item.title || '?').trim().charAt(0).toUpperCase());
+    var liveDot = item.live ? '<span class="gs-live-dot" aria-hidden="true"></span>' : '';
+    var liveSr = item.live ? '<span class="gs-sr-only"> — в эфире</span>' : '';
+    var thumb = item.art
+      ? '<img src="' + esc(item.art) + '" alt="" />'
+      : '<span class="gs-row-thumb-letter" aria-hidden="true">' + letter + '</span>';
+    return '<button type="button" class="gs-row" role="option" data-gs-select ' +
+      'data-id="' + esc(item.id) + '" data-title="' + esc(item.title) + '" data-type="' + esc(item.type) + '">' +
+      '<span class="gs-row-thumb">' + thumb + '</span>' +
+      '<span class="gs-row-body">' +
+        '<span class="gs-row-title">' + liveDot + esc(item.title) + liveSr + '</span>' +
+        (item.subtitle ? '<span class="gs-row-sub">' + esc(item.subtitle) + '</span>' : '') +
+      '</span>' +
+      '<span class="gs-row-type">' + esc(TYPE_LABEL[item.type] || '') + '</span>' +
+      '</button>';
+  }
+
+  function bestMarkup(item) {
+    var letter = esc((item.title || '?').trim().charAt(0).toUpperCase());
+    var thumb = item.art ? '<img src="' + esc(item.art) + '" alt="" />' : '<span aria-hidden="true">' + letter + '</span>';
+    var subParts = [TYPE_LABEL[item.type] || '', item.subtitle].filter(Boolean);
+    return '<button type="button" class="gs-best" data-gs-select ' +
+      'data-id="' + esc(item.id) + '" data-title="' + esc(item.title) + '" data-type="' + esc(item.type) + '">' +
+      '<span class="gs-best-thumb">' + thumb + '</span>' +
+      '<span class="gs-best-body">' +
+        '<span class="gs-best-eyebrow">Лучший результат</span>' +
+        '<span class="gs-best-title">' + esc(item.title) + '</span>' +
+        '<span class="gs-best-sub">' + esc(subParts.join(' · ')) + '</span>' +
+      '</span>' +
+      '</button>';
+  }
+
+  function renderRecentBlock(list) {
+    var rows = list.map(function (term) {
+      var t = esc(term);
+      return '<div class="gs-recent-row">' +
+        '<button type="button" class="gs-recent-term" data-term="' + t + '">' + t + '</button>' +
+        '<button type="button" class="gs-recent-remove" data-term="' + t + '" aria-label="Удалить «' + t + '» из истории">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">' +
+            '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</button>' +
+        '</div>';
+    }).join('');
+    return '<div class="gs-recent">' +
+      '<div class="gs-recent-head"><span class="gs-recent-title">Недавние запросы</span>' +
+      '<button type="button" class="gs-recent-clear">Очистить историю</button></div>' + rows + '</div>';
+  }
+
+  function renderSuggestChips() {
+    var chips = SUGGEST_TERMS.map(function (t) {
+      var e = esc(t);
+      return '<button type="button" class="gs-chip gs-suggest-chip" data-term="' + e + '">' + e + '</button>';
+    }).join('');
+    return '<div class="gs-suggest"><span class="gs-suggest-title">Часто ищут</span>' +
+      '<div class="gs-suggest-chips">' + chips + '</div></div>';
+  }
+
+  function renderEmptyState() {
+    var recent = getRecent();
+    var scoped = scopeFilter(INDEX, state.scope);
+    var out = '';
+    if (recent.length) out += renderRecentBlock(recent);
+    out += renderSuggestChips();
+    out += '<div class="gs-browse-label">Все категории</div>';
+    out += scoped.length ? renderBrowseGrid(scoped) : '<p class="gs-browse-empty">Пока недоступно в этом разделе</p>';
+    return out;
+  }
+
+  function renderResultsState(q, filtered) {
+    var best = pickBest(filtered, q);
+    var out = best ? bestMarkup(best) : '';
+    TYPE_SECTIONS.forEach(function (sec) {
+      var items = sectionItemsFor(sec.type, filtered);
+      if (!items.length) return;
+      var expanded = state.scope !== 'all' || !!state.expanded[sec.type];
+      var shown = expanded ? items : items.slice(0, SECTION_CAP);
+      var more = (!expanded && items.length > SECTION_CAP)
+        ? '<button type="button" class="gs-section-more" data-type="' + sec.type + '">Показать все →</button>'
+        : '';
+      out += '<div class="gs-section" data-section="' + sec.type + '">' +
+        '<div class="gs-section-head"><span class="gs-section-title">' + esc(sec.title) + '</span>' + more + '</div>' +
+        '<div class="gs-section-list">' + shown.map(rowMarkup).join('') + '</div>' +
+        '</div>';
+    });
+    return out;
+  }
+
+  function renderNoResultsState(q) {
+    var fallback = INDEX.filter(function (it) { return it.type === 'station'; }).slice(0, 6);
+    return '<div class="gs-empty">' +
+      '<p class="gs-empty-title">Ничего не нашлось по «' + esc(q) + '»</p>' +
+      '<p class="gs-empty-fallback-label">Попробуйте одну из станций</p>' +
+      renderBrowseGrid(fallback) +
+      '</div>';
+  }
+
+  /* ---- shell + render dispatcher --------------------------------------------- */
+
+  function ensureShell() {
+    if (overlay.getAttribute('data-gs-shell') === '1') return;
+    overlay.innerHTML =
+      '<button type="button" class="gs-close" aria-label="Закрыть поиск">' + CLOSE_SVG + '</button>' +
+      '<div class="gs-wrap">' +
+        '<div class="gs-scopes" data-role="scopes"></div>' +
+        '<div class="gs-body" data-role="body"></div>' +
+      '</div>';
+    overlay.setAttribute('data-gs-shell', '1');
+  }
+
+  function render() {
+    ensureShell();
+    var scopesEl = overlay.querySelector('[data-role="scopes"]');
+    var bodyEl = overlay.querySelector('[data-role="body"]');
+    if (scopesEl) scopesEl.innerHTML = renderScopeChips();
+
+    var q = field.value.trim();
+    var html;
+    if (!q) {
+      html = renderEmptyState();
+    } else {
+      var filtered = scopeFilter(INDEX.filter(function (it) { return matchesQuery(it, q); }), state.scope);
+      html = filtered.length ? renderResultsState(q, filtered) : renderNoResultsState(q);
+    }
+    if (bodyEl) bodyEl.innerHTML = html;
+
+    activeIndex = -1;
+    field.removeAttribute('aria-activedescendant');
+  }
+
+  /* ---- keyboard roving highlight --------------------------------------------- */
+
+  function optionEls() {
+    return overlay ? Array.prototype.slice.call(overlay.querySelectorAll('[data-gs-select]')) : [];
+  }
+
+  function setActiveIndex(idx) {
+    var list = optionEls();
+    list.forEach(function (el) { el.classList.remove('is-active'); el.removeAttribute('aria-selected'); });
+    activeIndex = idx;
+    var el = list[idx];
+    if (el) {
+      el.classList.add('is-active');
+      el.setAttribute('aria-selected', 'true');
+      if (!el.id) el.id = 'gs-opt-' + idx;
+      field.setAttribute('aria-activedescendant', el.id);
+      if (el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+    } else {
+      field.removeAttribute('aria-activedescendant');
+    }
+  }
+
+  function selectItem(el) {
+    if (!el) return;
+    var title = el.getAttribute('data-title') || '';
+    var type = el.getAttribute('data-type') || '';
+    var id = el.getAttribute('data-id') || '';
+    /* No real playback/navigation in this demo module — console.log only. */
+    console.log('[GorodSearch] select:', { id: id, type: type, title: title });
+    saveRecentTerm(field.value.trim() || title);
+    closeSearch();
+  }
+
+  /* ---- open / close ------------------------------------------------------------ */
+
+  function isOpen() { return !!overlay && !overlay.hidden; }
+
+  function openSearch() {
+    if (!field || !overlay) return;
+    if (overlay.hidden) {
+      lastFocus = document.activeElement;
+      state.scope = 'all';
+      state.expanded = {};
+      INDEX = buildIndex(); /* refresh in case now-playing/station data changed */
+      ensureShell();
+      overlay.hidden = false;
+      field.setAttribute('aria-expanded', 'true');
+      render();
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { if (overlay) overlay.classList.add('is-open'); });
+      });
+    }
+    if (document.activeElement !== field) field.focus();
+  }
+
+  function closeSearch() {
+    if (!overlay || overlay.hidden) return;
+    overlay.classList.remove('is-open');
+    field.setAttribute('aria-expanded', 'false');
+    field.removeAttribute('aria-activedescendant');
+
+    var done = false;
+    function finish(e) {
+      if (e && e.target !== overlay) return;
+      if (done) return;
+      done = true;
+      overlay.hidden = true;
+      overlay.removeEventListener('transitionend', finish);
+    }
+    overlay.addEventListener('transitionend', finish);
+    setTimeout(finish, 260);
+
+    if (lastFocus && lastFocus !== field && document.contains(lastFocus) && typeof lastFocus.focus === 'function') {
+      lastFocus.focus();
+    } else {
+      field.blur();
+    }
+    lastFocus = null;
+  }
+
+  function isTypingTarget(el) {
+    if (!el) return false;
+    var tag = (el.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
+    if (el.isContentEditable) return true;
+    return false;
+  }
+
+  /* ---- wiring ------------------------------------------------------------------- */
+
+  function wireEvents() {
+    field = document.getElementById('gorod-search-field');
+    overlay = document.getElementById('gorod-search-overlay');
+    if (!field || !overlay) return; /* integration not mounted yet — no-op */
+
+    INDEX = buildIndex();
+
+    field.setAttribute('role', 'combobox');
+    field.setAttribute('aria-autocomplete', 'list');
+    field.setAttribute('aria-controls', 'gorod-search-overlay');
+    field.setAttribute('aria-expanded', 'false');
+
+    field.addEventListener('focus', openSearch);
+
+    var debounceTimer = null;
+    field.addEventListener('input', function () {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function () { state.expanded = {}; render(); }, 160);
+    });
+
+    field.addEventListener('keydown', function (e) {
+      if (!isOpen()) return;
+      if (e.key === 'ArrowDown') {
+        var list = optionEls();
+        if (list.length) { e.preventDefault(); setActiveIndex(Math.min(activeIndex + 1, list.length - 1)); }
+      } else if (e.key === 'ArrowUp') {
+        var list2 = optionEls();
+        if (list2.length) { e.preventDefault(); setActiveIndex(Math.max(activeIndex - 1, 0)); }
+      } else if (e.key === 'Enter') {
+        var list3 = optionEls();
+        if (list3.length) {
+          e.preventDefault();
+          selectItem(list3[activeIndex >= 0 ? activeIndex : 0]);
+        }
+      }
+    });
+
+    /* Event delegation — overlay content is fully re-rendered per keystroke,
+       so handlers are bound once on stable ancestors, not on generated rows. */
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) { closeSearch(); return; }
+
+      var closeBtn = e.target.closest('.gs-close');
+      if (closeBtn) { closeSearch(); return; }
+
+      var chip = e.target.closest('.gs-chip[data-scope]');
+      if (chip) { state.scope = chip.getAttribute('data-scope'); state.expanded = {}; render(); field.focus(); return; }
+
+      var suggest = e.target.closest('.gs-suggest-chip[data-term]');
+      if (suggest) { field.value = suggest.getAttribute('data-term'); state.expanded = {}; render(); field.focus(); return; }
+
+      var more = e.target.closest('.gs-section-more[data-type]');
+      if (more) { state.expanded[more.getAttribute('data-type')] = true; render(); field.focus(); return; }
+
+      var rm = e.target.closest('.gs-recent-remove[data-term]');
+      if (rm) { removeRecentTerm(rm.getAttribute('data-term')); render(); field.focus(); return; }
+
+      var clr = e.target.closest('.gs-recent-clear');
+      if (clr) { clearRecentTerms(); render(); field.focus(); return; }
+
+      var rt = e.target.closest('.gs-recent-term[data-term]');
+      if (rt) { field.value = rt.getAttribute('data-term'); state.expanded = {}; render(); field.focus(); return; }
+
+      var opt = e.target.closest('[data-gs-select]');
+      if (opt) { selectItem(opt); return; }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      var mod = (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === 'k' || e.key === 'K');
+      if (mod) { e.preventDefault(); openSearch(); return; }
+      if (e.key === '/' && !isTypingTarget(e.target)) { e.preventDefault(); openSearch(); return; }
+      if (e.key === 'Escape' && isOpen()) { closeSearch(); }
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireEvents);
+  else wireEvents();
+
+  window.GorodSearch = {
+    open: openSearch,
+    close: closeSearch
+  };
 })();
 
 </script>
