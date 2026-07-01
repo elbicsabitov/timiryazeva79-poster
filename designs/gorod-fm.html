@@ -15936,6 +15936,7 @@
       </button></li>`;
   }
   let cards = [];
+  let programmatic = false, pTimer = null;
   function render(){
     const t = track(); if(!t) return;
     if(t.children.length) return; // idempotent
@@ -15943,6 +15944,7 @@
     cards = [...t.querySelectorAll('.rmg-card')];
     cards.forEach((c,i)=> c.querySelector('button').tabIndex = (i===0?0:-1));
     const io = new IntersectionObserver(es=>{
+      if(programmatic) return;
       es.forEach(e=>{ if(e.isIntersecting && e.intersectionRatio>0.6) setActive(e.target.dataset.id, false); });
     }, {root:t, threshold:[0.6]});
     cards.forEach(c=> io.observe(c));
@@ -15959,7 +15961,7 @@
       else return;
       e.preventDefault(); center(cards[n].dataset.id); cards[n].querySelector('button').focus();
     });
-    setActive('gorod', false); center('gorod', true);
+    requestAnimationFrame(()=> requestAnimationFrame(()=> center('gorod', true)));
   }
   function setActive(id, doCenter){
     if(!GorodStations.get(id)) return;
@@ -15976,8 +15978,11 @@
   function center(id, instant){
     const t = track(); if(!t) return;
     const el = t.querySelector(`.rmg-card[data-id="${id}"]`);
+    programmatic = true;
     if(el) el.scrollIntoView({inline:'center', block:'nearest', behavior: instant?'auto':'smooth'});
     setActive(id, false);
+    clearTimeout(pTimer);
+    pTimer = setTimeout(()=>{ programmatic = false; }, instant?80:520);
   }
   function tune(id){ document.dispatchEvent(new CustomEvent('gorod:tune',{detail:{id}})); }
   window.GorodRail = { render, setActive, center };
