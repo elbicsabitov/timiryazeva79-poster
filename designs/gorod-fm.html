@@ -2127,6 +2127,22 @@
         opacity: 0;
       }
 
+      /* Retire residual AI/legacy chrome on the NON-AI storefront home — scoped to #/home ONLY.
+         These elements render after </main> (outside [data-page=home]), so they must be scoped
+         via the route hook, not a descendant selector. !important beats inline style.display
+         (e.g. #home-fab). Other routes keep every one of these. (session 2, item 5) */
+      html[data-active-route="#/home"] #home-fab,            /* up-chevron corner FAB */
+      html[data-active-route="#/home"] .home-bottom-sheet,   /* legacy «Believer» track-file sheet */
+      html[data-active-route="#/home"] .home-side-drawer,    /* its drawer twin */
+      html[data-active-route="#/home"] .home-panel-backdrop, /* panel backdrop */
+      html[data-active-route="#/home"] .player-full,         /* legacy expanded player overlay */
+      html[data-active-route="#/home"] .ai-ribbon,           /* «почему?» between-track banner */
+      html[data-active-route="#/home"] .ai-launcher,         /* «Twinr AI» floating launcher */
+      html[data-active-route="#/home"] .ai-dock,             /* Twinr AI chat dock */
+      html[data-active-route="#/home"] .player-mini-reason { /* mini «Ты дослушал … 3 раза» line */
+        display: none !important;
+      }
+
       /* ===================================================================
          GOROD-045 — ВОЛНА как РАДИО (#/home default). Плитки = .home-tiles alt.
          =================================================================== */
@@ -2219,39 +2235,63 @@
       /* ===================================================================
          Home page — RMG station carousel (flat, no-tilt; replaces AI hero above)
          =================================================================== */
-      .rmg-rail{ position:relative; --rmg-card:320px; }
-      .rmg-track{ list-style:none; margin:0; padding:0; display:flex; gap:20px;
+      .rmg-rail{ position:relative; --rmg-card:320px; padding-top:calc(var(--topbar-h) + 32px); padding-bottom:6px; }
+      .rmg-track{ position:relative; list-style:none; margin:0; padding:0; display:flex; gap:20px;
         overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory;
         scroll-behavior:smooth; padding-inline:calc(50% - var(--rmg-card,320px)/2);
         scrollbar-width:none; }
       .rmg-track::-webkit-scrollbar{ display:none; }
       .rmg-card{ flex:0 0 var(--rmg-card,320px); scroll-snap-align:center; }
-      .rmg-card > button{ all:unset; box-sizing:border-box; display:block; width:100%; cursor:pointer;
-        border-radius:20px; background:var(--surface-1); padding:14px; }
+      .rmg-card-face{ all:unset; box-sizing:border-box; display:block; width:100%; cursor:pointer;
+        border-radius:20px; background:var(--surface-1); padding:14px; transition:box-shadow .25s, background .25s; }
+      .rmg-card[aria-current="true"] .rmg-card-face{ background:var(--surface-2);
+        box-shadow:0 0 0 1.5px color-mix(in srgb, var(--brand-blue-light) 55%, transparent) inset, 0 22px 46px -24px rgba(0,0,0,.75); }
+      .rmg-card-face:focus-visible{ outline:2px solid var(--accent-on-dark); outline-offset:3px; }
       .rmg-card-art{ aspect-ratio:1; border-radius:14px; background:var(--surface-2);
         display:grid; place-items:center; font:600 40px Onest,sans-serif; color:var(--text-sec); overflow:hidden; }
+      .rmg-card[aria-current="true"] .rmg-card-art{ background:var(--surface-3); }
       .rmg-card-name{ font:700 20px Onest,sans-serif; color:var(--text-pri); margin-top:12px; }
       .rmg-card-freq{ font:500 14px Onest,sans-serif; color:var(--text-sec); }
       .rmg-card-np{ font:500 14px Onest,sans-serif; color:var(--text-sec);
         white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:6px; }
       .rmg-card-live{ display:none; }
       .rmg-card[aria-current="true"] .rmg-card-live{ display:inline-flex; align-items:center; gap:6px;
-        font:600 12px Onest,sans-serif; color:var(--accent-on-dark); }
+        font:600 12px Onest,sans-serif; color:var(--accent-on-dark); margin-top:10px; }
       .rmg-card[aria-current="true"] .rmg-card-live::before{ content:''; width:8px; height:8px; border-radius:50%;
         background:var(--brand-blue-light); animation:rmg-pulse 1.6s ease-in-out infinite; }
-      @keyframes rmg-focus{ 0%,100%{opacity:.45; transform:scale(.82)} 50%{opacity:1; transform:scale(1)} }
+      /* Center-card transport — owner: play/like/skip on the station playing now */
+      .rmg-card-controls{ display:flex; gap:14px; justify-content:center; align-items:center;
+        height:0; margin-top:0; opacity:0; overflow:hidden; pointer-events:none;
+        transition:opacity .25s ease, height .25s ease, margin-top .25s ease; }
+      .rmg-card[aria-current="true"] .rmg-card-controls{ height:56px; margin-top:12px; opacity:1; pointer-events:auto; }
+      .rmg-ctrl{ all:unset; box-sizing:border-box; cursor:pointer; width:44px; height:44px; border-radius:50%;
+        display:grid; place-items:center; background:var(--surface-3); color:var(--text-pri);
+        transition:background .18s, transform .12s, color .18s; }
+      .rmg-ctrl:hover{ background:color-mix(in srgb, var(--surface-3) 82%, #fff 12%); }
+      .rmg-ctrl:active{ transform:scale(.93); }
+      .rmg-ctrl:focus-visible{ outline:2px solid var(--accent-on-dark); outline-offset:2px; }
+      .rmg-ctrl svg{ width:20px; height:20px; }
+      .rmg-ctrl--play{ width:52px; height:52px; background:var(--brand-blue-light); color:#fff; }
+      .rmg-ctrl--play:hover{ background:var(--brand-blue-hover,#6477ff); }
+      .rmg-ctrl--play .i-pause{ display:none; }
+      .rmg-ctrl--play[aria-pressed="true"] .i-play{ display:none; }
+      .rmg-ctrl--play[aria-pressed="true"] .i-pause{ display:block; }
+      .rmg-ctrl--like[aria-pressed="true"]{ color:var(--brand-blue-light); background:color-mix(in srgb, var(--brand-blue-light) 18%, var(--surface-3)); }
+      @keyframes rmg-focus{ 0%,34%{opacity:.34; transform:scale(.72)} 50%{opacity:1; transform:scale(1)} 66%,100%{opacity:.34; transform:scale(.72)} }
       @keyframes rmg-pulse{ 0%,100%{opacity:1} 50%{opacity:.4} }
       @supports (animation-timeline: view()){
         .rmg-card{ animation:rmg-focus linear both; animation-timeline:view(inline); will-change:transform,opacity; }
       }
       @supports not (animation-timeline: view()){
-        .rmg-card{ opacity:.45; transform:scale(.82); transition:opacity .25s, transform .25s; }
+        .rmg-card{ opacity:.34; transform:scale(.72); transition:opacity .25s, transform .25s; }
         .rmg-card.is-centered{ opacity:1; transform:scale(1); }
       }
       @media (prefers-reduced-motion: reduce){
         .rmg-track{ scroll-behavior:auto; }
         .rmg-card{ animation:none !important; opacity:1 !important; transform:none !important; }
+        .rmg-card:not([aria-current="true"]){ opacity:.62 !important; }
         .rmg-card[aria-current="true"] .rmg-card-live::before{ animation:none !important; }
+        .rmg-card-controls{ transition:none !important; }
       }
 
       /* ---- Город ФМ home: live-aware mini-player LIVE badge (Task 4) ---- */
@@ -2260,6 +2300,77 @@
       .player-live-badge::before { content:''; flex:none; width:6px; height:6px; border-radius:50%; background:var(--brand-blue-light); animation:player-live-pulse 1.6s ease-in-out infinite; }
       @keyframes player-live-pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
       @media (prefers-reduced-motion: reduce){ .player-live-badge::before{ animation:none; } }
+
+      /* Друзья слушают — icon actions ▶/＋ (session 2, item 3) */
+      .vitrina .vcard--friend {
+        cursor: default;
+      }
+      .vitrina .vcard--friend .vcard-row-top {
+        align-items: center;          /* аватар / текст / кнопки по центру строки */
+      }
+
+      .vitrina .vcard-friend-actions {
+        flex: none;
+        margin-left: auto;            /* прижать кнопки вправо */
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* Базовая icon-кнопка: hit-target 44x44 (Apple HIG) */
+      .vitrina .vitrina-iconbtn {
+        flex: none;
+        width: 44px;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 1px solid var(--hairline, rgba(255, 255, 255, .08));
+        border-radius: 50%;
+        background: transparent;
+        color: var(--text-sec, rgba(255, 255, 255, .62));
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: color 180ms cubic-bezier(.2, .8, .2, 1),
+                    border-color 180ms cubic-bezier(.2, .8, .2, 1),
+                    background 180ms cubic-bezier(.2, .8, .2, 1);
+      }
+      .vitrina .vitrina-iconbtn-ic { display: inline-flex; }
+      .vitrina .vitrina-iconbtn svg { width: 18px; height: 18px; display: block; }
+      .vitrina .vitrina-iconbtn:hover {
+        color: var(--accent-on-dark, #8094ff);
+        border-color: var(--accent-on-dark, #8094ff);
+      }
+      .vitrina .vitrina-iconbtn:focus-visible {
+        outline: 3px solid var(--accent-on-dark, #8094ff);
+        outline-offset: 2px;
+      }
+
+      /* Play — первичное действие: акцент-tint кружок (как .vcard-row-media--avatar) */
+      .vitrina .vitrina-iconbtn--play {
+        border-color: transparent;
+        background: rgba(81, 104, 252, .12);
+        background: color-mix(in srgb, var(--brand-blue-light, #5168FC) 12%, transparent);
+        color: var(--text-pri, #FFFFFF);
+      }
+      .vitrina .vitrina-iconbtn--play svg { width: 16px; height: 16px; }  /* треугольник плотнее */
+      .vitrina .vitrina-iconbtn--play:hover {
+        border-color: transparent;
+        color: var(--text-pri, #FFFFFF);
+        background: rgba(81, 104, 252, .22);
+        background: color-mix(in srgb, var(--brand-blue-light, #5168FC) 22%, transparent);
+      }
+
+      /* Add — вторичное: тонкий hairline-кружок (база + hover уводит в акцент) */
+      .vitrina .vitrina-iconbtn--add {
+        background: transparent;
+      }
+
+      /* Узкие экраны — плотнее gap */
+      @media (max-width: 480px) {
+        .vitrina .vcard-friend-actions { gap: 4px; }
+      }
       [data-live="true"] .player-mini-progress-bar, [data-live="true"] .player-progress, [data-live="true"] .player-scrubber { display:none !important; }
 
       /* ---- Город ФМ home: search field + overlay (Tasks 5+6) ---- */
@@ -12075,6 +12186,7 @@
 
       if (playerMini) {
         playerMini.addEventListener('click', function () {
+          if ((window.location.hash || '') === '#/home') return; // storefront home: no legacy expanded player (item 5)
           syncFullPlayerFromMini();
           openPlayer();
         });
@@ -12096,6 +12208,7 @@
 
       if (tabbarPlayerBtn) {
         tabbarPlayerBtn.addEventListener('click', function () {
+          if ((window.location.hash || '') === '#/home') return; // storefront home: no legacy expanded player (item 5)
           syncFullPlayerFromMini();
           openPlayer();
         });
@@ -15157,7 +15270,7 @@
     }
     function resetTimer() { clearTimeout(hideTimer); hideTimer = setTimeout(hide, 9000); }
     function show(html) {
-      if (!el || (window.location.hash || '') === '#/onboarding') return;
+      if (!el || (window.location.hash || '') === '#/onboarding' || (window.location.hash || '') === '#/home') return; // no «почему?» ribbon on storefront home (item 5)
       if (el.classList.contains('is-show')) { textEl.innerHTML = html; resetTimer(); return; }  // update, no budget cost
       if (budget <= 0) return;
       budget--;
@@ -16878,12 +16991,24 @@
   function monogram(name){ return (name||'?').trim()[0] || '?'; }
   function cardHTML(s, np){
     return `<li class="rmg-card" data-id="${s.id}">
-      <button type="button" aria-label="Слушать ${s.name}">
+      <button type="button" class="rmg-card-face" aria-label="Слушать ${s.name}">
         <span class="rmg-card-art">${s.logo?`<img src="${s.logo}" alt="" style="width:100%;height:100%;object-fit:cover">`:monogram(s.name)}</span>
         <span class="rmg-card-live">В ЭФИРЕ</span>
         <span class="rmg-card-name">${s.name}${s.freq?` <span class="rmg-card-freq">${s.freq}</span>`:''}</span>
         <span class="rmg-card-np">${np.artist} — ${np.title}</span>
-      </button></li>`;
+      </button>
+      <div class="rmg-card-controls">
+        <button type="button" class="rmg-ctrl rmg-ctrl--like" aria-pressed="false" aria-label="Нравится">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.4 2 5 5.2 5c2 0 3.3 1.2 3.8 2.3h6c.5-1.1 1.8-2.3 3.8-2.3C22 5 23.6 8.4 22 11.7 19.5 16.4 12 21 12 21z" fill="currentColor"/></svg>
+        </button>
+        <button type="button" class="rmg-ctrl rmg-ctrl--play" aria-pressed="false" aria-label="Играть">
+          <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z" fill="currentColor"/></svg>
+        </button>
+        <button type="button" class="rmg-ctrl rmg-ctrl--skip" aria-label="Следующая станция">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l9 7-9 7V5z" fill="currentColor"/><rect x="17" y="5" width="2.4" height="14" rx="1" fill="currentColor"/></svg>
+        </button>
+      </div></li>`;
   }
   let cards = [];
   let programmatic = false, pTimer = null;
@@ -16892,15 +17017,32 @@
     if(t.children.length) return; // idempotent
     t.innerHTML = GorodStations.list.map(s=>cardHTML(s, GorodStations.nowPlaying(s.id))).join('');
     cards = [...t.querySelectorAll('.rmg-card')];
-    cards.forEach((c,i)=> c.querySelector('button').tabIndex = (i===0?0:-1));
+    cards.forEach((c,i)=> c.querySelector('.rmg-card-face').tabIndex = (i===0?0:-1));
     const io = new IntersectionObserver(es=>{
       if(programmatic) return;
       es.forEach(e=>{ if(e.isIntersecting && e.intersectionRatio>0.6) setActive(e.target.dataset.id, false); });
     }, {root:t, threshold:[0.6]});
     cards.forEach(c=> io.observe(c));
-    cards.forEach(c=> c.querySelector('button').addEventListener('click', ()=>{
-      if(GorodStations.active===c.dataset.id) tune(c.dataset.id); else center(c.dataset.id);
-    }));
+    cards.forEach(c=>{
+      c.querySelector('.rmg-card-face').addEventListener('click', ()=>{
+        if(GorodStations.active===c.dataset.id) tune(c.dataset.id); else center(c.dataset.id);
+      });
+      const playBtn = c.querySelector('.rmg-ctrl--play');
+      if(playBtn) playBtn.addEventListener('click', ev=>{ ev.stopPropagation();
+        if(window.TwinrTransition && typeof TwinrTransition.toggle==='function') TwinrTransition.toggle();
+        reflectPlay();
+      });
+      const likeBtn = c.querySelector('.rmg-ctrl--like');
+      if(likeBtn) likeBtn.addEventListener('click', ev=>{ ev.stopPropagation();
+        likeBtn.setAttribute('aria-pressed', likeBtn.getAttribute('aria-pressed')==='true'?'false':'true');
+      });
+      const skipBtn = c.querySelector('.rmg-ctrl--skip');
+      if(skipBtn) skipBtn.addEventListener('click', ev=>{ ev.stopPropagation();
+        const idx = cards.findIndex(x=>x.dataset.id===GorodStations.active);
+        const nxt = cards[(idx+1)%cards.length];
+        if(nxt) center(nxt.dataset.id);
+      });
+    });
     t.addEventListener('keydown', e=>{
       const cur = cards.findIndex(c=>c.dataset.id===GorodStations.active);
       let n = cur;
@@ -16909,9 +17051,18 @@
       else if(e.key==='Home') n=0; else if(e.key==='End') n=cards.length-1;
       else if(e.key==='Enter'||e.key===' '){ tune(GorodStations.active); e.preventDefault(); return; }
       else return;
-      e.preventDefault(); center(cards[n].dataset.id); cards[n].querySelector('button').focus();
+      e.preventDefault(); center(cards[n].dataset.id); cards[n].querySelector('.rmg-card-face').focus();
     });
+    var miniPlay = document.getElementById('btn-play');
+    if(miniPlay && window.MutationObserver){
+      new MutationObserver(reflectPlay).observe(miniPlay, {attributes:true, attributeFilter:['aria-pressed']});
+    }
+    reflectPlay();
     requestAnimationFrame(()=> requestAnimationFrame(()=> center('gorod', true)));
+  }
+  function reflectPlay(){
+    var playing = !!(window.TwinrTransition && typeof TwinrTransition.isPlaying==='function' && TwinrTransition.isPlaying());
+    cards.forEach(function(c){ var b=c.querySelector('.rmg-ctrl--play'); if(b){ b.setAttribute('aria-pressed', playing?'true':'false'); b.setAttribute('aria-label', playing?'Пауза':'Играть'); }});
   }
   function setActive(id, doCenter){
     if(!GorodStations.get(id)) return;
@@ -16928,11 +17079,16 @@
   function center(id, instant){
     const t = track(); if(!t) return;
     const el = t.querySelector(`.rmg-card[data-id="${id}"]`);
-    programmatic = true;
-    if(el) el.scrollIntoView({inline:'center', block:'nearest', behavior: instant?'auto':'smooth'});
+    if(el){
+      programmatic = true;
+      // offsetLeft/offsetWidth are layout metrics (immune to the view-timeline scale transform),
+      // so centering is exact even while neighbour cards are scaled down.
+      const target = el.offsetLeft - (t.clientWidth - el.offsetWidth)/2;
+      t.scrollTo({ left: Math.max(0, Math.round(target)), behavior: instant?'auto':'smooth' });
+    }
     setActive(id, false);
     clearTimeout(pTimer);
-    pTimer = setTimeout(()=>{ programmatic = false; }, instant?80:520);
+    pTimer = setTimeout(()=>{ programmatic = false; }, instant?90:520);
   }
   function tune(id){ document.dispatchEvent(new CustomEvent('gorod:tune',{detail:{id}})); }
   window.GorodRail = { render, setActive, center };
@@ -16953,6 +17109,17 @@
   var BAR_ID='player-mini', TITLE_ID='player-track-title', ARTIST_ID='player-track-artist', COVER_ID='mini-art-img', BADGE_SEL='.player-live-badge';
   function byId(id){ return document.getElementById(id); }
   function isLiveStation(s){ return !!s && s.kind !== 'ondemand'; }
+  // Honest per-station cover: real logo if we have one, else a monogram tile
+  // (inline SVG data-URI — never a wrong track cover). Matches the carousel look. (item 9)
+  function stationArt(station){
+    if(station && station.logo) return station.logo;
+    var name = (station && station.name ? station.name : '?').trim();
+    var letter = name.charAt(0) || '?';
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96">'
+      + '<rect width="96" height="96" fill="#1B1E26"/>'
+      + '<text x="48" y="50" font-family="Onest, sans-serif" font-size="44" font-weight="700" fill="#8094ff" text-anchor="middle" dominant-baseline="central">' + letter + '</text></svg>';
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
   function paint(id){
     if(!window.GorodStations) return;
     var station = GorodStations.get(id); if(!station) return;
@@ -16962,6 +17129,7 @@
     var badge = bar ? bar.querySelector(BADGE_SEL) : null;
     if(titleEl)  titleEl.textContent  = np.title || '';
     if(artistEl) artistEl.textContent = station.name + ' · ' + (np.artist || '');
+    if(coverEl){ coverEl.setAttribute('src', stationArt(station)); coverEl.setAttribute('alt', 'Обложка: ' + station.name + (np.title ? ' — ' + np.title : '')); }
     if(bar)   bar.setAttribute('data-live', live ? 'true' : 'false');
     if(badge) badge.hidden = !live;
     if('mediaSession' in navigator){
@@ -16984,6 +17152,230 @@
   document.addEventListener('gorod:activecard', function(e){ paint(e.detail.id); });
   document.addEventListener('DOMContentLoaded', function(){ paint('gorod'); });
   window.GorodPlayer = { paint:paint, tune:tune };
+})();
+</script>
+<script>
+/* GOROD_VITRINA_CONTENT — rich storefront dataset (session 2, item 4). Defines window.GOROD_VITRINA_CONTENT consumed by buildDemoShelves(). */
+/* =========================================================================
+   GOROD FM — Витрина: наполнение контентом (drop-in для buildDemoShelves())
+   ------------------------------------------------------------------------
+   Точный shape под window.GorodVitrina (см. vitrina_structure_notes.md).
+   Каждая из 9 полок наполнена «полностью» (10–20 элементов).
+
+   ЧЕСТНОСТЬ (как метит демо само приложение — .demo-tag / «Демо: …»):
+     • реальные артисты + реальные треки = представительный контент, без пилюль
+       (так же, как незатеганные track-history-строки и «Потрачу — Егор Крид»);
+     • полки, делающие claim (редакция / соцфид / новизна / рейтинг / сетка эфира),
+       несут суффикс «· демо» в подзаголовке: friends, editorial, new, charts, shows;
+     • НИКАКИХ твёрдых чисел: без «X слушателей», без счётчиков, без процентов.
+       Ранг в чартах — порядковая позиция под «порядок условный · демо», не counter.
+     • если поверх #vitrina добавят глобальный demo-баннер — суффиксы «· демо» снять.
+
+   Интеграция: заменить тело функции buildDemoShelves() на
+       return window.GOROD_VITRINA_CONTENT;
+   (или вызвать buildVitrinaContent()). Порядок и id полок сохранены 1:1.
+   Полка «Друзья слушают» рендерится новым buildFriendRow() —
+   см. friends_renderer_snippet.js (у друзей вместо actionLabel — icon-кнопки).
+   ========================================================================= */
+
+(function () {
+  'use strict';
+
+  /* ---- 1. Друзья слушают (row) — 14 друзей ---------------------------------
+     now = ЧТО слушают («Трек — Артист» | станция | «подборку «…»»).
+     meta = «слушает » + now (готовая строка для показа).
+     station = контекст-станция (для будущей маршрутизации / чипа).
+     avatar:true → кружок-монограмма. actionLabel НЕ задаём (новый рендер даёт ▶ / ＋). */
+  var FRIENDS = [
+    ['Артём К.',  'Потрачу — Егор Крид',              'Город ФМ'],
+    ['Соня Л.',   'Русское Радио',                    'Русское Радио'],
+    ['Данияр С.', 'Life — Zivert',                    'DFM'],
+    ['Марина П.', 'Kosandra — Miyagi & Andy Panda',   'MAXIMUM'],
+    ['Игорь В.',  'подборку «Ретро 90-х»',            'Город ФМ'],
+    ['Алина Т.',  'Феникс — ANNA ASTI',               'Русское Радио'],
+    ['Максим Р.', 'Любимка — NILETTO',                'ХИТ FM'],
+    ['Камила Ж.', 'Грустный дэнс — Артик & Асти',     'ХИТ FM'],
+    ['Тимур А.',  'Бенз — MACAN',                     'MAXIMUM'],
+    ['Лера М.',   'Солнце Монако — Люся Чеботина',    'Русское Радио'],
+    ['Никита Д.', 'DFM',                              'DFM'],
+    ['Полина Г.', 'Комета — JONY',                    'Город ФМ'],
+    ['Руслан Х.', 'Птичка — HammAli & Navai',         'ХИТ FM'],
+    ['Вика С.',   'подборку «Вечер в городе»',        'Radio Monte Carlo']
+  ].map(function (f) {
+    return { title: f[0], avatar: true, now: f[1], station: f[2], meta: 'слушает ' + f[1] };
+  });
+
+  /* ---- 2. Категории и жанры (square) — 14, только title -------------------- */
+  var GENRES = [
+    'Русский поп', 'Танцевальная', 'Рок', 'Шансон', 'Ретро 90-х', 'Ретро 2000-х',
+    'Лаунж', 'Рэп и хип-хоп', 'Зарубежный поп', 'Электроника', 'Русский рок',
+    'Хиты FM', 'Романтика', 'Клубная'
+  ].map(function (t) { return { title: t }; });
+
+  /* ---- 3. Подборки (square) — 14, title + короткий meta-контекст ----------- */
+  var MOODS = [
+    ['Утренний заряд',        'для утра'],
+    ['В дорогу',              'в пути'],
+    ['Тренировка',            'для спорта'],
+    ['Вечер в городе',        'вечер'],
+    ['Спокойный вечер',       'выдохнуть'],
+    ['Русские хиты 2000-х',   'ностальгия'],
+    ['Только новинки',        'свежее'],
+    ['Фокус и работа',        'не отвлекает'],
+    ['Танцпол',               'вечеринка'],
+    ['Романтика',             'для двоих'],
+    ['Тёплый выходной',       'выходные'],
+    ['Ночная волна',          'поздний час'],
+    ['На всю громкость',      'погромче'],
+    ['Лёгкий фон',            'фоном']
+  ].map(function (m) { return { title: m[0], meta: m[1] }; });
+
+  /* ---- 4. Выбор редакции ГОРОДА (square) — 12, title + заметка куратора ----
+     meta = короткая (одна строка!) субъективная заметка редактора. */
+  var EDITORIAL = [
+    ['MACAN',                'Голос нового рэпа'],
+    ['Люся Чеботина',        'Открытие сезона'],
+    ['Три дня дождя',        'Пост-панк для города'],
+    ['ANNA ASTI',            'Королева радио'],
+    ['Русский рок навсегда', 'Выбор редактора'],
+    ['Zivert',               'Чистый поп-звук'],
+    ['Молодые голоса',       'За кем следить'],
+    ['SHAMAN',               'Громко и по-русски'],
+    ['Вечерний лаунж',       'Тихий выбор редакции'],
+    ['Мари Краймбрери',      'Искренне и цепко'],
+    ['Городские хиты',       'Саундтрек улиц'],
+    ['JONY',                 'Мелодии на повтор']
+  ].map(function (e) { return { title: e[0], meta: e[1] }; });
+
+  /* ---- 5. Новинки (square) — 16, title «Артист — Трек» --------------------- */
+  var NEW_RELEASES = [
+    'MACAN — Кислород',
+    'ANNA ASTI — По барам',
+    'Zivert — Credo',
+    'Артик & Асти — Девочка танцуй',
+    'JONY — Аллея',
+    'Егор Крид — Сердцеедка',
+    'HammAli & Navai — Прятки',
+    'Клава Кока — Покинула чат',
+    'Мари Краймбрери — Пряталки',
+    'Три дня дождя — Демоны',
+    'Дима Билан — Молния',
+    'Полина Гагарина — Кукушка',
+    'Мот — Капкан',
+    'Джиган — ДНК',
+    'Rauf & Faik — Детство',
+    'Miyagi & Andy Panda — Utopia'
+  ].map(function (t) { return { title: t }; });
+
+  /* ---- 6. Популярное · Чарты (row) — 14, title + rank --------------------- */
+  var CHARTS = [
+    'MACAN — Бенз',
+    'ANNA ASTI — Феникс',
+    'Егор Крид — Потрачу',
+    'Zivert — Life',
+    'Miyagi & Andy Panda — Kosandra',
+    'Артик & Асти — Грустный дэнс',
+    'HammAli & Navai — Птичка',
+    'JONY — Комета',
+    'SHAMAN — Встанем',
+    'Люся Чеботина — Солнце Монако',
+    'Клава Кока — Покинула чат',
+    'NILETTO — Любимка',
+    'Баста — Сансара',
+    'Полина Гагарина — Обезоружена'
+  ].map(function (t, i) { return { title: t, rank: i + 1 }; });
+
+  /* ---- 7. Коллекции (square) — 12, title + короткий meta ------------------- */
+  var COLLECTIONS = [
+    ['Ретро 80-х',            'золото эпохи'],
+    ['Русские хиты 90-х',     'ностальгия'],
+    ['Дискотека 2000-х',      'танцпол нулевых'],
+    ['Хиты 2010-х',           'недавняя классика'],
+    ['Только на русском',     'родная сцена'],
+    ['Танцевальный движ',     'нон-стоп бит'],
+    ['Медляки и романтика',   'для двоих'],
+    ['Саундтреки города',     'кино и сериалы'],
+    ['Рок-классика',          'гитары навсегда'],
+    ['Шансон вечера',         'по-душевному'],
+    ['Летний плейлист',       'тепло и легко'],
+    ['Клубный чарт',          'для вечеринки']
+  ].map(function (c) { return { title: c[0], meta: c[1] }; });
+
+  /* ---- 8. Исполнители (circle) — 16, title(имя) + meta(жанр) --------------- */
+  var ARTISTS = [
+    ['Егор Крид',              'Поп'],
+    ['MACAN',                  'Хип-хоп'],
+    ['Zivert',                 'Поп'],
+    ['ANNA ASTI',              'Поп'],
+    ['Баста',                  'Хип-хоп'],
+    ['Артик & Асти',           'Поп'],
+    ['Miyagi & Andy Panda',    'Хип-хоп'],
+    ['JONY',                   'Поп'],
+    ['Полина Гагарина',        'Поп'],
+    ['Дима Билан',             'Поп'],
+    ['SHAMAN',                 'Поп'],
+    ['Люся Чеботина',          'Поп'],
+    ['HammAli & Navai',        'Поп'],
+    ['Григорий Лепс',          'Эстрада'],
+    ['Валерий Меладзе',        'Эстрада'],
+    ['Три дня дождя',          'Рок']
+  ].map(function (a) { return { title: a[0], meta: a[1] }; });
+
+  /* ---- 9. Программы и ведущие (wide) — 10, title + meta(ведущий) + badge ---
+     badge.label = слот сетки (или «сейчас в эфире» + live:true).
+     Ведущие — демо-имена (подзаголовок полки помечен «· демо»). */
+  var SHOWS = [
+    { title: 'Утренний разгон',   meta: 'с Ильёй Крамером',    badge: { label: 'будни, 7:00' } },
+    { title: 'Городской чат',     meta: 'с Настей Ким',        badge: { label: 'сейчас в эфире', live: true } },
+    { title: 'Дневной эфир',      meta: 'с Романом Гейко',     badge: { label: 'будни, 13:00' } },
+    { title: 'Вечерний сет',      meta: 'с Дианой Соло',       badge: { label: 'будни, 18:00' } },
+    { title: 'Ночная волна',      meta: 'с Маратом Ли',        badge: { label: 'будни, 23:00' } },
+    { title: 'Хиты выходного',    meta: 'с Олей Ветровой',     badge: { label: 'сб–вс, 12:00' } },
+    { title: 'Топ недели',        meta: 'с Егором Дубовым',    badge: { label: 'вс, 16:00' } },
+    { title: 'Русский завтрак',   meta: 'с Полиной Рей',       badge: { label: 'будни, 9:00' } },
+    { title: 'Городские легенды', meta: 'с Артуром Мезенцевым', badge: { label: 'суббота, 20:00' } },
+    { title: 'Гость в студии',    meta: 'с Викой Град',        badge: { label: 'четверг, 19:00' } }
+  ];
+
+  /* ---- Сборка 9 полок (порядок / id / geometry / seeAllHref = 1:1) --------- */
+  function buildVitrinaContent() {
+    return [
+      { id: 'vitrina-friends', title: 'Друзья слушают',
+        subtitle: 'Пример ленты друзей · демо', geometry: 'row',
+        seeAllHref: '#/vitrina/friends', items: FRIENDS },
+
+      { id: 'vitrina-genres', title: 'Категории и жанры', geometry: 'square',
+        seeAllHref: '#/vitrina/genres', items: GENRES },
+
+      { id: 'vitrina-moods', title: 'Подборки', subtitle: 'Запусти любую как волну',
+        geometry: 'square', seeAllHref: '#/vitrina/moods', items: MOODS },
+
+      { id: 'vitrina-editorial', title: 'Выбор редакции ГОРОДА',
+        subtitle: 'Что слушает редакция · демо', geometry: 'square',
+        seeAllHref: '#/vitrina/editorial', items: EDITORIAL },
+
+      { id: 'vitrina-new', title: 'Новинки', subtitle: 'Пример новинок · демо',
+        geometry: 'square', seeAllHref: '#/vitrina/new', items: NEW_RELEASES },
+
+      { id: 'vitrina-charts', title: 'Популярное · Чарты',
+        subtitle: 'Порядок условный · демо', geometry: 'row',
+        seeAllHref: '#/vitrina/charts', items: CHARTS },
+
+      { id: 'vitrina-collections', title: 'Коллекции', geometry: 'square',
+        seeAllHref: '#/vitrina/collections', items: COLLECTIONS },
+
+      { id: 'vitrina-artists', title: 'Исполнители',
+        subtitle: 'Радио по артисту в один тап', geometry: 'circle',
+        seeAllHref: '#/vitrina/artists', items: ARTISTS },
+
+      { id: 'vitrina-shows', title: 'Программы и ведущие',
+        subtitle: 'Прямой эфир и повторы · демо', geometry: 'wide',
+        seeAllHref: '#/vitrina/shows', items: SHOWS }
+    ];
+  }
+
+  window.buildVitrinaContent = buildVitrinaContent;
+  window.GOROD_VITRINA_CONTENT = buildVitrinaContent();
 })();
 </script>
 <script>
@@ -17117,7 +17509,59 @@
     return card;
   }
 
+  /* --- Друзья слушают: avatar + «слушает X» + ▶/＋ icon buttons (item 3) --- */
+  function iconSvg(kind) {
+    var span = el('span', { className: 'vitrina-iconbtn-ic', attrs: { 'aria-hidden': 'true' } });
+    span.innerHTML = kind === 'play'
+      ? '<svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20" fill="currentColor"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">'
+        + '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    return span;
+  }
+
+  function friendIconBtn(kind, label, item) {
+    var btn = el('button', {
+      className: 'vitrina-iconbtn vitrina-iconbtn--' + kind,
+      attrs: {
+        type: 'button',
+        'aria-label': label,
+        'data-friend-action': kind,          // 'play' | 'add' — хук для будущей привязки
+        'data-friend-now': item.now || ''    // что именно слушает друг
+      }
+    });
+    btn.appendChild(iconSvg(kind));
+    return btn;
+  }
+
+  // Замена buildCardRow ДЛЯ ДРУЗЕЙ. Возвращает готовый .vcard--row.
+  function buildFriendRow(item) {
+    var what = item.now || item.meta || '';
+    var card = el('div', { className: 'vcard vcard--row vcard--friend' });
+
+    var top = el('div', { className: 'vcard-row-top' });
+
+    top.appendChild(el('div', {
+      className: 'vcard-row-media vcard-row-media--avatar',
+      text: monogram(item.title),
+      attrs: { 'aria-hidden': 'true' }
+    }));
+
+    var body = el('div', { className: 'vcard-row-body' });
+    body.appendChild(el('div', { className: 'vcard-row-title', text: item.title || '' }));
+    if (item.meta) body.appendChild(el('div', { className: 'vcard-row-meta', text: item.meta }));
+    top.appendChild(body);
+
+    var actions = el('div', { className: 'vcard-friend-actions' });
+    actions.appendChild(friendIconBtn('play', 'Слушать то же: ' + what, item));
+    actions.appendChild(friendIconBtn('add', 'Добавить в плейлист: ' + what, item));
+    top.appendChild(actions);
+
+    card.appendChild(top);
+    return card;
+  }
+
   function buildCard(item, geometry) {
+    if (geometry === 'row' && item.avatar) return buildFriendRow(item); // друзья → ▶/＋
     return geometry === 'row' ? buildCardRow(item) : buildCardVertical(item, geometry);
   }
 
@@ -17217,21 +17661,8 @@
 
     if (container) container.appendChild(shelf);
 
-    if ('IntersectionObserver' in window) {
-      paintSkeleton();
-      var io = new IntersectionObserver(function (entries) {
-        for (var i = 0; i < entries.length; i++) {
-          if (entries[i].isIntersecting) {
-            paintReal();
-            io.disconnect();
-            break;
-          }
-        }
-      }, { rootMargin: '240px 0px', threshold: 0.01 });
-      io.observe(shelf);
-    } else {
-      paintReal();
-    }
+    // Eager render: owner wants every shelf populated, not skeletons-until-scroll (item 4).
+    paintReal();
 
     return shelf;
   }
@@ -17244,6 +17675,7 @@
   // -----------------------------------------------------------------------
 
   function buildDemoShelves() {
+    if (window.GOROD_VITRINA_CONTENT) return window.GOROD_VITRINA_CONTENT; // rich dataset (item 4)
     var friends = [
       { title: 'Артём К.', meta: 'слушает Авторадио' },
       { title: 'Соня Л.', meta: 'слушает «Городские хиты»' },
