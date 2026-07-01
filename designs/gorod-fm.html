@@ -2262,6 +2262,448 @@
       @media (prefers-reduced-motion: reduce){ .player-live-badge::before{ animation:none; } }
       [data-live="true"] .player-mini-progress-bar, [data-live="true"] .player-progress, [data-live="true"] .player-scrubber { display:none !important; }
 
+      /* ---- Город ФМ home: music витрина feed (Tasks 7+8) ---- */
+/* =========================================================================
+   GOROD FM — Витрина (non-AI music storefront feed)
+   Tasks 7+8 — reusable shelf component + 9 ordered demo shelves on #/home
+   Dark theme only. Onest. Flat surfaces, single accent used sparingly.
+
+   SCOPING NOTE (read before editing):
+   Every selector below is qualified under the ".vitrina" ancestor. This is
+   deliberate: gorod-fm.html already defines *generic* global classes named
+   .shelf-head / .shelf-title / .shelf-sub for the «Подборки» page's
+   discover-shelf pattern (data-page="podborki", ~line 4393-4438 and
+   ~line 8152+). Reusing those bare class names here — as this spec's task
+   text names them — would leak styles both ways once this file lands in
+   the same <style> block. Prefixing with ".vitrina" keeps the required
+   class names (.shelf, .shelf-head, .shelf-seeall, .shelf-track, .vcard +
+   modifiers) exactly as specified while eliminating collisions in either
+   direction. See integration.md §"Concerns" for the full note.
+
+   TOKENS CONSUMED (must exist on :root in the host document — gorod-fm.html
+   already defines all of these; fallbacks below are just belt-and-suspenders
+   for standalone/self-contained use):
+     --surface-1 #15171D   --surface-2 #1B1E26   --surface-3 #23262F
+     --text-pri #FFFFFF    --text-sec rgba(255,255,255,.62)
+     --brand-blue-light #5168FC   --accent-on-dark #8094ff
+     --hairline rgba(255,255,255,.08)   --player-mini-h 72px
+   No new colors are introduced. Dimensional values (radius/gap/sizes) are
+   plain numbers per the spec, not tokens — this module owns its own layout
+   rhythm and does not depend on the host page's --r-*/--sh-*/--t-* vars.
+   ========================================================================= */
+
+.vitrina,
+.vitrina *,
+.vitrina *::before,
+.vitrina *::after {
+  box-sizing: border-box;
+}
+
+.vitrina {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px clamp(16px, 4vw, 28px) var(--player-mini-h, 72px);
+  font-family: 'Onest', sans-serif;
+  /* Section sits transparent over the app's existing dark backdrop
+     (--bg-base #0B0C0F is painted by the app shell's .bg-cinema layer) —
+     it is not repainted here so it stays consistent with sibling
+     components (.rmg-rail, .discover-shelf) that behave the same way. */
+}
+
+/* =========================================================================
+   SHELF — one row of the vitrina. Vertical rhythm via margin only.
+   No divider lines, no boxed/bordered section backgrounds.
+   ========================================================================= */
+
+.vitrina .shelf {
+  margin: 0 0 32px;
+}
+.vitrina .shelf:last-child {
+  margin-bottom: 0;
+}
+
+.vitrina .shelf-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 14px;
+}
+
+.vitrina .shelf-head-text {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+
+.vitrina .shelf-title {
+  margin: 0;
+  min-width: 0;
+  font: 600 19px/1.25 'Onest', sans-serif;
+  letter-spacing: -0.01em;
+  color: var(--text-pri, #FFFFFF);
+}
+
+.vitrina .shelf-subtitle {
+  margin: 0;
+  font: 400 13px/1.3 'Onest', sans-serif;
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+}
+
+.vitrina .shelf-seeall {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 4px;
+  font: 600 13px/1 'Onest', sans-serif;
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 180ms cubic-bezier(.2, .8, .2, 1);
+}
+.vitrina .shelf-seeall:hover {
+  color: var(--accent-on-dark, #8094ff);
+}
+.vitrina .shelf-seeall:focus-visible {
+  color: var(--accent-on-dark, #8094ff);
+  outline: 3px solid var(--accent-on-dark, #8094ff);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---- Track: horizontal scroller, hidden scrollbar, peeking half-card --- */
+
+.vitrina .shelf-track {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 2px 2px 6px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none; /* Firefox */
+}
+.vitrina .shelf-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Edge */
+}
+
+@media (max-width: 480px) {
+  .vitrina { padding-top: 20px; }
+  .vitrina .shelf-track { gap: 12px; }
+}
+
+/* =========================================================================
+   CARD — base + 5 geometries (circle / square / wide / portrait / row)
+   ========================================================================= */
+
+.vitrina .vcard {
+  flex: none;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background: var(--surface-1, #15171D);
+  border: none;
+  border-radius: 14px;
+  color: inherit;
+  font-family: 'Onest', sans-serif;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 180ms cubic-bezier(.2, .8, .2, 1);
+}
+.vitrina .vcard:focus-visible {
+  outline: 3px solid var(--accent-on-dark, #8094ff);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .vitrina .vcard:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* ---- Art block shared by circle / square / wide / portrait ---- */
+
+.vitrina .shelf-art {
+  position: relative;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--surface-2, #1B1E26);
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+}
+.vitrina .shelf-art-mono {
+  font: 600 26px/1 'Onest', sans-serif;
+  letter-spacing: 0.01em;
+  user-select: none;
+}
+
+/* ---- Card body text (vertical geometries) ---- */
+
+.vitrina .vcard-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.vitrina .vcard-title {
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font: 600 13.5px/1.3 'Onest', sans-serif;
+  color: var(--text-pri, #FFFFFF);
+}
+.vitrina .vcard-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 12px/1.3 'Onest', sans-serif;
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+}
+
+/* ---- Geometry: circle — stations / artists ---- */
+
+.vitrina .vcard--circle {
+  flex-basis: clamp(96px, 13vw, 136px);
+}
+.vitrina .vcard--circle .shelf-art {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--surface-3, #23262F);
+}
+.vitrina .vcard--circle .shelf-art-mono {
+  font-size: 22px;
+}
+.vitrina .vcard--circle .vcard-body {
+  text-align: center;
+}
+.vitrina .vcard--circle .vcard-title {
+  -webkit-line-clamp: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---- Geometry: square — categories/collections/editorial/new ---- */
+
+.vitrina .vcard--square {
+  flex-basis: clamp(132px, 15vw, 176px);
+}
+.vitrina .vcard--square .shelf-art {
+  aspect-ratio: 1;
+  border-radius: 10px;
+}
+
+/* ---- Geometry: wide 16:9 — shows/DJs ---- */
+
+.vitrina .vcard--wide {
+  flex-basis: clamp(224px, 26vw, 300px);
+}
+.vitrina .vcard--wide .shelf-art {
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+}
+.vitrina .vcard--wide .shelf-art-mono {
+  font-size: 32px;
+}
+
+/* ---- Geometry: portrait 3:4 — collections (optional) ---- */
+
+.vitrina .vcard--portrait {
+  flex-basis: clamp(120px, 14vw, 160px);
+}
+.vitrina .vcard--portrait .shelf-art {
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+}
+
+/* ---- Daypart badge — overlaid top-left on .vcard--wide art ---- */
+
+.vitrina .vcard-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .55);
+  font: 600 11.5px/1 'Onest', sans-serif;
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+}
+.vitrina .vcard-badge--live {
+  color: var(--accent-on-dark, #8094ff);
+}
+.vitrina .vcard-badge--live::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-blue-light, #5168FC);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .vitrina .vcard-badge--live::before {
+    animation: vitrina-pulse-dot 1.6s ease-in-out infinite;
+  }
+}
+@keyframes vitrina-pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .35; }
+}
+
+/* =========================================================================
+   Geometry: row — friends / charts / tracks (horizontal internal layout)
+   ========================================================================= */
+
+.vitrina .vcard--row {
+  flex-basis: clamp(220px, 30vw, 268px);
+  cursor: default; /* the row itself is informational; only .vcard-row-action is actionable */
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .vitrina .vcard--row:hover {
+    transform: none;
+  }
+}
+
+.vitrina .vcard-row-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.vitrina .vcard-row-media {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--surface-2, #1B1E26);
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+  font: 600 15px/1 'Onest', sans-serif;
+}
+.vitrina .vcard-row-media--avatar {
+  /* --brand-blue-light @ 12% — rgba fallback first, color-mix wins where supported */
+  background: rgba(81, 104, 252, .12);
+  background: color-mix(in srgb, var(--brand-blue-light, #5168FC) 12%, transparent);
+  color: var(--text-pri, #FFFFFF);
+  font-weight: 700;
+}
+
+.vitrina .vcard-row-rank {
+  flex: none;
+  width: 26px;
+  font: 700 15px/44px 'Onest', sans-serif;
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+}
+
+.vitrina .vcard-row-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+.vitrina .vcard-row-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 14px/1.3 'Onest', sans-serif;
+  color: var(--text-pri, #FFFFFF);
+}
+.vitrina .vcard-row-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 12.5px/1.3 'Onest', sans-serif;
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+}
+
+.vitrina .vcard-row-action {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 16px;
+  margin-top: 2px;
+  border: 1px solid var(--hairline, rgba(255, 255, 255, .08));
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-sec, rgba(255, 255, 255, .62));
+  font: 600 12.5px/1 'Onest', sans-serif;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 180ms cubic-bezier(.2, .8, .2, 1), border-color 180ms cubic-bezier(.2, .8, .2, 1);
+}
+.vitrina .vcard-row-action:hover {
+  color: var(--accent-on-dark, #8094ff);
+  border-color: var(--accent-on-dark, #8094ff);
+}
+.vitrina .vcard-row-action:focus-visible {
+  outline: 3px solid var(--accent-on-dark, #8094ff);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   SKELETON — loading placeholder, mounted while a shelf is off-screen.
+   Deliberately a flat opacity pulse, NOT a gradient sweep (anti-slop: no
+   gradient-fill backgrounds). Reduced-motion users see a static flat block.
+   ========================================================================= */
+
+.vitrina .vcard--skeleton {
+  cursor: default;
+  pointer-events: none;
+}
+.vitrina .vcard--skeleton .shelf-art-mono {
+  visibility: hidden;
+}
+.vitrina .vcard--skeleton .shelf-art,
+.vitrina .vcard--skeleton .vcard-title,
+.vitrina .vcard--skeleton .vcard-meta,
+.vitrina .vcard--skeleton .vcard-row-media,
+.vitrina .vcard--skeleton .vcard-row-title,
+.vitrina .vcard--skeleton .vcard-row-meta {
+  background: var(--surface-2, #1B1E26);
+  color: transparent;
+}
+.vitrina .vcard--skeleton .vcard-title,
+.vitrina .vcard--skeleton .vcard-meta,
+.vitrina .vcard--skeleton .vcard-row-title,
+.vitrina .vcard--skeleton .vcard-row-meta {
+  min-height: .95em;
+  border-radius: 5px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .vitrina .vcard--skeleton .shelf-art,
+  .vitrina .vcard--skeleton .vcard-title,
+  .vitrina .vcard--skeleton .vcard-meta,
+  .vitrina .vcard--skeleton .vcard-row-media,
+  .vitrina .vcard--skeleton .vcard-row-title,
+  .vitrina .vcard--skeleton .vcard-row-meta {
+    animation: vitrina-skeleton-pulse 1.4s ease-in-out infinite;
+  }
+}
+@keyframes vitrina-skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .55; }
+}
+
+
+
       /* =====================================================================
          ONBOARDING (#/onboarding) — собери свой вкус (floating bubble picker)
          First-run taste capture for the "First AI-driven music" narrative.
@@ -7978,6 +8420,7 @@
         <section class="rmg-rail" id="rmg-rail" role="group" aria-roledescription="карусель" aria-label="Радиостанции">
           <ul class="rmg-track" id="rmg-track" role="list"><!-- cards injected by Task 3 --></ul>
         </section>
+        <section class="vitrina" id="vitrina"></section>
 
         <div class="home-tiles" hidden>
         <!-- Figma 2174:422 — dark home with 8 tiles + featured central card + blue player -->
@@ -16044,6 +16487,381 @@
   document.addEventListener('DOMContentLoaded', function(){ paint('gorod'); });
   window.GorodPlayer = { paint:paint, tune:tune };
 })();
+</script>
+<script>
+/* GorodVitrina — Tasks 7+8: non-AI music витрина feed */
+/* =========================================================================
+   GOROD FM — Витрина (non-AI music storefront feed)
+   Tasks 7+8 — window.GorodVitrina: renderShelf() + renderAll()
+
+   This module owns the NON-AI music browse feed: a shelf component plus
+   9 ordered shelves of representative Russian-music demo content. No AI /
+   personalization shelves live here (those are a separate module).
+
+   Public API:
+     window.GorodVitrina.renderShelf({id,title,subtitle,seeAllHref,geometry,items}, container?)
+       -> builds one <section class="shelf"> and appends it to `container`
+          if given; always returns the built element (or null if the shelf
+          has 0 items — per spec, empty shelves are not rendered at all).
+     window.GorodVitrina.renderAll(container)
+       -> builds all 9 demo shelves, in order, into `container`. Idempotent
+          (marks the container so a second call is a no-op).
+
+   Bootstrap: on DOMContentLoaded, mounts into #vitrina if present.
+   ========================================================================= */
+
+(function () {
+  'use strict';
+
+  // -----------------------------------------------------------------------
+  // DOM helpers
+  // -----------------------------------------------------------------------
+
+  function el(tag, opts) {
+    var node = document.createElement(tag);
+    opts = opts || {};
+    if (opts.className) node.className = opts.className;
+    if (opts.text != null) node.textContent = opts.text;
+    if (opts.attrs) {
+      for (var key in opts.attrs) {
+        if (Object.prototype.hasOwnProperty.call(opts.attrs, key)) {
+          node.setAttribute(key, opts.attrs[key]);
+        }
+      }
+    }
+    return node;
+  }
+
+  // Letterform/monogram placeholder for missing art (never fabricated imagery).
+  // First letter of the first word + first letter of the last word, e.g.
+  // "Артём К." -> "АК", "Поп" -> "П", "Городские хиты" -> "Гх"(upper "ГХ").
+  function monogram(text) {
+    if (!text) return '?';
+    var words = String(text)
+      .replace(/[«»"]/g, '')
+      .split(/\s+/)
+      .filter(function (w) { return w && !/^[-—·:.,]+$/.test(w); });
+    if (!words.length) return '?';
+    if (words.length === 1) return words[0].charAt(0).toUpperCase();
+    return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+  }
+
+  // -----------------------------------------------------------------------
+  // Card builders
+  // -----------------------------------------------------------------------
+
+  // Vertical geometries: circle / square / wide / portrait.
+  // item: { title, meta?, badge?: { label, live? } }
+  function buildCardVertical(item, geometry) {
+    var card = el('button', { className: 'vcard vcard--' + geometry, attrs: { type: 'button' } });
+
+    var art = el('div', { className: 'shelf-art', attrs: { 'aria-hidden': 'true' } });
+    art.appendChild(el('span', { className: 'shelf-art-mono', text: monogram(item.title) }));
+    if (geometry === 'wide' && item.badge) {
+      var live = !!item.badge.live;
+      art.appendChild(el('span', {
+        className: 'vcard-badge' + (live ? ' vcard-badge--live' : ''),
+        text: item.badge.label
+      }));
+    }
+    card.appendChild(art);
+
+    var body = el('div', { className: 'vcard-body' });
+    body.appendChild(el('div', { className: 'vcard-title', text: item.title || '' }));
+    if (item.meta) body.appendChild(el('div', { className: 'vcard-meta', text: item.meta }));
+    card.appendChild(body);
+
+    return card;
+  }
+
+  // Row geometry: friends / charts / tracks.
+  // item: { title, meta?, avatar?: bool, rank?: number, actionLabel?: string }
+  //   avatar   -> circular initials tile (friends)
+  //   rank     -> numeric rank badge instead of media (charts), no thumb
+  //   neither  -> generic square letterform thumb (tracks)
+  function buildCardRow(item) {
+    var card = el('div', { className: 'vcard vcard--row' });
+    var top = el('div', { className: 'vcard-row-top' });
+
+    if (item.avatar) {
+      top.appendChild(el('div', {
+        className: 'vcard-row-media vcard-row-media--avatar',
+        text: monogram(item.title),
+        attrs: { 'aria-hidden': 'true' }
+      }));
+    } else if (item.rank != null) {
+      top.appendChild(el('div', { className: 'vcard-row-rank', text: item.rank + '.' }));
+    } else {
+      top.appendChild(el('div', {
+        className: 'vcard-row-media',
+        text: monogram(item.title),
+        attrs: { 'aria-hidden': 'true' }
+      }));
+    }
+
+    var body = el('div', { className: 'vcard-row-body' });
+    body.appendChild(el('div', { className: 'vcard-row-title', text: item.title || '' }));
+    if (item.meta) body.appendChild(el('div', { className: 'vcard-row-meta', text: item.meta }));
+    top.appendChild(body);
+    card.appendChild(top);
+
+    if (item.actionLabel) {
+      card.appendChild(el('button', {
+        className: 'vcard-row-action',
+        text: item.actionLabel,
+        attrs: {
+          type: 'button',
+          'aria-label': item.title ? (item.actionLabel + ', ' + item.title) : item.actionLabel
+        }
+      }));
+    }
+
+    return card;
+  }
+
+  function buildCard(item, geometry) {
+    return geometry === 'row' ? buildCardRow(item) : buildCardVertical(item, geometry);
+  }
+
+  // Non-interactive shimmer placeholder shown while a shelf is off-screen.
+  function buildSkeletonCard(geometry) {
+    if (geometry === 'row') {
+      var rowCard = el('div', { className: 'vcard vcard--row vcard--skeleton', attrs: { 'aria-hidden': 'true' } });
+      var rowTop = el('div', { className: 'vcard-row-top' });
+      rowTop.appendChild(el('div', { className: 'vcard-row-media' }));
+      var rowBody = el('div', { className: 'vcard-row-body' });
+      rowBody.appendChild(el('div', { className: 'vcard-row-title' }));
+      rowBody.appendChild(el('div', { className: 'vcard-row-meta' }));
+      rowTop.appendChild(rowBody);
+      rowCard.appendChild(rowTop);
+      return rowCard;
+    }
+    var card = el('div', { className: 'vcard vcard--' + geometry + ' vcard--skeleton', attrs: { 'aria-hidden': 'true' } });
+    card.appendChild(el('div', { className: 'shelf-art' }));
+    var body = el('div', { className: 'vcard-body' });
+    body.appendChild(el('div', { className: 'vcard-title' }));
+    card.appendChild(body);
+    return card;
+  }
+
+  function skeletonCountFor(geometry, itemCount) {
+    var max = geometry === 'wide' ? 3 : (geometry === 'row' ? 4 : 6);
+    return Math.min(itemCount, max);
+  }
+
+  // -----------------------------------------------------------------------
+  // Shelf builder — public API
+  // -----------------------------------------------------------------------
+
+  /**
+   * Builds one shelf (<section class="shelf">: head + .shelf-track of
+   * .vcard.vcard--{geometry}) and appends it to `container` if given.
+   * Returns the built element, or null if `items` is empty (shelves with
+   * 0 items are not rendered at all, per spec).
+   *
+   * Lazy-renders via IntersectionObserver when available: mounts
+   * .vcard--skeleton placeholders immediately, swaps in real cards once the
+   * shelf scrolls near the viewport. Falls back to an immediate full render
+   * when IntersectionObserver is unsupported.
+   *
+   * @param {{id?:string, title:string, subtitle?:string, seeAllHref?:string,
+   *          geometry:'circle'|'square'|'wide'|'portrait'|'row', items:object[]}} config
+   * @param {Element} [container]
+   */
+  function renderShelf(config, container) {
+    var items = (config && config.items) || [];
+    if (!items.length) return null;
+
+    var geometry = config.geometry;
+    var headingId = (config.id || 'shelf') + '-h';
+
+    var shelf = el('section', { className: 'shelf', attrs: { 'aria-labelledby': headingId } });
+    if (config.id) shelf.id = config.id;
+
+    var head = el('div', { className: 'shelf-head' });
+    var headText = el('div', { className: 'shelf-head-text' });
+    headText.appendChild(el('h3', {
+      className: 'shelf-title',
+      text: config.title || '',
+      attrs: { id: headingId }
+    }));
+    if (config.subtitle) {
+      headText.appendChild(el('p', { className: 'shelf-subtitle', text: config.subtitle }));
+    }
+    head.appendChild(headText);
+    if (config.seeAllHref) {
+      head.appendChild(el('a', {
+        className: 'shelf-seeall',
+        text: 'Все ›',
+        attrs: { href: config.seeAllHref }
+      }));
+    }
+    shelf.appendChild(head);
+
+    var track = el('div', { className: 'shelf-track' });
+    shelf.appendChild(track);
+
+    function paintReal() {
+      track.innerHTML = '';
+      track.removeAttribute('aria-busy');
+      items.forEach(function (item) {
+        track.appendChild(buildCard(item, geometry));
+      });
+    }
+
+    function paintSkeleton() {
+      track.setAttribute('aria-busy', 'true');
+      var count = skeletonCountFor(geometry, items.length);
+      for (var i = 0; i < count; i++) {
+        track.appendChild(buildSkeletonCard(geometry));
+      }
+    }
+
+    if (container) container.appendChild(shelf);
+
+    if ('IntersectionObserver' in window) {
+      paintSkeleton();
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            paintReal();
+            io.disconnect();
+            break;
+          }
+        }
+      }, { rootMargin: '240px 0px', threshold: 0.01 });
+      io.observe(shelf);
+    } else {
+      paintReal();
+    }
+
+    return shelf;
+  }
+
+  // -----------------------------------------------------------------------
+  // Demo content — representative Russian-music placeholders (no AI /
+  // personalization shelves; no fabricated stats, counts, or play numbers).
+  // "Артист {letter}" / "Исполнитель N" naming is a deliberate honesty
+  // signal: it reads unmistakably as placeholder, not a real chart claim.
+  // -----------------------------------------------------------------------
+
+  function buildDemoShelves() {
+    var friends = [
+      { title: 'Артём К.', meta: 'слушает Авторадио' },
+      { title: 'Соня Л.', meta: 'слушает «Городские хиты»' },
+      { title: 'Данияр С.', meta: 'слушает Zivert — Life' },
+      { title: 'Марина П.', meta: 'слушает DFM Dance' },
+      { title: 'Игорь В.', meta: 'слушает подборку «90-е»' },
+      { title: 'Алина Т.', meta: 'слушает Русское Радио' },
+      { title: 'Максим Р.', meta: 'слушает Niletto — Любимка' }
+    ].map(function (f) {
+      return { title: f.title, meta: f.meta, avatar: true, actionLabel: 'Слушать то же' };
+    });
+
+    var genres = ['Поп', 'Рок', 'Хип-хоп', 'Электроника', 'Джаз', 'Ретро',
+      'Танцевальная', 'Инди', 'Классика', 'Русский рок', 'Lo-fi', 'Настроения']
+      .map(function (t) { return { title: t }; });
+
+    var moods = ['Тёплый вечер', 'В дорогу', 'Утренний заряд', 'Спортзал',
+      'Русские хиты', 'Чил', 'Работа/фокус', 'Вечеринка']
+      .map(function (t) { return { title: t }; });
+
+    var editorial = ['Голоса нового сезона', 'Городские легенды рока', 'Открытие недели',
+      'Саундтрек большого города', 'Плейлист редакции: осень', 'Артисты, за которыми стоит следить']
+      .map(function (t) { return { title: t }; });
+
+    var newReleases = [
+      ['А', 'Новый рассвет'], ['Б', 'Городские огни'], ['В', 'На своей волне'],
+      ['Г', 'Не отпускай'], ['Д', 'Дальше по треку'], ['Е', 'Между строк'],
+      ['Ж', 'Свободен'], ['З', 'Вечер в городе']
+    ].map(function (pair) { return { title: 'Артист ' + pair[0] + ' — ' + pair[1] }; });
+
+    var charts = [
+      ['И', 'Останусь'], ['К', 'Городской шум'], ['Л', 'Пока горит'],
+      ['М', 'Друг за друга'], ['Н', 'Не сбавляй'], ['О', 'Ночной эфир'],
+      ['П', 'Ветер с юга'], ['Р', 'На повторе'], ['С', 'Домой'], ['Т', 'Между нами']
+    ].map(function (pair, i) {
+      return { title: 'Артист ' + pair[0] + ' — ' + pair[1], rank: i + 1 };
+    });
+
+    var collections = ['80-е', '90-е', '2000-е', 'На русском', 'Город: Москва', 'Саундтреки']
+      .map(function (t) { return { title: t }; });
+
+    var artists = [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) {
+      return { title: 'Исполнитель ' + n };
+    });
+
+    var shows = [
+      { title: 'Утренний разгон', badge: { label: 'будни, утро' } },
+      { title: 'Городской чат', badge: { label: 'сейчас в эфире', live: true } },
+      { title: 'Вечерний сет', badge: { label: 'в 18:00' } },
+      { title: 'Ночная волна', badge: { label: 'будни, ночь' } },
+      { title: 'Хиты выходного дня', badge: { label: 'в 12:00' } }
+    ];
+
+    return [
+      { id: 'vitrina-friends', title: 'Друзья слушают', geometry: 'row',
+        seeAllHref: '#/vitrina/friends', items: friends },
+      { id: 'vitrina-genres', title: 'Категории и жанры', geometry: 'square',
+        seeAllHref: '#/vitrina/genres', items: genres },
+      { id: 'vitrina-moods', title: 'Подборки', subtitle: 'Запусти любую как волну', geometry: 'square',
+        seeAllHref: '#/vitrina/moods', items: moods },
+      { id: 'vitrina-editorial', title: 'Выбор редакции ГОРОДА', subtitle: 'Что слушает редакция', geometry: 'square',
+        seeAllHref: '#/vitrina/editorial', items: editorial },
+      { id: 'vitrina-new', title: 'Новинки', geometry: 'square',
+        seeAllHref: '#/vitrina/new', items: newReleases },
+      { id: 'vitrina-charts', title: 'Популярное · Чарты', geometry: 'row',
+        seeAllHref: '#/vitrina/charts', items: charts },
+      { id: 'vitrina-collections', title: 'Коллекции', geometry: 'square',
+        seeAllHref: '#/vitrina/collections', items: collections },
+      { id: 'vitrina-artists', title: 'Исполнители', subtitle: 'Радио по артисту в один тап', geometry: 'circle',
+        seeAllHref: '#/vitrina/artists', items: artists },
+      { id: 'vitrina-shows', title: 'Программы и ведущие', subtitle: 'Прямой эфир и повторы', geometry: 'wide',
+        seeAllHref: '#/vitrina/shows', items: shows }
+    ];
+  }
+
+  // -----------------------------------------------------------------------
+  // renderAll — public API
+  // -----------------------------------------------------------------------
+
+  /**
+   * Renders all 9 vitrina shelves, in order, into `container`. Idempotent —
+   * a second call on an already-rendered container is a no-op.
+   * @param {Element} container
+   */
+  function renderAll(container) {
+    if (!container) return;
+    if (container.getAttribute('data-vitrina-rendered') === 'true') return;
+
+    buildDemoShelves().forEach(function (config) {
+      renderShelf(config, container);
+    });
+
+    container.setAttribute('data-vitrina-rendered', 'true');
+  }
+
+  window.GorodVitrina = {
+    renderShelf: renderShelf,
+    renderAll: renderAll
+  };
+
+  // -----------------------------------------------------------------------
+  // Bootstrap
+  // -----------------------------------------------------------------------
+
+  function boot() {
+    var mount = document.getElementById('vitrina');
+    if (mount) renderAll(mount);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+
 </script>
 </body>
 </html>
