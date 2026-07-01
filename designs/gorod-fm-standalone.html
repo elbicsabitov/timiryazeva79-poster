@@ -18739,7 +18739,7 @@
   function cardHTML(s, np){
     return `<li class="rmg-card" data-id="${s.id}">
       <button type="button" class="rmg-card-face" aria-label="Слушать ${s.name}">
-        <span class="rmg-card-art">${s.logo?`<img src="${s.logo}" alt="" style="width:100%;height:100%;object-fit:cover">`:monogram(s.name)}</span>
+        <span class="rmg-card-art">${(window.GOROD_ART&&GOROD_ART.on())?`<img src="${GOROD_ART.station(s.id)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(s.logo?`<img src="${s.logo}" alt="" style="width:100%;height:100%;object-fit:cover">`:monogram(s.name))}</span>
         <span class="rmg-card-live">В ЭФИРЕ</span>
         <span class="rmg-card-name">${s.name}${s.freq?` <span class="rmg-card-freq">${s.freq}</span>`:''}</span>
         <span class="rmg-card-np">${np.artist} — ${np.title}</span>
@@ -18870,6 +18870,7 @@
   // Honest per-station cover: real logo if we have one, else a monogram tile
   // (inline SVG data-URI — never a wrong track cover). Matches the carousel look. (item 9)
   function stationArt(station){
+    if(window.GOROD_ART && GOROD_ART.on() && station && station.id) return GOROD_ART.station(station.id);
     if(station && station.logo) return station.logo;
     var name = (station && station.name ? station.name : '?').trim();
     var letter = name.charAt(0) || '?';
@@ -19200,11 +19201,13 @@
 
   // Vertical geometries: circle / square / wide / portrait.
   // item: { title, meta?, badge?: { label, live? } }
-  function buildCardVertical(item, geometry) {
+  function buildCardVertical(item, geometry, shelfId, i) {
     var card = el('button', { className: 'vcard vcard--' + geometry, attrs: { type: 'button' } });
 
     var art = el('div', { className: 'shelf-art', attrs: { 'aria-hidden': 'true' } });
-    art.appendChild(el('span', { className: 'shelf-art-mono', text: monogram(item.title) }));
+    var artSrc = (window.GOROD_ART && GOROD_ART.on()) ? GOROD_ART.shelf(shelfId, item.title, i) : null;
+    if (artSrc) art.appendChild(el('img', { className: 'shelf-art-img', attrs: { src: artSrc, alt: '', loading: 'lazy' } }));
+    else art.appendChild(el('span', { className: 'shelf-art-mono', text: monogram(item.title) }));
     if (geometry === 'wide' && item.badge) {
       var live = !!item.badge.live;
       art.appendChild(el('span', {
@@ -19227,24 +19230,25 @@
   //   avatar   -> circular initials tile (friends)
   //   rank     -> numeric rank badge instead of media (charts), no thumb
   //   neither  -> generic square letterform thumb (tracks)
-  function buildCardRow(item) {
+  function buildCardRow(item, shelfId, i) {
     var card = el('div', { className: 'vcard vcard--row' });
     var top = el('div', { className: 'vcard-row-top' });
+    var photos = (window.GOROD_ART && GOROD_ART.on());
 
     if (item.avatar) {
-      top.appendChild(el('div', {
-        className: 'vcard-row-media vcard-row-media--avatar',
-        text: monogram(item.title),
-        attrs: { 'aria-hidden': 'true' }
-      }));
+      var avSrc = photos ? GOROD_ART.avatar(item.title, i) : null;
+      var av = el('div', { className: 'vcard-row-media vcard-row-media--avatar' + (avSrc ? ' has-photo' : ''), attrs: { 'aria-hidden': 'true' } });
+      if (avSrc) av.appendChild(el('img', { className: 'vcard-avatar-img', attrs: { src: avSrc, alt: '' } }));
+      else av.textContent = monogram(item.title);
+      top.appendChild(av);
     } else if (item.rank != null) {
       top.appendChild(el('div', { className: 'vcard-row-rank', text: item.rank + '.' }));
     } else {
-      top.appendChild(el('div', {
-        className: 'vcard-row-media',
-        text: monogram(item.title),
-        attrs: { 'aria-hidden': 'true' }
-      }));
+      var mSrc = photos ? GOROD_ART.shelf(shelfId, item.title, i) : null;
+      var m = el('div', { className: 'vcard-row-media' + (mSrc ? ' has-photo' : ''), attrs: { 'aria-hidden': 'true' } });
+      if (mSrc) m.appendChild(el('img', { className: 'vcard-avatar-img', attrs: { src: mSrc, alt: '' } }));
+      else m.textContent = monogram(item.title);
+      top.appendChild(m);
     }
 
     var body = el('div', { className: 'vcard-row-body' });
@@ -19292,17 +19296,17 @@
   }
 
   // Замена buildCardRow ДЛЯ ДРУЗЕЙ. Возвращает готовый .vcard--row.
-  function buildFriendRow(item) {
+  function buildFriendRow(item, shelfId, i) {
     var what = item.now || item.meta || '';
     var card = el('div', { className: 'vcard vcard--row vcard--friend' });
 
     var top = el('div', { className: 'vcard-row-top' });
 
-    top.appendChild(el('div', {
-      className: 'vcard-row-media vcard-row-media--avatar',
-      text: monogram(item.title),
-      attrs: { 'aria-hidden': 'true' }
-    }));
+    var avSrc = (window.GOROD_ART && GOROD_ART.on()) ? GOROD_ART.avatar(item.title, i) : null;
+    var avatar = el('div', { className: 'vcard-row-media vcard-row-media--avatar' + (avSrc ? ' has-photo' : ''), attrs: { 'aria-hidden': 'true' } });
+    if (avSrc) avatar.appendChild(el('img', { className: 'vcard-avatar-img', attrs: { src: avSrc, alt: '' } }));
+    else avatar.textContent = monogram(item.title);
+    top.appendChild(avatar);
 
     var body = el('div', { className: 'vcard-row-body' });
     body.appendChild(el('div', { className: 'vcard-row-title', text: item.title || '' }));
@@ -19318,9 +19322,9 @@
     return card;
   }
 
-  function buildCard(item, geometry) {
-    if (geometry === 'row' && item.avatar) return buildFriendRow(item); // друзья → ▶/＋
-    return geometry === 'row' ? buildCardRow(item) : buildCardVertical(item, geometry);
+  function buildCard(item, geometry, shelfId, i) {
+    if (geometry === 'row' && item.avatar) return buildFriendRow(item, shelfId, i); // друзья → ▶/＋
+    return geometry === 'row' ? buildCardRow(item, shelfId, i) : buildCardVertical(item, geometry, shelfId, i);
   }
 
   // Non-interactive shimmer placeholder shown while a shelf is off-screen.
@@ -19404,8 +19408,8 @@
     function paintReal() {
       track.innerHTML = '';
       track.removeAttribute('aria-busy');
-      items.forEach(function (item) {
-        track.appendChild(buildCard(item, geometry));
+      items.forEach(function (item, i) {
+        track.appendChild(buildCard(item, geometry, config.id, i));
       });
     }
 
@@ -20129,6 +20133,13 @@
   [data-surface="mobile"] .gs-overlay-search { display:flex; }
   [data-surface="mobile"] .gorod-search-overlay { inset: 0 0 calc(var(--tabbar-h) + var(--player-mini-h)) 0; }
 
+  /* Thematic photo fill (opt-in via ?art=photos / window.GOROD_PHOTOS=true) — replaces the monogram
+     placeholders with the same onboarding-sourced genre/artist art. Default stays monograms. */
+  .vitrina .shelf-art-img { width:100%; height:100%; object-fit:cover; display:block; }
+  .vitrina .vcard-row-media.has-photo,
+  .vitrina .vcard-row-media--avatar.has-photo { padding:0; overflow:hidden; background:var(--surface-2); }
+  .vitrina .vcard-avatar-img { width:100%; height:100%; object-fit:cover; display:block; }
+
   @media (max-width: 768px) {
     /* topbar is hidden on mobile → drop the home full-bleed negative margins so the
        search pill + carousel aren't clipped off the top / sides. */
@@ -20138,6 +20149,41 @@
     .home-search-mobile { display:flex; }
   }
 </style>
+<script>
+  /* Thematic art pool (opt-in via ?art=photos or window.GOROD_PHOTOS=true). Reuses the same
+     onboarding-sourced assets (genre vibes + real artist photos) so the storefront can render
+     with photos instead of monograms. Runs before DOMContentLoaded so renderers see it. All demo. */
+  (function () {
+    var B = 'assets/gorod-fm/';
+    var GENRE_MATCH = [
+      ['зарубеж','genre-pop.jpg'],['поп','genre-pop.jpg'],['хит','genre-pop.jpg'],
+      ['танц','genre-disco.jpg'],['диско','genre-disco.jpg'],
+      ['метал','genre-metal.jpg'],['рок','genre-rock.jpg'],
+      ['электро','genre-electro.jpg'],['транс','genre-electro.jpg'],
+      ['рэп','genre-rap.jpg'],['хип','genre-hiphop.jpg'],
+      ['джаз','genre-jazz.jpg'],['лаундж','genre-lofi.jpg'],['лаунж','genre-lofi.jpg'],['lo-fi','genre-lofi.jpg'],['чил','genre-lofi.jpg'],['споко','genre-lofi.jpg'],
+      ['шансон','genre-classic.jpg'],['ретро','genre-classic.jpg'],['класс','genre-classic.jpg'],['90','genre-disco.jpg'],['2000','genre-pop.jpg'],
+      ['r&b','genre-rnb.jpg'],['рнб','genre-rnb.jpg'],['инди','genre-indie.jpg']
+    ];
+    var GENRE_POOL = ['genre-pop.jpg','genre-rock.jpg','genre-disco.jpg','genre-electro.jpg','genre-rap.jpg','genre-jazz.jpg','genre-indie.jpg','genre-lofi.jpg','genre-rnb.jpg','genre-classic.jpg','genre-metal.jpg','genre-hiphop.jpg'];
+    var TILE_POOL = ['home-tile-chill.png','home-tile-k-pop.png','home-tile-pop-gold-2010s.png','home-tile-discach-90.png','home-tile-z-city-show.png','home-tile-dfm-chill-far.png','genre-disco.jpg','genre-pop.jpg','genre-electro.jpg','genre-lofi.jpg','genre-rock.jpg','genre-jazz.jpg','genre-rnb.jpg','genre-indie.jpg'];
+    var ARTIST_POOL = ['library-artist-a-studio.png','library-artist-afina.png','library-artist-aigel.png','library-artist-ak-47.png','library-artist-akvarium.png','library-artist-alisa.png','library-artist-alsmi.png','library-artist-alsu.png','library-artist-alyans.png','library-artist-anet-sai.png','library-artist-ani-lorak.png','library-artist-anna-vorobey.png','library-artist-anton-tokarev.png','library-artist-ariya.png','library-artist-arthur-pirozhkov.png','library-artist-artur.png','library-artist-asia.png','favs-artist-akon.png','favs-artist-mia-boyka.png','favs-artist-ramil.png','favs-group-bernhoft.png','favs-group-my-darkest-days.png','favs-dj-martin-garrix.png'];
+    var STATION = { gorod:'home-tile-z-city-show.png', russkoe:'genre-pop.jpg', hit:'genre-disco.jpg', dfm:'genre-electro.jpg', maximum:'genre-rock.jpg', mc:'genre-jazz.jpg' };
+    function at(pool, i) { i = i || 0; var n = pool.length; return B + pool[((i % n) + n) % n]; }
+    function genreMatch(t) { t = (t || '').toLowerCase(); for (var j = 0; j < GENRE_MATCH.length; j++) { if (t.indexOf(GENRE_MATCH[j][0]) >= 0) return B + GENRE_MATCH[j][1]; } return null; }
+    window.GOROD_ART = {
+      on: function () { return window.GOROD_PHOTOS === true || /(?:[?&])art=photos\b/.test(window.location.search || ''); },
+      station: function (id) { return STATION[id] ? B + STATION[id] : at(GENRE_POOL, 0); },
+      avatar: function (name, i) { return at(ARTIST_POOL, i); },
+      shelf: function (shelfId, title, i) {
+        if (shelfId === 'vitrina-genres') return genreMatch(title) || at(GENRE_POOL, i);
+        if (shelfId === 'vitrina-artists') return at(ARTIST_POOL, i);
+        if (shelfId === 'vitrina-new' || shelfId === 'vitrina-charts') return at(ARTIST_POOL, i + 5);
+        return at(TILE_POOL, i); /* moods / collections / editorial / programs */
+      }
+    };
+  })();
+  </script>
 <script>
   /* Responsive surface (items 6+7): narrow screens/phones adopt the app's built-in mobile shell
      (sidebar → bottom tabbar, mini-player above tabbar) by toggling data-surface, instead of
