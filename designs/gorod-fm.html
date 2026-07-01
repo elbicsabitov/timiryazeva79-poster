@@ -2254,6 +2254,14 @@
         .rmg-card[aria-current="true"] .rmg-card-live::before{ animation:none !important; }
       }
 
+      /* ---- Город ФМ home: live-aware mini-player LIVE badge (Task 4) ---- */
+      .player-live-badge { display:inline-flex; align-items:center; gap:6px; width:fit-content; align-self:flex-start; margin-top:1px; font-family:'Onest',sans-serif; font-size:11px; font-weight:700; line-height:1.15; letter-spacing:0.04em; text-transform:uppercase; color:var(--accent-on-dark); white-space:nowrap; }
+      .player-live-badge[hidden] { display:none; }
+      .player-live-badge::before { content:''; flex:none; width:6px; height:6px; border-radius:50%; background:var(--brand-blue-light); animation:player-live-pulse 1.6s ease-in-out infinite; }
+      @keyframes player-live-pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+      @media (prefers-reduced-motion: reduce){ .player-live-badge::before{ animation:none; } }
+      [data-live="true"] .player-mini-progress-bar, [data-live="true"] .player-progress, [data-live="true"] .player-scrubber { display:none !important; }
+
       /* =====================================================================
          ONBOARDING (#/onboarding) — собери свой вкус (floating bubble picker)
          First-run taste capture for the "First AI-driven music" narrative.
@@ -10186,6 +10194,7 @@
     <div class="player-mini-meta">
       <div class="player-mini-title" id="player-track-title">Слеза</div>
       <div class="player-mini-artist" id="player-track-artist">Егор Крид</div>
+      <span class="player-live-badge" hidden>LIVE</span>
       <button class="player-mini-reason" id="player-track-reason" type="button" aria-label="Почему играет этот трек" onclick="event.stopPropagation()">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.8L20 9.7l-5.1 3.4L16 19l-4-3.3L8 19l1.1-5.9L4 9.7l6.1-1.9z" fill="currentColor"/></svg>
         <span>Ты дослушал <b>Егора Крида</b> до конца 3 раза</span>
@@ -15994,6 +16003,46 @@
   window.addEventListener('hashchange', function(){
     if ((window.location.hash || '') === '#/home') { window.GorodRail && GorodRail.render(); }
   });
+})();
+</script>
+<script>
+/* GorodPlayer — Task 4: LIVE-aware mini-player. Enhances #player-mini; no real audio. */
+(function () {
+  'use strict';
+  var BAR_ID='player-mini', TITLE_ID='player-track-title', ARTIST_ID='player-track-artist', COVER_ID='mini-art-img', BADGE_SEL='.player-live-badge';
+  function byId(id){ return document.getElementById(id); }
+  function isLiveStation(s){ return !!s && s.kind !== 'ondemand'; }
+  function paint(id){
+    if(!window.GorodStations) return;
+    var station = GorodStations.get(id); if(!station) return;
+    var np = GorodStations.nowPlaying(id) || {title:'',artist:'',source:'demo',ts:0};
+    var live = isLiveStation(station);
+    var bar=byId(BAR_ID), titleEl=byId(TITLE_ID), artistEl=byId(ARTIST_ID), coverEl=byId(COVER_ID);
+    var badge = bar ? bar.querySelector(BADGE_SEL) : null;
+    if(titleEl)  titleEl.textContent  = np.title || '';
+    if(artistEl) artistEl.textContent = station.name + ' · ' + (np.artist || '');
+    if(bar)   bar.setAttribute('data-live', live ? 'true' : 'false');
+    if(badge) badge.hidden = !live;
+    if('mediaSession' in navigator){
+      try {
+        var artwork=[], coverSrc = coverEl && coverEl.getAttribute('src');
+        if(coverSrc) artwork.push({src:coverSrc});
+        navigator.mediaSession.metadata = new MediaMetadata({ title:np.title||'', artist:station.name + (np.artist?' · '+np.artist:''), artwork:artwork });
+        navigator.mediaSession.setActionHandler('play', function(){ if(window.TwinrTransition && typeof TwinrTransition.setPlaying==='function') TwinrTransition.setPlaying(true); navigator.mediaSession.playbackState='playing'; });
+        navigator.mediaSession.setActionHandler('pause', function(){ if(window.TwinrTransition && typeof TwinrTransition.setPlaying==='function') TwinrTransition.setPlaying(false); navigator.mediaSession.playbackState='paused'; });
+      } catch(err){}
+    }
+  }
+  function tune(id){
+    if(!window.GorodStations || !GorodStations.get(id)) return;
+    GorodStations.setActive(id);
+    if(window.GorodRail && typeof GorodRail.setActive==='function') GorodRail.setActive(id,false);
+    paint(id);
+  }
+  document.addEventListener('gorod:tune', function(e){ tune(e.detail.id); });
+  document.addEventListener('gorod:activecard', function(e){ paint(e.detail.id); });
+  document.addEventListener('DOMContentLoaded', function(){ paint('gorod'); });
+  window.GorodPlayer = { paint:paint, tune:tune };
 })();
 </script>
 </body>
