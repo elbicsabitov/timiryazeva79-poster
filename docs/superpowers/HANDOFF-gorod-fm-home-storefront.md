@@ -7,6 +7,36 @@
 **Plan:** `docs/superpowers/plans/2026-07-01-gorod-fm-home-carousel-vitrina-search.md`
 **Ledger:** `.superpowers/sdd/progress.md`
 
+---
+
+## ✅ SESSION 2 (cont, 2026-07-01) — ALL 10 owner-feedback + deferred items DONE + adversarial review + standalone
+
+**HEAD = `8da6443`** on `feat/gorod-home-rmg-storefront` (5 commits, **NOT pushed** — push at `sync`). `check_scripts.cjs` 31/0; **0 console errors on every route**. Verified via chrome-devtools MCP at desktop 1440 + mobile 390. Server now `python -m http.server 8791`.
+
+**Done (maps to the 🔴 REMAINING list further below):**
+1. ✅ **Carousel center-card transport** — ♥/⏸/⏭ on the aria-current card, wired to `TwinrTransition`; play glyph stays synced with the mini-player via a MutationObserver on `#btn-play`.
+2. ✅ **Carousel spacing/centering/focus** — `.rmg-rail` clears the topbar (`padding-top: topbar-h+32`); `center()` uses transform-immune `offsetLeft`; sharper `view()` focus (neighbours .72/.34). Re-centers on the ACTIVE station when #/home becomes visible (review M4).
+3. ✅ **Друзья слушают → ▶/＋ icons** — `buildFriendRow` (avatar + «слушает X» + two 44px icon buttons). ⚠️ icons are demo **hooks** (`data-friend-action`) — **not yet wired to playback** (review L7).
+4. ✅ **FULL витрина content** — 122-item RU-music dataset (`window.GOROD_VITRINA_CONTENT`, 9 shelves × 10–20), **eager render** (skeleton-until-scroll removed); honest «· демо» suffix on claim-shelves; monogram art (no fabricated imagery/hard stats).
+5. ✅ **Retire AI chrome on #/home** — scoped via `html[data-active-route="#/home"]` (these render OUTSIDE `[data-page=home]`, after `</main>`): Twinr AI launcher, up-chevron FAB, «почему?» ribbon, «Ты дослушал» line, legacy Believer sheet + `.player-full`; mini-player click guarded on home.
+6. ✅ **Search** — fixed the overlay rendering **0-height** (it was a child of `.topbar`, whose `backdrop-filter` made it the fixed containing block → moved to `<body>`). Mobile: search **pill** above the carousel + an **in-overlay input** (topbar field is hidden on mobile) driving the same typeahead (review H1). Verified «dfm» → DFM.
+7. ✅ **Mobile** — narrow (`≤768px`) adopts the app's `data-surface="mobile"` shell via a `matchMedia` flip (sidebar→bottom tabbar; guarded for tv/carplay, review M2); home full-bleed margins neutralized; `--rmg-card:76vw`.
+8. ✅ **Chat rail «Общий эфир» restored** (owner-flagged «чат справа пропал») — ported from `feat/gorod-chat-layer` (Option A: `.app-shell` → `sidebar | main | 360px rail`; main + витрина reflow beside it; mini-player full-width below, z below rail). Mobile: rail hidden + FAB opens it as a dialog (FAB hides when open). **Home leads with the «Всем · Общий эфир» community lane, NOT the Twinr AI composer/greeting** (review M3 — aligns with the non-AI home; Twinr is one tap away via the mode toggle). 🟡 **OWNER-CONFIRM this default.** Rail is **global** on all content routes (as on chat-layer) — if home-only wanted, gate `grid-column:3`/`.chat-rail` by route.
+9. ✅ **Honest mini-cover** — `GorodPlayer.stationArt()` per-station SVG-monogram data-URI (was a stale «Слеза»/Егор-Крид PNG); static markup is a neutral «Г» monogram too (no first-paint flash).
+10. ✅ **Review + standalone** — adversarial code/anti-slop/a11y review → 6 fixes (H1/M2/M3/M4/M5/L9). Standalone regenerated fresh from dev (`.scratch/gorod2/regen_standalone.py`, Pillow webp-inline: 30 assets 39.8 MB→2.8 MB, **5.18 MB**); renders identically.
+
+**Still GATED / follow-up (NOT blockers):**
+- **Owner real assets** — 6 РМГ station **logos** (have Monte Carlo only), Город ФМ **frequency**, live **stream URLs + ICY**, real catalog. Until then carousel/mini-cover use honest monograms.
+- **L7** — wire friend ▶/＋ (and vitrina cards, search `selectItem`) to real playback/nav (currently `console.log`/hooks; was inert pre-session too).
+- **«Моя волна» AI tab** — relocate the commented-out `#home-radio` wave/steer there + wave-2 recsys.
+- **M6** (perf) — eager render builds 122 cards on load; fine for demo, revisit if low-end jank.
+- **Standalone regen tool** = `.scratch/gorod2/regen_standalone.py` (run via `C:\Users\elbics\scoop\shims\python3.exe`). Splice scripts: `.scratch/gorod2/{integrate_vitrina2,splice}.cjs`; agent artifacts in `.scratch/gorod2/`.
+- **Push** held until `sync`.
+
+**START next session: this block.** Session-1 handoff + the 12-item remaining list preserved below for reference.
+
+---
+
 ## Owner-locked model (do not re-litigate)
 Home = non-AI **radio storefront**: (1) hero **carousel = the эфир** — 6 РМГ stations, flat NO tilt, center card = station playing now, sides switch by scroll/click; (2) persistent **live-aware player** (bottom); (3) **music витрина** below (browse/editorial/social shelves — friends, categories, collections, editorial, charts, artists, programs). Dark skin kept, `#/home` only. **ALL AI/personalization** (wave, steer, «для вас») → a separate **«Моя волна» AI tab** (the current `#/home` «Волна» experience, preserved commented-out as `#home-radio`).
 
