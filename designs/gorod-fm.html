@@ -15921,5 +15921,75 @@
   };
 })();
 </script>
+<script>
+(function(){
+  const track = () => document.getElementById('rmg-track');
+  const supportsSDA = CSS.supports('animation-timeline','view(inline)');
+  function monogram(name){ return (name||'?').trim()[0] || '?'; }
+  function cardHTML(s, np){
+    return `<li class="rmg-card" data-id="${s.id}">
+      <button type="button" aria-label="Слушать ${s.name}">
+        <span class="rmg-card-art">${s.logo?`<img src="${s.logo}" alt="" style="width:100%;height:100%;object-fit:cover">`:monogram(s.name)}</span>
+        <span class="rmg-card-live">В ЭФИРЕ</span>
+        <span class="rmg-card-name">${s.name}${s.freq?` <span class="rmg-card-freq">${s.freq}</span>`:''}</span>
+        <span class="rmg-card-np">${np.artist} — ${np.title}</span>
+      </button></li>`;
+  }
+  let cards = [];
+  function render(){
+    const t = track(); if(!t) return;
+    if(t.children.length) return; // idempotent
+    t.innerHTML = GorodStations.list.map(s=>cardHTML(s, GorodStations.nowPlaying(s.id))).join('');
+    cards = [...t.querySelectorAll('.rmg-card')];
+    cards.forEach((c,i)=> c.querySelector('button').tabIndex = (i===0?0:-1));
+    const io = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting && e.intersectionRatio>0.6) setActive(e.target.dataset.id, false); });
+    }, {root:t, threshold:[0.6]});
+    cards.forEach(c=> io.observe(c));
+    cards.forEach(c=> c.querySelector('button').addEventListener('click', ()=>{
+      if(GorodStations.active===c.dataset.id) tune(c.dataset.id); else center(c.dataset.id);
+    }));
+    t.addEventListener('keydown', e=>{
+      const cur = cards.findIndex(c=>c.dataset.id===GorodStations.active);
+      let n = cur;
+      if(e.key==='ArrowRight') n=Math.min(cur+1,cards.length-1);
+      else if(e.key==='ArrowLeft') n=Math.max(cur-1,0);
+      else if(e.key==='Home') n=0; else if(e.key==='End') n=cards.length-1;
+      else if(e.key==='Enter'||e.key===' '){ tune(GorodStations.active); e.preventDefault(); return; }
+      else return;
+      e.preventDefault(); center(cards[n].dataset.id); cards[n].querySelector('button').focus();
+    });
+    setActive('gorod', false); center('gorod', true);
+  }
+  function setActive(id, doCenter){
+    if(!GorodStations.get(id)) return;
+    GorodStations.setActive(id);
+    cards.forEach(c=>{
+      const on = c.dataset.id===id;
+      if(on) c.setAttribute('aria-current','true'); else c.removeAttribute('aria-current');
+      if(!supportsSDA) c.classList.toggle('is-centered', on);
+      c.querySelector('button').tabIndex = on?0:-1;
+    });
+    document.dispatchEvent(new CustomEvent('gorod:activecard',{detail:{id}}));
+    if(doCenter) center(id, true);
+  }
+  function center(id, instant){
+    const t = track(); if(!t) return;
+    const el = t.querySelector(`.rmg-card[data-id="${id}"]`);
+    if(el) el.scrollIntoView({inline:'center', block:'nearest', behavior: instant?'auto':'smooth'});
+    setActive(id, false);
+  }
+  function tune(id){ document.dispatchEvent(new CustomEvent('gorod:tune',{detail:{id}})); }
+  window.GorodRail = { render, setActive, center };
+  document.addEventListener('DOMContentLoaded', render);
+  // Route hook: re-render (idempotent) whenever #/home becomes the active route.
+  // Self-contained listener — mirrors this file's established pattern of independent
+  // `hashchange` observers (e.g. updateHomeFabVisibility) rather than editing the
+  // shared activatePage()/routeFromHash() router.
+  window.addEventListener('hashchange', function(){
+    if ((window.location.hash || '') === '#/home') { window.GorodRail && GorodRail.render(); }
+  });
+})();
+</script>
 </body>
 </html>
