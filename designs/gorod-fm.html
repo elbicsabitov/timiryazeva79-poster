@@ -15848,5 +15848,35 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
   })();
   </script>
+<script>
+(function(){
+  // Real РМГ roster (brand-book set). Logos pending → null renders a monogram placeholder.
+  const S = [
+    {id:'gorod',   name:'Город ФМ',         freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'russkoe', name:'Русское Радио',    freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'hit',     name:'ХИТ FM',           freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'dfm',     name:'DFM',              freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'maximum', name:'MAXIMUM',          freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'mc',      name:'Radio Monte Carlo',freq:null, logo:null, streamUrl:null, kind:'live'},
+  ];
+  // Representative now-playing (source:'demo' — replaced by real ICY metadata when streamUrl exists).
+  const NP = {
+    gorod:{title:'Любимка', artist:'Niletto', source:'demo', ts:0},
+    russkoe:{title:'Я русский', artist:'SHAMAN', source:'demo', ts:0},
+    hit:{title:'Плачу на техно', artist:'Cream Soda', source:'demo', ts:0},
+    dfm:{title:"Baby Don't Hurt Me", artist:'David Guetta', source:'demo', ts:0},
+    maximum:{title:'Sonne', artist:'Rammstein', source:'demo', ts:0},
+    mc:{title:'Smooth Operator', artist:'Sade', source:'demo', ts:0},
+  };
+  let active = 'gorod';
+  window.GorodStations = {
+    list: S,
+    get active(){ return active; },
+    get(id){ return S.find(s=>s.id===id); },
+    nowPlaying(id){ return NP[id] || {title:'', artist:'', source:'demo', ts:0}; },
+    setActive(id){ if(S.some(s=>s.id===id)) active = id; return active; },
+  };
+})();
+</script>
 </body>
 </html>
