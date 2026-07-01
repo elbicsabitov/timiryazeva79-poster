@@ -25,6 +25,8 @@
 9. ✅ **Honest mini-cover** — `GorodPlayer.stationArt()` per-station SVG-monogram data-URI (was a stale «Слеза»/Егор-Крид PNG); static markup is a neutral «Г» monogram too (no first-paint flash).
 10. ✅ **Review + standalone** — adversarial code/anti-slop/a11y review → 6 fixes (H1/M2/M3/M4/M5/L9). Standalone regenerated fresh from dev (`.scratch/gorod2/regen_standalone.py`, Pillow webp-inline: 30 assets 39.8 MB→2.8 MB, **5.18 MB**); renders identically.
 
+**🖼️ TWO VERSIONS** (owner «заполни картинками по теме как в онбординге»): `designs/gorod-fm.html` = **monogram/placeholder** version (unchanged default); `designs/gorod-fm-images.html` = **thematic-photos** version (generated copy that sets `window.GOROD_PHOTOS=true`; same file also honours `?art=photos`). Photo fill via `window.GOROD_ART` (trailing script) reusing the onboarding-sourced assets — genre-*.jpg keyword-matched to categories, `library-artist`/`favs` faces for artists+friend avatars, `home-tile` vibes for moods/collections/editorial/programs, per-station vibe tile for the carousel + mini-cover. Renderers fall back to monograms when the flag is off. Regen: `node .scratch/gorod2/gen_images_version.cjs`. Both served at `http://127.0.0.1:8791/` and opened in the owner's Chrome for side-by-side compare.
+
 **Still GATED / follow-up (NOT blockers):**
 - **Owner real assets** — 6 РМГ station **logos** (have Monte Carlo only), Город ФМ **frequency**, live **stream URLs + ICY**, real catalog. Until then carousel/mini-cover use honest monograms.
 - **L7** — wire friend ▶/＋ (and vitrina cards, search `selectItem`) to real playback/nav (currently `console.log`/hooks; was inert pre-session too).
