@@ -19203,7 +19203,8 @@
   // Vertical geometries: circle / square / wide / portrait.
   // item: { title, meta?, badge?: { label, live? } }
   function buildCardVertical(item, geometry, shelfId, i) {
-    var card = el('button', { className: 'vcard vcard--' + geometry, attrs: { type: 'button' } });
+    // div (not <button>) so the ♥/＋ action buttons can nest validly; the card had no click action.
+    var card = el('div', { className: 'vcard vcard--' + geometry });
 
     var art = el('div', { className: 'shelf-art', attrs: { 'aria-hidden': 'true' } });
     var artSrc = (window.GOROD_ART && GOROD_ART.on()) ? GOROD_ART.shelf(shelfId, item.title, i) : null;
@@ -19223,6 +19224,7 @@
     if (item.meta) body.appendChild(el('div', { className: 'vcard-meta', text: item.meta }));
     card.appendChild(body);
 
+    card.appendChild(cardActions(item.title, 'vcard-actions--overlay'));
     return card;
   }
 
@@ -19256,6 +19258,7 @@
     body.appendChild(el('div', { className: 'vcard-row-title', text: item.title || '' }));
     if (item.meta) body.appendChild(el('div', { className: 'vcard-row-meta', text: item.meta }));
     top.appendChild(body);
+    top.appendChild(cardActions(item.title, 'vcard-actions--row'));
     card.appendChild(top);
 
     if (item.actionLabel) {
@@ -19272,28 +19275,32 @@
     return card;
   }
 
-  /* --- Друзья слушают: avatar + «слушает X» + ▶/＋ icon buttons (item 3) --- */
+  /* --- Card action buttons: ▶ play (friends) · ♥ like · ＋ add — on EVERY card
+         (item 3 + owner «чтоб везде можно было сердечко нажать и плюсик»). ♥/＋ toggle. --- */
   function iconSvg(kind) {
     var span = el('span', { className: 'vitrina-iconbtn-ic', attrs: { 'aria-hidden': 'true' } });
-    span.innerHTML = kind === 'play'
-      ? '<svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20" fill="currentColor"/></svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">'
-        + '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    if (kind === 'play') span.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20" fill="currentColor"/></svg>';
+    else if (kind === 'like') span.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.4 2 5 5.2 5c2 0 3.3 1.2 3.8 2.3h6c.5-1.1 1.8-2.3 3.8-2.3C22 5 23.6 8.4 22 11.7 19.5 16.4 12 21 12 21z"/></svg>';
+    else span.innerHTML = '<svg class="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+      + '<svg class="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
     return span;
   }
 
+  // kind: 'play' (inert future hook) | 'like' | 'add'. like/add toggle aria-pressed (delegated handler below).
   function friendIconBtn(kind, label, item) {
-    var btn = el('button', {
-      className: 'vitrina-iconbtn vitrina-iconbtn--' + kind,
-      attrs: {
-        type: 'button',
-        'aria-label': label,
-        'data-friend-action': kind,          // 'play' | 'add' — хук для будущей привязки
-        'data-friend-now': item.now || ''    // что именно слушает друг
-      }
-    });
+    var attrs = { type: 'button', 'aria-label': label, 'data-friend-action': kind, 'data-friend-now': (item && item.now) || '' };
+    if (kind === 'like' || kind === 'add') { attrs['aria-pressed'] = 'false'; attrs['data-vcard-toggle'] = kind; }
+    var btn = el('button', { className: 'vitrina-iconbtn vitrina-iconbtn--' + kind, attrs: attrs });
     btn.appendChild(iconSvg(kind));
     return btn;
+  }
+
+  // ♥ + ＋ group for any card (overlay on the art for vertical cards, right-aligned on rows).
+  function cardActions(title, extraCls) {
+    var g = el('div', { className: 'vcard-actions' + (extraCls ? ' ' + extraCls : '') });
+    g.appendChild(friendIconBtn('like', 'Нравится' + (title ? ': ' + title : ''), null));
+    g.appendChild(friendIconBtn('add', 'Добавить' + (title ? ': ' + title : ''), null));
+    return g;
   }
 
   // Замена buildCardRow ДЛЯ ДРУЗЕЙ. Возвращает готовый .vcard--row.
@@ -19316,6 +19323,7 @@
 
     var actions = el('div', { className: 'vcard-friend-actions' });
     actions.appendChild(friendIconBtn('play', 'Слушать то же: ' + what, item));
+    actions.appendChild(friendIconBtn('like', 'Нравится: ' + what, item));
     actions.appendChild(friendIconBtn('add', 'Добавить в плейлист: ' + what, item));
     top.appendChild(actions);
 
@@ -19545,7 +19553,15 @@
 
   function boot() {
     var mount = document.getElementById('vitrina');
-    if (mount) renderAll(mount);
+    if (!mount) return;
+    renderAll(mount);
+    // ♥ / ＋ toggle — delegated so it covers every card (current + future renders).
+    mount.addEventListener('click', function (e) {
+      var b = (e.target && e.target.closest) ? e.target.closest('[data-vcard-toggle]') : null;
+      if (!b || !mount.contains(b)) return;
+      e.preventDefault();
+      b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    });
   }
 
   if (document.readyState === 'loading') {
@@ -20140,6 +20156,24 @@
   .vitrina .vcard-row-media.has-photo,
   .vitrina .vcard-row-media--avatar.has-photo { padding:0; overflow:hidden; background:var(--surface-2); }
   .vitrina .vcard-avatar-img { width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* ♥ / ＋ actions on EVERY card (owner «чтоб везде можно было сердечко и плюсик») */
+  .vitrina .vcard { position:relative; }
+  .vitrina .vcard-actions { display:flex; align-items:center; gap:6px; }
+  .vitrina .vcard-actions--overlay { position:absolute; top:14px; right:14px; z-index:2; }
+  .vitrina .vcard-actions--row { margin-left:auto; flex:none; padding-left:6px; }
+  .vitrina .vcard--row .vitrina-iconbtn { width:40px; height:40px; }        /* fit ▶♥＋ / ♥＋ on rows */
+  .vitrina .vcard-actions--overlay .vitrina-iconbtn { width:34px; height:34px; border-color:transparent;
+    background:rgba(11,12,15,.55); color:#fff; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .vitrina .vcard-actions--overlay .vitrina-iconbtn:hover { background:rgba(11,12,15,.8); border-color:transparent; }
+  .vitrina .vcard-actions--overlay .vitrina-iconbtn svg { width:17px; height:17px; }
+  .vitrina .vitrina-iconbtn--like svg { fill:none; stroke:currentColor; stroke-width:2; }
+  .vitrina .vitrina-iconbtn--like[aria-pressed="true"] { color:var(--brand-blue-light); }
+  .vitrina .vitrina-iconbtn--like[aria-pressed="true"] svg { fill:currentColor; stroke:none; }
+  .vitrina .vitrina-iconbtn--add .i-check { display:none; }
+  .vitrina .vitrina-iconbtn--add[aria-pressed="true"] { color:var(--brand-blue-light); }
+  .vitrina .vitrina-iconbtn--add[aria-pressed="true"] .i-plus { display:none; }
+  .vitrina .vitrina-iconbtn--add[aria-pressed="true"] .i-check { display:block; }
 
   @media (max-width: 768px) {
     /* topbar is hidden on mobile → drop the home full-bleed negative margins so the
