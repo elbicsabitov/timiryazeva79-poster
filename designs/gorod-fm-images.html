@@ -20204,11 +20204,17 @@
     var TILE_POOL = ['home-tile-chill.png','home-tile-k-pop.png','home-tile-pop-gold-2010s.png','home-tile-discach-90.png','home-tile-z-city-show.png','home-tile-dfm-chill-far.png','genre-disco.jpg','genre-pop.jpg','genre-electro.jpg','genre-lofi.jpg','genre-rock.jpg','genre-jazz.jpg','genre-rnb.jpg','genre-indie.jpg'];
     var ARTIST_POOL = ['library-artist-a-studio.png','library-artist-afina.png','library-artist-aigel.png','library-artist-ak-47.png','library-artist-akvarium.png','library-artist-alisa.png','library-artist-alsmi.png','library-artist-alsu.png','library-artist-alyans.png','library-artist-anet-sai.png','library-artist-ani-lorak.png','library-artist-anna-vorobey.png','library-artist-anton-tokarev.png','library-artist-ariya.png','library-artist-arthur-pirozhkov.png','library-artist-artur.png','library-artist-asia.png','favs-artist-akon.png','favs-artist-mia-boyka.png','favs-artist-ramil.png','favs-group-bernhoft.png','favs-group-my-darkest-days.png','favs-dj-martin-garrix.png'];
     var STATION = { gorod:'home-tile-z-city-show.png', russkoe:'genre-pop.jpg', hit:'genre-disco.jpg', dfm:'genre-electro.jpg', maximum:'genre-rock.jpg', mc:'genre-jazz.jpg' };
-    function at(pool, i) { i = i || 0; var n = pool.length; return B + pool[((i % n) + n) % n]; }
-    function genreMatch(t) { t = (t || '').toLowerCase(); for (var j = 0; j < GENRE_MATCH.length; j++) { if (t.indexOf(GENRE_MATCH[j][0]) >= 0) return B + GENRE_MATCH[j][1]; } return null; }
+    /* The offline standalone injects a resolver that maps assets/... -> its inlined data URI.
+       Renderers hand these paths straight into innerHTML <img src="…">, and the HTML parser
+       starts that fetch before the standalone's setAttribute/MutationObserver patches can
+       rewrite it — the picture still appears, but a dead file request + console error already
+       happened. So resolve here, at the source. Served dev: no resolver → path unchanged. */
+    function R(p) { return (window.GOROD_OFFLINE_RESOLVE ? window.GOROD_OFFLINE_RESOLVE(p) : p); }
+    function at(pool, i) { i = i || 0; var n = pool.length; return R(B + pool[((i % n) + n) % n]); }
+    function genreMatch(t) { t = (t || '').toLowerCase(); for (var j = 0; j < GENRE_MATCH.length; j++) { if (t.indexOf(GENRE_MATCH[j][0]) >= 0) return R(B + GENRE_MATCH[j][1]); } return null; }
     window.GOROD_ART = {
       on: function () { return window.GOROD_PHOTOS === true || /(?:[?&])art=photos\b/.test(window.location.search || ''); },
-      station: function (id) { return STATION[id] ? B + STATION[id] : at(GENRE_POOL, 0); },
+      station: function (id) { return STATION[id] ? R(B + STATION[id]) : at(GENRE_POOL, 0); },
       avatar: function (name, i) { return at(ARTIST_POOL, i); },
       shelf: function (shelfId, title, i) {
         if (shelfId === 'vitrina-genres') return genreMatch(title) || at(GENRE_POOL, i);
