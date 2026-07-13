@@ -9258,7 +9258,7 @@
              а главная — не-AI радио-витрина, поэтому она «Радио» (иконка-сигнал остаётся та же).
              Folds the old Лайвы/Подборки/Медиатека/Избранное into 'Открыть'. -->
 
-        <!-- Радио — станции РМГ в прямом эфире + музыкальная витрина -->
+        <!-- Радио — цифровые станции «Города» в прямом эфире + музыкальная витрина -->
         <a href="#/home" class="sidebar-item" data-route="#/home" aria-label="Радио">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M2 12h2.5l2-6 3 12 3-9 2 5 2.5-2H22"/>
@@ -9488,7 +9488,7 @@
               </div>
               <div class="map-card-body">
                 <div class="map-card-title">Страница трека</div>
-                <div class="map-card-subtitle">Monte Carlo adapted · cover + lyrics + история</div>
+                <div class="map-card-subtitle">Лаундж-раскладка · cover + lyrics + история</div>
               </div>
             </a>
 
@@ -9554,7 +9554,7 @@
               </div>
               <div class="map-card-body">
                 <div class="map-card-title">Плеер</div>
-                <div class="map-card-subtitle">Mini bar + full Monte Carlo overlay (открыть из любого экрана)</div>
+                <div class="map-card-subtitle">Mini bar + полноэкранный плеер (открыть из любого экрана)</div>
               </div>
             </button>
 
@@ -9732,11 +9732,11 @@
             <!-- 8: DFM CHILL — Figma 2174:469 left=100%+193 w=373 top=240 h=628 (mostly off-screen right) -->
             <button class="home-tile" type="button" role="listitem"
                     style="--x: calc(100% + 193px); --w: 373px; --h: 628px; --top: -33px;"
-                    data-label="DFM CHILL"
-                    aria-label="Открыть подборку DFM CHILL">
+                    data-label="ГОРОД CHILL"
+                    aria-label="Открыть подборку ГОРОД CHILL">
               <div class="home-tile-bg" style="background-image:url(assets/gorod-fm/home-tile-dfm-chill-far.png);"></div>
               <div class="home-tile-shade"></div>
-              <div class="home-tile-label-wrap"><span class="home-tile-label">DFM CHILL</span></div>
+              <div class="home-tile-label-wrap"><span class="home-tile-label">ГОРОД CHILL</span></div>
             </button>
 
             <!-- Bg blur halo behind featured (Figma 2174:530, top=438 in artboard) -->
@@ -10365,15 +10365,15 @@
             </button>
 
             <button class="artist-station-chip" type="button" role="listitem"
-              data-station-id="chill" aria-label="DFM CHILL 104.5 FM">
+              data-station-id="chill" aria-label="Город Chill, цифровая станция">
               <svg class="artist-station-eq" aria-hidden="true" viewBox="0 0 18 14">
                 <rect x="1"  y="8" width="2.5" height="6"  rx="1.25" fill="currentColor"/>
                 <rect x="5"  y="5" width="2.5" height="9"  rx="1.25" fill="currentColor"/>
                 <rect x="9"  y="3" width="2.5" height="11" rx="1.25" fill="currentColor"/>
                 <rect x="13" y="6" width="2.5" height="8"  rx="1.25" fill="currentColor"/>
               </svg>
-              <span class="artist-station-name">DFM CHILL</span>
-              <span class="artist-station-freq">104.5 FM</span>
+              <span class="artist-station-name">Город Chill</span>
+              <span class="artist-station-freq">цифровая</span>
             </button>
 
             <button class="artist-station-chip" type="button" role="listitem"
@@ -11048,15 +11048,15 @@
 
           <!-- Row 10: station -->
           <div class="favorites-row" role="listitem" tabindex="0"
-            data-fav-type="station" data-fav-title="DFM CHILL"
-            aria-label="DFM CHILL, станция, 104.5 FM">
+            data-fav-type="station" data-fav-title="Город Chill"
+            aria-label="Город Chill, цифровая станция">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
-              <span class="favorites-row-title">DFM CHILL</span>
-              <span class="favorites-row-sub">станция · 104.5 FM</span>
+              <span class="favorites-row-title">Город Chill</span>
+              <span class="favorites-row-sub">станция · цифровая</span>
             </div>
             <span class="favorites-type-badge favorites-type-badge--station" aria-hidden="true">СТАНЦИЯ</span>
-            <span class="favorites-row-info" aria-hidden="true">104.5</span>
+            <span class="favorites-row-info" aria-hidden="true">24/7</span>
             <button class="favorites-heart-btn" type="button" aria-pressed="true" aria-label="Убрать из избранного">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="currentColor"/></svg>
             </button>
@@ -13648,8 +13648,8 @@
           { label: 'Z. CITY SHOW',   img: 'assets/gorod-fm/podborki-tile-z-city-show.png' },
           { label: 'VADIM ADAMOV',   img: 'assets/gorod-fm/podborki-tile-vadim-adamov.png' },
           { label: 'DJ PITKIN',      img: 'assets/gorod-fm/podborki-tile-dj-pitkin.png' },
-          { label: 'DFM CHILL',      img: 'assets/gorod-fm/podborki-tile-dfm-chill-base.png' },
-          { label: 'DFM CHILL',      img: 'assets/gorod-fm/podborki-tile-dfm-chill-base.png', overlay: 'assets/gorod-fm/podborki-tile-dfm-chill-overlay.png' },
+          { label: 'ГОРОД CHILL',    img: 'assets/gorod-fm/podborki-tile-dfm-chill-base.png' },
+          { label: 'ГОРОД CHILL',    img: 'assets/gorod-fm/podborki-tile-dfm-chill-base.png', overlay: 'assets/gorod-fm/podborki-tile-dfm-chill-overlay.png' },
         ];
 
         function makeMobileTile(t, idx) {
@@ -14771,7 +14771,7 @@
       gorod: { dj: 'Сигнал', c: '#5168FC', station: 'Город ФМ',
         about: 'городской эфир: что играет, почему цепляет, как это собрано',
         lines: [
-          'Сейчас «{t}» — {a}. Тёплый поп-вокал, темп около сотни: ровно тот, на котором город едет домой.',
+          'Сейчас «{t}» — {a}. Тёплый вокал, темп около сотни: ровно тот, на котором город едет домой.',
           'Приём, который держит этот припев: строку повторяют трижды — и на третий раз её уже подпевают. Так пишут песни для радио.',
           'Слышишь бэки вторым планом? Их дублируют, чтобы припев казался шире, чем он есть. Старый радийный трюк.',
           'Между треками у меня нет пауз: следующий вход кладу по восьмёркам, чтобы эфир не проваливался.',
@@ -14779,28 +14779,19 @@
           'Такие цепкие припевы живут в ротации дольше остальных — их не успевают надоесть, их успевают полюбить.',
           'Хочешь, разберу, из чего собран звук {a}? Просто спроси меня здесь.'
         ] },
-      russkoe: { dj: 'Припев', c: '#f6a26a', station: 'Русское Радио',
-        about: 'русская песня: слово, мелодия, как устроен припев',
+      pop: { dj: 'Припев', c: '#f6a26a', station: 'Город Поп',
+        about: 'песня и хит: как устроен припев и почему он взлетает',
         lines: [
-          'В эфире «{t}» — {a}. Русская песня всегда начинается со слова: мелодию тут строят под текст, а не наоборот.',
+          'В эфире «{t}» — {a}. Поп начинается со слова: мелодию тут строят под текст, а не наоборот.',
           'Смотри на конструкцию: куплет — предприпев — припев. Предприпев работает разгоном, поэтому припев бьёт сильнее.',
+          'Первые семь секунд решают всё. Не зацепило — переключат; поэтому припев приходит раньше, чем ты его ждёшь.',
+          'В чарт такие вещи заносит не радио, а слушатель: сначала репит, потом ротация.',
           'К финалу тональность часто поднимают на полтона — и последний припев звучит на разрыв. Приём старый, работает до сих пор.',
-          'В нашем формате ценится спетость: живой вокал и минимум подстройки, чтобы песня звучала как разговор.',
-          'Радио — не плейлист, а драматургия: после тяжёлой песни всегда идёт лёгкая. Сейчас как раз такой поворот.',
-          'Спроси, почему этот припев запоминается с первого раза — расскажу, где там крючок.'
+          'Побеждает не громкость, а узнаваемость: мотив, который можно напеть без слов.',
+          'Спроси, почему этот припев запоминается с первого раза — покажу, где там крючок.'
         ] },
-      hit: { dj: 'Чарт', c: '#3fb6a8', station: 'ХИТ FM',
-        about: 'хиты и чарты: что взлетает и почему',
-        lines: [
-          'Сейчас «{t}» — {a}. В чарт такие вещи заносит не радио, а слушатель: сначала репит, потом ротация.',
-          'Хит-формат простой: первые семь секунд решают всё. Не зацепило — переключат.',
-          'Заметь, припев приходит раньше, чем ты его ждёшь. Это осознанно: хит не заставляет ждать.',
-          'В чартах выигрывает не громкость, а узнаваемость — мотив, который можно напеть без слов.',
-          'Танцевальные хиты живут короче, поп-хиты дольше. Поэтому мы крутим и те, и другие.',
-          'Спроси, что сейчас поднимается в ротации — покажу, что растёт.'
-        ] },
-      dfm: { dj: 'Бит', c: '#8b6df6', station: 'DFM',
-        about: 'танцевальная сцена: грув, ремиксы, темп',
+      disco: { dj: 'Бит', c: '#8b6df6', station: 'Город Диско',
+        about: 'танцевальное: грув, ремиксы, темп',
         lines: [
           'В эфире «{t}» — {a}. Танцевальный формат живёт на 120–128 ударах: это темп, на котором тело само попадает в шаг.',
           'Слушай перед дропом: бас убирают полностью. Именно поэтому его возвращение ощущается как удар.',
@@ -14809,25 +14800,45 @@
           'Между треками держу бит: перехожу по шестнадцать тактов, чтобы танцпол не провалился.',
           'Скажи словами, если нужно плотнее или спокойнее — переставлю линию.'
         ] },
-      maximum: { dj: 'Фузз', c: '#ff8a8a', station: 'MAXIMUM',
+      rock: { dj: 'Фузз', c: '#ff8a8a', station: 'Город Рок',
         about: 'рок: гитары, альбомы, как это записано',
         lines: [
           'Сейчас «{t}» — {a}. Гитара звучит толсто из-за двойного дубля: одну партию пишут дважды и разводят по каналам.',
-          'Рок-радио — про альбом, а не про сингл. Поэтому в эфире встречается то, что в чартах не было никогда.',
+          'Рок-канал — про альбом, а не про сингл. Поэтому здесь встречается то, что в чартах не было никогда.',
           'Слышишь, как дышат барабаны? Это компрессия: подтягивает тихое, придерживает громкое.',
           'Стадионный припев — это две ноты и много воздуха. Всё, что сложнее, толпа не подхватит.',
-          'Формат держится на контрасте: после тяжёлого ставлю мелодичное, иначе ухо устаёт за час.',
+          'Держу контраст: после тяжёлого ставлю мелодичное, иначе ухо устаёт за час.',
           'Спроси про любой рифф — разберу, из чего он собран.'
         ] },
-      mc: { dj: 'Бархат', c: '#caa6ff', station: 'Radio Monte Carlo',
-        about: 'лаундж и джаз: атмосфера, паузы, звук',
+      hiphop: { dj: 'Флоу', c: '#3fb6a8', station: 'Город Хип-хоп',
+        about: 'хип-хоп: бит, флоу, punchline',
         lines: [
-          'В эфире «{t}» — {a}. Здесь всё держится на паузе: в лаундже тишина между нотами важнее самих нот.',
+          'В эфире «{t}» — {a}. Слушай не слова, а как они ложатся на бит: флоу — это ритм поверх ритма.',
+          'Бит здесь простой намеренно: чем меньше в нём событий, тем больше места голосу.',
+          'Хороший панчлайн держат паузой. Тишина перед строкой работает сильнее самой строки.',
+          'Бас и бочка делят один диапазон — их разводят по времени, иначе низ превращается в кашу.',
+          'Куплет длиннее припева — редкость для радио, но здесь именно куплет и есть аттракцион.',
+          'Спроси, из чего собран этот бит — разберу по слоям.'
+        ] },
+      chill: { dj: 'Бархат', c: '#caa6ff', station: 'Город Chill',
+        about: 'лаундж: атмосфера, паузы, воздух',
+        lines: [
+          'В эфире «{t}» — {a}. Здесь всё держится на паузе: тишина между нотами важнее самих нот.',
           'Саксофон не играет мелодию — он её договаривает. Поэтому его ставят после строки, а не поверх неё.',
           'Слышишь, что бас идёт чуть позже доли? Это свинг: так музыка перестаёт быть ровной.',
-          'Наш формат не требует внимания. Он его возвращает — когда ты сам захочешь.',
-          'Вечер на Monte Carlo собирается как ужин: сначала лёгкое, к полуночи — самое густое.',
+          'Этот канал не требует внимания. Он его возвращает — когда ты сам захочешь.',
+          'Вечер здесь собирается как ужин: сначала лёгкое, к полуночи — самое густое.',
           'Скажи, если нужно прозрачнее или плотнее — подстрою атмосферу.'
+        ] },
+      lirika: { dj: 'Струна', c: '#6df6c0', station: 'Город Лирика',
+        about: 'медленное: голос, текст, динамика',
+        lines: [
+          'Сейчас «{t}» — {a}. В балладе главный инструмент — дыхание: паузы певца слышно так же, как ноты.',
+          'Динамика здесь важнее громкости: тихий куплет существует ради того, чтобы припев показался огромным.',
+          'Аранжировка нарастает слоями — сначала голос, потом струнные, и только в конце барабаны.',
+          'Медленная песня прощает слушателю всё, кроме фальши: поэтому её почти не правят в студии.',
+          'Такие вещи ставят между быстрыми не для отдыха, а чтобы вернуть тебе внимание.',
+          'Спроси, о чём эта песня на самом деле — разберу текст.'
         ] }
     };
 
@@ -14867,7 +14878,7 @@
         ]
       };
     });
-    /* станция → комната: теперь 1:1 (id станции РМГ = id комнаты диджея) */
+    /* станция → комната: 1:1 (id цифровой станции = id комнаты её диджея) */
     var STATION_TO_ROOM = {};
     var STATION_LABEL = {};
     Object.keys(DJS).forEach(function (id) { STATION_TO_ROOM[id] = id; STATION_LABEL[id] = DJS[id].station; });
@@ -18410,7 +18421,7 @@
       {n:'CHILL',w:252,img:'assets/gorod-fm/podborki-tile-chill.png',rel:'Ближе к твоим вечерним ~70 BPM'},
       {n:'ДИСКАЧ 90-х',w:260,img:'assets/gorod-fm/podborki-tile-discach-90.png',rel:'Новое для тебя — диско-эпоха'},
       {n:'K-POP',w:248,img:'assets/gorod-fm/podborki-tile-k-pop.png',rel:'Шаг в сторону от твоего вектора'},
-      {n:'DFM Chill',w:300,img:'assets/gorod-fm/podborki-tile-dfm-chill-base.png',rel:'Спокойнее, чем твоя волна'},
+      {n:'Город Chill',w:300,img:'assets/gorod-fm/podborki-tile-dfm-chill-base.png',rel:'Спокойнее, чем твоя волна'},
       {n:'Z. City Show',w:300,img:'assets/gorod-fm/podborki-tile-z-city-show.png',rel:'Шоу редакции — живой эфир'},
       {n:'Vadim Adamov',w:300,img:'assets/gorod-fm/podborki-tile-vadim-adamov.png',rel:'Диджей-сет рядом с поп-вектором'},
       {n:'DJ Pitkin',w:252,img:'assets/gorod-fm/podborki-tile-dj-pitkin.png',rel:'Танцевальный — дальше от твоего'}
@@ -18951,23 +18962,30 @@
   </script>
 <script>
 (function(){
-  // Real РМГ roster (brand-book set). Logos pending → null renders a monogram placeholder.
+  /* ЦИФРОВЫЕ СТАНЦИИ «ГОРОДА» (owner 13.07: «убери DFM, ХитФМ и так далее — чисто цифровые
+     станции на главной»). Соседних FM-брендов холдинга на витрине больше нет: это продукт
+     «Города», и в эфире у него свои каналы. Все — живые цифровые стримы, поэтому freq=null
+     у ВСЕХ (частота бывает у FM, у цифрового канала её нет). Логотипы ждём от клиента →
+     null рисует честную монограмму. */
   const S = [
-    {id:'gorod',   name:'Город ФМ',         freq:null, logo:null, streamUrl:null, kind:'live'},
-    {id:'russkoe', name:'Русское Радио',    freq:null, logo:null, streamUrl:null, kind:'live'},
-    {id:'hit',     name:'ХИТ FM',           freq:null, logo:null, streamUrl:null, kind:'live'},
-    {id:'dfm',     name:'DFM',              freq:null, logo:null, streamUrl:null, kind:'live'},
-    {id:'maximum', name:'MAXIMUM',          freq:null, logo:null, streamUrl:null, kind:'live'},
-    {id:'mc',      name:'Radio Monte Carlo',freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'gorod',  name:'Город ФМ',      freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'pop',    name:'Город Поп',     freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'disco',  name:'Город Диско',   freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'rock',   name:'Город Рок',     freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'hiphop', name:'Город Хип-хоп', freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'chill',  name:'Город Chill',   freq:null, logo:null, streamUrl:null, kind:'live'},
+    {id:'lirika', name:'Город Лирика',  freq:null, logo:null, streamUrl:null, kind:'live'},
   ];
-  // Representative now-playing (source:'demo' — replaced by real ICY metadata when streamUrl exists).
+  // Демо now-playing — треки, которые УЖЕ живут в приложении (лента друзей / витрина), а не выдуманные.
+  // source:'demo' → заменится реальными ICY-метаданными, когда появятся streamUrl.
   const NP = {
-    gorod:{title:'Любимка', artist:'Niletto', source:'demo', ts:0},
-    russkoe:{title:'Я русский', artist:'SHAMAN', source:'demo', ts:0},
-    hit:{title:'Плачу на техно', artist:'Cream Soda', source:'demo', ts:0},
-    dfm:{title:"Baby Don't Hurt Me", artist:'David Guetta', source:'demo', ts:0},
-    maximum:{title:'Sonne', artist:'Rammstein', source:'demo', ts:0},
-    mc:{title:'Smooth Operator', artist:'Sade', source:'demo', ts:0},
+    gorod:{title:'Любимка', artist:'NILETTO', source:'demo', ts:0},
+    pop:{title:'Феникс', artist:'ANNA ASTI', source:'demo', ts:0},
+    disco:{title:'Life', artist:'Zivert', source:'demo', ts:0},
+    rock:{title:'Enemy', artist:'Imagine Dragons', source:'demo', ts:0},
+    hiphop:{title:'Бенз', artist:'MACAN', source:'demo', ts:0},
+    chill:{title:'Space Song', artist:'Beach House', source:'demo', ts:0},
+    lirika:{title:'Комета', artist:'JONY', source:'demo', ts:0},
   };
   let active = 'gorod';
   window.GorodStations = {
@@ -19206,19 +19224,19 @@
      avatar:true → кружок-монограмма. actionLabel НЕ задаём (новый рендер даёт ▶ / ＋). */
   var FRIENDS = [
     ['Артём К.',  'Потрачу — Егор Крид',              'Город ФМ'],
-    ['Соня Л.',   'Русское Радио',                    'Русское Радио'],
-    ['Данияр С.', 'Life — Zivert',                    'DFM'],
-    ['Марина П.', 'Kosandra — Miyagi & Andy Panda',   'MAXIMUM'],
-    ['Игорь В.',  'подборку «Ретро 90-х»',            'Город ФМ'],
-    ['Алина Т.',  'Феникс — ANNA ASTI',               'Русское Радио'],
-    ['Максим Р.', 'Любимка — NILETTO',                'ХИТ FM'],
-    ['Камила Ж.', 'Грустный дэнс — Артик & Асти',     'ХИТ FM'],
-    ['Тимур А.',  'Бенз — MACAN',                     'MAXIMUM'],
-    ['Лера М.',   'Солнце Монако — Люся Чеботина',    'Русское Радио'],
-    ['Никита Д.', 'DFM',                              'DFM'],
-    ['Полина Г.', 'Комета — JONY',                    'Город ФМ'],
-    ['Руслан Х.', 'Птичка — HammAli & Navai',         'ХИТ FM'],
-    ['Вика С.',   'подборку «Вечер в городе»',        'Radio Monte Carlo']
+    ['Соня Л.',   'Город Лирика',                     'Город Лирика'],
+    ['Данияр С.', 'Life — Zivert',                    'Город Диско'],
+    ['Марина П.', 'Kosandra — Miyagi & Andy Panda',   'Город Хип-хоп'],
+    ['Игорь В.',  'подборку «Ретро 90-х»',            'Город Диско'],
+    ['Алина Т.',  'Феникс — ANNA ASTI',               'Город Поп'],
+    ['Максим Р.', 'Любимка — NILETTO',                'Город ФМ'],
+    ['Камила Ж.', 'Грустный дэнс — Артик & Асти',     'Город Поп'],
+    ['Тимур А.',  'Бенз — MACAN',                     'Город Хип-хоп'],
+    ['Лера М.',   'Солнце Монако — Люся Чеботина',    'Город Поп'],
+    ['Никита Д.', 'Город Диско',                      'Город Диско'],
+    ['Полина Г.', 'Комета — JONY',                    'Город Лирика'],
+    ['Руслан Х.', 'Птичка — HammAli & Navai',         'Город Лирика'],
+    ['Вика С.',   'подборку «Вечер в городе»',        'Город Chill']
   ].map(function (f) {
     return { title: f[0], avatar: true, now: f[1], station: f[2], meta: 'слушает ' + f[1] };
   });
@@ -19706,12 +19724,12 @@
   function buildDemoShelves() {
     if (window.GOROD_VITRINA_CONTENT) return window.GOROD_VITRINA_CONTENT; // rich dataset (item 4)
     var friends = [
-      { title: 'Артём К.', meta: 'слушает Авторадио' },
+      { title: 'Артём К.', meta: 'слушает Город ФМ' },
       { title: 'Соня Л.', meta: 'слушает «Городские хиты»' },
       { title: 'Данияр С.', meta: 'слушает Zivert — Life' },
-      { title: 'Марина П.', meta: 'слушает DFM Dance' },
+      { title: 'Марина П.', meta: 'слушает Город Диско' },
       { title: 'Игорь В.', meta: 'слушает подборку «90-е»' },
-      { title: 'Алина Т.', meta: 'слушает Русское Радио' },
+      { title: 'Алина Т.', meta: 'слушает Город Поп' },
       { title: 'Максим Р.', meta: 'слушает Niletto — Любимка' }
     ].map(function (f) {
       return { title: f.title, meta: f.meta, avatar: true, actionLabel: 'Слушать то же' };
@@ -19851,10 +19869,10 @@
 
   var DEMO_SHOWS = [
     { title: 'Z.CITY SHOW',       subtitle: 'Город ФМ · вечернее шоу' },
-    { title: 'Вечерний Джаз',     subtitle: 'Radio Monte Carlo · 20:00' },
-    { title: 'Утренний драйв',    subtitle: 'Русское Радио · утро' },
-    { title: 'Топ-40 недели',     subtitle: 'ХИТ FM · выходные' },
-    { title: 'Ночной эфир',       subtitle: 'MAXIMUM · ночь' }
+    { title: 'Вечерний Джаз',     subtitle: 'Город Chill · 20:00' },
+    { title: 'Утренний драйв',    subtitle: 'Город ФМ · утро' },
+    { title: 'Топ-40 недели',     subtitle: 'Город Поп · выходные' },
+    { title: 'Ночной эфир',       subtitle: 'Город Рок · ночь' }
   ];
 
   var DEMO_GENRES = ['Поп', 'Рок', 'Хип-хоп', 'Электроника', 'Джаз'];
@@ -20461,7 +20479,7 @@
     var GENRE_POOL = ['genre-pop.jpg','genre-rock.jpg','genre-disco.jpg','genre-electro.jpg','genre-rap.jpg','genre-jazz.jpg','genre-indie.jpg','genre-lofi.jpg','genre-rnb.jpg','genre-classic.jpg','genre-metal.jpg','genre-hiphop.jpg'];
     var TILE_POOL = ['home-tile-chill.png','home-tile-k-pop.png','home-tile-pop-gold-2010s.png','home-tile-discach-90.png','home-tile-z-city-show.png','home-tile-dfm-chill-far.png','genre-disco.jpg','genre-pop.jpg','genre-electro.jpg','genre-lofi.jpg','genre-rock.jpg','genre-jazz.jpg','genre-rnb.jpg','genre-indie.jpg'];
     var ARTIST_POOL = ['library-artist-a-studio.png','library-artist-afina.png','library-artist-aigel.png','library-artist-ak-47.png','library-artist-akvarium.png','library-artist-alisa.png','library-artist-alsmi.png','library-artist-alsu.png','library-artist-alyans.png','library-artist-anet-sai.png','library-artist-ani-lorak.png','library-artist-anna-vorobey.png','library-artist-anton-tokarev.png','library-artist-ariya.png','library-artist-arthur-pirozhkov.png','library-artist-artur.png','library-artist-asia.png','favs-artist-akon.png','favs-artist-mia-boyka.png','favs-artist-ramil.png','favs-group-bernhoft.png','favs-group-my-darkest-days.png','favs-dj-martin-garrix.png'];
-    var STATION = { gorod:'home-tile-z-city-show.png', russkoe:'genre-pop.jpg', hit:'genre-disco.jpg', dfm:'genre-electro.jpg', maximum:'genre-rock.jpg', mc:'genre-jazz.jpg' };
+    var STATION = { gorod:'home-tile-z-city-show.png', pop:'genre-pop.jpg', disco:'genre-disco.jpg', rock:'genre-rock.jpg', hiphop:'genre-hiphop.jpg', chill:'genre-lofi.jpg', lirika:'genre-rnb.jpg' };
     /* The offline standalone injects a resolver that maps assets/... -> its inlined data URI.
        Renderers hand these paths straight into innerHTML <img src="…">, and the HTML parser
        starts that fetch before the standalone's setAttribute/MutationObserver patches can
