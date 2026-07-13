@@ -537,6 +537,25 @@ def main() -> int:
         print(f"  image optimization: {len(_SAVINGS)} images, {saved / 1024 / 1024:.1f} MB saved")
     print(f"  Source: {size_in:,} bytes -> Standalone: {size_out:,} bytes")
 
+    # ── ГЕЙТ: сборка не считается собранной, пока не доказано, что она живёт ОФЛАЙН ──
+    # 13.07.2026 мы едва не отправили клиенту standalone, в котором рантайм-пути к картинкам
+    # остались относительными: из designs/ они резолвились соседней папкой assets/ и дыра была
+    # НЕ ВИДНА. Прибор стоял не в той комнате. Теперь билд сам себя проверяет и падает.
+    # У проверки есть негативный контроль: check_standalone_offline.py --selftest
+    from check_standalone_offline import check as _check_offline   # noqa: PLC0415
+
+    problems = _check_offline(out_html, html)
+    if problems:
+        print(f"\n  FAIL: сборка НЕ работает офлайн ({len(problems)} нарушений):")
+        for p in problems[:12]:
+            print("    - " + p)
+        if len(problems) > 12:
+            print(f"    ... и ещё {len(problems) - 12}")
+        print("    Файл записан, но отправлять его НЕЛЬЗЯ. Диагностика:")
+        print("      python tools/check_standalone_offline.py --selftest")
+        return 1
+    print("  offline gate: OK (карта покрывает все пути, которые рантайм способен склеить)")
+
     return 0
 
 
