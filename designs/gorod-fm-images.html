@@ -9253,15 +9253,17 @@
       <a href="#/home" class="sidebar-logo" aria-label="Город ФМ — на главную">Город.fm</a>
 
       <nav class="sidebar-nav">
-        <!-- 3-tab IA (UX research 08): Волна / Мой вкус / Открыть.
+        <!-- 3-tab IA (UX research 08): Радио / Мой вкус / Открыть.
+             «Волна» освободили: это слово теперь принадлежит будущей AI-вкладке «Моя волна»,
+             а главная — не-AI радио-витрина, поэтому она «Радио» (иконка-сигнал остаётся та же).
              Folds the old Лайвы/Подборки/Медиатека/Избранное into 'Открыть'. -->
 
-        <!-- Волна — ваше адаптивное радио (now-playing + живая волна) -->
-        <a href="#/home" class="sidebar-item" data-route="#/home" aria-label="Волна">
+        <!-- Радио — станции РМГ в прямом эфире + музыкальная витрина -->
+        <a href="#/home" class="sidebar-item" data-route="#/home" aria-label="Радио">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M2 12h2.5l2-6 3 12 3-9 2 5 2.5-2H22"/>
           </svg>
-          Волна
+          Радио
         </a>
 
         <!-- Мой вкус — живой редактируемый Twinr-профиль -->
@@ -11595,8 +11597,8 @@
       <!-- HEADER — clickable room-switcher row + collapse chevron -->
       <div class="rail-head rail-expanded-only">
         <button class="rail-room-btn" id="rail-room-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="rail-rooms">
-          <span class="rail-room-pin" id="rail-room-pin" aria-hidden="true">📌</span>
-          <span class="rail-room-name" id="rail-room-name">Общий эфир</span>
+          <span class="rail-room-pin" id="rail-room-pin" aria-hidden="true">🎙</span>
+          <span class="rail-room-name" id="rail-room-name">Сигнал · Город ФМ</span>
           <span class="rail-room-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </button>
         <button class="rail-collapse" id="rail-collapse" type="button" aria-label="Свернуть чат в полосу">
@@ -11607,17 +11609,17 @@
         </button>
       </div>
 
-      <!-- room-switcher dropdown (📌 Общий эфир pinned + seeded demo station rooms) -->
-      <div class="rail-rooms rail-expanded-only" id="rail-rooms" role="menu" aria-label="Выбрать комнату чата"></div>
+      <!-- переключатель станций: у каждой станции свой ИИ-диджей (играющая приколота сверху) -->
+      <div class="rail-rooms rail-expanded-only" id="rail-rooms" role="menu" aria-label="Выбрать станцию — её диджея"></div>
 
       <!-- NOW-PLAYING CONTEXT — room «почему» collapsed to 1 line; tap-to-expand (static, not live) -->
-      <button class="rail-ctx rail-expanded-only" id="rail-ctx" type="button" aria-expanded="false" aria-label="Описание комнаты — раскрыть">
+      <button class="rail-ctx rail-expanded-only" id="rail-ctx" type="button" aria-expanded="false" aria-label="Кто ведёт эфир — раскрыть">
         <div class="rail-ctx-cover" id="rail-ctx-cover" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3" fill="#fff" stroke="none"/><circle cx="18" cy="16" r="3" fill="#fff" stroke="none"/></svg>
         </div>
         <div class="rail-ctx-body">
-          <div class="rail-ctx-title" id="rail-ctx-title">Общий эфир</div>
-          <div class="rail-ctx-why" id="rail-ctx-why">Здесь обсуждают то, что играет у каждого. <b>Демо-комната.</b></div>
+          <div class="rail-ctx-title" id="rail-ctx-title">Сигнал · ИИ-диджей «Города ФМ»</div>
+          <div class="rail-ctx-why" id="rail-ctx-why">Рассказывает про то, что играет прямо сейчас. <b>Демо: реплики сценарные.</b></div>
         </div>
         <span class="rail-ctx-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
       </button>
@@ -11642,16 +11644,16 @@
         </button>
       </div>
 
-      <!-- live Twinr taste profile strip (reused) shows only in Twinr mode -->
+      <!-- вкусовой профиль: из него и «собран» персональный диджей (виден в режиме «Мой диджей») -->
       <div class="ai-profile rail-expanded-only" id="rail-profile" hidden>
-        <div class="ai-profile-label">Ваш <b>Twinr</b>-профиль · живой</div>
+        <div class="ai-profile-label">Ваш <b>диджей</b> · собран из вкуса</div>
         <div class="ai-profile-tags" id="rail-profile-tags"></div>
       </div>
 
       <!-- PRESENCE + slow-mode strip (static, NOT a live-region) -->
       <div class="rail-presence rail-expanded-only" id="rail-presence">
-        <span class="rail-presence-live" id="rail-presence-live">1 240 слушают · 18 пишут</span>
-        <span class="rail-presence-slow" id="rail-presence-slow">Медленный режим · 5 сек</span>
+        <span class="rail-presence-live" id="rail-presence-live">1 240 слушают</span>
+        <span class="rail-presence-slow" id="rail-presence-slow">Факт каждые ~10 сек</span>
       </div>
 
       <!-- quick-actions: 1 horizontal row (≤2 contextual chips) + ✦ menu has the rest -->
@@ -11665,35 +11667,35 @@
         <!-- mode-chip: restates the armed target AND opens the role=menu popover -->
         <button class="rail-mode-chip" id="rail-mode-chip" type="button"
                 aria-haspopup="menu" aria-expanded="false" aria-controls="rail-mode-pop"
-                aria-label="Кому отправить · сменить режим или открыть действия Twinr">
+                aria-label="Кому адресовать · сменить режим или открыть действия диджея">
           <span class="rail-mode-chip-dot" aria-hidden="true"></span>
           <span class="rail-mode-chip-ico" id="rail-mode-chip-ico" aria-hidden="true">✦</span>
-          <span class="rail-mode-chip-label" id="rail-mode-chip-label">Twinr</span>
+          <span class="rail-mode-chip-label" id="rail-mode-chip-label">Мой диджей</span>
           <svg class="rail-mode-chip-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
 
-        <!-- popover: radiogroup (Всем/Twinr — real radios) + menu-actions -->
+        <!-- popover: radiogroup (диджей станции / мой диджей — real radios) + menu-actions -->
         <div class="rail-mode-pop" id="rail-mode-pop" role="menu" aria-label="Режим и действия">
-          <div class="ai-mode" role="radiogroup" aria-label="Кому отправить сообщение">
+          <div class="ai-mode" role="radiogroup" aria-label="Кому адресовать вопрос">
             <label class="ai-seg ai-seg--all">
               <input type="radio" name="rail-mode" value="all" checked>
-              <span class="ai-seg-ico" aria-hidden="true">👥</span><span>Всем</span>
+              <span class="ai-seg-ico" aria-hidden="true">🎙</span><span>Диджей</span>
             </label>
             <label class="ai-seg ai-seg--ai">
               <input type="radio" name="rail-mode" value="ai">
-              <span class="ai-seg-ico" aria-hidden="true">✦</span><span>Twinr</span>
+              <span class="ai-seg-ico" aria-hidden="true">✦</span><span>Мой</span>
             </label>
           </div>
           <div class="rail-mode-pop-divider" aria-hidden="true"></div>
-          <div class="rail-mode-pop-label">Действия Twinr</div>
+          <div class="rail-mode-pop-label">Действия диджея</div>
           <div id="rail-menu-actions"><!-- menu-action buttons injected by JS --></div>
         </div>
 
         <!-- the field — textarea (auto-grow) + send pill -->
         <div class="ai-input">
-          <textarea class="ai-input-field" id="rail-input" rows="1" placeholder="Спросите Twinr — видно только вам…" autocomplete="off" aria-label="Сообщение для Twinr AI — видно только вам"></textarea>
-          <button class="ai-send" type="submit" aria-label="Спросить Twinr">
-            <span class="ai-send-label" id="rail-send-label">Спросить Twinr</span>
+          <textarea class="ai-input-field" id="rail-input" rows="1" placeholder="Спросить своего диджея — видно только вам…" autocomplete="off" aria-label="Вопрос своему диджею — видно только вам"></textarea>
+          <button class="ai-send" type="submit" aria-label="Спросить">
+            <span class="ai-send-label" id="rail-send-label">Спросить</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
@@ -12494,17 +12496,18 @@
     role="navigation"
     aria-label="Мобильная навигация"
   >
+    <!-- один и тот же роут должен называться одинаково в сайдбаре и в таббаре:
+         раньше было «Волна» слева и «Главная» снизу — теперь «Радио» + та же иконка-сигнал -->
     <button
       class="tabbar-item"
       type="button"
       data-route="#/home"
-      aria-label="Главная"
+      aria-label="Радио"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
+        <path d="M2 12h2.5l2-6 3 12 3-9 2 5 2.5-2H22"/>
       </svg>
-      Главная
+      Радио
     </button>
 
     <button
@@ -14750,47 +14753,128 @@
     var mode = 'all', undoTimer = 0, lastBroadcast = null;
     var REACTIONS = ['🔥', '❤️', '🎧', '😮'];
 
-    /* ============================ ROOMS + per-room store ============================
-       Auto-follow the PLAYING station (owner decision 2) is non-destructive: each
-       room keeps {html, scrollTop, draft, mode, seeded} so switching back restores
-       the draft and scroll. 📌 Общий эфир is pinned; the rest are seeded demo
-       station rooms. The rail follows the STATION, never the #/route. */
-    var ROOMS = {
-      global: { id: 'global', pin: '📌', name: 'Общий эфир', station: null,
-        ctxTitle: 'Общий эфир', ctxWhy: 'Здесь обсуждают то, что играет у каждого. <b>Демо-комната.</b>',
-        presence: '1 240 слушают · 18 пишут', slow: 'Медленный режим · 5 сек',
-        peers: [
-          { h: 'guest_4471', c: '#6d6af6', t: 'эта волна прям под ночь 🔥' },
-          { h: 'guest_0192', c: '#f6a26a', t: 'кто ставил Niletto до этого? зашло' },
-          { h: 'guest_8830', c: '#3fb6a8', t: 'плюсую, тёплая подборка' }
+    /* ============================ ИИ-ДИДЖЕИ + per-room store ============================
+       Owner (2026-07-13): рейл остаётся тем же по UX/UI, но в нём не переговариваются люди —
+       ведёт ЭФИР ИИ-диджей: пока играет музыка, он рассказывает про неё. У КАЖДОЙ станции
+       свой диджей со своим голосом и своей темой; переключил станцию — сменился диджей
+       (авто-follow по событию carousel'а `gorod:tune`). Второй режим композера — «Мой диджей»:
+       собран из твоего вкуса и говорит про ТВОЮ музыку (бывший приватный Twinr-лейн).
+
+       Реплики СЦЕНАРНЫЕ (демо, помечено в шапке комнаты). Сознательно держим их на уровне
+       ремесла/формата (как устроен припев, зачем режут интро, почему бас опаздывает), а НЕ
+       выдуманных «фактов» про реальных людей — врать биографию SHAMAN'а или Rammstein
+       прототип не должен. Настоящие факты потребуют источника метаданных (см. DEBT GHS-021).
+
+       Auto-follow остаётся non-destructive: комната хранит {html, scrollTop, draft, mode, seeded},
+       возврат восстанавливает черновик и скролл. */
+    var DJS = {
+      gorod: { dj: 'Сигнал', c: '#5168FC', station: 'Город ФМ',
+        about: 'городской эфир: что играет, почему цепляет, как это собрано',
+        lines: [
+          'Сейчас «{t}» — {a}. Тёплый поп-вокал, темп около сотни: ровно тот, на котором город едет домой.',
+          'Приём, который держит этот припев: строку повторяют трижды — и на третий раз её уже подпевают. Так пишут песни для радио.',
+          'Слышишь бэки вторым планом? Их дублируют, чтобы припев казался шире, чем он есть. Старый радийный трюк.',
+          'Между треками у меня нет пауз: следующий вход кладу по восьмёркам, чтобы эфир не проваливался.',
+          'Городской формат — это не жанр, а время суток. Всё, что звучит как вечер в большом городе.',
+          'Такие цепкие припевы живут в ротации дольше остальных — их не успевают надоесть, их успевают полюбить.',
+          'Хочешь, разберу, из чего собран звук {a}? Просто спроси меня здесь.'
         ] },
-      lofi: { id: 'lofi', pin: '#', name: 'LoFi Ночь', station: 'chill',
-        ctxTitle: 'LoFi Ночь — «Midnight Tape»', ctxWhy: '<b>Меланхоличное инди</b> — ты часто слушаешь такое ночью. Демо.',
-        presence: '612 слушают · 9 пишут', slow: 'Медленный режим · 5 сек',
-        peers: [
-          { h: 'guest_3310', c: '#8aa0ff', t: 'идеально под учёбу' },
-          { h: 'guest_7782', c: '#caa6ff', t: 'этот бит залип 🎧' }
+      russkoe: { dj: 'Припев', c: '#f6a26a', station: 'Русское Радио',
+        about: 'русская песня: слово, мелодия, как устроен припев',
+        lines: [
+          'В эфире «{t}» — {a}. Русская песня всегда начинается со слова: мелодию тут строят под текст, а не наоборот.',
+          'Смотри на конструкцию: куплет — предприпев — припев. Предприпев работает разгоном, поэтому припев бьёт сильнее.',
+          'К финалу тональность часто поднимают на полтона — и последний припев звучит на разрыв. Приём старый, работает до сих пор.',
+          'В нашем формате ценится спетость: живой вокал и минимум подстройки, чтобы песня звучала как разговор.',
+          'Радио — не плейлист, а драматургия: после тяжёлой песни всегда идёт лёгкая. Сейчас как раз такой поворот.',
+          'Спроси, почему этот припев запоминается с первого раза — расскажу, где там крючок.'
         ] },
-      synth: { id: 'synth', pin: '#', name: 'Синтвейв', station: 'disko',
-        ctxTitle: 'Синтвейв — «Neon Drive»', ctxWhy: 'Ретро-синты 80-х под твой <b>вечерний драйв</b>. Демо.',
-        presence: '438 слушают · 6 пишут', slow: 'Медленный режим · 8 сек',
-        peers: [
-          { h: 'guest_5521', c: '#f6a26a', t: 'врубай погромче 🔥' },
-          { h: 'guest_2098', c: '#6df6c0', t: 'Kavinsky vibes' }
+      hit: { dj: 'Чарт', c: '#3fb6a8', station: 'ХИТ FM',
+        about: 'хиты и чарты: что взлетает и почему',
+        lines: [
+          'Сейчас «{t}» — {a}. В чарт такие вещи заносит не радио, а слушатель: сначала репит, потом ротация.',
+          'Хит-формат простой: первые семь секунд решают всё. Не зацепило — переключат.',
+          'Заметь, припев приходит раньше, чем ты его ждёшь. Это осознанно: хит не заставляет ждать.',
+          'В чартах выигрывает не громкость, а узнаваемость — мотив, который можно напеть без слов.',
+          'Танцевальные хиты живут короче, поп-хиты дольше. Поэтому мы крутим и те, и другие.',
+          'Спроси, что сейчас поднимается в ротации — покажу, что растёт.'
         ] },
-      rock: { id: 'rock', pin: '#', name: 'Город Рок', station: 'rock',
-        ctxTitle: 'Город Рок — «Believer»', ctxWhy: 'Стадион-рок и громкие припевы. Демо-комната станции.',
-        presence: '4 832 слушают · 41 пишут', slow: 'Медленный режим · 5 сек',
-        peers: [
-          { h: 'guest_1144', c: '#ff8a8a', t: 'imagine dragons топ' }
+      dfm: { dj: 'Бит', c: '#8b6df6', station: 'DFM',
+        about: 'танцевальная сцена: грув, ремиксы, темп',
+        lines: [
+          'В эфире «{t}» — {a}. Танцевальный формат живёт на 120–128 ударах: это темп, на котором тело само попадает в шаг.',
+          'Слушай перед дропом: бас убирают полностью. Именно поэтому его возвращение ощущается как удар.',
+          'Радийный ремикс и клубный — разные вещи: для эфира вступление режут вдвое, никто не будет ждать минуту.',
+          'Тут важен не мотив, а грув. Мотив забывается, грув запоминает тело.',
+          'Между треками держу бит: перехожу по шестнадцать тактов, чтобы танцпол не провалился.',
+          'Скажи словами, если нужно плотнее или спокойнее — переставлю линию.'
+        ] },
+      maximum: { dj: 'Фузз', c: '#ff8a8a', station: 'MAXIMUM',
+        about: 'рок: гитары, альбомы, как это записано',
+        lines: [
+          'Сейчас «{t}» — {a}. Гитара звучит толсто из-за двойного дубля: одну партию пишут дважды и разводят по каналам.',
+          'Рок-радио — про альбом, а не про сингл. Поэтому в эфире встречается то, что в чартах не было никогда.',
+          'Слышишь, как дышат барабаны? Это компрессия: подтягивает тихое, придерживает громкое.',
+          'Стадионный припев — это две ноты и много воздуха. Всё, что сложнее, толпа не подхватит.',
+          'Формат держится на контрасте: после тяжёлого ставлю мелодичное, иначе ухо устаёт за час.',
+          'Спроси про любой рифф — разберу, из чего он собран.'
+        ] },
+      mc: { dj: 'Бархат', c: '#caa6ff', station: 'Radio Monte Carlo',
+        about: 'лаундж и джаз: атмосфера, паузы, звук',
+        lines: [
+          'В эфире «{t}» — {a}. Здесь всё держится на паузе: в лаундже тишина между нотами важнее самих нот.',
+          'Саксофон не играет мелодию — он её договаривает. Поэтому его ставят после строки, а не поверх неё.',
+          'Слышишь, что бас идёт чуть позже доли? Это свинг: так музыка перестаёт быть ровной.',
+          'Наш формат не требует внимания. Он его возвращает — когда ты сам захочешь.',
+          'Вечер на Monte Carlo собирается как ужин: сначала лёгкое, к полуночи — самое густое.',
+          'Скажи, если нужно прозрачнее или плотнее — подстрою атмосферу.'
         ] }
     };
-    /* maps a playing station id (data-station / home data-station) → room id */
-    var STATION_TO_ROOM = { chill: 'lofi', disko: 'synth', rock: 'rock', pop: 'global', hiphop: 'global', lirika: 'global' };
-    var STATION_LABEL = { chill: 'Город CHILL', disko: 'Город Диско', rock: 'Город Рок', pop: 'Город Поп', hiphop: 'Город Хип-Хоп', lirika: 'Город Лирика' };
+
+    /* now-playing по станции. GorodStations объявлен НИЖЕ в документе → резолвим лениво. */
+    function npFor(id) {
+      /* Для ИГРАЮЩЕЙ станции правду знает мини-плеер: ⏭ и карточки витрины меняют его,
+         а GorodStations.nowPlaying остаётся демо-константой станции. Для остальных станций
+         (их диджеев можно открыть, не переключая эфир) берём их демо-трек. */
+      if (id === playingRoom) {
+        var tEl = document.getElementById('player-track-title'), aEl = document.getElementById('player-track-artist');
+        var t = tEl && (tEl.textContent || '').trim();
+        var a = aEl && (aEl.textContent || '').trim();
+        /* мини-плеер держит артиста как «Станция · Артист» — диджею нужен только артист */
+        if (a && a.indexOf(' · ') >= 0) a = a.split(' · ').pop().trim();
+        if (t && a) return { t: t, a: a };
+      }
+      var np = (window.GorodStations && GorodStations.nowPlaying) ? GorodStations.nowPlaying(id) : null;
+      return { t: (np && np.title) || 'трек', a: (np && np.artist) || 'артист' };
+    }
+    function fillLine(tpl, id) {
+      var np = npFor(id), d = DJS[id] || {};
+      return String(tpl).replace(/\{t\}/g, np.t).replace(/\{a\}/g, np.a).replace(/\{s\}/g, d.station || '');
+    }
+    /* Одна комната = один диджей = одна станция. Комнаты собираются из DJS, а не пишутся руками. */
+    var ROOMS = {};
+    Object.keys(DJS).forEach(function (id) {
+      var d = DJS[id];
+      ROOMS[id] = {
+        id: id, pin: '🎙', dj: d.dj, name: d.dj + ' · ' + d.station, station: id, c: d.c,
+        ctxTitle: d.dj + ' · ИИ-диджей «' + d.station + '»',
+        ctxWhy: 'Рассказывает про то, что играет прямо сейчас — ' + d.about + '. <b>Демо: реплики сценарные.</b>',
+        presence: '1 240 слушают', slow: 'Факт каждые ~10 сек',
+        // первые две реплики комнаты = первые две из пула (подставятся под now-playing при сиде)
+        peers: [
+          { h: d.dj + ' · ИИ-диджей', c: d.c, tpl: d.lines[0] },
+          { h: d.dj + ' · ИИ-диджей', c: d.c, tpl: d.lines[1] }
+        ]
+      };
+    });
+    /* станция → комната: теперь 1:1 (id станции РМГ = id комнаты диджея) */
+    var STATION_TO_ROOM = {};
+    var STATION_LABEL = {};
+    Object.keys(DJS).forEach(function (id) { STATION_TO_ROOM[id] = id; STATION_LABEL[id] = DJS[id].station; });
+    var HOME_ROOM = 'gorod';        // станция по умолчанию в карусели = Город ФМ
     var store = {};                 // roomId → {html, scrollTop, draft, mode, seeded}
-    var currentRoom = 'global';
-    var playingRoom = 'global';     // room of the station currently playing
+    var currentRoom = HOME_ROOM;
+    var playingRoom = HOME_ROOM;    // комната станции, которая играет сейчас
     var followDismissed = false;
 
     /* ============================ SHARED RADIO (collaborative) ============================
@@ -14809,7 +14893,7 @@
     // In the scripted demo this only SWAPS which pre-authored suggestion Twinr surfaces (no recompute).
     var session = {
       active: false,
-      prevRoom: 'global',           // room to restore on end
+      prevRoom: HOME_ROOM,          // room to restore on end
       members: [],                  // [{id,name,c}] — seeded friends present
       blend: 0,                     // remember dial position: 0 = Моя станция, 1 = Поровну
       pendingByFriend: {},          // per-friend pending suggestion cap (spam control)
@@ -14907,11 +14991,63 @@
         followStation((e.detail && e.detail.station) || null);
       });
 
+      /* «У каждой станции свой диджей» держится на событиях карусели. Слушаем ОБА:
+           • `gorod:activecard` — карточка встала в центр; по нему перерисовывается мини-плеер,
+             то есть эфир де-факто уже сменился (замер: слушали только tune -> плеер играл Sonne,
+             а диджей оставался городским);
+           • `gorod:tune` — явный клик по центральной карточке.
+         Дебаунс: при прокрутке activecard прилетает пачкой, комнату нельзя дёргать на каждый. */
+      var followT = 0, followPending = null, npQuietUntil = 0;
+      function followStationSoon(id) {
+        if (!id || !ROOMS[id]) return;
+        followPending = id;
+        clearTimeout(followT);
+        followT = setTimeout(function () {
+          var sid = followPending; if (!sid) return;
+          var switching = (sid !== currentRoom);
+          var seededBefore = !!(store[sid] && store[sid].seeded);
+          npQuietUntil = Date.now() + 3000;      // смену трека при смене станции анонсирует сам диджей
+          followStation(sid);                    // ставит playingRoom и переключает комнату
+          if (switching && currentRoom === sid && seededBefore) {
+            var np = npFor(sid);
+            djSpeak('Снова в эфире «' + DJS[sid].station + '» — сейчас «' + np.t + '» — ' + np.a + '.');
+          }
+        }, 650);
+      }
+      document.addEventListener('gorod:tune', function (e) { followStationSoon(e && e.detail && e.detail.id); });
+      document.addEventListener('gorod:activecard', function (e) { followStationSoon(e && e.detail && e.detail.id); });
+
+      /* Диджей реагирует на смену трека (⏭, карточка витрины): в демо правду о том,
+         что играет, знает мини-плеер — за ним и наблюдаем. */
+      var npTitleEl = document.getElementById('player-track-title');
+      if (npTitleEl && window.MutationObserver) {
+        var lastTitle = (npTitleEl.textContent || '').trim(), npDebounce = 0;
+        /* На старте GorodPlayer сам вписывает now-playing станции в мини-плеер — это НЕ смена
+           трека, а первичная отрисовка. Молчим первые 4 сек: сид комнаты уже поздоровался. */
+        var npArmed = false;
+        setTimeout(function () { lastTitle = (npTitleEl.textContent || '').trim(); npArmed = true; }, 4000);
+        new MutationObserver(function () {
+          var t = (npTitleEl.textContent || '').trim();
+          if (!t || t === lastTitle) return;
+          lastTitle = t;
+          if (!npArmed) return;
+          clearTimeout(npDebounce);
+          npDebounce = setTimeout(function () {
+            var r = ROOMS[currentRoom];
+            if (!r || !r.dj || currentRoom !== playingRoom) return;
+            if (Date.now() < npQuietUntil) return;   // станцию только что сменили — там свой анонс
+            var np = npFor(currentRoom);
+            clearTimeout(dripTimer);
+            djSpeak('Сейчас в эфире «' + np.t + '» — ' + np.a + '. Слушай, что тут интересного.');
+          }, 700);
+        }).observe(npTitleEl, { childList: true, characterData: true, subtree: true });
+      }
+
       scheduleDrip(3500);  // live-chat drip — scripted "constant conversation" for client demos
 
       renderProfile();
       // initial room render — default Всем in the global/station room
-      switchRoom('global', { silent: true });
+      switchRoom(HOME_ROOM, { silent: true });
       // Storefront home is a NON-AI surface (owner-locked model: home = radio storefront, all AI →
       // «Моя волна»). So lead its rail with the «Общий эфир» community lane (Всем), NOT the Twinr AI
       // composer + greeting — that foregrounded AI on home and conflicted with the retire-AI pass
@@ -15157,7 +15293,8 @@
     }
 
     /* ====================== ROOMS — dropdown, switching, auto-follow ====================== */
-    function roomName() { return ROOMS[currentRoom] ? ROOMS[currentRoom].name : 'Общий эфир'; }
+    function roomName() { return ROOMS[currentRoom] ? ROOMS[currentRoom].name : 'Эфир'; }
+    function djName()   { return (ROOMS[currentRoom] && ROOMS[currentRoom].dj) || 'Диджей'; }
 
     function buildRoomDropdown() {
       var el = $('rail-rooms'); if (!el) return;
@@ -15182,10 +15319,13 @@
         el.appendChild(sb);
         var sdiv = document.createElement('div'); sdiv.className = 'rail-rooms-divider'; el.appendChild(sdiv);
       }
-      item(ROOMS.global, true);
+      item(ROOMS[playingRoom] || ROOMS[HOME_ROOM], true);
       var div = document.createElement('div'); div.className = 'rail-rooms-divider'; el.appendChild(div);
-      var lbl = document.createElement('div'); lbl.className = 'rail-rooms-label'; lbl.textContent = 'Комнаты станций · демо'; el.appendChild(lbl);
-      ['lofi', 'synth', 'rock'].forEach(function (id) { item(ROOMS[id], false); });
+      var lbl = document.createElement('div'); lbl.className = 'rail-rooms-label'; lbl.textContent = 'Диджеи станций · демо'; el.appendChild(lbl);
+      Object.keys(ROOMS).forEach(function (id) {
+        if (id === SESSION_ROOM || id === (playingRoom || HOME_ROOM)) return;   // уже приколот сверху
+        item(ROOMS[id], false);
+      });
     }
 
     /* snapshot current room state before leaving (non-destructive scroll/draft/mode) */
@@ -15246,7 +15386,7 @@
        room automatically (owner decision 2). Non-destructive: switchRoom saves the
        leaving room's draft/scroll/mode first. */
     function followStation(stationId) {
-      var room = STATION_TO_ROOM[stationId] || 'global';
+      var room = STATION_TO_ROOM[stationId] || HOME_ROOM;
       playingRoom = room;
       followDismissed = false;
       // SHARED RADIO (Stage 2): while a live session is active, auto-follow is
@@ -15287,6 +15427,7 @@
       var redirect = text.replace(/^\s*(@twinr|\/twinr|\/)\s*/i, '');
       if (redirect !== text && redirect) { addUser(redirect); chipsEl.innerHTML = ''; privateAI(redirect); return; }
       showUndo(addRoomUser(text));
+      djReplyTo(text);                      // эфир отвечает: диджей разбирает вопрос
     }
 
     function setMode(m, fromUser) {
@@ -15295,29 +15436,31 @@
       [].forEach.call(modeRadios, function (r) { r.checked = (r.value === mode); });
       var NAME = roomName();
       if (profileWrap) profileWrap.hidden = (mode !== 'ai');
+      var DJ = djName();
       if (mode === 'ai') {
-        // PRIVATE Twinr — unmistakable it does NOT go to the room (non-color: icon+word+placeholder+send)
-        input.placeholder = 'Спросите Twinr — видно только вам…';
-        input.setAttribute('aria-label', 'Сообщение для Twinr AI — видно только вам, в эфир не уйдёт');
-        sendLabel.textContent = 'Спросить Twinr';
-        sendBtn.setAttribute('aria-label', 'Спросить Twinr — приватно, в эфир не уйдёт');
+        // МОЙ ДИДЖЕЙ — собран из твоего вкуса, говорит про ТВОЮ музыку, в эфир не уходит
+        input.placeholder = 'Спросить своего диджея — видно только вам…';
+        input.setAttribute('aria-label', 'Вопрос своему диджею — видно только вам, в эфир не уйдёт');
+        sendLabel.textContent = 'Спросить';
+        sendBtn.setAttribute('aria-label', 'Спросить своего диджея — приватно, в эфир не уйдёт');
         if (modeChipIco) modeChipIco.textContent = '✦';
-        if (modeChipLabel) modeChipLabel.textContent = 'Только вы · Twinr';
+        if (modeChipLabel) modeChipLabel.textContent = 'Мой диджей · только вы';
         if (modeChip) {
-          modeChip.title = 'Только вы · Twinr — в эфир не уйдёт';
-          modeChip.setAttribute('aria-label', 'Режим: только вы · Twinr — в эфир не уйдёт. Нажмите, чтобы сменить или открыть действия.');
+          modeChip.title = 'Мой диджей — собран из вашего вкуса, в эфир не уйдёт';
+          modeChip.setAttribute('aria-label', 'Режим: мой диджей — приватно, в эфир не уйдёт. Нажмите, чтобы сменить или открыть действия.');
         }
         setChips(DEFAULT_CHIPS);
       } else {
-        input.placeholder = 'Сообщение в общий эфир…';
-        input.setAttribute('aria-label', 'Сообщение всем в комнате «' + NAME + '»');
-        sendLabel.textContent = 'Отправить всем';
-        sendBtn.setAttribute('aria-label', 'Отправить всем в «' + NAME + '»');
-        if (modeChipIco) modeChipIco.textContent = '👥';
-        if (modeChipLabel) modeChipLabel.textContent = 'Всем · ' + NAME;
+        // ДИДЖЕЙ СТАНЦИИ — вопрос уходит в эфир, отвечает ведущий этой станции
+        input.placeholder = 'Спросить диджея о треке…';
+        input.setAttribute('aria-label', 'Вопрос диджею «' + DJ + '» в эфире «' + NAME + '»');
+        sendLabel.textContent = 'Спросить диджея';
+        sendBtn.setAttribute('aria-label', 'Спросить диджея «' + DJ + '»');
+        if (modeChipIco) modeChipIco.textContent = '🎙';
+        if (modeChipLabel) modeChipLabel.textContent = 'Диджей · ' + DJ;
         if (modeChip) {
-          modeChip.title = '👥 Всем · общий эфир «' + NAME + '»';
-          modeChip.setAttribute('aria-label', 'Режим: всем в «' + NAME + '» · общий эфир. Нажмите, чтобы сменить или открыть действия.');
+          modeChip.title = '🎙 Диджей станции — ' + NAME;
+          modeChip.setAttribute('aria-label', 'Режим: диджей станции «' + NAME + '». Нажмите, чтобы сменить или открыть действия.');
         }
         setRoomChips();
       }
@@ -15327,8 +15470,8 @@
       chipsEl.innerHTML = '';
       REACTIONS.forEach(function (r) {
         var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = r;
-        b.setAttribute('aria-label', 'Отправить реакцию ' + r + ' всем');
-        b.addEventListener('click', function () { showUndo(addRoomUser(r)); });
+        b.setAttribute('aria-label', 'Реакция ' + r + ' — диджею в эфир');
+        b.addEventListener('click', function () { showUndo(addRoomUser(r)); djAck(); });
         chipsEl.appendChild(b);
       });
     }
@@ -15347,28 +15490,67 @@
       var st = store[currentRoom] || (store[currentRoom] = {});
       if (st.seeded) return; st.seeded = true;
       var r = ROOMS[currentRoom];
-      addRoomDivider('Вы в «' + r.name + '» · демо-сообщения');
-      (r.peers || []).forEach(addRoomPeer);
+      if (r.dj) {
+        var np = npFor(r.id);
+        addRoomDivider('🎙 ' + r.dj + ' ведёт «' + DJS[r.id].station + '» · сейчас «' + np.t + '» — ' + np.a + ' · демо');
+      } else {
+        addRoomDivider('Вы в «' + r.name + '» · демо-сообщения');
+      }
+      (r.peers || []).forEach(function (p) {
+        addRoomPeer({ h: p.h, c: p.c, t: p.tpl ? fillLine(p.tpl, r.id) : p.t });
+      });
+      // сид уже произнёс lines[0..n-1] — сдвигаем курсор пула, иначе поток повторит их же
+      if (r.dj) r.__i = (r.peers || []).length;
       scrollDown();
     }
     function addRoomUser(text) {
       var m = document.createElement('div'); m.className = 'ai-msg ai-msg--mine';
       var b = document.createElement('div'); b.className = 'ai-msg-bubble'; b.textContent = text;
-      var s = document.createElement('div'); s.className = 'ai-msg-sent'; s.textContent = 'отправлено всем · 🟢';
+      var s = document.createElement('div'); s.className = 'ai-msg-sent';
+      s.textContent = (ROOMS[currentRoom] && ROOMS[currentRoom].dj) ? 'вопрос диджею · 🟢' : 'отправлено всем · 🟢';
       m.appendChild(b); m.appendChild(s); msgs.appendChild(m); capLog(); scrollDown(); return m;
     }
 
-    /* ---- live-chat drip — scripted "constant conversation" so client demos read as a live room
-       (peer "печатает…" → message). Seeded/demo, near-bottom-aware, pauses when tab hidden. ---- */
-    var DRIP_WHO = [{ h: 'ночная_сова', c: '#6d6af6' }, { h: 'mef_88', c: '#f6a26a' }, { h: 'гость_2841', c: '#3fb6a8' }, { h: 'lena_k', c: '#c0455a' }, { h: 'dimon_v', c: '#5168FC' }, { h: 'kira', c: '#34d399' }];
-    var DRIP_LINES = ['кто это поёт? 🔥', 'прям мой вайб', 'на репите уже', '🎧🎧', 'топ подборка сегодня', 'а дальше что поставят?', 'ностальгия 🥹', 'качает 💯', 'согласен', 'можно поэнергичнее?', '+1', 'обожаю этот трек', 'кто добавил? спасибо', 'под это работается', '😍', 'наконец хороший эфир', 'о, недавно нашёл это', 'тоже слушаю!'];
+    /* ---- ЖИВОЙ ЭФИР ДИДЖЕЯ — тот же «постоянно живой» ритм, что был у людского чата
+       («печатает…» → сообщение), но отправитель ОДИН: ИИ-диджей станции, и он рассказывает
+       про то, что играет. Near-bottom-aware, замирает при скрытой вкладке.
+       В комнате «Слушаем вместе» пишут по-прежнему ЛЮДИ (друзья) — там drip остался людской. ---- */
+    var DRIP_WHO = [{ h: 'Аня', c: '#8b6df6' }, { h: 'Тимур', c: '#f6a26a' }, { h: 'Лера', c: '#3fb6a8' }];
+    var DRIP_LINES = ['о, эту я знаю 🔥', 'ставь громче', 'под это работается', 'плюсую', '🎧', 'а дальше что?'];
     var dripTimer = 0, dripIdx = 0;
     function dripActive() { return !!(msgs && currentRoom && ROOMS[currentRoom] && (ROOMS[currentRoom].peers || currentRoom === SESSION_ROOM)); }
     function dripNearBottom() { return !!(msgs && (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight) < 90); }
     function scheduleDrip(ms) { clearTimeout(dripTimer); dripTimer = setTimeout(dripTick, ms); }
+    function djHandle(r) { return r.dj + ' · ИИ-диджей'; }
+
+    /* одна реплика диджея: пузырь «печатает…» → текст. text=null → следующий факт из пула станции */
+    function djSpeak(text, thenMs) {
+      var r = ROOMS[currentRoom]; if (!r || !r.dj || !msgs) return;
+      var d = DJS[r.id], atBottom = dripNearBottom(), handle = djHandle(r);
+      var t = document.createElement('div'); t.className = 'ai-msg ai-msg--room';
+      t.innerHTML = '<div class="ai-room-av" style="background:' + r.c + '" aria-hidden="true">' + esc(r.dj.charAt(0).toUpperCase()) + '</div>' +
+        '<div class="ai-room-col"><div class="ai-room-handle">' + esc(handle) + '</div><div class="ai-msg-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div></div>';
+      msgs.appendChild(t); if (atBottom) scrollDown();
+      pulse(1500);                                   // GOROD-049: рейл «дышит», пока диджей говорит
+      var roomAtStart = currentRoom;
+      setTimeout(function () {
+        if (t.parentNode) t.parentNode.removeChild(t);
+        if (currentRoom !== roomAtStart) return;     // станцию переключили, пока он «печатал»
+        r.__i = (r.__i || 0);
+        var line = text || fillLine(d.lines[r.__i % d.lines.length], r.id);
+        if (!text) r.__i++;
+        addRoomPeer({ h: handle, c: r.c, t: line });
+        if (atBottom) scrollDown();
+        scheduleDrip(thenMs || (8500 + (r.__i % 4) * 1500));   // новый факт каждые ~8-13 сек
+      }, 1100 + ((r.__i || 0) % 3) * 300);
+    }
+
     function dripTick() {
       dripTimer = 0;
       if (document.hidden || !dripActive()) { scheduleDrip(6000); return; }
+      var r = ROOMS[currentRoom];
+      if (r && r.dj) { djSpeak(null); return; }      // станция → ведёт её ИИ-диджей
+      /* «Слушаем вместе» — пишут живые друзья, не диджей */
       var who = DRIP_WHO[dripIdx % DRIP_WHO.length]; dripIdx++;
       var atBottom = dripNearBottom();
       var t = document.createElement('div'); t.className = 'ai-msg ai-msg--room';
@@ -15383,10 +15565,48 @@
       }, 1100 + (dripIdx % 4) * 320);
     }
 
+    /* ответ диджея на вопрос из композера — интерактив тот же, что был у чата, отвечает диджей */
+    function djAnswer(q) {
+      var r = ROOMS[currentRoom]; if (!r || !r.dj) return null;
+      var d = DJS[r.id], np = npFor(r.id), s = (q || '').toLowerCase();
+      if (/что за|что это|кто (это|поёт|поет|исполня)|что играет|как называ/.test(s))
+        return 'Сейчас «' + np.t + '» — ' + np.a + '. Держу этот настрой ещё пару треков, резких поворотов не будет.';
+      if (/дальше|потом|следующ|next/.test(s))
+        return 'Дальше беру вещь того же темпа — переход соберу так, чтобы ты его не заметил.';
+      if (/громч|энергич|быстрее|бодрее|качат/.test(s))
+        return 'Принял — поверну эфир плотнее: больше баса, темп выше. Скажи, если перегну.';
+      if (/тише|спокойн|медленн|расслаб|чилл/.test(s))
+        return 'Сбавляю: уберу тяжёлое и оставлю то, что не требует внимания.';
+      if (/почему|зачем|как так|объясн/.test(s))
+        return 'Объясняю честно: трек стоит здесь не случайно — он держит темп и настроение соседних. Эфир это порядок, а не случайный плейлист.';
+      if (/факт|интересн|расскажи|ещё|еще|давай/.test(s)) {
+        r.__i = (r.__i || 0) + 1;
+        return fillLine(d.lines[r.__i % d.lines.length], r.id);
+      }
+      return 'Услышал: «' + q + '». В проде отвечу из метаданных трека и истории станции — здесь реплики сценарные, но спрашивать можно как угодно.';
+    }
+    /* короткая реакция диджея на 🔥/❤️/🎧/😮 — чтобы эфир отвечал, а не молчал */
+    var DJ_ACK = ['Вижу реакцию — принял.', 'Слышу вас. Значит, держим это направление.', 'Отмечаю: зашло. Похожее поставлю ближе к концу часа.'];
+    var ackIdx = 0;
+    function djAck() {
+      var r = ROOMS[currentRoom]; if (!r || !r.dj) return;
+      clearTimeout(dripTimer);
+      setTimeout(function () { djSpeak(DJ_ACK[ackIdx++ % DJ_ACK.length]); }, 700);
+    }
+    function djReplyTo(q) {
+      var r = ROOMS[currentRoom]; if (!r || !r.dj) return;
+      var a = djAnswer(q); if (!a) return;
+      clearTimeout(dripTimer);
+      setTimeout(function () { djSpeak(a); }, 800);
+    }
+
     function showUndo(node) {
       lastBroadcast = node;
       undoEl.hidden = false;
-      undoEl.innerHTML = '<span>Отправлено в «<b>' + esc(roomName()) + '</b>»</span><button type="button" class="ai-undo-btn">Отменить</button>';
+      var undoLbl = (ROOMS[currentRoom] && ROOMS[currentRoom].dj)
+        ? ('Вопрос диджею «<b>' + esc(djName()) + '</b>»')
+        : ('Отправлено в «<b>' + esc(roomName()) + '</b>»');
+      undoEl.innerHTML = '<span>' + undoLbl + '</span><button type="button" class="ai-undo-btn">Отменить</button>';
       undoEl.querySelector('.ai-undo-btn').addEventListener('click', undoBroadcast);
       clearTimeout(undoTimer); undoTimer = setTimeout(hideUndo, 6000);
     }
@@ -15404,13 +15624,13 @@
       setSpeaking(true);
       var t = document.createElement('div'); t.className = 'ai-msg ai-msg--ai ai-msg--private';
       t.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div>' +
-        '<div class="ai-msg-bubble"><div class="ai-private-tag">✦ Twinr · видно только вам</div>' +
+        '<div class="ai-msg-bubble"><div class="ai-private-tag">✦ Мой диджей · видно только вам</div>' +
         '<div class="ai-typing"><span></span><span></span><span></span></div></div>';
       msgs.appendChild(t); scrollDown();
       setTimeout(function () {
         var ans = privateAnswer(q);
         t.innerHTML = '<div class="ai-msg-avatar" aria-hidden="true">' + SPARK + '</div>' +
-          '<div class="ai-msg-bubble"><div class="ai-private-tag">✦ Twinr · видно только вам</div>' + ans +
+          '<div class="ai-msg-bubble"><div class="ai-private-tag">✦ Мой диджей · видно только вам</div>' + ans +
           '<button type="button" class="ai-share-btn">Поделиться с чатом</button></div>';
         t.querySelector('.ai-share-btn').addEventListener('click', function () { shareToChat(ans); });
         scrollDown();
@@ -15419,14 +15639,21 @@
     }
     function privateAnswer(q) {
       var s = q.toLowerCase();
-      if (/почему|why/.test(s)) return 'Сейчас в комнате тёплый поп-вокал ~95 BPM — под него ставлю похожее. Виден только тебе.';
-      if (/спокойн|грустн|чилл|тих|расслаб/.test(s)) return 'Могу собрать тебе спокойную ветку отдельно — не сбивая общий эфир комнаты.';
-      return 'Уловил: «' + esc(q) + '». В проде отвечу из твоего вкусового вектора. Этот ответ приватный — в комнате его никто не видит.';
+      var tags = (profile && profile.length) ? profile.join(' · ') : 'твой вкус';
+      if (/кто ты|какой ты|о себе|представ/.test(s))
+        return 'Я твой диджей — собран из твоего вкуса: <b>' + esc(tags) + '</b>. Рассказываю не про эфир вообще, а про <b>твою</b> музыку.';
+      if (/почему|why|зачем/.test(s))
+        return 'Потому что это ложится в твой вектор: <b>' + esc(tags) + '</b>. Я веду от того, что ты уже дослушиваешь до конца, а не от общего чарта.';
+      if (/спокойн|грустн|чилл|тих|расслаб/.test(s))
+        return 'Соберу тебе спокойную ветку отдельно — эфир станции при этом не трогаю, он идёт своим ходом.';
+      if (/факт|интересн|расскажи|история/.test(s))
+        return 'Держи из твоей полки <b>' + esc(profile[0] || 'вкуса') + '</b>: этот звук строится на широком припеве и узком куплете — контраст и делает его «твоим». Скажи «ещё» — копну глубже.';
+      return 'Уловил: «' + esc(q) + '». В проде отвечу из твоего вкусового вектора (<b>' + esc(tags) + '</b>). Ответ приватный — в эфир станции он не уйдёт.';
     }
     function shareToChat(ansHtml) {
       var tmp = document.createElement('div'); tmp.innerHTML = ansHtml;
       var node = addRoomUser(tmp.textContent || '');
-      var sent = node.querySelector('.ai-msg-sent'); if (sent) sent.textContent = 'поделился ответом Twinr · 🟢';
+      var sent = node.querySelector('.ai-msg-sent'); if (sent) sent.textContent = 'поделился ответом своего диджея · 🟢';
       showUndo(node);
     }
 
@@ -15444,7 +15671,8 @@
     ];
 
     function greet() {
-      aiSay('Привет! Я веду ваше радио. Сейчас в эфире <b>Слеза</b> — Егор Крид. Дальше — <b>Любимка</b> · Niletto, <span class="ai-why">вы часто дослушиваете такие тёплые треки до конца</span>.' + track('Любимка', 'Niletto'), 600)
+      var tags = (profile && profile.length) ? profile.join(' · ') : 'ваш вкус';
+      aiSay('Я <b>ваш диджей</b> — собран из вашего вкуса: <b>' + esc(tags) + '</b>. Пока станция ведёт свой эфир, я рассказываю про <b>вашу</b> музыку: откуда звук, почему цепляет, что слушать дальше. <span class="ai-why">Диджей станции — в соседнем режиме, он говорит про то, что играет сейчас.</span>', 600)
         .then(function () { setChips(DEFAULT_CHIPS); });
     }
 
@@ -15489,15 +15717,34 @@
       backradio: function () { aiSay('Возвращаю вашу волну. Сейчас — Слеза, дальше Любимка. Приятного!').then(function () { setChips(DEFAULT_CHIPS); }); }
     };
 
+    /* «Мой диджей» — тот же приватный лейн, но персона другая: он собран из вкусового профиля
+       и рассказывает про ТВОЮ музыку (у станции для этого есть свой диджей в соседнем режиме). */
+    var MY_FACTS = [
+      'Ваша грань <b>{p}</b> держится на контрасте: узкий куплет — широкий припев. Именно поэтому вы дослушиваете такие вещи до конца.',
+      'В <b>{p}</b> вас цепляет не мелодия, а плотность: когда инструментов много, но каждый на своём месте.',
+      'Ваш вкус любит повтор: строку, которую можно подхватить со второго раза. Это слышно во всех трёх ваших гранях.',
+      'Смежная территория для <b>{p}</b> — то же настроение на другом инструменте. С неё я и начну, если попросите «по-другому».'
+    ];
+    var myFactIdx = -1;
+
     function handleText(text) {
       var t = text.toLowerCase();
+      var tags = (profile && profile.length) ? profile.join(' · ') : 'ваш вкус';
+      if (/кто ты|ты кто|какой ты|о себе|представ/.test(t))
+        return aiSay('Я <b>ваш диджей</b> — собран из вашего вкуса: <b>' + esc(tags) + '</b>. Диджей станции ведёт свой эфир, а я рассказываю про <b>вашу</b> музыку: откуда звук, почему цепляет, что слушать дальше.')
+          .then(function () { setChips(DEFAULT_CHIPS); });
+      if (/факт|интересн|ещё|еще|что нового|удиви/.test(t)) {
+        myFactIdx = (myFactIdx + 1) % MY_FACTS.length;
+        return aiSay(MY_FACTS[myFactIdx].replace('{p}', esc((profile && profile[0]) || 'ваша главная грань')))
+          .then(function () { setChips(DEFAULT_CHIPS); });
+      }
       if (/по-друг|по друг|не нрав|друг|смени|поменяй/.test(t)) return intents.different();
       if (/почему|why|обоснуй/.test(t)) return intents.why();
       if (/экскурс|истори|tour|путь|эволюц/.test(t)) return intents.tour();
       if (/реклам|ads/.test(t)) return intents.ads();
       if (/грустн|спокойн|тих|чилл|calm|sad|расслаб/.test(t)) { updateProfile([], ['Чилл']); return aiSay('Сбавляю темп — спокойная волна: меньше ударных, тёплые синты, лоу-фай грань.' + track('Weightless', 'Marconi Union')).then(function () { setChips(DEFAULT_CHIPS); }); }
       if (/бодр|энерг|качай|трениров|workout|драйв/.test(t)) { updateProfile([], ['Энергия']); return aiSay('Поднимаю энергию — забойная волна для движения.' + track('Stronger', 'Kanye West')).then(function () { setChips(DEFAULT_CHIPS); }); }
-      return aiSay('Уловил: «' + esc(text) + '». В проде я бы разобрал это через ваш вкусовой вектор и перестроил волну на лету. Пока попробуйте кнопки — они показывают, как это работает.').then(function () { setChips(DEFAULT_CHIPS); });
+      return aiSay('Услышал: «' + esc(text) + '». В проде разберу это по вашему вкусовому вектору (<b>' + esc(tags) + '</b>) и перестрою подборку на лету. Пока попробуйте кнопки — они показывают, как это работает.').then(function () { setChips(DEFAULT_CHIPS); });
     }
 
     function greetFromOnboarding(names) {
@@ -15646,14 +15893,14 @@
     function endSession() {
       if (!session.active) return;
       session.active = false;
-      var back = session.prevRoom || playingRoom || 'global';
+      var back = session.prevRoom || playingRoom || HOME_ROOM;
       // tear down the session room (host ends for all)
       saveRoomState();
       delete ROOMS[SESSION_ROOM];
       delete store[SESSION_ROOM];
       session.members = [];
       // RESTORE auto-follow target
-      if (!ROOMS[back]) back = 'global';
+      if (!ROOMS[back]) back = HOME_ROOM;
       switchRoom(back);
       paintSessionChrome();
       syncPill(false);
@@ -18768,7 +19015,18 @@
     cards.forEach((c,i)=> c.querySelector('.rmg-card-face').tabIndex = (i===0?0:-1));
     const io = new IntersectionObserver(es=>{
       if(programmatic) return;
-      es.forEach(e=>{ if(e.isIntersecting && e.intersectionRatio>0.6) setActive(e.target.dataset.id, false); });
+      /* Было: setActive на КАЖДУЮ карточку с ratio>0.6 по порядку записей -> «последний победил»,
+         и активной становился сосед центральной (замер: клик по MAXIMUM -> active='mc', плеер и
+         диджей уезжали на чужую станцию, а второй клик вместо tune просто перецентрировал).
+         Берём ту, чей центр ближе к центру ленты — это и есть «в эфире». */
+      const r = t.getBoundingClientRect(), mid = r.left + r.width / 2;
+      let best = null, bestD = Infinity;
+      cards.forEach(c => {
+        const b = c.getBoundingClientRect();
+        const d = Math.abs((b.left + b.width / 2) - mid);
+        if (d < bestD) { bestD = d; best = c; }
+      });
+      if (best) setActive(best.dataset.id, false);
     }, {root:t, threshold:[0.6]});
     cards.forEach(c=> io.observe(c));
     cards.forEach(c=>{
