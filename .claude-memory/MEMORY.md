@@ -22,6 +22,7 @@
 - [session_2026_06_11_twinr_storage_md.md](session_2026_06_11_twinr_storage_md.md) — **Twinr «Хранилище» + MD-конвертер (задача Татьяны)**: бывш. «ИИ — Документы» перестроен под их прод (upload-карточка 20 МБ + таблица с её скринов 1:1) и вынесен в **отдельную вкладку сайдбара** (data-route="storage", по команде Эльбика); **MD-конвертер** per-row «В Markdown» (PDF/DOCX) → модалка convert→выбор «В хранилище» (строка .md+флеш) / «В проект» (дропдаун Аудио Метрика/Большой Цифровой/CRM Турбо); фикс по ревью Эльбика: «Загрузить» оживлён (файл→строка, валидация 20 МБ) + .md скачивается (data:markdown, «Скачать»); real-click E2E в standalone, console 0; zip отправлен ей msg 590167 (серверная telethon-сессия — локальную лочил JRE-аплоад). Уроки: Chrome MCP same-URL navigate=no-op (нужен reload ignoreCache); «все прям в восторге от дизы» — фидбек барышень Татьяны
 - [session_2026_04_29_rutv_cinematic.md](session_2026_04_29_rutv_cinematic.md) — **Holy Grail integration + RU.TV showcase v1→v5**: Anthropic Design System Prompt vendored + DESIGN_PROTOCOL.md в 10 частях; RU.TV витрина-агрегатор с 104 реальными ассетами, чарт top-10 русской сцены, расписание week×hours, 3 темы (Glass/Apple Dark/Light) + cinematic второй вариант (Apple TV+ landing с full-screen hero, off-canvas drawer, bento layouts, scroll reveal). 2 файла на руках: dashboard 10MB + cinematic 4.5MB
 - [session_2026_05_13_rutv_landing_pixel_perfect.md](session_2026_05_13_rutv_landing_pixel_perfect.md) — **RU.TV landing v6**: Figma frame 3373:2073 mapped через FigMCP OAuth + Chrome MCP; реальный логотип inline SVG currentColor + masked TV; **2 версии** built: `rutv-landing-figma.html` (1-в-1 Figma 36KB) и `rutv-landing.html` (Karpathy-tier production-best 120KB) — SPA с 7 hash routes (home/live/news/poster/video/programs/schedule), Apple TV+ cinematic hero (Ken Burns + LIVE pulse + viewer count), Spotify now-playing chip, Netflix card hover, YouTube TV schedule grid с LIVE highlight, sticky frosted nav (HIG iOS 26), filter chips, modal player, dark mode auto, mobile bottom nav, full SEO+JSON-LD. Standalone 4.1MB / 11.2MB через `tools/build_rutv_landing_standalone.py`. RUTV-100..120 в DEBT.
+- [session_2026_07_15_rutv_showcase_v2.md](session_2026_07_15_rutv_showcase_v2.md) — **RU.TV showcase v2→v2.2**: розовый ребрендинг #E40087 + официальный лого/фавикон с живого ru.tv (favicon.svg + logo.e3ca789.svg — единственные первоисточники бренда), hero эфира + рекламный слот 300×600 с ротацией, 6 подканалов-потоков, новое меню (Премия-заглушка / Новости+Афиша / Программы 9 / Видео / Витрина подарков), PiP вместо нижнего плеера, one-click эфир, баллы Twitch-механикой; правки owner'а: без сайдбар-виджета, Супер 20 = топ-10 + страница, хедер без надписи раздела. 3 zip-поставки в Saved (актуальный msg 602428). Ветка `feat/rutv-showcase-v2`
 - [session_2026_06_03_gorod_fm_cont16_light_sweep_analysis.md](session_2026_06_03_gorod_fm_cont16_light_sweep_analysis.md) — **Город ФМ cont-16**: light theme deferred-sweep — 6-агентный read-only аудит (workflow `woi5kyh7a`, 537k токенов) всех вторичных роутов (#/track/#/profile/#/artist/#/podborki/#/lives/#/recap/shared-chrome) → build-ready override-спек (`HANDOFF-gorod-fm-cont-16.md` + verbatim `cont-16-light-sweep-analysis.json`). Билд НА ПАУЗЕ по директиве Эльбика «пауза без потерь» — `gorod-fm.html` НЕ тронут. Находки: #/podborki gallery=DEAD CODE, #/artist latent бел-на-бел track-cover, closed-box/recap-card остаются тёмными, seam byte-identity via fallback. Этот sync запушил cont-12→16.
 
 ## Current Design Iteration
@@ -30,11 +31,11 @@
 
 **Два production-ready варианта на руках, заказчик выбирает направление:**
 
-**Dashboard (для daily use):**
-- `designs/showcase-aggregator.html` (90 KB, 11 секций)
-- `designs/showcase-aggregator-standalone.html` (10.3 MB, 104 ассета inlined)
-- Sidebar 256px постоянно видим, sticky bottom radio player
-- Sections: Hero / Каналы / Радио / Сейчас слушают / Чарт top-10 / Жанры / Артисты / DJ / Mood / Клипы / Новости / Расписание / Партнёры / Footer
+**Dashboard (для daily use) — v2.2 (2026-07-15, ветка `feat/rutv-showcase-v2`):**
+- `designs/showcase-aggregator.html` (117 KB) + standalone 10.9 MB
+- Sidebar: официальный лого + меню Главная / Премия RU.TV (ссылка-заглушка) / Новости (табы Новости|Афиша) / Программы (9 плиток) / Видео / Витрина подарков; без мини-виджета
+- Главная: hero эфира + рекламный слот 300×600 (ротация) / 6 подканалов (клик переключает эфир) / Каналы / Новые клипы 16:9×3 / Программы / Супер 20 top-10 (+страница #chart с 20) / Новости / Артисты / Ведущие / футер-контакты
+- PiP мини-плеер вместо нижнего радио-бара + one-click эфир из топбара; баллы за просмотр (Twitch-механика) + витрина подарков; хедер без надписи раздела (название в document.title)
 
 **Cinematic (для marketing/pitch):**
 - `designs/showcase-cinematic.html` (61 KB)
@@ -50,7 +51,7 @@
 - **Apple Dark** — pure black `#000`, dynamic blur от hero artwork, white CTA, max contrast `#f5f5f7`
 - **Light** — Apple Music Light style: `#f5f5f7` bg, `#ffffff` cards, `#1d1d1f` text, brand red accent, subtle shadows
 
-**Бренд:** RU.TV красно-белый oval `#E30033` + 1.5px white inner ring, Onest шрифт (НЕ Inter/Roboto per Holy Grail).
+**Бренд (v2.2, 2026-07-15):** розовый **#E40087** (первоисточник — favicon.svg на ru.tv) + официальный лого из шапки ru.tv (`assets/rutv/rutv-logo-official.svg`, inline currentColor). Старый красный oval `#E30033` — только в cinematic-варианте. Onest шрифт (НЕ Inter/Roboto per Holy Grail).
 
 **Контент (real RU.TV):**
 - Каналы: RU.TV приоритет, Русское Радио ТВ, DFM TV, Maximum TV, Monte Carlo TV, Хит FM TV
