@@ -20,5 +20,6 @@ _updated: 2026-07-15_
 <!-- dated, newest first, append-only -->
 
 ## JOURNAL
+- 2026-07-15 — 📦 ДОСТАВЛЕНО: zip `deliverables/2026-07-15/rutv-showcase-v2-standalone-2026-07-15.zip` (8.74MB, внутри `rutv-showcase-v2-standalone.html`) → Telegram Saved Messages **msg 602408**, БЕЗ подписи (директива owner'а «чисто zip»). Рельса: `.scratch/rutv2/send_zip_to_saved.py` (telethon-сессия mama-helper read-only, force_document).
 - 2026-07-15 — RU.TV showcase v2: розовый ребрендинг (все 3 темы) + официальный лого/фавикон с ru.tv · hero+промо 300×600 (IAB) с ротацией креативов · 6 подканалов с переключением эфира · новое меню + страницы Новости(+Афиша)/Программы(9 плиток)/Видео/Витрина подарков · PiP-миниплеер + one-click эфир · баллы+сундук+обмен подарков · скриншот-верификация 3 темы × desktop/mobile, все страницы · standalone 11.4MB офлайн-чист · commit `980f025`
 <!-- dated one-liners, newest first; prune older than ~5 sessions -->
