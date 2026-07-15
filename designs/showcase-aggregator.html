@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="ru" data-style="glass" data-page="live">
+<html lang="ru" data-style="glass" data-page="home">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>RU.TV — Русское музыкальное телевидение</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNTkuOTk5OSAzLjE4MDIyZS0wOEMyNi44NjMzIC0wLjAwMTA2NzI3IDAgMjYuODYyMyAwIDYwLjAwMTFDMCA5My4xMzc3IDI2Ljg2NDcgMTIwIDYwLjAwMTMgMTIwQzkzLjEzOTMgMTIwIDEyMC4wMDMgOTMuMTM3NyAxMjAgNjAuMDAxMUMxMjAuMDAzIDI2Ljg2MzMgOTMuMTM5NCAtMC4wMDEwNjcyNyA1OS45OTk5IDMuMTgwMjJlLTA4WiIgZmlsbD0iI0U0MDA4NyIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTM0LjI2MzQgNjguOTU5Nkw0My4yNjg5IDgzLjQzMDZINTUuMzIzTDQ0Ljg4OTQgNjYuOTkxQzUwLjIwMjcgNjQuNTgxMiA1My4xODQ3IDYwLjAwODUgNTMuMTg0NyA1My45Nzk4QzUzLjE4NDcgNDQuODQwMyA0Ni4zMTUyIDM5IDM0LjkxMTYgMzlIMThWODMuNDMwNkgyOC44ODQ5VjY4Ljk1OTZIMzQuMjYzNFpNMzYuNDAyNCA1OC45OTI5SDI4Ljg4NDhWNDguOTY4NkgzNi40MDI0QzQwLjI4ODQgNDguOTY4NiA0MS44NDM3IDUxLjU3MDYgNDEuODQzNyA1My45ODA0QzQxLjg0MzcgNTYuMzkxIDQwLjI4ODQgNTguOTkyOSAzNi40MDI0IDU4Ljk5MjlaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTAyLjQ2OCA2My43NDM0VjM5SDkxLjcyNjNWNjQuMTI1NEM5MS43MjYzIDcwLjQ4NzUgODguMjE0MSA3NC40MzIzIDgyLjMzMzEgNzQuNDMyM0M3Ni40NTE0IDc0LjQzMjMgNzIuOTM0NiA3MC40ODc1IDcyLjkzNDYgNjQuMTI1NFYzOUg2Mi4xOTgzVjYzLjc0MzRDNjIuMTk4MyA3Ny4xMDMgNzAuNDQyNyA4NC40MTc5IDgyLjMzMzEgODQuNDE3OUM5NC4xNTc4IDg0LjQxNzkgMTAyLjQ2OCA3Ny4xMDMgMTAyLjQ2OCA2My43NDM0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,13 +24,14 @@
   --t-fast: 200ms cubic-bezier(.2,.8,.2,1);
   --t-mid: 380ms cubic-bezier(.2,.8,.2,1);
   --sidebar-w: 256px;
-  --player-h: 88px;
   --content-pad: 40px;
+  --promo-w: 300px;  /* рекламный слот IAB Half Page 300×600 */
+  --promo-h: 600px;
 
-  /* Brand RU.TV (красно-белый овал, розово-голубые promo) */
-  --brand-red: #E30033;
-  --brand-red-hot: #FF1F4B;
-  --brand-pink: #FF4D8F;
+  /* Brand RU.TV — официальный розовый ребрендинга (#E40087 из favicon.svg ru.tv) */
+  --brand-pink: #E40087;
+  --brand-pink-hot: #FF24A8;
+  --brand-pink-deep: #A80063;
   --brand-cyan: #21B5FF;
   --brand-magenta: #C724B1;
   --brand-yellow: #FFC700;
@@ -51,16 +53,16 @@
   --glass-blur: 28px;
   --glass-blur-strong: 44px;
 
-  --accent: var(--brand-red);
-  --accent-hover: var(--brand-red-hot);
-  --accent-soft: rgba(227,0,51,0.18);
+  --accent: var(--brand-pink);
+  --accent-hover: var(--brand-pink-hot);
+  --accent-soft: rgba(228,0,135,0.20);
   --on-accent: #ffffff;
 
   --text-primary: rgba(255,255,255,0.96);
   --text-secondary: rgba(255,255,255,0.66);
   --text-tertiary: rgba(255,255,255,0.42);
 
-  --live-dot: #FF5C5C;
+  --live-dot: var(--brand-pink);
   --shadow-lg: 0 24px 60px rgba(0,0,0,0.55), 0 4px 14px rgba(0,0,0,0.35);
   --shadow-md: 0 12px 32px rgba(0,0,0,0.45);
 }
@@ -83,14 +85,14 @@
 
   --accent: var(--brand-pink);
   --accent-hover: var(--brand-pink-hot);
-  --accent-soft: rgba(227,0,51,0.14);
+  --accent-soft: rgba(228,0,135,0.16);
   --on-accent: #ffffff;
 
   --text-primary: #f5f5f7;
   --text-secondary: rgba(245,245,247,0.66);
   --text-tertiary: rgba(245,245,247,0.42);
 
-  --live-dot: #ff453a;
+  --live-dot: var(--brand-pink);
   --shadow-lg: 0 30px 80px rgba(0,0,0,0.85), 0 8px 24px rgba(0,0,0,0.6);
   --shadow-md: 0 14px 36px rgba(0,0,0,0.7);
 }
@@ -112,16 +114,16 @@
   --glass-blur: 24px;
   --glass-blur-strong: 40px;
 
-  --accent: var(--brand-red);
-  --accent-hover: var(--brand-red-hot);
-  --accent-soft: rgba(227,0,51,0.10);
+  --accent: var(--brand-pink);
+  --accent-hover: var(--brand-pink-hot);
+  --accent-soft: rgba(228,0,135,0.10);
   --on-accent: #ffffff;
 
   --text-primary: #1d1d1f;
   --text-secondary: #515154;
   --text-tertiary: #86868b;
 
-  --live-dot: #E30033;
+  --live-dot: var(--brand-pink);
   --shadow-lg: 0 20px 50px rgba(0,0,0,0.10), 0 4px 14px rgba(0,0,0,0.06);
   --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
 }
@@ -135,6 +137,7 @@
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border-right: 1px solid var(--glass-border);
 }
+[data-style="light"] .sb-logo { color: var(--brand-pink); }
 [data-style="light"] .sb-item[aria-current="page"] {
   background: var(--accent-soft);
   color: var(--accent);
@@ -152,17 +155,22 @@
   background: linear-gradient(180deg, rgba(245,245,247,0.92), rgba(245,245,247,0));
 }
 [data-style="light"] .tb-search,
-[data-style="light"] .tb-icon-btn {
+[data-style="light"] .tb-icon-btn,
+[data-style="light"] .tb-points {
   background: rgba(0,0,0,0.05);
   border: 0;
 }
 [data-style="light"] .tb-search:hover,
-[data-style="light"] .tb-icon-btn:hover {
+[data-style="light"] .tb-icon-btn:hover,
+[data-style="light"] .tb-points:hover {
   background: rgba(0,0,0,0.08);
 }
 
 [data-style="light"] .card-tv,
-[data-style="light"] .card-news {
+[data-style="light"] .card-news,
+[data-style="light"] .afisha-card,
+[data-style="light"] .gift-card,
+[data-style="light"] .points-hero {
   background: #ffffff;
   border: 1px solid var(--glass-border);
   backdrop-filter: none;
@@ -170,115 +178,61 @@
   box-shadow: var(--shadow-md);
 }
 [data-style="light"] .card-tv:hover,
-[data-style="light"] .card-news:hover {
+[data-style="light"] .card-news:hover,
+[data-style="light"] .afisha-card:hover,
+[data-style="light"] .gift-card:hover {
   background: #ffffff;
   box-shadow: var(--shadow-lg);
 }
-[data-style="light"] .card-radio-disc,
-[data-style="light"] .card-genre,
-[data-style="light"] .card-mood,
-[data-style="light"] .card-clip-thumb,
-[data-style="light"] .card-dj-art,
-[data-style="light"] .card-artist-avatar {
+[data-style="light"] .card-sub,
+[data-style="light"] .card-clip-wide-thumb,
+[data-style="light"] .card-program-art,
+[data-style="light"] .card-host-art,
+[data-style="light"] .card-artist-avatar,
+[data-style="light"] .video-card-thumb,
+[data-style="light"] .live-hero,
+[data-style="light"] .promo-slot {
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-md);
 }
 
-[data-style="light"] .chip {
+[data-style="light"] .live-info {
+  background: #ffffff;
+  border-top: 1px solid var(--glass-border);
+}
+[data-style="light"] .pip { background: #ffffff; }
+[data-style="light"] .pip-bar {
+  background: rgba(255,255,255,0.95);
+  border-top: 1px solid var(--glass-border);
+}
+
+[data-style="light"] .tabs-btn {
   background: rgba(0,0,0,0.06);
   border: 0;
   color: var(--text-secondary);
 }
-[data-style="light"] .chip:hover { background: rgba(0,0,0,0.10); color: var(--text-primary); }
-[data-style="light"] .chip[aria-pressed="true"] {
+[data-style="light"] .tabs-btn:hover { background: rgba(0,0,0,0.10); color: var(--text-primary); }
+[data-style="light"] .tabs-btn[aria-selected="true"] {
   background: var(--text-primary);
   color: white;
 }
-
-[data-style="light"] .player {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(40px) saturate(1.6);
-  -webkit-backdrop-filter: blur(40px) saturate(1.6);
-  border-top: 1px solid var(--glass-border);
-}
-[data-style="light"] .pl-btn-play {
-  background: #1d1d1f;
-  color: white;
-}
-[data-style="light"] .pl-btn-play:hover { background: var(--accent); color: white; }
 
 [data-style="light"] .tweaks {
   background: rgba(255,255,255,0.92);
   border: 1px solid var(--glass-border);
 }
 
-[data-style="light"] .schedule {
-  background: #ffffff;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-md);
-}
-
-[data-style="light"] .partner {
-  background: #ffffff;
-  border: 1px solid var(--glass-border);
-}
-[data-style="light"] .partner:hover { background: rgba(0,0,0,0.02); }
-
-[data-style="light"] .sb-recent {
-  background: rgba(0,0,0,0.04);
-}
-[data-style="light"] .sb-recent:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); }
-
-[data-style="light"] .chart-rank {
-  color: var(--accent);
-}
-
-[data-style="light"] .row-link {
-  color: var(--accent);
-}
-
-[data-style="light"] .card-news-tag {
-  color: var(--accent);
-}
-
-[data-style="light"] .pl-btn:hover {
-  background: rgba(0,0,0,0.06);
-}
-
-[data-style="light"] .tb-avatar {
-  border: 0;
-}
-
-[data-style="light"] .player-volume input[type=range] {
-  background: rgba(0,0,0,0.12);
-}
-[data-style="light"] .player-volume input[type=range]::-webkit-slider-thumb {
-  background: #1d1d1f;
-}
-
+[data-style="light"] .chart-rank { color: var(--accent); }
+[data-style="light"] .row-link { color: var(--accent); }
+[data-style="light"] .card-news-tag { color: var(--accent); }
+[data-style="light"] .tb-avatar { border: 0; }
 
 [data-style="light"] .card-tv-channel-logo {
   background: #1d1d1f;
   color: white;
 }
-[data-style="light"] .player-art {
-  border: 1px solid var(--glass-border);
-}
-[data-style="light"] .player-station-mark {
-  background: var(--accent);
-  color: white;
-}
-[data-style="light"] .player-track { color: var(--text-primary); }
-[data-style="light"] .player-station { color: var(--text-secondary); }
-[data-style="light"] .pl-btn {
-  color: var(--text-secondary);
-}
-[data-style="light"] .player-volume svg { color: var(--text-secondary); }
 [data-style="light"] .sb-mini-track,
 [data-style="light"] .sb-mini-artist { color: white; }
-[data-style="light"] .sb-brand-name { color: var(--text-primary); }
-[data-style="light"] .sb-brand-sub { color: var(--text-secondary); }
-[data-style="light"] .sb-label { color: var(--text-tertiary); }
 [data-style="light"] .tb-title { color: var(--text-primary); }
 [data-style="light"] .tb-search input { color: var(--text-primary); }
 [data-style="light"] .tb-search input::placeholder { color: var(--text-tertiary); }
@@ -290,27 +244,28 @@
 [data-style="light"] .footer-col a { color: var(--text-secondary); }
 [data-style="light"] .footer-bottom { color: var(--text-tertiary); }
 [data-style="light"] .footer-bottom a { color: var(--text-secondary); }
-[data-style="light"] .schedule-hour { color: var(--text-secondary); }
-[data-style="light"] .schedule-day { color: var(--text-secondary); }
-[data-style="light"] .partner-mark-name { color: var(--text-primary); }
-[data-style="light"] .partner-mark-sub { color: var(--text-tertiary); }
 [data-style="light"] .card-tv-channel { color: var(--text-tertiary); }
 [data-style="light"] .card-tv-now { color: var(--text-primary); }
 [data-style="light"] .card-tv-next { color: var(--text-secondary); }
-[data-style="light"] .card-radio-track-now { color: var(--text-primary); }
-[data-style="light"] .card-radio-track { color: var(--text-secondary); }
 [data-style="light"] .card-news-title { color: var(--text-primary); }
 [data-style="light"] .card-news-meta { color: var(--text-tertiary); }
 [data-style="light"] .card-artist-name,
-[data-style="light"] .card-dj-name { color: var(--text-primary); }
+[data-style="light"] .card-host-name,
+[data-style="light"] .card-clip-wide-artist { color: var(--text-primary); }
 [data-style="light"] .card-artist-meta,
-[data-style="light"] .card-dj-meta { color: var(--text-tertiary); }
+[data-style="light"] .card-host-meta,
+[data-style="light"] .card-clip-wide-track { color: var(--text-tertiary); }
 [data-style="light"] .chart-rank-trend { color: var(--text-tertiary); }
 [data-style="light"] .chart-artist { color: var(--text-primary); }
 [data-style="light"] .chart-track { color: var(--text-secondary); }
 [data-style="light"] .chart-actions { color: var(--text-tertiary); }
 [data-style="light"] .chart-row + .chart-row::before { background: var(--glass-border); opacity: 1; }
 [data-style="light"] .tweaks-btn { color: var(--text-secondary); }
+[data-style="light"] .live-next { color: var(--text-secondary); }
+[data-style="light"] .pip-track { color: var(--text-primary); }
+[data-style="light"] .pip-channel { color: var(--text-secondary); }
+[data-style="light"] .gift-cost { background: rgba(0,0,0,0.05); color: var(--text-primary); }
+[data-style="light"] .tab-note { color: var(--text-tertiary); }
 
 /* =========================================================================
    RESET
@@ -384,7 +339,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
   min-height: 100dvh;
-  padding-bottom: var(--player-h);
 }
 
 /* ---------- SIDEBAR ---------- */
@@ -392,7 +346,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   position: sticky;
   top: 0;
   align-self: start;
-  height: calc(100dvh - var(--player-h));
+  height: 100dvh;
   padding: 22px 18px 18px;
   background: var(--glass-bg-weak);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
@@ -409,47 +363,21 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   -webkit-backdrop-filter: blur(40px) saturate(1.4);
 }
 
-/* Brand mark */
+/* Официальный логотип RU.TV — SVG с ru.tv, одноцветный (цвет через currentColor:
+   белый на тёмных темах, брендовый розовый на светлой) */
 .sb-brand {
-  display: flex; align-items: center; gap: 12px;
-  padding: 0 4px 6px;
+  display: block;
+  padding: 2px 6px 4px;
+  cursor: pointer;
 }
-.sb-brand-mark {
-  width: 60px; height: 40px;
-  flex: 0 0 60px;
-  display: grid; place-items: center;
-  border-radius: 999px;
-  background: var(--brand-red);
-  color: white;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  box-shadow: 0 8px 22px rgba(227,0,51,0.45);
-  font-family: var(--font-sans);
-  position: relative;
+.sb-logo {
+  width: 126px;
+  height: auto;
+  display: block;
+  color: #fff;
+  transition: opacity var(--t-fast);
 }
-.sb-brand-mark::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border: 1.5px solid rgba(255,255,255,0.35);
-  border-radius: 999px;
-  pointer-events: none;
-}
-.sb-brand-text {
-  display: flex; flex-direction: column;
-  line-height: 1.1;
-}
-.sb-brand-name {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-.sb-brand-sub {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
+.sb-brand:hover .sb-logo { opacity: 0.82; }
 
 /* Mini-player в сайдбаре (now-on-air) */
 .sb-mini-player {
@@ -520,20 +448,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   display: inline-flex; align-items: center; gap: 6px;
 }
 
-.sb-recent {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 14px;
-  border-radius: var(--r-md);
-  background: var(--glass-bg-weak);
-  font-size: 13px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: background var(--t-fast), color var(--t-fast);
-  min-height: 44px;
-}
-.sb-recent:hover { background: var(--glass-bg); color: var(--text-primary); }
-.sb-recent svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
-
 /* Sidebar nav items */
 .sb-nav { display: flex; flex-direction: column; gap: 2px; }
 .sb-item {
@@ -574,7 +488,11 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   stroke: currentColor; fill: none; stroke-width: 1.7;
   stroke-linecap: round; stroke-linejoin: round;
 }
-.sb-footer { margin-top: auto; }
+.sb-item .sb-ext {
+  margin-left: auto;
+  width: 13px; height: 13px; flex: 0 0 13px;
+  opacity: 0.45;
+}
 
 /* ---------- CONTENT AREA ---------- */
 .content {
@@ -640,10 +558,74 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 .tb-icon-btn:hover { background: var(--glass-bg); color: var(--text-primary); }
 .tb-icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* One-click эфир — постоянная кнопка на всех страницах */
+.tb-live-btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 10px 18px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: white;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 22px rgba(228,0,135,0.35);
+  transition: background var(--t-fast), transform var(--t-fast);
+  min-height: 42px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.tb-live-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.tb-live-btn .live-pulse { background: white; }
+
+/* Баллы зрителя (механика Twitch channel points) — видны на всех страницах */
+.tb-points {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  font-weight: 700;
+  font-feature-settings: "tnum";
+  transition: background var(--t-fast);
+  min-height: 42px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.tb-points:hover { background: var(--glass-bg); }
+.tb-points svg { width: 15px; height: 15px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tb-points[data-chest="true"]::after {
+  content: "";
+  position: absolute;
+  top: 4px; right: 6px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--brand-yellow);
+  box-shadow: 0 0 0 0 rgba(255,199,0,0.6);
+  animation: pulse 1.6s infinite;
+}
+.tb-points-float {
+  position: absolute;
+  right: 12px; top: -8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--brand-yellow);
+  opacity: 0;
+  pointer-events: none;
+}
+.tb-points-float[data-anim="true"] { animation: ptsFloat 1.4s ease forwards; }
+@keyframes ptsFloat {
+  0% { opacity: 0; transform: translateY(6px); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
 .tb-avatar {
   width: 42px; height: 42px;
   border-radius: var(--r-pill);
-  background: linear-gradient(135deg, var(--brand-pink), var(--brand-orange));
+  background: linear-gradient(135deg, var(--brand-pink), var(--brand-magenta));
   display: grid; place-items: center;
   font-weight: 700;
   font-size: 14px;
@@ -652,73 +634,46 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 
 /* =========================================================================
-   HERO CAROUSEL — promo баннеры (DFM Плейлисты с Apple Music и т.п.)
+   LIVE-ЗОНА — прямой эфир + рекламный промоблок 300×600 (IAB Half Page)
    ========================================================================= */
-.hero-carousel {
-  margin: 8px 0 28px;
-  position: relative;
+.live-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--promo-w);
+  gap: 22px;
+  align-items: stretch;
+  margin: 8px 0 22px;
 }
-.hero-track {
-  display: flex; gap: 22px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 12px;
-  scroll-padding-left: var(--content-pad);
-  scroll-padding-right: var(--content-pad);
-  margin: 0 calc(var(--content-pad) * -1);
-  padding-left: var(--content-pad);
-  padding-right: var(--content-pad);
-}
-.hero-card {
-  flex: 0 0 88%;
-  scroll-snap-align: start;
+.live-hero {
   position: relative;
+  height: var(--promo-h);
+  margin: 0;
   border-radius: var(--r-xl);
   overflow: hidden;
-  aspect-ratio: 21 / 8;
-  min-height: 340px;
-  max-height: 540px;
-  background-color: #1a1a1a;
-  background-size: cover;
-  background-position: center;
+  display: flex;
+  flex-direction: column;
+  background: #101014;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lg);
-  transition: transform var(--t-mid);
 }
-.hero-card::before {
+.live-screen {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+}
+.live-screen::after {
   content: "";
   position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.82) 100%),
-    linear-gradient(90deg, rgba(0,0,0,0.55) 0%, transparent 60%);
-  z-index: 1;
+  background: linear-gradient(180deg, rgba(0,0,0,0.14) 0%, transparent 30%, rgba(0,0,0,0.78) 100%);
 }
-.hero-card:hover { transform: scale(1.005); }
-.hero-card-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-}
-.hero-card-bg::after {
-  content: "";
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.78) 100%),
-    linear-gradient(90deg, rgba(0,0,0,0.45) 0%, transparent 55%);
-}
-.hero-card-overlay {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 44px 52px;
-  gap: 18px;
+.live-screen-top {
+  position: absolute; top: 20px; left: 22px; right: 22px;
+  display: flex; align-items: center; gap: 12px;
   z-index: 2;
 }
-@media (max-width: 1100px) { .hero-card-overlay { padding: 32px 28px; gap: 14px; } }
-.hero-card-meta {
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  font-size: 13px;
-  color: rgba(255,255,255,0.85);
-}
-.hero-card-tag {
+.live-tag {
   padding: 5px 11px;
   border-radius: var(--r-pill);
   background: rgba(0,0,0,0.45);
@@ -730,24 +685,231 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.hero-card-title {
-  font-size: clamp(28px, 3.5vw, 52px);
+.live-viewers {
+  margin-left: auto;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255,255,255,0.9);
+  font-size: 12px;
+  font-weight: 600;
+  font-feature-settings: "tnum";
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.live-viewers svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.live-screen-meta {
+  position: absolute; left: 22px; right: 22px; bottom: 18px;
+  z-index: 2;
+}
+.live-screen-title {
+  font-size: clamp(26px, 2.6vw, 40px);
   font-weight: 800;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.02em;
   color: white;
-  max-width: 720px;
-  line-height: 1.04;
+  line-height: 1.05;
   text-shadow: 0 2px 18px rgba(0,0,0,0.45);
 }
-.hero-card-sub {
-  font-size: 15px;
-  color: rgba(255,255,255,0.85);
-  max-width: 580px;
-}
-.hero-card-actions {
-  display: flex; gap: 10px;
+.live-screen-sub {
   margin-top: 6px;
+  font-size: 14.5px;
+  color: rgba(255,255,255,0.85);
+  max-width: 560px;
 }
+.live-play {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  z-index: 2;
+  opacity: 0;
+  background: rgba(0,0,0,0.25);
+  transition: opacity var(--t-fast);
+}
+.live-screen:hover .live-play { opacity: 1; }
+.live-play-btn {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: grid; place-items: center;
+  box-shadow: 0 12px 32px rgba(228,0,135,0.45);
+  transition: transform var(--t-fast);
+}
+.live-screen:hover .live-play-btn { transform: scale(1.06); }
+.live-play-btn svg { width: 28px; height: 28px; fill: currentColor; margin-left: 4px; }
+.live-info {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 18px;
+  padding: 16px 22px;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+  border-top: 1px solid var(--glass-border);
+}
+[data-style="apple"] .live-info { background: rgba(28,28,30,0.95); }
+.live-next { font-size: 13.5px; color: var(--text-secondary); min-width: 0; }
+.live-next strong { color: var(--text-primary); font-weight: 600; }
+.live-info-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; flex: 0 0 auto; }
+.btn-live {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 8px 22px rgba(228,0,135,0.35);
+}
+.btn-live:hover { background: var(--accent-hover); }
+
+/* Бонус-сундук — механика Twitch: появляется у эфира раз в 15 минут */
+.chest-btn {
+  display: none;
+  align-items: center; gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  background: var(--brand-yellow);
+  color: #3a2a00;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 8px 22px rgba(255,199,0,0.35);
+  transition: transform var(--t-fast);
+  min-height: 44px;
+}
+.chest-btn[data-ready="true"] { display: inline-flex; animation: chestPop 500ms cubic-bezier(.2,.8,.2,1); }
+.chest-btn:hover { transform: scale(1.04); }
+.chest-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes chestPop {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Промоблок 300×600 — рекламный слот с ротацией креативов */
+.promo-slot {
+  position: relative;
+  width: var(--promo-w);
+  height: var(--promo-h);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  background: #101014;
+}
+.promo-tag {
+  position: absolute; top: 12px; right: 12px;
+  z-index: 3;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255,255,255,0.75);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.promo-slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease;
+  cursor: pointer;
+}
+.promo-slide[data-on="true"] { opacity: 1; pointer-events: auto; }
+.promo-slide::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.85) 100%);
+}
+.promo-meta {
+  position: absolute; left: 18px; right: 18px; bottom: 46px;
+  z-index: 2;
+}
+.promo-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.promo-sub { margin-top: 6px; font-size: 12.5px; color: rgba(255,255,255,0.82); }
+.promo-cta {
+  margin-top: 12px;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+  background: white;
+  color: black;
+  font-size: 13px;
+  font-weight: 600;
+}
+.promo-dots {
+  position: absolute; left: 18px; bottom: 16px;
+  display: flex; gap: 6px;
+  z-index: 3;
+}
+.promo-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+.promo-dot[aria-current="true"] { background: white; transform: scale(1.2); }
+
+/* Подканалы RU.TV — тематические потоки под эфиром */
+.sub-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 56px;
+}
+.card-sub {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  background-size: cover;
+  background-position: center;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+  text-align: left;
+  width: 100%;
+}
+.card-sub:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
+.card-sub::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 20%, rgba(0,0,0,0.72) 100%);
+}
+.card-sub[aria-pressed="true"] {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.card-sub-live {
+  position: absolute; top: 10px; left: 10px;
+  z-index: 2;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+.card-sub-live::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--brand-pink);
+}
+.card-sub-meta {
+  position: absolute; left: 14px; right: 14px; bottom: 12px;
+  z-index: 2;
+}
+.card-sub-name { display: block; font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.01em; }
+.card-sub-tag { display: block; font-size: 11.5px; color: rgba(255,255,255,0.72); margin-top: 2px; }
 
 .live-badge {
   display: inline-flex; align-items: center; gap: 7px;
@@ -759,7 +921,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  box-shadow: 0 4px 12px rgba(255,92,92,0.35);
+  box-shadow: 0 4px 12px rgba(228,0,135,0.35);
 }
 .live-pulse {
   width: 7px; height: 7px;
@@ -798,39 +960,32 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .btn svg { width: 18px; height: 18px; fill: currentColor; }
 
 /* =========================================================================
-   CHIP ROW — категории
+   TABS — переключатель разделов внутри страницы (Новости | Афиша)
    ========================================================================= */
-.chip-row {
-  display: flex; gap: 8px;
-  overflow-x: auto;
-  padding: 4px 0 12px;
-  margin: 0 calc(var(--content-pad) * -1) 28px;
-  padding-left: var(--content-pad);
-  padding-right: var(--content-pad);
-  scroll-snap-type: x mandatory;
-  scroll-padding-left: var(--content-pad);
-}
-.chip {
-  flex: 0 0 auto;
-  padding: 10px 18px;
+.tabs { display: flex; gap: 8px; margin: 4px 0 24px; align-items: center; }
+.tabs-btn {
+  padding: 10px 20px;
   border-radius: var(--r-pill);
   background: var(--glass-bg-weak);
   border: 1px solid var(--glass-border);
   color: var(--text-secondary);
   font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
+  font-weight: 600;
   transition: background var(--t-fast), color var(--t-fast);
-  scroll-snap-align: start;
   min-height: 44px;
 }
-.chip:hover { background: var(--glass-bg); color: var(--text-primary); }
-.chip[aria-pressed="true"] {
+.tabs-btn:hover { background: var(--glass-bg); color: var(--text-primary); }
+.tabs-btn[aria-selected="true"] {
   background: var(--text-primary);
   color: var(--bg-base);
   border-color: transparent;
-  font-weight: 600;
 }
+.tab-note { font-size: 13px; color: var(--text-tertiary); margin-left: auto; }
+
+/* Заголовок-хиро внутренних страниц */
+.page-head { margin: 8px 0 24px; }
+.page-head h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }
+.page-head p { margin-top: 8px; font-size: 14.5px; color: var(--text-secondary); max-width: 560px; }
 
 /* =========================================================================
    ROW SECTIONS
@@ -945,84 +1100,99 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   border-radius: 2px;
 }
 
-/* CARD: Radio station */
-.card-radio { flex: 0 0 200px; scroll-snap-align: start; cursor: pointer; }
-.card-radio-disc {
-  position: relative;
-  width: 200px; height: 200px;
-  margin-bottom: 14px;
-  border-radius: 22px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  transition: transform var(--t-mid);
-}
-[data-style="apple"] .card-radio-disc { border-radius: 14px; }
-.card-radio:hover .card-radio-disc { transform: scale(1.04) rotate(-1deg); }
-.card-radio-art {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-}
-.card-radio-art::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.7) 100%);
-}
-.card-radio-meta {
-  position: absolute;
-  bottom: 16px; left: 16px; right: 16px;
-  display: flex; align-items: end; justify-content: space-between;
-  gap: 12px;
-  z-index: 2;
-}
-.card-radio-name { font-weight: 700; font-size: 16px; color: white; letter-spacing: -0.01em; }
-.card-radio-tag { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
-.card-radio-play {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  display: grid; place-items: center;
-  color: white;
-  border: 1px solid rgba(255,255,255,0.25);
-  transition: background var(--t-fast), transform var(--t-fast);
-  flex: 0 0 36px;
-}
-.card-radio-disc:hover .card-radio-play { background: var(--accent); color: white; transform: scale(1.08); }
-.card-radio-play svg { width: 14px; height: 14px; fill: currentColor; }
-.card-radio-track { font-size: 13px; color: var(--text-secondary); padding-left: 4px; }
-.card-radio-track-now { color: var(--text-primary); font-weight: 500; margin-bottom: 2px; }
-
-/* CARD: Genre tile (большие плитки) */
-.card-genre {
-  flex: 0 0 220px;
+/* CARD: Новый клип — прямоугольный 16:9, три в ряд */
+.card-clip-wide {
+  flex: 0 0 calc((100% - 32px) / 3);
+  min-width: 300px;
   scroll-snap-align: start;
-  aspect-ratio: 1.1 / 1;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  position: relative;
   cursor: pointer;
+}
+.card-clip-wide-thumb {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
   background-size: cover; background-position: center;
+  position: relative;
+  overflow: hidden;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-md);
   transition: transform var(--t-fast);
 }
-.card-genre:hover { transform: translateY(-3px) scale(1.02); }
-.card-genre::after {
-  content: '';
+.card-clip-wide:hover .card-clip-wide-thumb { transform: scale(1.02); }
+.card-clip-wide-thumb::after {
+  content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%);
+  background: linear-gradient(180deg, transparent 62%, rgba(0,0,0,0.55) 100%);
 }
-.card-genre-name {
-  position: absolute; bottom: 16px; left: 18px; right: 18px;
+.card-clip-wide-duration {
+  position: absolute; bottom: 10px; right: 10px;
   z-index: 2;
+  padding: 4px 8px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: white;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.01em;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
 }
+.card-clip-wide-hover {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity var(--t-fast);
+}
+.card-clip-wide:hover .card-clip-wide-hover { opacity: 1; }
+.card-clip-wide-hover span {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(228,0,135,0.92);
+  display: grid; place-items: center;
+  color: white;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+}
+.card-clip-wide-hover svg { width: 20px; height: 20px; fill: currentColor; margin-left: 3px; }
+.card-clip-wide-artist { margin-top: 10px; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
+.card-clip-wide-track { font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
+
+/* CARD: Программа — радийная плитка (видеоподкаст) */
+.card-program { flex: 0 0 210px; scroll-snap-align: start; cursor: pointer; }
+.card-program-art {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--r-lg);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-fast);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+}
+.card-program:hover .card-program-art { transform: scale(1.03); }
+.card-program-time {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255,255,255,0.9);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.card-program-abbr {
+  font-size: 26px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.95);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+.card-program-meta { margin-top: 10px; font-size: 12.5px; color: var(--text-tertiary); }
 
 /* CARD: Artist (round avatar) */
 .card-artist { flex: 0 0 160px; scroll-snap-align: start; cursor: pointer; text-align: center; }
@@ -1045,78 +1215,27 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 .card-artist-meta { font-size: 12px; color: var(--text-tertiary); }
 
-/* CARD: DJ (rect) */
-.card-dj { flex: 0 0 200px; scroll-snap-align: start; cursor: pointer; }
-.card-dj-art {
-  aspect-ratio: 1 / 1;
-  border-radius: var(--r-md);
-  background-size: cover; background-position: center;
-  margin-bottom: 12px;
-  border: 1px solid var(--glass-border);
-  transition: transform var(--t-fast);
-  box-shadow: var(--shadow-md);
-}
-.card-dj:hover .card-dj-art { transform: scale(1.04); }
-.card-dj-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
-.card-dj-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
-
-/* CARD: Mood (gradient large tile) */
-.card-mood {
-  flex: 0 0 280px;
-  scroll-snap-align: start;
-  aspect-ratio: 1.6 / 1;
+/* CARD: Ведущий — монограмма (реальные фото пришлёт заказчик) */
+.card-host { flex: 0 0 180px; scroll-snap-align: start; cursor: pointer; }
+.card-host-art {
+  aspect-ratio: 1 / 1.15;
   border-radius: var(--r-lg);
-  overflow: hidden;
-  cursor: pointer;
-  background: var(--mood-grad, linear-gradient(135deg,#3a1f5a,#1a3a5a));
-  position: relative;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-md);
-  transition: transform var(--t-fast);
-}
-.card-mood:hover { transform: scale(1.03); }
-.card-mood-name {
-  position: absolute; left: 20px; bottom: 18px;
-  color: white;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.01em;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-}
-
-/* CARD: Clip */
-.card-clip { flex: 0 0 240px; scroll-snap-align: start; cursor: pointer; }
-.card-clip-thumb {
-  aspect-ratio: 9 / 12;
-  border-radius: var(--r-lg);
-  background-size: cover; background-position: center;
   position: relative;
   overflow: hidden;
   border: 1px solid var(--glass-border);
-  transition: transform var(--t-fast);
   box-shadow: var(--shadow-md);
+  transition: transform var(--t-fast);
+  display: grid; place-items: center;
 }
-.card-clip:hover .card-clip-thumb { transform: scale(1.03); }
-.card-clip-thumb::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.85) 100%);
+.card-host:hover .card-host-art { transform: scale(1.04); }
+.card-host-initials {
+  font-size: 44px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: -0.02em;
 }
-.card-clip-meta { position: absolute; bottom: 12px; left: 14px; right: 14px; z-index: 2; }
-.card-clip-artist { font-weight: 700; font-size: 15px; margin-bottom: 2px; letter-spacing: -0.01em; color: white; }
-.card-clip-track { font-size: 12.5px; color: rgba(255,255,255,0.78); }
-.card-clip-duration {
-  position: absolute; top: 10px; right: 10px;
-  z-index: 2;
-  padding: 4px 8px;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: white;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-}
+.card-host-name { margin-top: 10px; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.card-host-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
 
 /* CARD: News */
 .card-news {
@@ -1234,87 +1353,233 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .chart-row:hover .chart-actions { color: var(--text-secondary); }
 
 /* =========================================================================
-   SCHEDULE — день × часы grid (как DFM Расписание)
+   БАЛЛЫ И ВИТРИНА ПОДАРКОВ (механика Twitch channel points)
    ========================================================================= */
-.schedule {
-  border-radius: var(--r-lg);
-  background: var(--glass-bg-weak);
-  border: 1px solid var(--glass-border);
-  padding: 22px 22px 22px 14px;
-  overflow-x: auto;
-}
-.schedule-head {
+.points-hero {
   display: grid;
-  grid-template-columns: 110px repeat(7, 1fr);
-  gap: 10px;
-  margin-bottom: 14px;
-  padding-left: 10px;
-}
-.schedule-hour {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
-  text-align: center;
-  font-feature-settings: "tnum";
-}
-.schedule-row {
-  display: grid;
-  grid-template-columns: 110px repeat(7, 1fr);
-  gap: 10px;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
   align-items: center;
-  margin-bottom: 10px;
-}
-.schedule-day {
-  font-size: 14px;
-  color: var(--text-secondary);
-  padding-left: 10px;
-}
-.schedule-cell {
-  padding: 12px 14px;
-  border-radius: var(--r-md);
-  color: white;
-  font-size: 13.5px;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  transition: transform var(--t-fast), filter var(--t-fast), box-shadow var(--t-fast);
-  letter-spacing: -0.005em;
-  min-height: 48px;
-  display: grid; place-items: center;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
-}
-.schedule-cell:hover { transform: scale(1.04); filter: brightness(1.12); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
-
-/* =========================================================================
-   FOOTER PARTNERS (RMG)
-   ========================================================================= */
-.partners {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
-  margin-top: 4px;
-}
-.partner {
-  aspect-ratio: 16 / 7;
-  border-radius: var(--r-md);
+  padding: 28px 32px;
+  border-radius: var(--r-xl);
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  display: grid; place-items: center;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-md);
+  margin-bottom: 40px;
+}
+[data-style="apple"] .points-hero { background: rgba(28,28,30,0.95); }
+.points-balance-label {
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.points-balance {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-feature-settings: "tnum";
+  margin: 6px 0 4px;
+  display: flex; align-items: center; gap: 12px;
+}
+.points-balance svg { width: 34px; height: 34px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.points-progress { margin-top: 14px; max-width: 420px; }
+.points-progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+}
+.points-progress-bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-pink), var(--brand-magenta));
+  border-radius: 3px;
+  transition: width 1s linear;
+}
+.points-progress-label { font-size: 12.5px; color: var(--text-secondary); margin-top: 8px; font-feature-settings: "tnum"; }
+.points-rules { display: flex; flex-direction: column; gap: 10px; }
+.points-rule {
+  display: flex; align-items: center; gap: 10px;
   font-size: 13px;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+}
+.points-rule strong { color: var(--text-primary); font-weight: 700; font-feature-settings: "tnum"; }
+.points-rule svg { width: 16px; height: 16px; flex: 0 0 16px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+}
+.gift-card {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+  display: flex;
+  flex-direction: column;
+}
+[data-style="apple"] .gift-card { background: rgba(28,28,30,0.95); }
+.gift-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.gift-art {
+  aspect-ratio: 16 / 10;
+  display: grid; place-items: center;
+}
+.gift-art-label {
+  font-size: 21px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.95);
+  letter-spacing: -0.02em;
   text-align: center;
-  padding: 12px;
-  transition: background var(--t-fast);
+  padding: 0 18px;
+  text-wrap: balance;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+.gift-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.gift-name { font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
+.gift-row { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.gift-cost {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  font-weight: 700;
+  font-feature-settings: "tnum";
+}
+.gift-cost svg { width: 13px; height: 13px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.gift-buy {
+  padding: 8px 16px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background var(--t-fast), opacity var(--t-fast);
+  min-height: 36px;
+}
+.gift-buy:hover { background: var(--accent-hover); }
+.gift-buy[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* =========================================================================
+   АФИША (вкладка внутри Новостей)
+   ========================================================================= */
+.afisha-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.afisha-card {
+  display: grid;
+  grid-template-columns: 86px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 20px;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   cursor: pointer;
+  transition: background var(--t-fast), transform var(--t-fast);
 }
-.partner:hover { background: var(--glass-bg-strong); }
-.partner-mark {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+[data-style="apple"] .afisha-card { background: rgba(28,28,30,0.95); }
+.afisha-card:hover { transform: translateY(-2px); }
+.afisha-date {
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
-.partner-mark-name { font-weight: 800; }
-.partner-mark-sub { font-size: 10px; color: var(--text-tertiary); font-weight: 500; }
+.afisha-day { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; font-feature-settings: "tnum"; }
+.afisha-month { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
+.afisha-title { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+.afisha-place { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.afisha-cta {
+  padding: 9px 18px;
+  border-radius: var(--r-pill);
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+  min-height: 40px;
+}
+.afisha-cta:hover { background: var(--accent); border-color: transparent; color: white; }
+
+/* Сетка новостей на странице Новости */
+.news-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.news-grid .card-news { flex: none; }
+
+/* =========================================================================
+   ВИДЕО — грид и программы
+   ========================================================================= */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px 16px;
+}
+.video-card { cursor: pointer; }
+.video-card-thumb {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
+  background-size: cover; background-position: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-fast);
+}
+.video-card:hover .video-card-thumb { transform: scale(1.02); }
+.video-card-thumb::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 62%, rgba(0,0,0,0.55) 100%);
+}
+.video-card-duration {
+  position: absolute; bottom: 10px; right: 10px;
+  z-index: 2;
+  padding: 4px 8px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.video-card-tag {
+  position: absolute; top: 10px; left: 10px;
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.video-card-name { margin-top: 10px; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.video-card-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+
+/* Программы — сетка 9 плиток */
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px 16px;
+}
+.program-grid .card-program { flex: none; }
 
 .app-footer {
   margin-top: 16px;
@@ -1345,106 +1610,127 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 
 /* =========================================================================
-   STICKY RADIO PLAYER
+   PIP МИНИ-ПЛЕЕР — картинка-в-картинке (паттерн YouTube/Twitch):
+   появляется, когда эфир ушёл из зоны видимости или открыт другой раздел
    ========================================================================= */
-.player {
+.pip {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: var(--player-h);
-  z-index: 60;
+  right: 24px; bottom: 24px;
+  width: min(340px, calc(100vw - 24px));
+  z-index: 70;
+  border-radius: var(--r-lg);
+  overflow: hidden;
   background: var(--glass-bg-strong);
   backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.4);
   -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.4);
-  border-top: 1px solid var(--glass-border);
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 32px;
-  padding: 0 32px;
-  box-shadow: 0 -8px 24px rgba(0,0,0,0.32);
+  border: 1px solid var(--glass-rim);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-mid), transform var(--t-mid);
 }
-[data-style="apple"] .player {
-  background: rgba(28,28,30,0.92);
-  backdrop-filter: blur(40px) saturate(1.5);
-  -webkit-backdrop-filter: blur(40px) saturate(1.5);
+.pip[data-on="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
-.player-now { display: flex; align-items: center; gap: 14px; min-width: 0; }
-.player-art {
-  width: 56px; height: 56px;
-  border-radius: 10px;
-  background-size: cover; background-position: center;
-  flex: 0 0 56px;
-  background-color: var(--accent-soft);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--glass-border);
+[data-style="apple"] .pip { background: rgba(28,28,30,0.95); }
+.pip-screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
 }
-.player-meta { min-width: 0; }
-.player-track {
-  font-size: 14.5px;
+.pip-screen::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, transparent 40%);
+}
+.pip-live { position: absolute; top: 10px; left: 10px; z-index: 2; }
+.pip-actions {
+  position: absolute; top: 8px; right: 8px;
+  display: flex; gap: 6px;
+  z-index: 2;
+}
+.pip-act {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  display: grid; place-items: center;
+  transition: background var(--t-fast);
+}
+.pip-act:hover { background: rgba(0,0,0,0.78); }
+.pip-act svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pip-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+}
+.pip-play {
+  width: 38px; height: 38px;
+  flex: 0 0 38px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: grid; place-items: center;
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+.pip-play:hover { background: var(--accent-hover); transform: scale(1.05); }
+.pip-play svg { width: 16px; height: 16px; fill: currentColor; }
+.pip-meta { min-width: 0; flex: 1; }
+.pip-track {
+  font-size: 13.5px;
   font-weight: 600;
-  letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
 }
-.player-station {
-  font-size: 12.5px;
+.pip-channel { font-size: 11.5px; color: var(--text-secondary); margin-top: 1px; }
+.pip-points {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--text-secondary);
-  display: flex; align-items: center; gap: 8px;
-  margin-top: 2px;
+  font-feature-settings: "tnum";
+  display: inline-flex; align-items: center; gap: 5px;
 }
-.player-station-mark {
-  width: 16px; height: 16px;
-  border-radius: 4px;
-  background: var(--accent);
-  display: grid; place-items: center;
-  color: white;
-  font-size: 9px;
-  font-weight: 800;
+.pip-points svg { width: 13px; height: 13px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Toast — подсказка (напр. клик по «Премия RU.TV» до подключения лендинга) */
+.toast {
+  position: fixed;
+  left: 50%; bottom: 32px;
+  transform: translate(-50%, 16px);
+  z-index: 90;
+  padding: 12px 20px;
+  border-radius: var(--r-pill);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.4);
+  border: 1px solid var(--glass-rim);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-mid), transform var(--t-mid);
 }
-.player-controls { display: flex; align-items: center; gap: 10px; }
-.pl-btn {
-  width: 40px; height: 40px;
-  display: grid; place-items: center;
-  border-radius: 50%;
-  color: var(--text-secondary);
-  transition: background var(--t-fast), color var(--t-fast);
-}
-.pl-btn:hover { background: var(--glass-bg-weak); color: var(--text-primary); }
-.pl-btn svg { width: 18px; height: 18px; fill: currentColor; }
-.pl-btn-play {
-  width: 52px; height: 52px;
-  background: var(--text-primary);
-  color: var(--bg-base);
-}
-.pl-btn-play:hover { background: var(--accent); color: white; transform: scale(1.05); }
-[data-style="apple"] .pl-btn-play { background: white; color: black; }
-.pl-btn-play svg { width: 22px; height: 22px; }
-.player-extras { display: flex; align-items: center; gap: 14px; justify-content: flex-end; }
-.player-volume { display: flex; align-items: center; gap: 10px; min-width: 160px; }
-.player-volume input[type=range] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%; height: 4px;
-  background: var(--glass-border);
-  border-radius: 2px;
-  outline: none;
-}
-.player-volume input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: var(--text-primary);
-  cursor: pointer;
-}
+.toast[data-on="true"] { opacity: 1; transform: translate(-50%, 0); }
+[data-style="light"] .toast { background: rgba(255,255,255,0.95); }
 
 /* =========================================================================
    TWEAKS PANEL — Style switcher (Holy Grail)
    ========================================================================= */
 .tweaks {
   position: fixed;
-  right: 24px;
-  bottom: calc(var(--player-h) + 24px);
+  left: 24px;
+  bottom: 24px;
   z-index: 80;
   display: flex; flex-direction: column;
   padding: 8px;
@@ -1482,45 +1768,69 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
    ========================================================================= */
 .page { display: none; }
 .page[data-active="true"] { display: block; }
-.placeholder-page { padding: 80px 0; text-align: center; color: var(--text-secondary); }
-.placeholder-page h2 { font-size: 36px; margin-bottom: 12px; color: var(--text-primary); }
-.placeholder-page p { max-width: 420px; margin: 0 auto; font-size: 15px; }
 
 /* =========================================================================
    RESPONSIVE
    ========================================================================= */
+.tb-live-short { display: none; }
+
 @media (min-width: 1800px) {
   :root { --content-pad: 60px; --sidebar-w: 288px; }
   .row-title { font-size: 26px; }
 }
+@media (max-width: 1360px) {
+  .sub-row { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 1100px) {
   :root { --sidebar-w: 220px; }
-  .partners { grid-template-columns: repeat(3, 1fr); }
-  .schedule-head, .schedule-row { grid-template-columns: 80px repeat(7, minmax(80px, 1fr)); }
+  /* Промо 300×600 — десктопный формат; на узких экранах слот скрыт
+     (мобильный креатив 300×250 — отдельной задачей) */
+  .live-layout { grid-template-columns: 1fr; }
+  .promo-slot { display: none; }
+  .live-hero { height: auto; }
+  .live-screen { aspect-ratio: 16 / 9; }
+  .afisha-list { grid-template-columns: 1fr; }
+  .news-grid { grid-template-columns: 1fr; }
+  .program-grid { grid-template-columns: repeat(2, 1fr); }
+  .points-hero { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
   :root { --sidebar-w: 0; --content-pad: 16px; }
   .sidebar { display: none; }
-  .topbar { padding: 12px 0; gap: 10px; }
+  .topbar { padding: 12px 0; gap: 8px; }
   .tb-search { min-width: 0; }
-  .tb-title { font-size: 16px; }
-  .hero-card { flex: 0 0 92%; aspect-ratio: 4/4.6; min-height: 380px; max-height: 540px; }
-  .hero-card-overlay { padding: 22px; gap: 10px; }
-  .hero-card-title { font-size: 28px; }
-  .player { grid-template-columns: 1fr auto; gap: 14px; padding: 0 14px; }
-  .player-extras { display: none; }
-  .tweaks { right: 12px; bottom: calc(var(--player-h) + 12px); }
-  .partners { grid-template-columns: repeat(2, 1fr); }
+  .tb-title { display: none; }
+  .tb-icon-btn { display: none; }
+  .tb-live-full { display: none; }
+  .tb-live-short { display: inline; }
+  .live-info { flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
+  .live-info-actions { margin-left: 0; width: 100%; }
+  .live-info-actions .btn-live { flex: 1; justify-content: center; }
+  .sub-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    margin: 0 calc(var(--content-pad) * -1) 48px;
+    padding: 0 var(--content-pad) 8px;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: var(--content-pad);
+  }
+  .card-sub { flex: 0 0 200px; scroll-snap-align: start; }
+  .card-clip-wide { flex: 0 0 82%; min-width: 0; }
+  /* PiP выше Tweaks-панели, чтобы не перекрывались */
+  .pip { right: 12px; bottom: 80px; width: min(300px, calc(100vw - 24px)); }
+  .tweaks { left: 12px; bottom: 12px; }
   .app-footer { grid-template-columns: 1fr; gap: 20px; }
-  .schedule { padding: 14px 14px 14px 8px; }
-  .schedule-head, .schedule-row { grid-template-columns: 60px repeat(7, minmax(70px, 1fr)); }
-  .schedule-cell { padding: 10px; font-size: 12px; }
   .chart-grid { grid-template-columns: 1fr; }
+  .program-grid { grid-template-columns: 1fr; }
+  .page-head h2 { font-size: 27px; }
+  .afisha-card { grid-template-columns: 64px 1fr; }
+  .afisha-cta { display: none; }
 }
 
 @media (min-width: 1920px) {
-  .card-tv:focus-visible, .card-radio:focus-visible, .card-clip:focus-visible,
-  .card-genre:focus-visible, .card-artist:focus-visible, .card-dj:focus-visible {
+  .card-tv:focus-visible, .card-sub:focus-visible, .card-clip-wide:focus-visible,
+  .card-program:focus-visible, .card-artist:focus-visible, .card-host:focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 4px;
     transform: scale(1.06);
@@ -1543,74 +1853,57 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   <!-- SIDEBAR                                                              -->
   <!-- =================================================================== -->
   <aside class="sidebar">
-    <div class="sb-brand">
-      <div class="sb-brand-mark">RU.TV</div>
-      <div class="sb-brand-text">
-        <div class="sb-brand-name">RU.TV</div>
-        <div class="sb-brand-sub">Русское музыкальное ТВ</div>
-      </div>
-    </div>
+    <!-- Официальный логотип RU.TV (SVG из шапки ru.tv, без подписей) -->
+    <a class="sb-brand" data-route="home" aria-label="RU.TV — на главную">
+      <svg class="sb-logo" viewBox="416.11 700.231 1086.721 525.264" role="img" aria-label="RU.TV">
+        <g fill="currentColor">
+          <path d="m616.94 834.844c-18.263-8.042-39.834-12.101-64.862-12.101h-124.687v273.576h77.413v-71.551h47.274c25.028 0 46.673-4.133 64.862-12.326 18.263-8.192 32.242-19.766 42.013-34.798 9.77-14.957 14.656-32.995 14.656-54.115s-4.885-38.481-14.656-53.737c-9.771-15.257-23.75-26.906-42.013-34.948zm-33.22 118.223c-8.042 6.915-20.217 10.373-36.376 10.373h-42.615v-79.744h42.615c16.159 0 28.259 3.608 36.376 10.748 8.042 7.139 12.1 16.836 12.1 29.086 0 12.252-4.058 22.623-12.1 29.537z"/>
+          <path d="m866.989 822.21v48.026c0 21.345-5.035 36.602-15.031 45.696s-22.773 13.679-38.105 13.679c-16.385 0-28.786-4.586-37.127-13.679-8.343-9.094-12.477-22.923-12.477-41.412v-52.31h-77.413v56.97c0 37.279 9.169 65.688 27.584 85.229 18.337 19.541 44.718 29.313 79.142 29.313 20.593 0 38.405-4.661 53.512-14.055 7.441-4.66 14.13-10.447 19.916-17.362v11.875c0 21.872-4.809 37.88-14.43 48.101-9.621 10.147-24.877 15.258-45.696 15.258-14.881 0-29.463-2.33-43.741-7.065-14.356-4.66-27.884-11.499-40.661-20.293l-30.064 54.715c13.829 10.973 30.589 19.691 50.431 26.155 19.766 6.538 42.238 9.77 67.191 9.77 27.359 0 51.108-5.035 71.326-15.031s35.85-24.727 46.898-44.193c11.048-19.467 16.61-43.216 16.61-71.326v-148.061h-77.788z"/>
+          <path d="m1322.075 942.935c3.232-2.63 4.885-6.614 4.885-11.875s-1.653-9.244-4.885-12.025c-3.232-2.707-8.042-4.059-14.43-4.059h-29.613v31.942h29.613c6.389.001 11.198-1.352 14.43-3.983z"/>
+          <path d="m1314.108 978.332h-36.075v33.52h36.075c6.84 0 11.95-1.428 15.258-4.283 3.306-2.857 5.035-7.141 5.035-12.703s-1.653-9.77-5.035-12.476c-3.308-2.705-8.418-4.058-15.258-4.058z"/>
+          <path d="m1236.996 704.387c-141.224 0-255.614 114.466-255.614 255.614 0 141.146 114.39 255.612 255.614 255.612 141.222 0 255.612-114.466 255.612-255.612.001-141.148-114.465-255.614-255.612-255.614zm127.393 328.141c-11.124 8.341-27.057 12.476-47.876 12.476h-83.877v-126.491h-49.83v126.491h-45.395v-126.491h-49.83v-36.602h224.572c19.391 0 34.498 3.682 45.32 11.048 10.823 7.365 16.159 17.812 16.159 31.34 0 13.529-5.035 23.6-15.181 31.116-2.18 1.653-4.661 3.082-7.216 4.36 5.336 1.727 10.221 3.907 14.28 6.838 10.297 7.366 15.484 17.964 15.484 31.793s-5.562 25.854-16.686 34.122z"/>
+        </g>
+      </svg>
+    </a>
 
-    <!-- Mini-player (now-on-air) -->
+    <!-- Mini-player (now-on-air): эфир в один клик из сайдбара -->
     <div class="sb-mini-player" id="sbMiniPlayer" style="background-image: url('assets/rutv/image 1.png');">
       <span class="sb-mini-live"><span class="live-pulse"></span>LIVE</span>
-      <div class="sb-mini-play"><button class="sb-mini-play-btn" aria-label="Смотреть"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+      <div class="sb-mini-play"><button class="sb-mini-play-btn" id="sbMiniPlayBtn" aria-label="Смотреть эфир"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
       <div class="sb-mini-meta">
         <div class="sb-mini-track">SHAMAN — Я русский</div>
         <div class="sb-mini-artist">Сейчас в эфире RU.TV</div>
       </div>
     </div>
 
-    <button class="sb-recent">
-      Только что в эфире
-      <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
-
     <nav class="sb-nav" aria-label="Главное">
-      <button class="sb-item" data-route="live" aria-current="page">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5.6 5.6a9 9 0 0 0 0 12.7M18.4 5.6a9 9 0 0 1 0 12.7M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/></svg>
-        Прямой эфир
+      <button class="sb-item" data-route="home" aria-current="page">
+        <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Главная
       </button>
-      <button class="sb-item" data-route="channels">
-        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
-        Каналы
-      </button>
-      <button class="sb-item" data-route="radio">
-        <svg viewBox="0 0 24 24"><path d="M3 11V8a2 2 0 0 1 1.3-1.9l13-4.5a1 1 0 0 1 1.3 1V11"/><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="2.5"/><path d="M16 14h2"/></svg>
-        Станции
-      </button>
-      <button class="sb-item" data-route="chart">
-        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l3-3 4 4 5-5"/></svg>
-        Чарт
-      </button>
-      <button class="sb-item" data-route="playlists">
-        <svg viewBox="0 0 24 24"><path d="M21 15V6a2 2 0 0 0-2-2H8M7 4l-4 4 4 4"/><path d="M3 9v9a2 2 0 0 0 2 2h11M17 20l4-4-4-4"/></svg>
-        Плей-листы
-      </button>
-      <button class="sb-item" data-route="schedule">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        Расписание
-      </button>
-      <button class="sb-item" data-route="clips">
-        <svg viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
-        Клипы
-      </button>
+      <!-- Ссылка на лендинг Премии RU.TV — URL вставит заказчик (href) -->
+      <a class="sb-item" id="sbPremia" href="#" title="Лендинг Премии RU.TV — ссылку добавит заказчик">
+        <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21 1.18.54 2.03 2.03 2.03 3.79"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        Премия RU.TV
+        <svg class="sb-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      </a>
       <button class="sb-item" data-route="news">
         <svg viewBox="0 0 24 24"><path d="M4 22h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2Z"/><path d="M18 8h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2"/><path d="M6 6h8M6 10h8M6 14h6"/></svg>
         Новости
       </button>
-      <button class="sb-item" data-route="library">
-        <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-        Избранное
+      <button class="sb-item" data-route="programs">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+        Программы
+      </button>
+      <button class="sb-item" data-route="video">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>
+        Видео
+      </button>
+      <button class="sb-item" data-route="gifts">
+        <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+        Витрина подарков
       </button>
     </nav>
-
-    <div class="sb-footer">
-      <button class="sb-item" data-route="settings">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        Настройки
-      </button>
-    </div>
   </aside>
 
   <!-- =================================================================== -->
@@ -1621,10 +1914,22 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
     <header class="topbar">
       <div class="tb-title" id="tbTitle">Главная</div>
       <div class="tb-spacer"></div>
+      <!-- One-click эфир: кнопка видна на любой странице -->
+      <button class="tb-live-btn" id="tbLiveBtn" aria-label="Смотреть прямой эфир">
+        <span class="live-pulse"></span>
+        <span class="tb-live-full">Прямой эфир</span>
+        <span class="tb-live-short">Эфир</span>
+      </button>
       <label class="tb-search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="search" placeholder="Найти канал, станцию, исполнителя или клип" aria-label="Поиск">
+        <input type="search" name="site-search" placeholder="Найти клип, программу или артиста" aria-label="Поиск">
       </label>
+      <!-- Баллы зрителя: копятся за просмотр, клик — Витрина подарков -->
+      <button class="tb-points" id="tbPoints" data-route="gifts" data-chest="false" aria-label="Ваши баллы — открыть Витрину подарков">
+        <svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+        <span id="tbPointsVal">1 240</span>
+        <span class="tb-points-float" id="tbPointsFloat">+10</span>
+      </button>
       <button class="tb-icon-btn" aria-label="Уведомления">
         <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
       </button>
@@ -1632,102 +1937,79 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
     </header>
 
     <!-- ============================================================ -->
-    <!-- PAGE: LIVE / Главная                                          -->
+    <!-- PAGE: Главная                                                 -->
     <!-- ============================================================ -->
-    <section class="page" data-page-id="live" data-active="true">
+    <section class="page" data-page-id="home" data-active="true">
 
-      <!-- Hero promo carousel -->
-      <div class="hero-carousel">
-        <div class="hero-track" id="heroTrack"></div>
+      <!-- Прямой эфир + рекламный промоблок 300×600 -->
+      <div class="live-layout">
+        <figure class="live-hero" id="liveHero">
+          <div class="live-screen" id="liveScreen" style="background-image: url('assets/rutv/image 1.png');">
+            <div class="live-screen-top">
+              <span class="live-badge"><span class="live-pulse"></span>В эфире</span>
+              <span class="live-tag" id="liveTag">RU.TV — основной эфир</span>
+              <span class="live-viewers"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span id="liveViewers">12 407</span></span>
+            </div>
+            <div class="live-play"><span class="live-play-btn" id="livePlayIcon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <div class="live-screen-meta">
+              <h1 class="live-screen-title" id="liveTitle">SHAMAN — Я русский</h1>
+              <p class="live-screen-sub" id="liveSub">Лучшие русские клипы 24/7 в прямом эфире RU.TV</p>
+            </div>
+          </div>
+          <figcaption class="live-info">
+            <div class="live-next">Далее в 22:00 — <strong>Супер 20: главный чарт страны</strong></div>
+            <div class="live-info-actions">
+              <button class="chest-btn" id="chestBtn" data-ready="false" aria-label="Забрать бонусные баллы">
+                <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+                Забрать +50
+              </button>
+              <button class="btn btn-live" id="liveWatchBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть эфир</button>
+            </div>
+          </figcaption>
+        </figure>
+
+        <!-- Рекламный слот 300×600 (IAB Half Page), ротация креативов -->
+        <aside class="promo-slot" id="promoSlot" aria-label="Реклама">
+          <span class="promo-tag">Реклама</span>
+          <div class="promo-dots" id="promoDots" role="tablist" aria-label="Креативы"></div>
+        </aside>
       </div>
 
-      <!-- Категории -->
-      <nav class="chip-row" aria-label="Категории">
-        <button class="chip" aria-pressed="true">Все</button>
-        <button class="chip" aria-pressed="false">Музыка</button>
-        <button class="chip" aria-pressed="false">Сериалы</button>
-        <button class="chip" aria-pressed="false">Спорт</button>
-        <button class="chip" aria-pressed="false">Новости</button>
-        <button class="chip" aria-pressed="false">Подкасты</button>
-        <button class="chip" aria-pressed="false">Развлечения</button>
-        <button class="chip" aria-pressed="false">Детям</button>
-        <button class="chip" aria-pressed="false">Документальное</button>
-      </nav>
+      <!-- Подканалы RU.TV — тематические потоки (клик переключает эфир) -->
+      <nav class="sub-row" id="subRow" aria-label="Тематические каналы RU.TV"></nav>
 
-      <!-- Row: Каналы прямой эфир -->
+      <!-- Каналы -->
       <section class="row-section">
         <div class="row-head">
           <h2 class="row-title">Каналы — сейчас в эфире</h2>
-          <a href="#channels" class="row-link" data-route="channels">Все каналы →</a>
         </div>
         <div class="row-track" id="trackChannels"></div>
       </section>
 
-      <!-- Row: Радиостанции -->
+      <!-- Новые клипы: прямоугольные 16:9, три в ряд -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Радиостанции РМГ</h2>
-          <a href="#radio" class="row-link" data-route="radio">Все станции →</a>
+          <h2 class="row-title">Новые клипы</h2>
+          <a href="#video" class="row-link" data-route="video">Все клипы →</a>
         </div>
-        <div class="row-track" id="trackRadio"></div>
+        <div class="row-track" id="trackNewClips"></div>
       </section>
 
-      <!-- Row: Сейчас слушают -->
+      <!-- Программы как видеоподкасты -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Сейчас слушают</h2>
+          <h2 class="row-title">Программы</h2>
+          <a href="#programs" class="row-link" data-route="programs">Все программы →</a>
         </div>
-        <div class="row-track" id="trackNowPlaying"></div>
+        <div class="row-track" id="trackPrograms"></div>
       </section>
 
-      <!-- Чарт -->
+      <!-- Супер 20 -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Чарт RU.TV — топ 10</h2>
-          <a href="#chart" class="row-link" data-route="chart">Полный чарт →</a>
+          <h2 class="row-title">Супер 20</h2>
         </div>
         <div class="chart-grid" id="chartGrid"></div>
-      </section>
-
-      <!-- Жанры -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Жанры</h2>
-        </div>
-        <div class="row-track" id="trackGenres"></div>
-      </section>
-
-      <!-- Исполнители -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Исполнители</h2>
-        </div>
-        <div class="row-track" id="trackArtists"></div>
-      </section>
-
-      <!-- DJ -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">DJ</h2>
-        </div>
-        <div class="row-track" id="trackDjs"></div>
-      </section>
-
-      <!-- Музыка по настроению -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Музыка по настроению</h2>
-        </div>
-        <div class="row-track" id="trackMoods"></div>
-      </section>
-
-      <!-- Клипы -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Клипы недели</h2>
-          <a href="#clips" class="row-link" data-route="clips">Все клипы →</a>
-        </div>
-        <div class="row-track" id="trackClips"></div>
       </section>
 
       <!-- Новости -->
@@ -1739,28 +2021,20 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <div class="row-track" id="trackNews"></div>
       </section>
 
-      <!-- Расписание -->
+      <!-- Артисты -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Расписание RU.TV</h2>
-          <a href="#schedule" class="row-link" data-route="schedule">Полное расписание →</a>
+          <h2 class="row-title">Артисты</h2>
         </div>
-        <div class="schedule" id="scheduleGrid"></div>
+        <div class="row-track" id="trackArtists"></div>
       </section>
 
-      <!-- Партнёры РМГ -->
+      <!-- Ведущие -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Russian Media Group</h2>
-          <a class="row-link" href="#">О холдинге →</a>
+          <h2 class="row-title">Ведущие</h2>
         </div>
-        <div class="partners">
-          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">RU.TV</span><span class="partner-mark-sub">Русский музыкальный канал</span></div></div>
-          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">Русское Радио</span><span class="partner-mark-sub">Главное радио страны</span></div></div>
-          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">DFM</span><span class="partner-mark-sub">Танцевальная волна</span></div></div>
-          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">MAXIMUM</span><span class="partner-mark-sub">Радио Максимум</span></div></div>
-          <div class="partner"><div class="partner-mark"><span class="partner-mark-name">Monte Carlo</span><span class="partner-mark-sub">Радио Монте Карло</span></div></div>
-        </div>
+        <div class="row-track" id="trackHosts"></div>
       </section>
 
       <footer class="app-footer">
@@ -1785,48 +2059,133 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 
     </section>
 
-    <!-- Other pages -->
-    <section class="page" data-page-id="channels"><div class="placeholder-page"><h2>Все каналы</h2><p>Полная сетка ТВ-каналов с фильтрами по категориям и расписанием.</p></div></section>
-    <section class="page" data-page-id="radio"><div class="placeholder-page"><h2>Радиостанции</h2><p>Все станции РМГ с группировкой по жанрам и текущим треком.</p></div></section>
-    <section class="page" data-page-id="chart"><div class="placeholder-page"><h2>Полный чарт RU.TV</h2><p>Топ-100 треков на основе ротации и голосования зрителей RU.TV.</p></div></section>
-    <section class="page" data-page-id="playlists"><div class="placeholder-page"><h2>Плей-листы</h2><p>Тематические подборки от редакции RU.TV и партнёров РМГ.</p></div></section>
-    <section class="page" data-page-id="schedule"><div class="placeholder-page"><h2>Расписание</h2><p>Программа эфира RU.TV на неделю с напоминаниями.</p></div></section>
-    <section class="page" data-page-id="clips"><div class="placeholder-page"><h2>Клипы</h2><p>Витрина музыкальных клипов: тренды, новинки, по жанрам.</p></div></section>
-    <section class="page" data-page-id="news"><div class="placeholder-page"><h2>Новости</h2><p>Лента новостей с тегами по разделам.</p></div></section>
-    <section class="page" data-page-id="library"><div class="placeholder-page"><h2>Избранное</h2><p>Сохранённые каналы, станции, плей-листы и клипы.</p></div></section>
-    <section class="page" data-page-id="settings"><div class="placeholder-page"><h2>Настройки</h2><p>Профиль, оформление, качество стрима, родительский контроль.</p></div></section>
+    <!-- ============================================================ -->
+    <!-- PAGE: Новости (вкладки: Новости | Афиша)                      -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="news">
+      <div class="page-head">
+        <h2>Новости</h2>
+        <p>События русской сцены, премьеры клипов и всё, что происходит в эфире RU.TV.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Разделы новостей">
+        <button class="tabs-btn" role="tab" data-tab="news" aria-selected="true">Новости</button>
+        <button class="tabs-btn" role="tab" data-tab="afisha" aria-selected="false">Афиша</button>
+        <span class="tab-note" id="tabNote">обновлено 15 минут назад</span>
+      </div>
+      <div id="newsTabNews" role="tabpanel">
+        <div class="news-grid" id="newsGrid"></div>
+      </div>
+      <div id="newsTabAfisha" role="tabpanel" hidden>
+        <div class="afisha-list" id="afishaList"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: Программы — 9 радийных плиток (видеоподкасты)           -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="programs">
+      <div class="page-head">
+        <h2>Программы</h2>
+        <p>Шоу и рубрики RU.TV в формате видеоподкастов — смотрите выпуски в любое время.</p>
+      </div>
+      <div class="program-grid" id="programGrid"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: Видео — новинки и всё остальное                         -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="video">
+      <div class="page-head">
+        <h2>Видео</h2>
+        <p>Клипы, шоу и концерты RU.TV. Новинки — первыми.</p>
+      </div>
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Новинки</h2>
+        </div>
+        <div class="row-track" id="trackVideoNew"></div>
+      </section>
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Все видео</h2>
+        </div>
+        <div class="video-grid" id="videoGrid"></div>
+      </section>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: Витрина подарков — баллы за просмотр (Twitch-механика)  -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="gifts">
+      <div class="page-head">
+        <h2>Витрина подарков</h2>
+        <p>Смотрите эфир — копите баллы. Обменивайте их на мерч, билеты и фирменные бонусы RU.TV.</p>
+      </div>
+      <div class="points-hero">
+        <div>
+          <div class="points-balance-label">Ваши баллы</div>
+          <div class="points-balance">
+            <svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+            <span id="giftsBalance">1 240</span>
+          </div>
+          <div class="points-progress">
+            <div class="points-progress-bar"><span id="pointsProgressBar" style="width: 0%"></span></div>
+            <div class="points-progress-label" id="pointsProgressLabel">+10 баллов через 5:00 просмотра эфира</div>
+          </div>
+        </div>
+        <div class="points-rules">
+          <div class="points-rule">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></svg>
+            <span><strong>+10</strong> за каждые 5 минут просмотра эфира</span>
+          </div>
+          <div class="points-rule">
+            <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+            <span><strong>+50</strong> бонус-сундук у эфира — раз в 15 минут</span>
+          </div>
+          <div class="points-rule">
+            <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            <span><strong>×2</strong> за серию — смотрите эфир несколько дней подряд</span>
+          </div>
+        </div>
+      </div>
+      <div class="gift-grid" id="giftGrid"></div>
+    </section>
 
   </main>
 </div>
 
 <!-- =================================================================== -->
-<!-- STICKY RADIO PLAYER                                                  -->
+<!-- PIP МИНИ-ПЛЕЕР — эфир всегда рядом (картинка-в-картинке)            -->
 <!-- =================================================================== -->
-<div class="player" role="region" aria-label="Плеер">
-  <div class="player-now">
-    <div class="player-art" id="playerArt" style="background-image: url('assets/rutv/Rectangle 4322-16.png'); background-size: cover; background-position: center;"></div>
-    <div class="player-meta">
-      <div class="player-track" id="playerTrack">SHAMAN — Я русский</div>
-      <div class="player-station">
-        <span class="player-station-mark">RU</span>
-        <span id="playerStation">RU.TV</span>
-        <span>· Прямой эфир</span>
-      </div>
+<div class="pip" id="pip" data-on="false" role="complementary" aria-label="Мини-плеер эфира">
+  <div class="pip-screen" id="pipScreen" style="background-image: url('assets/rutv/image 1.png');" title="Развернуть эфир">
+    <span class="pip-live live-badge"><span class="live-pulse"></span>LIVE</span>
+    <div class="pip-actions">
+      <button class="pip-act" id="pipExpand" aria-label="Развернуть эфир">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+      </button>
+      <button class="pip-act" id="pipClose" aria-label="Закрыть мини-плеер">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
     </div>
   </div>
-  <div class="player-controls">
-    <button class="pl-btn" aria-label="Предыдущая"><svg viewBox="0 0 24 24"><path d="M19 20 9 12l10-8v16zM7 5v14H5V5z"/></svg></button>
-    <button class="pl-btn pl-btn-play" id="playBtn" aria-label="Воспроизведение/пауза"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-    <button class="pl-btn" aria-label="Следующая"><svg viewBox="0 0 24 24"><path d="m5 4 10 8-10 8V4zm12 0h2v16h-2z"/></svg></button>
-  </div>
-  <div class="player-extras">
-    <button class="pl-btn" aria-label="В избранное"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
-    <div class="player-volume">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
-      <input type="range" min="0" max="100" value="62" aria-label="Громкость">
+  <div class="pip-bar">
+    <button class="pip-play" id="pipPlay" aria-label="Пауза или воспроизведение">
+      <svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+    </button>
+    <div class="pip-meta">
+      <div class="pip-track" id="pipTrack">SHAMAN — Я русский</div>
+      <div class="pip-channel" id="pipChannel">RU.TV · Прямой эфир</div>
     </div>
+    <span class="pip-points" id="pipPoints">
+      <svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+      <span id="pipPointsText">+10 через 5:00</span>
+    </span>
   </div>
 </div>
+
+<!-- Toast-подсказка -->
+<div class="toast" id="toast" data-on="false" role="status"></div>
 
 <!-- =================================================================== -->
 <!-- TWEAKS PANEL — Style switcher                                        -->
@@ -1850,44 +2209,43 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 
 <script>
 /* =========================================================================
-   DATA — реальный контент из Figma DFM/RMG + KZ-каналы
+   DATA — демо-контент витрины (реальные RU.TV ассеты из export rutv)
    ========================================================================= */
 
-// Hero promo carousel — реальные RU.TV ассеты
-const heroes = [
-  {
-    title: 'Прямой эфир RU.TV',
-    sub: 'Лучшие русские клипы 24/7. Сейчас на экране: SHAMAN — «Я русский»',
-    img: 'assets/rutv/image 1.png',
-    isLive: true,
-    badge: 'СЕЙЧАС В ЭФИРЕ',
-  },
-  {
-    title: 'Звёзды Хайпа · LIVE Арена',
-    sub: '6 декабря — большой концерт топ-артистов российской сцены',
-    img: 'assets/rutv/Rectangle 4322-2.png',
-    isLive: false,
-    badge: 'СПЕЦПРОЕКТ',
-  },
-  {
-    title: 'Полевой — премьера сериала',
-    sub: 'Эксклюзив RU.TV — авторский музыкальный проект уже на канале',
-    img: 'assets/rutv/image 2.png',
-    isLive: false,
-    badge: 'ПРЕМЬЕРА',
-  },
-  {
-    title: 'Статус: В сети',
-    sub: 'Сервис доставки приветов и поздравлений в прямом эфире',
-    img: 'assets/rutv/Rectangle 4322-15.png',
-    isLive: false,
-    badge: 'НОВЫЙ СЕРВИС',
-  },
+// Основной эфир
+const mainLive = {
+  id: 'main',
+  img: 'assets/rutv/image 1.png',
+  title: 'SHAMAN — Я русский',
+  sub: 'Лучшие русские клипы 24/7 в прямом эфире RU.TV',
+};
+
+// Подканалы — тематические потоки RU.TV (клик по карточке переключает эфир)
+const subChannels = [
+  { id: 'kids',  name: 'Детям',       tag: 'Мультклипы и песни',     grad: 'linear-gradient(135deg,#FFC700,#E40087)',
+    title: 'Детский эфир RU.TV', sub: 'Добрые клипы и песни для самых маленьких' },
+  { id: 'clips', name: 'Клипы 24/7',  tag: 'Нон-стоп новинки',       img: 'assets/rutv/Rectangle 4322-8.png',
+    title: 'Клипы 24/7', sub: 'Новые русские клипы без перерыва' },
+  { id: 'calm',  name: 'Без слов',    tag: 'Инструментал',           grad: 'linear-gradient(135deg,#21B5FF,#0d1525)',
+    title: 'Без слов', sub: 'Инструментальные версии хитов — фон для работы и отдыха' },
+  { id: 'disco', name: 'Дискотека',   tag: 'Танцевальные хиты',      img: 'assets/rutv/Rectangle 4322-9.png',
+    title: 'Дискотека RU.TV', sub: 'Танцевальные хиты от 90-х до наших дней' },
+  { id: 'retro', name: 'Ретро',       tag: 'Отечественная классика', img: 'assets/rutv/Rectangle 4322-13.png',
+    title: 'Ретро-эфир', sub: 'Золотая отечественная эстрада и любимые клипы' },
+  { id: '2000s', name: 'Хиты 2000-х', tag: 'Ностальгия',             img: 'assets/rutv/Rectangle 4322-14.png',
+    title: 'Хиты 2000-х', sub: 'Главные песни нулевых в одном потоке' },
+];
+
+// Креативы рекламного промоблока 300×600
+const promos = [
+  { title: 'Звёзды Хайпа · LIVE Арена', sub: '6 декабря — большой концерт топ-артистов', cta: 'Билеты', img: 'assets/rutv/Rectangle 4322-2.png' },
+  { title: 'Полевой — премьера сериала', sub: 'Эксклюзив RU.TV уже на канале', cta: 'Смотреть', img: 'assets/rutv/image 2.png' },
+  { title: 'Статус: В сети', sub: 'Приветы и поздравления в прямом эфире', cta: 'Отправить привет', img: 'assets/rutv/Rectangle 4322-15.png' },
 ];
 
 // TV-каналы — RU.TV приоритет + партнёры РМГ. Реальные images из export rutv
 const channels = [
-  { code: 'RU', name: 'RU.TV', now: 'SHAMAN — Я русский', next: '22:00 — Топ-20 RU.TV', progress: 64,
+  { code: 'RU', name: 'RU.TV', now: 'SHAMAN — Я русский', next: '22:00 — Супер 20', progress: 64,
     img: 'assets/rutv/Rectangle 4322-1.png' },
   { code: 'РР', name: 'Русское Радио ТВ', now: 'Звёздное караоке', next: '23:00 — Хит-парад', progress: 28,
     img: 'assets/rutv/Rectangle 4322-2.png' },
@@ -1901,62 +2259,54 @@ const channels = [
     img: 'assets/rutv/Rectangle 4322-6.png' },
 ];
 
-// Радиостанции РМГ (реальные) — RU.TV ассеты + бренд-цвета
-const radios = [
-  { code: 'РР', name: 'Русское Радио', tag: '105.7 FM', now: 'SHAMAN', track: 'Я русский',
-    img: 'assets/rutv/Rectangle 4322-7.png' },
-  { code: 'RU', name: 'RU.TV Music', tag: 'Online', now: 'JONY', track: 'Аллея',
-    img: 'assets/rutv/Rectangle 4322-8.png' },
-  { code: 'D', name: 'DFM', tag: '101.2 FM', now: 'David Guetta', track: 'Baby Don\'t Hurt Me',
-    img: 'assets/rutv/Rectangle 4322-9.png' },
-  { code: 'M', name: 'Радио Maximum', tag: '103.7 FM', now: 'Imagine Dragons', track: 'Bones',
-    img: 'assets/rutv/Rectangle 4322-10.png' },
-  { code: 'MC', name: 'Monte Carlo', tag: '105.9 FM', now: 'Adele', track: 'Hello',
-    img: 'assets/rutv/Rectangle 4322-11.png' },
-  { code: 'Х', name: 'Хит FM', tag: '107.4 FM', now: 'The Weeknd', track: 'Blinding Lights',
-    img: 'assets/rutv/Rectangle 4322-12.png' },
-  { code: 'Р', name: 'Русское Ретро', tag: '90.4 FM', now: 'Алла Пугачёва', track: 'Миллион роз',
-    img: 'assets/rutv/Rectangle 4322-13.png' },
-  { code: 'РРАШ', name: 'Радио Шансон', tag: '95.5 FM', now: 'Михаил Шуфутинский', track: '3 сентября',
-    img: 'assets/rutv/Rectangle 4322-14.png' },
+// Новые клипы — прямоугольные карточки 16:9, три в ряд
+const newClips = [
+  { artist: 'SHAMAN', track: 'Я русский', dur: '3:24', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { artist: 'JONY', track: 'Комета', dur: '3:06', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { artist: 'Полина Гагарина', track: 'Кукушка', dur: '3:35', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { artist: 'Macan', track: 'Пополам', dur: '3:18', img: 'assets/rutv/Rectangle 4322-23.jpg' },
+  { artist: 'MIYAGI & Andy Panda', track: 'Минимал', dur: '3:04', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { artist: 'Слава Марлоу', track: 'Снова я напиваюсь', dur: '3:25', img: 'assets/rutv/Rectangle 4322-25.jpg' },
 ];
 
-// Сейчас слушают / клипы крутятся прямо сейчас
-const nowPlaying = [
-  { artist: 'SHAMAN', track: 'Я русский', img: 'assets/rutv/Rectangle 4322-16.png' },
-  { artist: 'Григорий Лепс', track: 'Рюмка водки на столе', img: 'assets/rutv/Rectangle 4322-17.png' },
-  { artist: 'Полина Гагарина', track: 'Кукушка', img: 'assets/rutv/Rectangle 4322-18.png' },
-  { artist: 'Дима Билан', track: 'Молния', img: 'assets/rutv/Rectangle 4322-19.jpg' },
-  { artist: 'Валерий Меладзе', track: 'Вопреки', img: 'assets/rutv/Rectangle 4322-20.jpg' },
-  { artist: 'JONY', track: 'Комета', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+// Программы RU.TV — 9 плиток-видеоподкастов (названия демо — сетку пришлёт канал)
+const programs = [
+  { name: 'Утро на RU.TV',    meta: 'Видеоподкаст · 128 выпусков',    time: 'Будни 07:00', grad: 'linear-gradient(135deg,#FF9D2E,#E40087)' },
+  { name: 'Супер 20',         meta: 'Чарт · 46 выпусков',             time: 'Пт 19:00',    grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
+  { name: 'Стол заказов',     meta: 'Интерактив · 210 выпусков',      time: 'Ежедневно',   grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
+  { name: 'Новости RU.TV',    meta: 'Информация · короткий формат',   time: 'Каждый час',  grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
+  { name: 'Звёзды Хайпа',     meta: 'Шоу · 24 выпуска',               time: 'Сб 20:00',    grad: 'linear-gradient(135deg,#FF4D8F,#7a1245)' },
+  { name: 'Караоке-батл',     meta: 'Шоу · 58 выпусков',              time: 'Вс 18:00',    grad: 'linear-gradient(135deg,#7a2be2,#1a0d30)' },
+  { name: 'Дискотека 2000-х', meta: 'Музыкальный блок · 90 выпусков', time: 'Пт 22:00',    grad: 'linear-gradient(135deg,#FFC700,#B00068)' },
+  { name: 'Закулисье',        meta: 'Бэкстейдж · 33 выпуска',         time: 'Ср 21:00',    grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
+  { name: 'Русский чарт',     meta: 'Хит-парад · 112 выпусков',       time: 'Вт 19:00',    grad: 'linear-gradient(135deg,#E40087,#21B5FF)' },
 ];
 
-// Чарт RU.TV top-10 — русская сцена
+// Супер 20 — главный чарт RU.TV
 const chart = [
-  { rank: 1, artist: 'SHAMAN', track: 'Я русский', trend: '+3', img: 'assets/rutv/Rectangle 4322-16.png' },
-  { rank: 2, artist: 'JONY', track: 'Комета', trend: '+1', img: 'assets/rutv/Rectangle 4322-21.jpg' },
-  { rank: 3, artist: 'MIYAGI & Andy Panda', track: 'Минимал', trend: '−1', img: 'assets/rutv/Rectangle 4322-22.jpg' },
-  { rank: 4, artist: 'Macan', track: 'Пополам', trend: '+2', img: 'assets/rutv/Rectangle 4322-23.jpg' },
-  { rank: 5, artist: 'HammAli & Navai', track: 'Птичка', trend: '+1', img: 'assets/rutv/Rectangle 4322-24.jpg' },
-  { rank: 6, artist: 'Полина Гагарина', track: 'Кукушка', trend: '−2', img: 'assets/rutv/Rectangle 4322-18.png' },
-  { rank: 7, artist: 'Артур Пирожков', track: 'Зацепила', trend: '+4', img: 'assets/rutv/Rectangle 4322-5.png' },
-  { rank: 8, artist: 'Слава Марлоу', track: 'Снова я напиваюсь', trend: '+1', img: 'assets/rutv/Rectangle 4322-25.jpg' },
-  { rank: 9, artist: 'Светлана Лобода', track: 'Случайная', trend: '−3', img: 'assets/rutv/Rectangle 4322-26.jpg' },
+  { rank: 1,  artist: 'SHAMAN', track: 'Я русский', trend: '+3', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { rank: 2,  artist: 'JONY', track: 'Комета', trend: '+1', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { rank: 3,  artist: 'MIYAGI & Andy Panda', track: 'Минимал', trend: '−1', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { rank: 4,  artist: 'Macan', track: 'Пополам', trend: '+2', img: 'assets/rutv/Rectangle 4322-23.jpg' },
+  { rank: 5,  artist: 'HammAli & Navai', track: 'Птичка', trend: '+1', img: 'assets/rutv/Rectangle 4322-24.jpg' },
+  { rank: 6,  artist: 'Полина Гагарина', track: 'Кукушка', trend: '−2', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { rank: 7,  artist: 'Артур Пирожков', track: 'Зацепила', trend: '+4', img: 'assets/rutv/Rectangle 4322-5.png' },
+  { rank: 8,  artist: 'Слава Марлоу', track: 'Снова я напиваюсь', trend: '+1', img: 'assets/rutv/Rectangle 4322-25.jpg' },
+  { rank: 9,  artist: 'Светлана Лобода', track: 'Случайная', trend: '−3', img: 'assets/rutv/Rectangle 4322-26.jpg' },
   { rank: 10, artist: 'Дима Билан', track: 'Молния', trend: '+2', img: 'assets/rutv/Rectangle 4322-19.jpg' },
+  { rank: 11, artist: 'Zivert', track: 'Life', trend: '−1', img: 'assets/rutv/Rectangle 4322-27.jpg' },
+  { rank: 12, artist: 'Мот', track: 'Соло', trend: '+3', img: 'assets/rutv/Rectangle 4322-28.jpg' },
+  { rank: 13, artist: 'Григорий Лепс', track: 'Рюмка водки на столе', trend: '−2', img: 'assets/rutv/Rectangle 4322-17.png' },
+  { rank: 14, artist: 'Ани Лорак', track: 'Сопрано', trend: '+1', img: 'assets/rutv/Rectangle 4322-29.jpg' },
+  { rank: 15, artist: 'Баста', track: 'Сансара', trend: '−1', img: 'assets/rutv/Rectangle 4322-30.jpg' },
+  { rank: 16, artist: 'Клава Кока', track: 'Покинула чат', trend: '+2', img: 'assets/rutv/Rectangle 4322-31.jpg' },
+  { rank: 17, artist: 'Валерий Меладзе', track: 'Вопреки', trend: '−4', img: 'assets/rutv/Rectangle 4322-20.jpg' },
+  { rank: 18, artist: 'Люся Чеботина', track: 'Солнце Монако', trend: '+5', img: 'assets/rutv/Rectangle 4322-32.jpg' },
+  { rank: 19, artist: 'Artik & Asti', track: 'Истеричка', trend: '−1', img: 'assets/rutv/Rectangle 4322-33.jpg' },
+  { rank: 20, artist: 'Хабиб', track: 'Ягода малинка', trend: '−2', img: 'assets/rutv/Rectangle 4322-34.jpg' },
 ];
 
-// Жанры — RU.TV рубрики
-const genres = [
-  { name: 'Поп-Хиты', grad: 'linear-gradient(135deg,#E30033,#3a0d20)' },
-  { name: 'Шансон', grad: 'linear-gradient(135deg,#5a3d1a,#1a1a0d)' },
-  { name: 'Танцы', grad: 'linear-gradient(135deg,#21B5FF,#0d1525)' },
-  { name: 'Рок', grad: 'linear-gradient(135deg,#1a1a1a,#3d1a1a)' },
-  { name: 'Ретро', grad: 'linear-gradient(135deg,#C724B1,#1a0d30)' },
-  { name: 'Дискотека 80-х', grad: 'linear-gradient(135deg,#FF4D8F,#3a1f5a)' },
-  { name: 'Лирика', grad: 'linear-gradient(135deg,#0d3a3d,#0d1525)' },
-];
-
-// Исполнители — русская сцена с реальными RU.TV artwork
+// Артисты — русская сцена с реальными RU.TV artwork
 const artists = [
   { name: 'SHAMAN', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-16.png' },
   { name: 'Полина Гагарина', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-18.png' },
@@ -1968,59 +2318,62 @@ const artists = [
   { name: 'Дима Билан', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-19.jpg' },
 ];
 
-// DJ
-const djs = [
-  { name: 'DJ Smash', meta: 'Дискотека', img: 'assets/rutv/Rectangle 4322-27.jpg' },
-  { name: 'DJ Грув', meta: 'House', img: 'assets/rutv/Rectangle 4322-28.jpg' },
-  { name: 'Слава Марлоу', meta: 'EDM · Поп', img: 'assets/rutv/Rectangle 4322-25.jpg' },
-  { name: 'Артур Пирожков', meta: 'Поп · Дискотека', img: 'assets/rutv/Rectangle 4322-5.png' },
-  { name: 'Filatov & Karas', meta: 'House', img: 'assets/rutv/Rectangle 4322-29.jpg' },
-  { name: 'Леонид Руденко', meta: 'Dance', img: 'assets/rutv/Rectangle 4322-30.jpg' },
-];
-
-// Музыка по настроению
-const moods = [
-  { name: 'Энергия', grad: 'linear-gradient(135deg,#E30033,#FFC700)' },
-  { name: 'Релакс', grad: 'linear-gradient(135deg,#21B5FF,#3a8a9f)' },
-  { name: 'Романтика', grad: 'linear-gradient(135deg,#C724B1,#FF4D8F)' },
-  { name: 'Фокус', grad: 'linear-gradient(135deg,#1a1a3d,#3a3a6f)' },
-  { name: 'Вечеринка', grad: 'linear-gradient(135deg,#FF4D8F,#E30033,#3a1f5a)' },
-  { name: 'Утро', grad: 'linear-gradient(135deg,#FFC700,#FF4D8F)' },
-];
-
-// Клипы — реальные RU.TV ассеты
-const clips = [
-  { artist: 'SHAMAN', track: 'Я русский', dur: '3:24', img: 'assets/rutv/Rectangle 4322-16.png' },
-  { artist: 'JONY', track: 'Комета', dur: '3:06', img: 'assets/rutv/Rectangle 4322-21.jpg' },
-  { artist: 'Полина Гагарина', track: 'Кукушка', dur: '3:35', img: 'assets/rutv/Rectangle 4322-18.png' },
-  { artist: 'MIYAGI & Andy Panda', track: 'Минимал', dur: '3:04', img: 'assets/rutv/Rectangle 4322-22.jpg' },
-  { artist: 'Macan', track: 'Пополам', dur: '3:18', img: 'assets/rutv/Rectangle 4322-23.jpg' },
-  { artist: 'Артур Пирожков', track: 'Зацепила', dur: '3:48', img: 'assets/rutv/Rectangle 4322-5.png' },
-  { artist: 'Слава Марлоу', track: 'Снова я напиваюсь', dur: '3:25', img: 'assets/rutv/Rectangle 4322-25.jpg' },
+// Ведущие — имена-плейсхолдеры с монограммами (состав и фото пришлёт канал)
+const hosts = [
+  { name: 'Алекс Морозов', prog: 'Утро на RU.TV', initials: 'АМ', grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
+  { name: 'Кристина Ветрова', prog: 'Супер 20', initials: 'КВ', grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
+  { name: 'Даня Соколов', prog: 'Стол заказов', initials: 'ДС', grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
+  { name: 'Мия Орлова', prog: 'Звёзды Хайпа', initials: 'МО', grad: 'linear-gradient(135deg,#FF9D2E,#7a3a00)' },
+  { name: 'Тимур Волков', prog: 'Дискотека 2000-х', initials: 'ТВ', grad: 'linear-gradient(135deg,#FFC700,#B00068)' },
+  { name: 'Лиза Морская', prog: 'Закулисье', initials: 'ЛМ', grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
 ];
 
 // Новости RU.TV
 const news = [
   { tag: 'Премьера', title: 'SHAMAN представил новый клип «Я русский» — премьера на RU.TV', time: '15 мин назад', source: 'RU.TV News', img: 'assets/rutv/Rectangle 4322-16.png' },
   { tag: 'Концерт', title: 'Звёзды Хайпа: 6 декабря большой концерт — Лепс, Билан, Лобода, Меладзе', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-2.png' },
-  { tag: 'Чарт', title: 'JONY возглавил топ-чарт RU.TV — четвёртая неделя подряд', time: '1 ч назад', source: 'RU.TV Chart', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { tag: 'Чарт', title: 'JONY возглавил Супер 20 — четвёртая неделя подряд', time: '1 ч назад', source: 'RU.TV Chart', img: 'assets/rutv/Rectangle 4322-21.jpg' },
   { tag: 'Премьера', title: 'Полевой — авторский музыкальный сериал стартовал на RU.TV', time: '2 ч назад', source: 'RU.TV', img: 'assets/rutv/image 2.png' },
   { tag: 'Сервис', title: 'Запущен «Статус: В сети» — отправляйте приветы прямо в эфир', time: '3 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-15.png' },
   { tag: 'Спецпроект', title: 'Анна Семенович: мастер-класс по фигурному катанию для детей', time: '4 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-1.png' },
 ];
 
-// Расписание RU.TV — реальные программы
-const days = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
-const hours = ['12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
-const scheduleColors = ['#E30033','#21B5FF','#FF4D8F','#C724B1','#1a8a5a','#FFC700','#3a8ad8'];
-const programs = [
-  ['Топ-20','Звёзды','Караоке','Хит-парад','Live Mix','Чарт RU.TV','Вечерний эфир'],
-  ['Премьера','Дискотека','Шансон','Поп Хиты','DJ Hour','Топ-100','Ночь'],
-  ['Утренний','Свежее','Ретро','Live Show','Rock Hour','Чарт','Полночь'],
-  ['Максимум','Рок-Хиты','Vocal Hour','Live Mix','Чарт','Новинки','Smooth Set'],
-  ['Поп-Лаб','DJ Hour','Hot 100','Танцы','Пятничный','Топ-Звёзды','Party Time'],
-  ['Суббота','Vibes Mix','Топ-20','Рок-волна','DJ Live','Повтор Чарта','Ночной Клуб'],
-  ['Утро в RU.TV','Easy Hits','Душа','Акустика','Топ-Повтор','Лучшее','Финал недели'],
+// Афиша — вкладка внутри Новостей
+const afisha = [
+  { day: '20', month: 'сен', title: 'Стол заказов — юбилейный выпуск со зрителями', place: 'Студия RU.TV · Москва', cta: 'Участвовать' },
+  { day: '03', month: 'окт', title: 'Дискотека 2000-х · Live', place: 'Санкт-Петербург · Ледовый дворец', cta: 'Билеты' },
+  { day: '06', month: 'дек', title: 'Звёзды Хайпа · LIVE Арена', place: 'Москва · LIVE Арена', cta: 'Билеты' },
+  { day: '31', month: 'дек', title: 'Новогодний марафон RU.TV', place: 'Прямой эфир · весь день', cta: 'Напомнить' },
+  { day: '14', month: 'фев', title: 'Романтика нулевых — большой концерт', place: 'Москва · ВТБ Арена', cta: 'Билеты' },
+  { day: '—', month: '2027', title: 'Премия RU.TV 2027', place: 'Дата и площадка уточняются', cta: 'Подробнее' },
+];
+
+// Видео — страница «Видео» (новинки = newClips)
+const videos = [
+  { tag: 'Клип', name: 'SHAMAN — Я русский', dur: '3:24', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { tag: 'Шоу', name: 'Звёзды Хайпа · выпуск 12', dur: '52:10', img: 'assets/rutv/Rectangle 4322-2.png' },
+  { tag: 'Концерт', name: 'Дискотека 2000-х · Live', dur: '1:48:20', img: 'assets/rutv/Rectangle 4322-9.png' },
+  { tag: 'Клип', name: 'JONY — Комета', dur: '3:06', img: 'assets/rutv/Rectangle 4322-21.jpg' },
+  { tag: 'Интервью', name: 'Полина Гагарина — о новом туре', dur: '24:15', img: 'assets/rutv/Rectangle 4322-18.png' },
+  { tag: 'Клип', name: 'Macan — Пополам', dur: '3:18', img: 'assets/rutv/Rectangle 4322-23.jpg' },
+  { tag: 'Шоу', name: 'Караоке-батл · финал сезона', dur: '47:02', img: 'assets/rutv/Rectangle 4322-28.jpg' },
+  { tag: 'Клип', name: 'Слава Марлоу — Снова я напиваюсь', dur: '3:25', img: 'assets/rutv/Rectangle 4322-25.jpg' },
+  { tag: 'Концерт', name: 'Ретро-вечер: золотая эстрада', dur: '1:32:44', img: 'assets/rutv/Rectangle 4322-13.png' },
+  { tag: 'Клип', name: 'MIYAGI & Andy Panda — Минимал', dur: '3:04', img: 'assets/rutv/Rectangle 4322-22.jpg' },
+  { tag: 'Интервью', name: 'Дима Билан — о новом альбоме', dur: '18:40', img: 'assets/rutv/Rectangle 4322-19.jpg' },
+  { tag: 'Шоу', name: 'Стол заказов · лучшие моменты', dur: '35:12', img: 'assets/rutv/Rectangle 4322-30.jpg' },
+];
+
+// Витрина подарков — обмен баллов
+const gifts = [
+  { name: 'Билет на Премию RU.TV', label: 'Премия RU.TV', cost: 25000, grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
+  { name: 'Худи RU.TV', label: 'Худи', cost: 12000, grad: 'linear-gradient(135deg,#2a2a34,#0d0d12)' },
+  { name: 'Футболка RU.TV', label: 'Футболка', cost: 6000, grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
+  { name: 'Привет в эфире', label: 'Привет в эфире', cost: 3000, grad: 'linear-gradient(135deg,#FF4D8F,#7a1245)' },
+  { name: 'Кружка RU.TV', label: 'Кружка', cost: 2500, grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
+  { name: 'Открытка от ведущего', label: 'Открытка', cost: 1200, grad: 'linear-gradient(135deg,#FF9D2E,#7a3a00)' },
+  { name: 'Стикерпак RU.TV', label: 'Стикеры', cost: 800, grad: 'linear-gradient(135deg,#7a2be2,#1a0d30)' },
+  { name: 'Фон для видеозвонков', label: 'Фон', cost: 500, grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
 ];
 
 /* =========================================================================
@@ -2039,23 +2392,55 @@ function bg(item) {
   return '';
 }
 
-function renderHero() {
-  document.getElementById('heroTrack').innerHTML = heroes.map(h => `
-    <article class="hero-card" style="${bg(h)}">
-      <div class="hero-card-overlay">
-        <div class="hero-card-meta">
-          ${h.isLive ? '<span class="live-badge"><span class="live-pulse"></span>В эфире</span>' : ''}
-          <span class="hero-card-tag">${h.badge}</span>
-        </div>
-        <h1 class="hero-card-title">${h.title}</h1>
-        <p class="hero-card-sub">${h.sub}</p>
-        <div class="hero-card-actions">
-          <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть</button>
-          <button class="btn btn-secondary">Подробнее</button>
-        </div>
-      </div>
-    </article>
+// Подканалы — тематические потоки (кнопки: клик переключает эфир)
+function renderSubChannels() {
+  document.getElementById('subRow').innerHTML = subChannels.map(s => `
+    <button class="card-sub" style="${bg(s)}" data-sub="${s.id}" aria-pressed="false">
+      <span class="card-sub-live">LIVE</span>
+      <span class="card-sub-meta">
+        <span class="card-sub-name">${s.name}</span>
+        <span class="card-sub-tag">${s.tag}</span>
+      </span>
+    </button>
   `).join('');
+}
+
+// Промоблок 300×600 — ротация рекламных креативов
+let promoIdx = 0, promoTimer = null;
+function renderPromo() {
+  const slot = document.getElementById('promoSlot');
+  const dots = document.getElementById('promoDots');
+  promos.forEach((p, i) => {
+    const slide = el('a', 'promo-slide', `
+      <div class="promo-meta">
+        <div class="promo-title">${p.title}</div>
+        <div class="promo-sub">${p.sub}</div>
+        <span class="promo-cta">${p.cta}</span>
+      </div>`);
+    slide.style.cssText = bg(p);
+    slide.href = '#';
+    slide.dataset.on = i === 0 ? 'true' : 'false';
+    slide.addEventListener('click', e => e.preventDefault());
+    slot.insertBefore(slide, dots);
+  });
+  dots.innerHTML = promos.map((_, i) =>
+    `<button class="promo-dot" data-promo-dot="${i}" aria-current="${i === 0}" aria-label="Креатив ${i + 1}"></button>`
+  ).join('');
+  dots.addEventListener('click', e => {
+    const b = e.target.closest('[data-promo-dot]');
+    if (!b) return;
+    promoGo(+b.dataset.promoDot);
+    promoStart();
+  });
+}
+function promoGo(i) {
+  promoIdx = ((i % promos.length) + promos.length) % promos.length;
+  document.querySelectorAll('.promo-slide').forEach((s, j) => s.dataset.on = j === promoIdx ? 'true' : 'false');
+  document.querySelectorAll('.promo-dot').forEach((d, j) => d.setAttribute('aria-current', j === promoIdx ? 'true' : 'false'));
+}
+function promoStart() {
+  clearInterval(promoTimer);
+  promoTimer = setInterval(() => promoGo(promoIdx + 1), 6000);
 }
 
 function renderChannels() {
@@ -2075,42 +2460,36 @@ function renderChannels() {
   `).join('');
 }
 
-function renderRadio() {
-  document.getElementById('trackRadio').innerHTML = radios.map(r => `
-    <article class="card-radio" tabindex="0" data-station="${r.name}" data-track="${r.now} — ${r.track}">
-      <div class="card-radio-disc">
-        <div class="card-radio-art" style="${bg(r)}"></div>
-        <div class="card-radio-meta">
-          <div>
-            <div class="card-radio-name">${r.name}</div>
-            <div class="card-radio-tag">${r.tag}</div>
-          </div>
-          <button class="card-radio-play" aria-label="Играть ${r.name}"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-        </div>
+// Новые клипы (и «Новинки» на странице Видео) — прямоугольные 16:9
+function clipWideCard(c) {
+  return `
+    <article class="card-clip-wide" tabindex="0">
+      <div class="card-clip-wide-thumb" style="${bg(c)}">
+        <span class="card-clip-wide-duration">${c.dur}</span>
+        <div class="card-clip-wide-hover"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       </div>
-      <div class="card-radio-track">
-        <div class="card-radio-track-now">${r.now}</div>
-        <div>${r.track}</div>
-      </div>
-    </article>
-  `).join('');
+      <div class="card-clip-wide-artist">${c.artist}</div>
+      <div class="card-clip-wide-track">${c.track}</div>
+    </article>`;
+}
+function renderNewClips() {
+  document.getElementById('trackNewClips').innerHTML = newClips.map(clipWideCard).join('');
 }
 
-function renderNowPlaying() {
-  document.getElementById('trackNowPlaying').innerHTML = nowPlaying.map(n => `
-    <article class="card-radio" tabindex="0" data-station="RU.TV" data-track="${n.artist} — ${n.track}">
-      <div class="card-radio-disc">
-        <div class="card-radio-art" style="${bg(n)}"></div>
-        <div class="card-radio-meta">
-          <div>
-            <div class="card-radio-name">${n.artist}</div>
-            <div class="card-radio-tag">${n.track}</div>
-          </div>
-          <button class="card-radio-play" aria-label="Играть"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-        </div>
+// Программы — радийные плитки-видеоподкасты (на главной ряд, на странице сетка 9)
+function programCard(p) {
+  return `
+    <article class="card-program" tabindex="0">
+      <div class="card-program-art" style="background: ${p.grad};">
+        <span class="card-program-time">${p.time}</span>
+        <span class="card-program-abbr">${p.name}</span>
       </div>
-    </article>
-  `).join('');
+      <div class="card-program-meta">${p.meta}</div>
+    </article>`;
+}
+function renderPrograms() {
+  document.getElementById('trackPrograms').innerHTML = programs.map(programCard).join('');
+  document.getElementById('programGrid').innerHTML = programs.map(programCard).join('');
 }
 
 function renderChart() {
@@ -2136,14 +2515,6 @@ function renderChart() {
   }).join('');
 }
 
-function renderGenres() {
-  document.getElementById('trackGenres').innerHTML = genres.map(g => `
-    <article class="card-genre" tabindex="0" style="background: ${g.grad};">
-      <div class="card-genre-name">${g.name}</div>
-    </article>
-  `).join('');
-}
-
 function renderArtists() {
   document.getElementById('trackArtists').innerHTML = artists.map(a => `
     <article class="card-artist" tabindex="0">
@@ -2154,40 +2525,18 @@ function renderArtists() {
   `).join('');
 }
 
-function renderDjs() {
-  document.getElementById('trackDjs').innerHTML = djs.map(d => `
-    <article class="card-dj" tabindex="0">
-      <div class="card-dj-art" style="${bg(d)}"></div>
-      <div class="card-dj-name">${d.name}</div>
-      <div class="card-dj-meta">${d.meta}</div>
+function renderHosts() {
+  document.getElementById('trackHosts').innerHTML = hosts.map(h => `
+    <article class="card-host" tabindex="0">
+      <div class="card-host-art" style="background: ${h.grad};"><span class="card-host-initials">${h.initials}</span></div>
+      <div class="card-host-name">${h.name}</div>
+      <div class="card-host-meta">${h.prog}</div>
     </article>
   `).join('');
 }
 
-function renderMoods() {
-  document.getElementById('trackMoods').innerHTML = moods.map(m => `
-    <article class="card-mood" tabindex="0" style="background: ${m.grad};">
-      <div class="card-mood-name">${m.name}</div>
-    </article>
-  `).join('');
-}
-
-function renderClips() {
-  document.getElementById('trackClips').innerHTML = clips.map(c => `
-    <article class="card-clip" tabindex="0">
-      <div class="card-clip-thumb" style="${bg(c)}">
-        <span class="card-clip-duration">${c.dur}</span>
-        <div class="card-clip-meta">
-          <div class="card-clip-artist">${c.artist}</div>
-          <div class="card-clip-track">${c.track}</div>
-        </div>
-      </div>
-    </article>
-  `).join('');
-}
-
-function renderNews() {
-  document.getElementById('trackNews').innerHTML = news.map(n => `
+function newsCard(n) {
+  return `
     <article class="card-news" tabindex="0">
       <div class="card-news-thumb" style="${bg(n)}"></div>
       <div class="card-news-body">
@@ -2195,33 +2544,70 @@ function renderNews() {
         <div class="card-news-title">${n.title}</div>
         <div class="card-news-meta"><span>${n.time}</span>·<span>${n.source}</span></div>
       </div>
+    </article>`;
+}
+function renderNews() {
+  document.getElementById('trackNews').innerHTML = news.map(newsCard).join('');
+  document.getElementById('newsGrid').innerHTML = news.map(newsCard).join('');
+}
+
+function renderAfisha() {
+  document.getElementById('afishaList').innerHTML = afisha.map(a => `
+    <article class="afisha-card" tabindex="0">
+      <div class="afisha-date">
+        <div class="afisha-day">${a.day}</div>
+        <div class="afisha-month">${a.month}</div>
+      </div>
+      <div>
+        <div class="afisha-title">${a.title}</div>
+        <div class="afisha-place">${a.place}</div>
+      </div>
+      <button class="afisha-cta">${a.cta}</button>
     </article>
   `).join('');
 }
 
-function renderSchedule() {
-  const head = ['<div></div>', ...hours.map(h => `<div class="schedule-hour">${h}</div>`)].join('');
-  const rows = days.map((d, i) => {
-    const cells = programs[i].map((p, j) => `
-      <div class="schedule-cell" style="background: ${scheduleColors[(i+j) % scheduleColors.length]};">${p}</div>
-    `).join('');
-    return `<div class="schedule-row"><div class="schedule-day">${d}</div>${cells}</div>`;
-  }).join('');
-  document.getElementById('scheduleGrid').innerHTML = `<div class="schedule-head">${head}</div>${rows}`;
+function renderVideos() {
+  document.getElementById('trackVideoNew').innerHTML = newClips.map(clipWideCard).join('');
+  document.getElementById('videoGrid').innerHTML = videos.map(v => `
+    <article class="video-card" tabindex="0">
+      <div class="video-card-thumb" style="${bg(v)}">
+        <span class="video-card-tag">${v.tag}</span>
+        <span class="video-card-duration">${v.dur}</span>
+      </div>
+      <div class="video-card-name">${v.name}</div>
+    </article>
+  `).join('');
 }
 
-renderHero();
+function renderGifts() {
+  document.getElementById('giftGrid').innerHTML = gifts.map(g => `
+    <article class="gift-card">
+      <div class="gift-art" style="background: ${g.grad};"><span class="gift-art-label">${g.label}</span></div>
+      <div class="gift-body">
+        <div class="gift-name">${g.name}</div>
+        <div class="gift-row">
+          <span class="gift-cost"><svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>${g.cost.toLocaleString('ru-RU')}</span>
+          <button class="gift-buy" data-cost="${g.cost}" data-name="${g.name}">Обменять</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+renderSubChannels();
+renderPromo();
+promoStart();
 renderChannels();
-renderRadio();
-renderNowPlaying();
+renderNewClips();
+renderPrograms();
 renderChart();
-renderGenres();
-renderArtists();
-renderDjs();
-renderMoods();
-renderClips();
 renderNews();
-renderSchedule();
+renderAfisha();
+renderArtists();
+renderHosts();
+renderVideos();
+renderGifts();
 
 /* =========================================================================
    STYLE SWITCHER (Holy Grail Tweaks)
@@ -2247,13 +2633,17 @@ function applyStyle(s) {
    ========================================================================= */
 const ROUTE_KEY = 'showcase.route';
 const titles = {
-  live: 'Главная', channels: 'Каналы', radio: 'Радиостанции',
-  chart: 'Чарт DFM', playlists: 'Плей-листы', schedule: 'Расписание',
-  clips: 'Клипы', news: 'Новости', library: 'Избранное', settings: 'Настройки',
+  home: 'Главная',
+  news: 'Новости',
+  programs: 'Программы',
+  video: 'Видео',
+  gifts: 'Витрина подарков',
 };
+let route = 'home';
 
 function setRoute(r) {
-  if (!titles[r]) r = 'live';
+  if (!titles[r]) r = 'home';
+  route = r;
   document.querySelectorAll('.page').forEach(p => {
     p.dataset.active = p.dataset.pageId === r ? 'true' : 'false';
   });
@@ -2265,58 +2655,220 @@ function setRoute(r) {
   root.dataset.page = r;
   localStorage.setItem(ROUTE_KEY, r);
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  updatePip();
 }
 
-document.querySelectorAll('[data-route]').forEach(el => {
-  el.addEventListener('click', e => {
+document.querySelectorAll('[data-route]').forEach(n => {
+  n.addEventListener('click', e => {
     e.preventDefault();
-    setRoute(el.dataset.route);
+    setRoute(n.dataset.route);
   });
 });
-setRoute(localStorage.getItem(ROUTE_KEY) || 'live');
 
 /* =========================================================================
-   PLAYER
+   LIVE: эфир, подканалы, one-click, PiP
    ========================================================================= */
 let playing = true;
-const playBtn = document.getElementById('playBtn');
-const playerTrack = document.getElementById('playerTrack');
-const playerStation = document.getElementById('playerStation');
-const playerArt = document.getElementById('playerArt');
+let pipDismissed = false;
+let heroVisible = true;
+let activeSub = null;
 
-playBtn.addEventListener('click', () => {
+const liveScreen = document.getElementById('liveScreen');
+const pip = document.getElementById('pip');
+const pipScreen = document.getElementById('pipScreen');
+
+const PLAY_SVG = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+const PAUSE_SVG = '<svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+
+function currentStream() {
+  return activeSub ? subChannels.find(s => s.id === activeSub) : mainLive;
+}
+
+function applyStream() {
+  const s = currentStream();
+  liveScreen.style.cssText = bg(s);
+  pipScreen.style.cssText = bg(s);
+  document.getElementById('liveTitle').textContent = s.title;
+  document.getElementById('liveSub').textContent = s.sub;
+  document.getElementById('liveTag').textContent = s.id === 'main' ? 'RU.TV — основной эфир' : `RU.TV · ${s.name}`;
+  document.getElementById('pipTrack').textContent = s.title;
+  document.getElementById('pipChannel').textContent = s.id === 'main' ? 'RU.TV · Прямой эфир' : `RU.TV · ${s.name}`;
+  document.querySelectorAll('.card-sub').forEach(c => {
+    c.setAttribute('aria-pressed', c.dataset.sub === activeSub ? 'true' : 'false');
+  });
+}
+
+function renderPlayState() {
+  document.getElementById('pipPlay').innerHTML = playing ? PAUSE_SVG : PLAY_SVG;
+  document.getElementById('livePlayIcon').innerHTML = playing ? PAUSE_SVG : PLAY_SVG;
+  updatePip();
+}
+
+// PiP показывается, когда эфир играет «за кадром»: другой раздел или hero вне вьюпорта
+function updatePip() {
+  const on = !pipDismissed && (route !== 'home' || !heroVisible);
+  pip.dataset.on = on ? 'true' : 'false';
+}
+
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(entries => {
+    heroVisible = entries[0].isIntersecting;
+    updatePip();
+  }, { threshold: 0.2 }).observe(document.getElementById('liveHero'));
+}
+
+// One-click эфир: топбар, сайдбар-виджет, PiP — всё ведёт в эфир одним кликом
+function goLive() {
+  pipDismissed = false;
+  playing = true;
+  setRoute('home');
+  renderPlayState();
+}
+document.getElementById('tbLiveBtn').addEventListener('click', goLive);
+document.getElementById('sbMiniPlayBtn').addEventListener('click', goLive);
+document.getElementById('pipExpand').addEventListener('click', goLive);
+document.getElementById('pipScreen').addEventListener('click', e => {
+  if (e.target.closest('.pip-act')) return;
+  goLive();
+});
+document.getElementById('liveWatchBtn').addEventListener('click', () => {
+  playing = true;
+  pipDismissed = false;
+  renderPlayState();
+});
+liveScreen.addEventListener('click', () => {
   playing = !playing;
-  playBtn.innerHTML = playing
-    ? '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
-    : '<svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+  renderPlayState();
+});
+document.getElementById('pipPlay').addEventListener('click', () => {
+  playing = !playing;
+  renderPlayState();
+});
+document.getElementById('pipClose').addEventListener('click', () => {
+  pipDismissed = true;
+  updatePip();
 });
 
-document.addEventListener('click', e => {
-  const card = e.target.closest('[data-station]');
+// Переключение подканала (повторный клик — возврат к основному эфиру)
+document.getElementById('subRow').addEventListener('click', e => {
+  const card = e.target.closest('.card-sub');
   if (!card) return;
-  const trackData = card.dataset.track;
-  if (trackData) {
-    const [now, track] = trackData.split(' — ');
-    playerTrack.textContent = track ? `${now} — ${track}` : now;
-  }
-  playerStation.textContent = card.dataset.station;
-  const r = radios.find(x => x.name === card.dataset.station);
-  if (r && r.img) {
-    playerArt.style.backgroundImage = `url('${encodeURI(r.img)}')`;
-    playerArt.style.backgroundSize = 'cover';
-    playerArt.style.backgroundPosition = 'center';
-  }
+  activeSub = activeSub === card.dataset.sub ? null : card.dataset.sub;
+  playing = true;
+  applyStream();
+  renderPlayState();
 });
 
 /* =========================================================================
-   CHIPS
+   БАЛЛЫ ЗРИТЕЛЯ — механика Twitch channel points.
+   В проде: +10 за 300 сек просмотра, сундук +50 раз в 900 сек.
+   Демо-таймеры ускорены (60/90 сек), чтобы механика была видна сразу.
    ========================================================================= */
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
-    chip.setAttribute('aria-pressed', 'true');
+const PTS_KEY = 'showcase.points';
+const TICK_TOTAL = 60;
+const CHEST_TOTAL = 90;
+let pts = parseInt(localStorage.getItem(PTS_KEY) || '1240', 10);
+let tickLeft = TICK_TOTAL;
+let chestLeft = CHEST_TOTAL;
+let chestReady = false;
+
+const fmtPts = n => n.toLocaleString('ru-RU');
+const fmtTime = sec => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+
+function renderPoints(gain) {
+  document.getElementById('tbPointsVal').textContent = fmtPts(pts);
+  document.getElementById('giftsBalance').textContent = fmtPts(pts);
+  const progress = Math.round((1 - tickLeft / TICK_TOTAL) * 100);
+  document.getElementById('pointsProgressBar').style.width = progress + '%';
+  document.getElementById('pointsProgressLabel').textContent =
+    playing ? `+10 баллов через ${fmtTime(tickLeft)} просмотра эфира` : 'Включите эфир, чтобы копить баллы';
+  document.getElementById('pipPointsText').textContent =
+    chestReady ? 'Сундук ждёт!' : `+10 через ${fmtTime(tickLeft)}`;
+  document.querySelectorAll('.gift-buy').forEach(b => { b.disabled = pts < +b.dataset.cost; });
+  if (gain) {
+    const f = document.getElementById('tbPointsFloat');
+    f.textContent = `+${gain}`;
+    f.dataset.anim = 'false';
+    void f.offsetWidth;
+    f.dataset.anim = 'true';
+  }
+  localStorage.setItem(PTS_KEY, String(pts));
+}
+
+setInterval(() => {
+  if (!playing) { renderPoints(); return; }
+  tickLeft--;
+  if (tickLeft <= 0) {
+    pts += 10;
+    tickLeft = TICK_TOTAL;
+    renderPoints(10);
+    return;
+  }
+  if (!chestReady) {
+    chestLeft--;
+    if (chestLeft <= 0) {
+      chestReady = true;
+      document.getElementById('chestBtn').dataset.ready = 'true';
+      document.getElementById('tbPoints').dataset.chest = 'true';
+    }
+  }
+  renderPoints();
+}, 1000);
+
+document.getElementById('chestBtn').addEventListener('click', () => {
+  if (!chestReady) return;
+  pts += 50;
+  chestReady = false;
+  chestLeft = CHEST_TOTAL;
+  document.getElementById('chestBtn').dataset.ready = 'false';
+  document.getElementById('tbPoints').dataset.chest = 'false';
+  renderPoints(50);
+  showToast('+50 баллов — бонус-сундук ваш!');
+});
+
+// Обмен подарков
+document.getElementById('giftGrid').addEventListener('click', e => {
+  const b = e.target.closest('.gift-buy');
+  if (!b || b.disabled) return;
+  pts -= +b.dataset.cost;
+  renderPoints();
+  showToast(`Готово! «${b.dataset.name}» скоро будет у вас`);
+});
+
+/* =========================================================================
+   TOAST + ПРЕМИЯ + ТАБЫ НОВОСТЕЙ
+   ========================================================================= */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.dataset.on = 'true';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.dataset.on = 'false'; }, 3200);
+}
+
+// Премия RU.TV — внешняя ссылка на лендинг; URL вставит заказчик в href #sbPremia
+document.getElementById('sbPremia').addEventListener('click', function (e) {
+  if (this.getAttribute('href') === '#') {
+    e.preventDefault();
+    showToast('Лендинг Премии RU.TV подключается — ссылка появится здесь');
+  }
+});
+
+document.querySelectorAll('.tabs-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs-btn').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+    document.getElementById('newsTabNews').hidden = b.dataset.tab !== 'news';
+    document.getElementById('newsTabAfisha').hidden = b.dataset.tab !== 'afisha';
+    document.getElementById('tabNote').textContent = b.dataset.tab === 'news' ? 'обновлено 15 минут назад' : 'ближайшие события';
   });
 });
+
+/* INIT */
+applyStream();
+renderPlayState();
+renderPoints();
+setRoute(localStorage.getItem(ROUTE_KEY) || 'home');
 </script>
 </body>
 </html>
