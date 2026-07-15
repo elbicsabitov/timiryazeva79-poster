@@ -231,8 +231,6 @@
   background: #1d1d1f;
   color: white;
 }
-[data-style="light"] .sb-mini-track,
-[data-style="light"] .sb-mini-artist { color: white; }
 [data-style="light"] .tb-title { color: var(--text-primary); }
 [data-style="light"] .tb-search input { color: var(--text-primary); }
 [data-style="light"] .tb-search input::placeholder { color: var(--text-tertiary); }
@@ -378,75 +376,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   transition: opacity var(--t-fast);
 }
 .sb-brand:hover .sb-logo { opacity: 0.82; }
-
-/* Mini-player в сайдбаре (now-on-air) */
-.sb-mini-player {
-  position: relative;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  aspect-ratio: 1 / 1.05;
-  cursor: pointer;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-md);
-  background-size: cover;
-  background-position: center;
-}
-.sb-mini-player::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.0) 30%, rgba(0,0,0,0.85) 100%);
-}
-.sb-mini-play {
-  position: absolute;
-  inset: 0;
-  display: grid; place-items: center;
-  z-index: 2;
-  opacity: 0;
-  background: rgba(0,0,0,0.32);
-  transition: opacity var(--t-fast);
-}
-.sb-mini-player:hover .sb-mini-play { opacity: 1; }
-.sb-mini-play-btn {
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  display: grid; place-items: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-  transition: transform var(--t-fast);
-}
-.sb-mini-player:hover .sb-mini-play-btn { transform: scale(1.08); }
-.sb-mini-play-btn svg { width: 20px; height: 20px; fill: currentColor; margin-left: 3px; }
-.sb-mini-meta {
-  position: absolute; left: 14px; right: 14px; bottom: 14px;
-  z-index: 2;
-}
-.sb-mini-track {
-  font-size: 16px;
-  font-weight: 700;
-  color: white;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.sb-mini-artist {
-  font-size: 12px;
-  color: rgba(255,255,255,0.78);
-  margin-top: 2px;
-}
-.sb-mini-live {
-  position: absolute; top: 12px; right: 12px;
-  padding: 4px 10px 4px 9px;
-  background: var(--accent);
-  color: white;
-  border-radius: var(--r-pill);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  z-index: 2;
-  display: inline-flex; align-items: center; gap: 6px;
-}
 
 /* Sidebar nav items */
 .sb-nav { display: flex; flex-direction: column; gap: 2px; }
@@ -1866,16 +1795,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
       </svg>
     </a>
 
-    <!-- Mini-player (now-on-air): эфир в один клик из сайдбара -->
-    <div class="sb-mini-player" id="sbMiniPlayer" style="background-image: url('assets/rutv/image 1.png');">
-      <span class="sb-mini-live"><span class="live-pulse"></span>LIVE</span>
-      <div class="sb-mini-play"><button class="sb-mini-play-btn" id="sbMiniPlayBtn" aria-label="Смотреть эфир"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
-      <div class="sb-mini-meta">
-        <div class="sb-mini-track">SHAMAN — Я русский</div>
-        <div class="sb-mini-artist">Сейчас в эфире RU.TV</div>
-      </div>
-    </div>
-
     <nav class="sb-nav" aria-label="Главное">
       <button class="sb-item" data-route="home" aria-current="page">
         <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
@@ -2004,10 +1923,11 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <div class="row-track" id="trackPrograms"></div>
       </section>
 
-      <!-- Супер 20 -->
+      <!-- Супер 20: на главной — топ-10, полная двадцатка по переходу -->
       <section class="row-section">
         <div class="row-head">
           <h2 class="row-title">Супер 20</h2>
+          <a href="#chart" class="row-link" data-route="chart">Вся двадцатка →</a>
         </div>
         <div class="chart-grid" id="chartGrid"></div>
       </section>
@@ -2057,6 +1977,17 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <a href="#">Одноклассники</a>
       </div>
 
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: Супер 20 — полный чарт (переход с главной, вне меню)    -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="chart">
+      <div class="page-head">
+        <h2>Супер 20</h2>
+        <p>Главный чарт RU.TV — двадцать клипов недели по ротации и голосам зрителей.</p>
+      </div>
+      <div class="chart-grid" id="chartGridFull"></div>
     </section>
 
     <!-- ============================================================ -->
@@ -2492,11 +2423,10 @@ function renderPrograms() {
   document.getElementById('programGrid').innerHTML = programs.map(programCard).join('');
 }
 
-function renderChart() {
-  document.getElementById('chartGrid').innerHTML = chart.map(c => {
-    const rank = String(c.rank).padStart(2, '0');
-    const trendUp = c.trend.startsWith('+');
-    return `
+function chartRow(c) {
+  const rank = String(c.rank).padStart(2, '0');
+  const trendUp = c.trend.startsWith('+');
+  return `
     <article class="chart-row" tabindex="0">
       <div>
         <div class="chart-rank">${rank}</div>
@@ -2512,7 +2442,11 @@ function renderChart() {
         <button aria-label="Не нравится"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.7a2 2 0 0 0-2 1.7l-1.4 9a2 2 0 0 0 2 2.3zM17 2h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></svg></button>
       </div>
     </article>`;
-  }).join('');
+}
+function renderChart() {
+  // Главная — только топ-10 (компактный блок), полная двадцатка — на странице #chart
+  document.getElementById('chartGrid').innerHTML = chart.slice(0, 10).map(chartRow).join('');
+  document.getElementById('chartGridFull').innerHTML = chart.map(chartRow).join('');
 }
 
 function renderArtists() {
@@ -2634,6 +2568,7 @@ function applyStyle(s) {
 const ROUTE_KEY = 'showcase.route';
 const titles = {
   home: 'Главная',
+  chart: 'Супер 20',
   news: 'Новости',
   programs: 'Программы',
   video: 'Видео',
@@ -2725,7 +2660,6 @@ function goLive() {
   renderPlayState();
 }
 document.getElementById('tbLiveBtn').addEventListener('click', goLive);
-document.getElementById('sbMiniPlayBtn').addEventListener('click', goLive);
 document.getElementById('pipExpand').addEventListener('click', goLive);
 document.getElementById('pipScreen').addEventListener('click', e => {
   if (e.target.closest('.pip-act')) return;
