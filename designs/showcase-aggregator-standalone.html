@@ -231,7 +231,6 @@
   background: #1d1d1f;
   color: white;
 }
-[data-style="light"] .tb-title { color: var(--text-primary); }
 [data-style="light"] .tb-search input { color: var(--text-primary); }
 [data-style="light"] .tb-search input::placeholder { color: var(--text-tertiary); }
 [data-style="light"] .tb-icon-btn { color: var(--text-secondary); }
@@ -447,11 +446,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.0));
   backdrop-filter: blur(30px) saturate(1.4);
   -webkit-backdrop-filter: blur(30px) saturate(1.4);
-}
-.tb-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
 }
 .tb-spacer { flex: 1; }
 .tb-search {
@@ -1728,7 +1722,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   .sidebar { display: none; }
   .topbar { padding: 12px 0; gap: 8px; }
   .tb-search { min-width: 0; }
-  .tb-title { display: none; }
   .tb-icon-btn { display: none; }
   .tb-live-full { display: none; }
   .tb-live-short { display: inline; }
@@ -1831,7 +1824,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   <main class="content">
 
     <header class="topbar">
-      <div class="tb-title" id="tbTitle">Главная</div>
       <div class="tb-spacer"></div>
       <!-- One-click эфир: кнопка видна на любой странице -->
       <button class="tb-live-btn" id="tbLiveBtn" aria-label="Смотреть прямой эфир">
@@ -2586,7 +2578,7 @@ function setRoute(r) {
     if (i.dataset.route === r) i.setAttribute('aria-current', 'page');
     else i.removeAttribute('aria-current');
   });
-  document.getElementById('tbTitle').textContent = titles[r];
+  document.title = `${titles[r]} — RU.TV`;
   root.dataset.page = r;
   localStorage.setItem(ROUTE_KEY, r);
   window.scrollTo({ top: 0, behavior: 'smooth' });
