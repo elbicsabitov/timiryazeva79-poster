@@ -23,7 +23,7 @@
   --r-xs: 8px;
   --t-fast: 200ms cubic-bezier(.2,.8,.2,1);
   --t-mid: 380ms cubic-bezier(.2,.8,.2,1);
-  --sidebar-w: 256px;
+  --sidebar-w: 216px; /* правка Стаса 07-16 (msg 602802): «еще уже меню» — минимум по самому широкому пункту «Витрина подарков» (Onest 129.9px + икона 18 + gap 14 + пад 12×2 + пад сайдбара 14×2 ≈ 214) */
   --content-pad: 40px;
   --promo-w: 300px;  /* рекламный слот IAB Half Page 300×600 */
   --promo-h: 600px;
@@ -340,7 +340,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   top: 0;
   align-self: start;
   height: 100dvh;
-  padding: 22px 18px 18px;
+  padding: 22px 14px 18px;
   background: var(--glass-bg-weak);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
@@ -376,9 +376,10 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .sb-nav { display: flex; flex-direction: column; gap: 2px; }
 .sb-item {
   display: flex; align-items: center; gap: 14px;
-  padding: 12px 16px;
+  padding: 12px 12px;
   border-radius: var(--r-md);
   color: var(--text-secondary);
+  white-space: nowrap; /* при узком сайдбаре перенос хуже, чем 1px клип */
   font-size: 14.5px;
   font-weight: 500;
   cursor: pointer;
@@ -1712,14 +1713,14 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .tb-live-short { display: none; }
 
 @media (min-width: 1800px) {
-  :root { --content-pad: 60px; --sidebar-w: 288px; }
+  :root { --content-pad: 60px; --sidebar-w: 224px; }
   .row-title { font-size: 26px; }
 }
 @media (max-width: 1360px) {
   .sub-row { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 1100px) {
-  :root { --sidebar-w: 220px; }
+  /* сайдбар уже сужен глобально до 216px (правка 602802) — отдельный override не нужен */
   /* Промо 300×600 — десктопный формат; на узких экранах слот скрыт
      (мобильный креатив 300×250 — отдельной задачей) */
   .live-layout { grid-template-columns: 1fr; }
