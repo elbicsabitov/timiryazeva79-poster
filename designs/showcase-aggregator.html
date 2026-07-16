@@ -137,7 +137,6 @@
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border-right: 1px solid var(--glass-border);
 }
-[data-style="light"] .sb-logo { color: var(--brand-pink); }
 [data-style="light"] .sb-item[aria-current="page"] {
   background: var(--accent-soft);
   color: var(--accent);
@@ -155,13 +154,11 @@
   background: linear-gradient(180deg, rgba(245,245,247,0.92), rgba(245,245,247,0));
 }
 [data-style="light"] .tb-search,
-[data-style="light"] .tb-icon-btn,
 [data-style="light"] .tb-points {
   background: rgba(0,0,0,0.05);
   border: 0;
 }
 [data-style="light"] .tb-search:hover,
-[data-style="light"] .tb-icon-btn:hover,
 [data-style="light"] .tb-points:hover {
   background: rgba(0,0,0,0.08);
 }
@@ -233,7 +230,6 @@
 }
 [data-style="light"] .tb-search input { color: var(--text-primary); }
 [data-style="light"] .tb-search input::placeholder { color: var(--text-tertiary); }
-[data-style="light"] .tb-icon-btn { color: var(--text-secondary); }
 [data-style="light"] .tb-search svg { color: var(--text-tertiary); }
 [data-style="light"] .row-title { color: var(--text-primary); }
 [data-style="light"] .footer-col h4 { color: var(--text-tertiary); }
@@ -360,8 +356,8 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   -webkit-backdrop-filter: blur(40px) saturate(1.4);
 }
 
-/* Официальный логотип RU.TV — SVG с ru.tv, одноцветный (цвет через currentColor:
-   белый на тёмных темах, брендовый розовый на светлой) */
+/* Официальный логотип RU.TV — SVG с ru.tv, одноцветный (цвет через currentColor).
+   Правка редакции №1: брендовый розовый во ВСЕХ темах, включая Glass и Apple Dark */
 .sb-brand {
   display: block;
   padding: 2px 6px 4px;
@@ -371,7 +367,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   width: 126px;
   height: auto;
   display: block;
-  color: #fff;
+  color: var(--brand-pink);
   transition: opacity var(--t-fast);
 }
 .sb-brand:hover .sb-logo { opacity: 0.82; }
@@ -470,18 +466,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   min-width: 0;
 }
 .tb-search input::placeholder { color: var(--text-tertiary); }
-.tb-icon-btn {
-  width: 42px; height: 42px;
-  display: grid; place-items: center;
-  border-radius: var(--r-pill);
-  background: var(--glass-bg-weak);
-  border: 1px solid var(--glass-border);
-  color: var(--text-secondary);
-  transition: background var(--t-fast), color var(--t-fast);
-}
-.tb-icon-btn:hover { background: var(--glass-bg); color: var(--text-primary); }
-.tb-icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
 /* One-click эфир — постоянная кнопка на всех страницах */
 .tb-live-btn {
   display: inline-flex; align-items: center; gap: 9px;
@@ -1165,7 +1149,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   flex: 0 0 380px;
   scroll-snap-align: start;
   display: grid;
-  grid-template-columns: 132px 1fr;
+  grid-template-columns: 108px 1fr;
   gap: 14px;
   padding: 14px;
   border-radius: var(--r-lg);
@@ -1182,9 +1166,10 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
+/* Правка редакции №6: миниатюры новостей — квадрат 1:1 (единый ресайз) */
 .card-news-thumb {
   border-radius: 10px;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   background-size: cover; background-position: center;
   border: 1px solid var(--glass-border);
 }
@@ -1496,21 +1481,50 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .video-card-name { margin-top: 10px; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 .video-card-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
 
-/* Программы — сетка 9 плиток */
+/* Программы — сетка 9 плиток. Правка редакции №5: плитки компактнее
+   (auto-fill ~170-210px вместо трёх крупных колонок) */
 .program-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 20px 14px;
 }
 .program-grid .card-program { flex: none; }
+.program-grid .card-program-art { padding: 12px; }
+.program-grid .card-program-abbr { font-size: 19px; }
+.program-grid .card-program-time { font-size: 9.5px; padding: 3px 8px; }
+.program-grid .card-program-meta { font-size: 11.5px; margin-top: 8px; }
 
 .app-footer {
   margin-top: 16px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
   padding: 32px 0 20px;
   border-top: 1px solid var(--glass-border);
+}
+/* Кнопки сторов (правка редакции №13) */
+.store-badges { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.store-badge { display: block; line-height: 0; border-radius: 7px; transition: opacity var(--t-fast), transform var(--t-fast); }
+.store-badge:hover { opacity: 0.85; transform: translateY(-1px); }
+.store-badge svg { height: 40px; width: auto; display: block; }
+/* Рег. информация сетевого издания (правка редакции №11) */
+.footer-legal {
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: var(--text-tertiary);
+  padding: 14px 0 0;
+  max-width: 980px;
+}
+/* Возрастная маркировка (правка редакции №12; значение сверить с редакцией) */
+.age-badge {
+  margin-left: auto;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  align-self: center;
 }
 .footer-col h4 {
   font-size: 12px;
@@ -1624,7 +1638,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 .pip-points svg { width: 13px; height: 13px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-/* Toast — подсказка (напр. клик по «Премия RU.TV» до подключения лендинга) */
+/* Toast — подсказка (напр. клик по «Премия РУ.ТВ» до подключения лендинга) */
 .toast {
   position: fixed;
   left: 50%; bottom: 32px;
@@ -1714,7 +1728,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   .live-screen { aspect-ratio: 16 / 9; }
   .afisha-list { grid-template-columns: 1fr; }
   .news-grid { grid-template-columns: 1fr; }
-  .program-grid { grid-template-columns: repeat(2, 1fr); }
+  .app-footer { grid-template-columns: repeat(2, 1fr); gap: 28px; }
   .points-hero { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
@@ -1722,7 +1736,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   .sidebar { display: none; }
   .topbar { padding: 12px 0; gap: 8px; }
   .tb-search { min-width: 0; }
-  .tb-icon-btn { display: none; }
   .tb-live-full { display: none; }
   .tb-live-short { display: inline; }
   .live-info { flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
@@ -1744,7 +1757,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   .tweaks { left: 12px; bottom: 12px; }
   .app-footer { grid-template-columns: 1fr; gap: 20px; }
   .chart-grid { grid-template-columns: 1fr; }
-  .program-grid { grid-template-columns: 1fr; }
+  .program-grid { grid-template-columns: repeat(2, 1fr); }
   .page-head h2 { font-size: 27px; }
   .afisha-card { grid-template-columns: 64px 1fr; }
   .afisha-cta { display: none; }
@@ -1793,12 +1806,10 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
         Главная
       </button>
-      <!-- Ссылка на лендинг Премии RU.TV — URL вставит заказчик (href) -->
-      <a class="sb-item" id="sbPremia" href="#" title="Лендинг Премии RU.TV — ссылку добавит заказчик">
-        <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21 1.18.54 2.03 2.03 2.03 3.79"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-        Премия RU.TV
-        <svg class="sb-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-      </a>
+      <button class="sb-item" data-route="video">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>
+        Видео
+      </button>
       <button class="sb-item" data-route="news">
         <svg viewBox="0 0 24 24"><path d="M4 22h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2Z"/><path d="M18 8h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2"/><path d="M6 6h8M6 10h8M6 14h6"/></svg>
         Новости
@@ -1807,14 +1818,16 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
         Программы
       </button>
-      <button class="sb-item" data-route="video">
-        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>
-        Видео
-      </button>
       <button class="sb-item" data-route="gifts">
         <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
         Витрина подарков
       </button>
+      <!-- Ссылка на лендинг Премии — URL вставит заказчик (href) -->
+      <a class="sb-item" id="sbPremia" href="#" title="Лендинг Премии РУ.ТВ — ссылку добавит заказчик">
+        <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21 1.18.54 2.03 2.03 2.03 3.79"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        Премия РУ.ТВ
+        <svg class="sb-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      </a>
     </nav>
   </aside>
 
@@ -1824,13 +1837,14 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   <main class="content">
 
     <header class="topbar">
-      <div class="tb-spacer"></div>
-      <!-- One-click эфир: кнопка видна на любой странице -->
+      <!-- One-click эфир: слева, на одной вертикали с началом блока «В эфире»
+           (правка редакции №2: кнопку — влево, шапку — разгрузить) -->
       <button class="tb-live-btn" id="tbLiveBtn" aria-label="Смотреть прямой эфир">
         <span class="live-pulse"></span>
         <span class="tb-live-full">Прямой эфир</span>
         <span class="tb-live-short">Эфир</span>
       </button>
+      <div class="tb-spacer"></div>
       <label class="tb-search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="search" name="site-search" placeholder="Найти клип, программу или артиста" aria-label="Поиск">
@@ -1840,9 +1854,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
         <span id="tbPointsVal">1 240</span>
         <span class="tb-points-float" id="tbPointsFloat">+10</span>
-      </button>
-      <button class="tb-icon-btn" aria-label="Уведомления">
-        <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
       </button>
       <div class="tb-avatar">ЭС</div>
     </header>
@@ -1927,7 +1938,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
       <!-- Новости -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Главные новости</h2>
+          <h2 class="row-title">Свежие новости</h2>
           <a href="#news" class="row-link" data-route="news">Все новости →</a>
         </div>
         <div class="row-track" id="trackNews"></div>
@@ -1949,24 +1960,42 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         <div class="row-track" id="trackHosts"></div>
       </section>
 
+      <!-- Подвал. Правки редакции №10 (контакты) · №14 (выдача призов) ·
+           №13 (кнопки сторов) · №11 (рег. информация) · №9 (соцсети: ОК/ВК/MAX) ·
+           №12 (возрастная маркировка — значение сверить с редакцией) -->
       <footer class="app-footer">
         <div class="footer-col">
-          <h4>Головной офис RU.TV</h4>
+          <h4>Контакты</h4>
           <p>123298, Москва, 3-я Хорошёвская, 12<br>Телефон: +7 499 579-77-09<br>Прямой эфир: +7 (495) 956-10-12<br>info@ru.tv</p>
         </div>
         <div class="footer-col">
-          <h4>Связь</h4>
-          <p>WhatsApp: +7 495 956-10-12<br>Техподдержка сайта: support@ru.tv<br>Реклама: ad@ru.tv · +7 499 579-77-99<br>Новости и пресс-релизы: press@ru.tv</p>
+          <h4>Редакция и реклама</h4>
+          <p>WhatsApp: +7 495 956-10-12<br>Техподдержка сайта: support@ru.tv<br>Реклама: ad@ru.tv · +7 499 579-77-99<br>Пресс-релизы: press@ru.tv</p>
+        </div>
+        <div class="footer-col">
+          <h4>Выдача призов</h4>
+          <p>Призы «Витрины подарков» выдаются в офисе RU.TV по будням с 12:00 до 18:00.<br>Вопросы: prizes@ru.tv<br>При получении нужен паспорт.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Приложение RU.TV</h4>
+          <div class="store-badges">
+            <a href="#" class="store-badge" aria-label="Загрузите в App Store"><svg viewBox="0 0 119.664 40"><path d="M110.135 0H9.535Q8.986 0 8.44.002q-.457.004-.919.013A13 13 0 0 0 5.517.19a6.7 6.7 0 0 0-1.9.627 6.4 6.4 0 0 0-1.62 1.18A6.3 6.3 0 0 0 .82 3.617a6.6 6.6 0 0 0-.625 1.903 13 13 0 0 0-.179 2.002c-.01.307-.01.615-.015.921V31.56c.005.31.006.61.015.921a13 13 0 0 0 .18 2.002 6.6 6.6 0 0 0 .624 1.905A6.2 6.2 0 0 0 1.998 38a6.3 6.3 0 0 0 1.618 1.179 6.7 6.7 0 0 0 1.901.63 13.5 13.5 0 0 0 2.004.177c.31.007.613.011.919.011.366.002.728.002 1.095.002h100.6c.36 0 .724 0 1.084-.002.304 0 .617-.004.922-.01a13 13 0 0 0 2-.178 6.8 6.8 0 0 0 1.908-.63A6.3 6.3 0 0 0 117.666 38a6.4 6.4 0 0 0 1.182-1.614 6.6 6.6 0 0 0 .619-1.905 13.5 13.5 0 0 0 .185-2.002c.004-.31.004-.61.004-.921.008-.364.008-.725.008-1.094V9.536q.002-.549-.008-1.092.001-.46-.004-.92a13.5 13.5 0 0 0-.185-2.003 6.6 6.6 0 0 0-.62-1.903 6.47 6.47 0 0 0-2.798-2.8 6.8 6.8 0 0 0-1.908-.627 13 13 0 0 0-2-.176c-.305-.005-.618-.011-.922-.013-.36-.002-.725-.002-1.084-.002Z" style="fill:#a6a6a6"/><path d="M8.445 39.125c-.305 0-.602-.004-.904-.01a13 13 0 0 1-1.87-.164 5.9 5.9 0 0 1-1.656-.548 5.4 5.4 0 0 1-1.397-1.016 5.3 5.3 0 0 1-1.02-1.397 5.7 5.7 0 0 1-.544-1.657 12.4 12.4 0 0 1-.166-1.875c-.007-.21-.015-.913-.015-.913v-23.1s.009-.692.015-.895a12.4 12.4 0 0 1 .165-1.872 5.8 5.8 0 0 1 .544-1.662 5.4 5.4 0 0 1 1.015-1.398 5.6 5.6 0 0 1 1.402-1.023 5.8 5.8 0 0 1 1.653-.544A12.6 12.6 0 0 1 7.543.887l.902-.012h102.769l.913.013a12.4 12.4 0 0 1 1.858.162 6 6 0 0 1 1.671.548 5.6 5.6 0 0 1 2.415 2.42 5.8 5.8 0 0 1 .535 1.649 13 13 0 0 1 .174 1.887c.003.283.003.588.003.89.008.375.008.732.008 1.092v20.929c0 .363 0 .718-.008 1.075 0 .325 0 .623-.004.93a13 13 0 0 1-.17 1.853 5.7 5.7 0 0 1-.54 1.67 5.5 5.5 0 0 1-1.016 1.386 5.4 5.4 0 0 1-1.4 1.022 5.9 5.9 0 0 1-1.668.55 12.5 12.5 0 0 1-1.869.163c-.293.007-.6.011-.897.011l-1.084.002Z"/><g data-name="&lt;Group&gt;"><g data-name="&lt;Group&gt;"><path d="M24.769 20.3a4.95 4.95 0 0 1 2.356-4.151 5.07 5.07 0 0 0-3.99-2.158c-1.68-.176-3.308 1.005-4.164 1.005-.872 0-2.19-.988-3.608-.958a5.32 5.32 0 0 0-4.473 2.728c-1.934 3.348-.491 8.269 1.361 10.976.927 1.325 2.01 2.805 3.428 2.753 1.387-.058 1.905-.885 3.58-.885 1.658 0 2.144.885 3.59.852 1.489-.025 2.426-1.332 3.32-2.67a11 11 0 0 0 1.52-3.092 4.78 4.78 0 0 1-2.92-4.4M22.037 12.21a4.87 4.87 0 0 0 1.115-3.49 4.96 4.96 0 0 0-3.208 1.66A4.64 4.64 0 0 0 18.8 13.74a4.1 4.1 0 0 0 3.237-1.53" data-name="&lt;Path&gt;" style="fill:#fff"/></g><path d="M42.302 27.14H37.57l-1.137 3.356h-2.005l4.484-12.418h2.083l4.483 12.418h-2.039Zm-4.243-1.55h3.752l-1.85-5.446h-.051ZM55.16 25.97c0 2.813-1.506 4.62-3.779 4.62a3.07 3.07 0 0 1-2.848-1.583h-.043v4.484H46.63V21.442h1.8v1.506h.033a3.21 3.21 0 0 1 2.883-1.6c2.298 0 3.813 1.816 3.813 4.622m-1.91 0c0-1.833-.948-3.038-2.393-3.038-1.42 0-2.375 1.23-2.375 3.038 0 1.824.955 3.046 2.375 3.046 1.445 0 2.393-1.197 2.393-3.046M65.125 25.97c0 2.813-1.506 4.62-3.779 4.62a3.07 3.07 0 0 1-2.848-1.583h-.043v4.484h-1.859V21.442h1.799v1.506h.034a3.21 3.21 0 0 1 2.883-1.6c2.298 0 3.813 1.816 3.813 4.622m-1.91 0c0-1.833-.948-3.038-2.393-3.038-1.42 0-2.375 1.23-2.375 3.038 0 1.824.955 3.046 2.375 3.046 1.445 0 2.392-1.197 2.392-3.046M71.71 27.036c.138 1.232 1.334 2.04 2.97 2.04 1.566 0 2.693-.808 2.693-1.919 0-.964-.68-1.54-2.29-1.936l-1.609-.388c-2.28-.55-3.339-1.617-3.339-3.348 0-2.142 1.867-3.614 4.519-3.614 2.624 0 4.423 1.472 4.483 3.614h-1.876c-.112-1.239-1.136-1.987-2.634-1.987s-2.521.757-2.521 1.858c0 .878.654 1.395 2.255 1.79l1.368.336c2.548.603 3.606 1.626 3.606 3.443 0 2.323-1.85 3.778-4.793 3.778-2.754 0-4.614-1.42-4.734-3.667ZM83.346 19.3v2.142h1.722v1.472h-1.722v4.991c0 .776.345 1.137 1.102 1.137a6 6 0 0 0 .611-.043v1.463a5 5 0 0 1-1.032.086c-1.833 0-2.548-.689-2.548-2.445v-5.189h-1.316v-1.472h1.316V19.3ZM86.065 25.97c0-2.849 1.678-4.639 4.294-4.639 2.625 0 4.295 1.79 4.295 4.639 0 2.856-1.661 4.638-4.295 4.638s-4.294-1.782-4.294-4.638m6.695 0c0-1.954-.895-3.108-2.401-3.108s-2.4 1.162-2.4 3.108c0 1.962.894 3.106 2.4 3.106s2.401-1.144 2.401-3.106M96.186 21.442h1.773v1.541h.043a2.16 2.16 0 0 1 2.177-1.635 3 3 0 0 1 .637.069v1.738a2.6 2.6 0 0 0-.835-.112 1.873 1.873 0 0 0-1.937 2.083v5.37h-1.858ZM109.384 27.837c-.25 1.643-1.85 2.771-3.898 2.771-2.634 0-4.269-1.764-4.269-4.595 0-2.84 1.644-4.682 4.19-4.682 2.506 0 4.08 1.72 4.08 4.466v.637h-6.394v.112a2.358 2.358 0 0 0 2.436 2.564 2.05 2.05 0 0 0 2.09-1.273Zm-6.282-2.702h4.526a2.177 2.177 0 0 0-2.22-2.298 2.29 2.29 0 0 0-2.306 2.298" style="fill:#fff"/></g><g data-name="&lt;Group&gt;"><path d="M36.738 11.253h.798a1 1 0 0 0 1.125-.95c0-.551-.414-.907-1.116-.907a1.064 1.064 0 0 0-1.204.935h-.876a1.87 1.87 0 0 1 2.108-1.745c1.175 0 2.002.658 2.002 1.604a1.386 1.386 0 0 1-1.084 1.365v.07a1.39 1.39 0 0 1 1.327 1.443 1.993 1.993 0 0 1-2.228 1.774 1.983 1.983 0 0 1-2.241-1.765h.89c.053.57.577.939 1.35.939s1.28-.414 1.28-.997c0-.591-.476-.955-1.307-.955h-.824ZM40.83 13.424c0-.81.604-1.278 1.674-1.344l1.22-.07v-.389c0-.475-.314-.744-.922-.744-.496 0-.84.182-.939.5h-.86c.09-.773.82-1.27 1.84-1.27 1.13 0 1.766.563 1.766 1.514v3.077h-.856v-.633h-.07a1.52 1.52 0 0 1-1.353.707 1.36 1.36 0 0 1-1.5-1.348m2.894-.384v-.377l-1.1.07c-.62.042-.901.253-.901.65 0 .405.351.64.835.64a1.06 1.06 0 0 0 1.166-.983M46.968 10.943v3.755h-.889v-4.503h2.965v.748ZM54.43 12.444c0 1.431-.724 2.328-1.86 2.328a1.47 1.47 0 0 1-1.386-.756h-.07v2.179h-.89v-6h.856v.744h.067a1.56 1.56 0 0 1 1.414-.819c1.145 0 1.869.893 1.869 2.324m-.914 0c0-.95-.45-1.526-1.203-1.526-.748 0-1.216.587-1.216 1.53 0 .939.467 1.526 1.212 1.526.756 0 1.207-.575 1.207-1.53M55.613 16.31v-.765a2 2 0 0 0 .29.017.77.77 0 0 0 .815-.628l.066-.22-1.63-4.52h.968l1.129 3.577h.07l1.125-3.576h.943l-1.679 4.689c-.385 1.095-.81 1.447-1.729 1.447a4 4 0 0 1-.368-.02M60.081 13.42h.885c.087.397.459.604.98.604.591 0 .954-.26.954-.666 0-.434-.326-.641-.955-.641h-.673v-.69h.662c.537 0 .81-.207.81-.584 0-.33-.264-.583-.81-.583-.497 0-.86.211-.918.567h-.857a1.58 1.58 0 0 1 1.775-1.32c1.07 0 1.682.485 1.682 1.246a.925.925 0 0 1-.71.921v.07a1.01 1.01 0 0 1 .88 1.014c0 .856-.728 1.422-1.84 1.422-.984 0-1.783-.45-1.865-1.36M65.066 14.698v-4.503h.88v3.097h.071l2.075-3.097h.881v4.503h-.88v-3.114h-.067l-2.08 3.114ZM73.826 10.943h-1.418v3.755h-.89v-3.755H70.1v-.748h3.726ZM78.613 13.482a1.83 1.83 0 0 1-1.952 1.303 2.045 2.045 0 0 1-2.08-2.325 2.077 2.077 0 0 1 2.076-2.352c1.253 0 2.01.856 2.01 2.27v.31h-3.18v.05a1.19 1.19 0 0 0 1.2 1.29 1.08 1.08 0 0 0 1.07-.546Zm-3.126-1.451h2.273a1.086 1.086 0 0 0-1.107-1.167 1.15 1.15 0 0 0-1.166 1.167M82.38 10.195h2.03c.882 0 1.398.446 1.398 1.145a.97.97 0 0 1-.76.951v.07a1.03 1.03 0 0 1 .962 1.038c0 .786-.59 1.299-1.579 1.299h-2.05Zm.881.682v1.166h.881c.537 0 .794-.207.794-.587 0-.352-.224-.58-.695-.58Zm0 1.82v1.319h1.054c.525 0 .807-.232.807-.658 0-.45-.319-.662-.918-.662Z" style="fill:#fff"/></g></svg></a>
+            <a href="#" class="store-badge" aria-label="Доступно в Google Play"><svg viewBox="0 0 646 191.41"><clipPath id="gp-badge-a"><path d="M0 0h646v191.41H0z"/></clipPath><clipPath id="gp-badge-b"><path d="M0 0h646v191.41H0z"/></clipPath><g fill="none" clip-path="url(#gp-badge-a)"><g fill="#000" clip-path="url(#gp-badge-b)"><path d="M622.07 191.41H23.93C10.77 191.41 0 180.64 0 167.48V23.93C0 10.77 10.77 0 23.93 0h598.15c13.16 0 23.93 10.77 23.93 23.93v143.56c0 13.16-10.77 23.93-23.93 23.93"/><path fill="#a6a5a5" d="M622.07 3.83c11.08 0 20.1 9.02 20.1 20.1v143.56c0 11.08-9.02 20.1-20.1 20.1H23.93c-11.08 0-20.1-9.02-20.1-20.1V23.93c0-11.09 9.01-20.1 20.1-20.1h598.15zm0-3.83H23.93C10.77 0 0 10.77 0 23.93v143.56c0 13.16 10.77 23.93 23.93 23.93h598.15c13.16 0 23.93-10.77 23.93-23.93V23.93C646 10.77 635.23 0 622.07 0"/><path fill="#fff" d="M326.04 104.08c-11.25 0-20.43 8.56-20.43 20.36s9.17 20.35 20.43 20.35 20.43-8.64 20.43-20.35-9.17-20.36-20.43-20.36m0 32.69c-6.17 0-11.49-5.09-11.49-12.33s5.32-12.34 11.49-12.34 11.48 5.01 11.48 12.34-5.32 12.33-11.48 12.33m-44.57-32.69c-11.25 0-20.43 8.56-20.43 20.36s9.17 20.35 20.43 20.35 20.43-8.64 20.43-20.35-9.18-20.36-20.43-20.36m0 32.69c-6.16 0-11.48-5.09-11.48-12.33s5.32-12.34 11.48-12.34 11.49 5.01 11.49 12.34-5.32 12.33-11.49 12.33m-53.01-26.44v8.63h20.66c-.62 4.86-2.23 8.4-4.7 10.87-3.01 3.01-7.71 6.32-15.96 6.32-12.72 0-22.67-10.25-22.67-22.97s9.94-22.97 22.67-22.97c6.86 0 11.87 2.69 15.57 6.16l6.09-6.09c-5.17-4.93-12.03-8.71-21.66-8.71-17.42 0-32.07 14.19-32.07 31.61s14.65 31.61 32.07 31.61c9.4 0 16.49-3.09 22.05-8.87 5.7-5.7 7.48-13.72 7.48-20.2 0-2-.15-3.85-.46-5.39h-29.06zm216.81 6.7c-1.7-4.55-6.86-12.95-17.42-12.95s-19.19 8.25-19.19 20.36c0 11.41 8.63 20.35 20.19 20.35 9.33 0 14.72-5.7 16.96-9.02l-6.94-4.63c-2.32 3.39-5.47 5.63-10.02 5.63s-7.79-2.08-9.87-6.16l27.21-11.26-.92-2.31zm-27.75 6.79c-.23-7.87 6.09-11.87 10.64-11.87 3.55 0 6.56 1.77 7.56 4.32l-18.19 7.56zm-22.13 19.73h8.94V83.73h-8.94zm-14.65-34.92h-.31c-2-2.39-5.86-4.55-10.71-4.55-10.18 0-19.5 8.94-19.5 20.43s9.33 20.27 19.5 20.27c4.86 0 8.71-2.16 10.71-4.63h.31v2.93c0 7.79-4.16 11.95-10.87 11.95-5.47 0-8.87-3.93-10.25-7.24l-7.79 3.24c2.23 5.4 8.17 12.03 18.04 12.03 10.48 0 19.35-6.17 19.35-21.2v-36.54h-8.48v3.32zm-10.25 28.14c-6.17 0-11.33-5.16-11.33-12.25s5.16-12.41 11.33-12.41 10.87 5.24 10.87 12.41-4.78 12.25-10.87 12.25m116.67-53.03h-21.39v59.82h8.92V120.9h12.47c9.9 0 19.62-7.17 19.62-18.58s-9.73-18.58-19.62-18.58m.23 28.83h-12.7V92.06h12.7c6.68 0 10.47 5.53 10.47 10.25s-3.79 10.25-10.47 10.25m55.18-8.59c-6.46 0-13.16 2.85-15.93 9.15l7.93 3.31c1.69-3.31 4.85-4.39 8.16-4.39 4.62 0 9.31 2.77 9.39 7.69v.62c-1.62-.92-5.08-2.31-9.31-2.31-8.54 0-17.24 4.69-17.24 13.47 0 8.01 7.01 13.16 14.85 13.16 6.01 0 9.31-2.69 11.39-5.85h.31v4.62h8.62V120.5c0-10.62-7.92-16.54-18.16-16.54m-1.08 32.78c-2.93 0-7.01-1.46-7.01-5.08 0-4.62 5.08-6.38 9.47-6.38 3.92 0 5.77.85 8.16 2-.69 5.54-5.46 9.47-10.62 9.47m50.64-31.48-10.24 25.94h-.31l-10.62-25.94h-9.62l15.93 36.25-9.08 20.16h9.31l24.55-56.41h-9.93zm-80.42 38.27h8.93V83.72h-8.93z"/><path fill="#ea4435" d="m99.14 92.95-50.95 54.07v.03a13.746 13.746 0 0 0 13.29 10.19c2.55 0 4.93-.69 6.98-1.89l.16-.1 57.35-33.09-26.84-29.22z"/><path fill="#f9bc15" d="m150.68 83.74-.05-.03-24.76-14.35-27.89 24.82 27.99 27.98 24.62-14.21c4.32-2.34 7.25-6.89 7.25-12.13s-2.89-9.74-7.17-12.08"/><path fill="#547dbf" d="M48.19 44.39c-.31 1.13-.47 2.32-.47 3.54v95.55c0 1.23.16 2.41.47 3.54l52.69-52.69-52.7-49.94z"/><path fill="#33a851" d="m99.51 95.71 26.37-26.36L68.6 36.14a13.75 13.75 0 0 0-7.11-1.97c-6.36 0-11.73 4.33-13.3 10.21v.01l51.33 51.32z"/></g><g fill="#fff"><path d="M206.09 61.47c-2.37-1.36-4.24-3.23-5.6-5.62s-2.04-5.02-2.04-7.91.68-5.52 2.04-7.91 3.23-4.26 5.6-5.62 5-2.04 7.89-2.04c4.47 0 8.15 1.62 11.03 4.87l-3.2 3.12c-1.03-1.22-2.17-2.14-3.43-2.75s-2.71-.92-4.35-.92c-2.03 0-3.87.46-5.54 1.39q-2.49 1.395-3.96 3.96c-.97 1.71-1.46 3.67-1.46 5.89s.49 4.18 1.46 5.89 2.29 3.03 3.96 3.95c1.66.93 3.51 1.4 5.54 1.4 3.39 0 6.23-1.4 8.53-4.21l3.29 3.16a15.3 15.3 0 0 1-5.2 3.96c-2.03.94-4.25 1.42-6.66 1.42q-4.335 0-7.89-2.04zM230.96 33.04h4.58v14.45h.25l11.87-14.45h5.75v.25l-12.57 14.9 13.24 14.4v.25h-6L235.8 49.18h-.25v13.66h-4.58V33.03zM268.18 33.04h5.2l11.28 29.81h-5.04l-2.75-7.66h-12.16l-2.75 7.66h-5.04l11.24-29.81zm7.2 17.9-3.33-9.14-1.12-3.41h-.25l-1.12 3.41-3.33 9.14h9.16zM301.9 49.57q-2.79 2.46-6.87 2.46c-1.8 0-3.43-.37-4.89-1.1s-2.6-1.8-3.43-3.18c-.83-1.39-1.25-3.02-1.25-4.91v-9.78h4.62v8.99c0 1.8.53 3.2 1.58 4.18 1.05.99 2.47 1.48 4.25 1.48 2.41 0 4.41-.94 6-2.83V33.06h4.54v29.81h-4.54V49.59zM321.71 33.04h5.2l11.28 29.81h-5.04l-2.75-7.66h-12.16l-2.75 7.66h-5.04l11.24-29.81zm7.2 17.9-3.33-9.14-1.12-3.41h-.25l-1.12 3.41-3.33 9.14h9.16zM345.94 37.37h-8.37v-4.33h21.27v4.33h-8.33v25.48h-4.58V37.37zM363.59 33.04h4.58v10.62h6.33c1.86 0 3.58.38 5.16 1.15 1.58.76 2.84 1.87 3.79 3.33q1.41 2.19 1.41 5.1c0 2.91-.47 3.64-1.41 5.1s-2.21 2.57-3.79 3.35-3.3 1.17-5.16 1.17h-10.91V33.05zm11.24 25.52c1.08 0 2.04-.25 2.87-.75s1.47-1.16 1.91-1.98.67-1.69.67-2.6-.22-1.78-.67-2.6c-.44-.82-1.08-1.48-1.91-2-.83-.51-1.79-.77-2.87-.77h-6.66v10.7zM399.61 33.04h4.54v16.49l-.25 5.75h.25l13.36-22.23h5.2v29.81h-4.54v-16.9l.25-5.75h-.25L404.6 62.86h-5V33.05zM431.68 61.6c-1.87-1.28-3.16-3.16-3.85-5.66l4.2-1.67c.36 1.55 1.06 2.78 2.1 3.66 1.04.89 2.27 1.33 3.68 1.33 1.53 0 2.83-.48 3.91-1.44s1.62-2.14 1.62-3.56c0-.92-.26-1.75-.79-2.52-.53-.76-1.25-1.37-2.16-1.81-.92-.44-1.91-.67-3-.67h-2.46v-4h2.21q2.25 0 3.75-1.23c1.5-1.23 1.5-1.92 1.5-3.31 0-1.22-.46-2.23-1.39-3.04-.93-.8-2.09-1.21-3.48-1.21-1.25 0-2.3.38-3.16 1.12-.86.75-1.46 1.64-1.79 2.66l-4.04-1.67c.58-1.64 1.64-3.09 3.19-4.35q2.31-1.89 5.85-1.89c1.8 0 3.41.35 4.81 1.06s2.5 1.68 3.29 2.91c.79 1.24 1.19 2.63 1.19 4.18 0 2.89-1.26 5.02-3.79 6.41v.25c1.42.64 2.57 1.57 3.46 2.79s1.33 2.71 1.33 4.46-.44 3.23-1.31 4.62-2.08 2.48-3.6 3.27c-1.53.79-3.23 1.19-5.12 1.19-2.22 0-4.27-.64-6.14-1.92z"/></g></g></svg></a>
+            <!-- RuStore: упрощённый бейдж в стиле сторов (официальный — из брендбука при имплементации) -->
+            <a href="#" class="store-badge" aria-label="Скачайте из RuStore"><svg viewBox="0 0 135 40"><rect width="135" height="40" rx="5" fill="#000"/><rect x=".8" y=".8" width="133.4" height="38.4" rx="4.4" fill="none" stroke="#a6a6a6" stroke-width="1.6"/><rect x="8" y="8" width="24" height="24" rx="6" fill="#0077FF"/><g fill="#fff"><path d="M13.6 21.8c0-1.05.72-1.96 1.74-2.21l7.1-1.74c.74-.18 1.46.38 1.46 1.14v2.33c0 1.05-.72 1.96-1.74 2.21l-7.1 1.74c-.74.18-1.46-.38-1.46-1.14z"/><path d="M13.6 16.7c0-1.05.72-1.96 1.74-2.21l7.1-1.74c.74-.18 1.46.38 1.46 1.14v2.33c0 1.05-.72 1.96-1.74 2.21l-7.1 1.74c-.74.18-1.46-.38-1.46-1.14z" opacity=".62"/><path d="M13.6 26.9c0-1.05.72-1.96 1.74-2.21l7.1-1.74c.74-.18 1.46.38 1.46 1.14v1.33c0 1.05-.72 1.96-1.74 2.21l-7.1 1.74c-.74.18-1.46-.38-1.46-1.14z" opacity=".35"/></g><text x="38" y="17" fill="#fff" font-size="8.6">Скачайте из</text><text x="38" y="30.5" fill="#fff" font-size="12.6" font-weight="700" letter-spacing=".2">RuStore</text></svg></a>
+          </div>
         </div>
       </footer>
+      <!-- Рег. информация сетевого издания (правка редакции №11; текст правится редакцией) -->
+      <p class="footer-legal">Сетевое издание «RU.TV / РУ.ТВ» зарегистрировано Федеральной службой по надзору в сфере связи, информационных технологий и массовых коммуникаций (Роскомнадзор) 19 февраля 2020 года. Свидетельство о регистрации: Эл № ФС77-77888. Учредитель: Акционерное Общество «Мьюзик Один».</p>
       <div class="footer-bottom">
         <span>© Russian Media Group · RU.TV</span>
         <a href="#">Политика безопасности</a>
         <a href="#">Пользовательское соглашение</a>
-        <a href="#">Telegram</a>
-        <a href="#">YouTube</a>
-        <a href="#">VK</a>
+        <a href="#">ВКонтакте</a>
         <a href="#">Одноклассники</a>
+        <a href="#">MAX</a>
+        <span class="age-badge" title="Возрастная маркировка">16+</span>
       </div>
 
     </section>
@@ -2241,14 +2270,16 @@ const artists = [
   { name: 'Дима Билан', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-19.jpg' },
 ];
 
-// Ведущие — имена-плейсхолдеры с монограммами (состав и фото пришлёт канал)
+// Ведущие — имена-плейсхолдеры с монограммами (состав и фото пришлёт канал).
+// Правка редакции №8: только имя и фамилия, БЕЗ привязки к программам —
+// связь ведущий↔программа показывать на личной странице ведущего
 const hosts = [
-  { name: 'Алекс Морозов', prog: 'Утро на RU.TV', initials: 'АМ', grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
-  { name: 'Кристина Ветрова', prog: 'Супер 20', initials: 'КВ', grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
-  { name: 'Даня Соколов', prog: 'Стол заказов', initials: 'ДС', grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
-  { name: 'Мия Орлова', prog: 'Звёзды Хайпа', initials: 'МО', grad: 'linear-gradient(135deg,#FF9D2E,#7a3a00)' },
-  { name: 'Тимур Волков', prog: 'Дискотека 2000-х', initials: 'ТВ', grad: 'linear-gradient(135deg,#FFC700,#B00068)' },
-  { name: 'Лиза Морская', prog: 'Закулисье', initials: 'ЛМ', grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
+  { name: 'Алекс Морозов', initials: 'АМ', grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
+  { name: 'Кристина Ветрова', initials: 'КВ', grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
+  { name: 'Даня Соколов', initials: 'ДС', grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
+  { name: 'Мия Орлова', initials: 'МО', grad: 'linear-gradient(135deg,#FF9D2E,#7a3a00)' },
+  { name: 'Тимур Волков', initials: 'ТВ', grad: 'linear-gradient(135deg,#FFC700,#B00068)' },
+  { name: 'Лиза Морская', initials: 'ЛМ', grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
 ];
 
 // Новости RU.TV
@@ -2268,7 +2299,7 @@ const afisha = [
   { day: '06', month: 'дек', title: 'Звёзды Хайпа · LIVE Арена', place: 'Москва · LIVE Арена', cta: 'Билеты' },
   { day: '31', month: 'дек', title: 'Новогодний марафон RU.TV', place: 'Прямой эфир · весь день', cta: 'Напомнить' },
   { day: '14', month: 'фев', title: 'Романтика нулевых — большой концерт', place: 'Москва · ВТБ Арена', cta: 'Билеты' },
-  { day: '—', month: '2027', title: 'Премия RU.TV 2027', place: 'Дата и площадка уточняются', cta: 'Подробнее' },
+  { day: '—', month: '2027', title: 'Премия РУ.ТВ 2027', place: 'Дата и площадка уточняются', cta: 'Подробнее' },
 ];
 
 // Видео — страница «Видео» (новинки = newClips)
@@ -2289,7 +2320,7 @@ const videos = [
 
 // Витрина подарков — обмен баллов
 const gifts = [
-  { name: 'Билет на Премию RU.TV', label: 'Премия RU.TV', cost: 25000, grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
+  { name: 'Билет на Премию РУ.ТВ', label: 'Премия РУ.ТВ', cost: 25000, grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
   { name: 'Худи RU.TV', label: 'Худи', cost: 12000, grad: 'linear-gradient(135deg,#2a2a34,#0d0d12)' },
   { name: 'Футболка RU.TV', label: 'Футболка', cost: 6000, grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
   { name: 'Привет в эфире', label: 'Привет в эфире', cost: 3000, grad: 'linear-gradient(135deg,#FF4D8F,#7a1245)' },
@@ -2456,7 +2487,6 @@ function renderHosts() {
     <article class="card-host" tabindex="0">
       <div class="card-host-art" style="background: ${h.grad};"><span class="card-host-initials">${h.initials}</span></div>
       <div class="card-host-name">${h.name}</div>
-      <div class="card-host-meta">${h.prog}</div>
     </article>
   `).join('');
 }
@@ -2773,11 +2803,12 @@ function showToast(msg) {
   toastTimer = setTimeout(() => { t.dataset.on = 'false'; }, 3200);
 }
 
-// Премия RU.TV — внешняя ссылка на лендинг; URL вставит заказчик в href #sbPremia
+// Премия РУ.ТВ (правка редакции №3: кириллица, пункт внизу меню) —
+// внешняя ссылка на лендинг; URL вставит заказчик в href #sbPremia
 document.getElementById('sbPremia').addEventListener('click', function (e) {
   if (this.getAttribute('href') === '#') {
     e.preventDefault();
-    showToast('Лендинг Премии RU.TV подключается — ссылка появится здесь');
+    showToast('Лендинг Премии РУ.ТВ подключается — ссылка появится здесь');
   }
 });
 
