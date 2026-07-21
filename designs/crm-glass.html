@@ -1814,6 +1814,96 @@ a.cell-link:active { opacity: 0.8; }
 /* ═══ CHAR COUNTER LIVE ═══ */
 [data-maxlen] ~ .counter::before { content: attr(data-current) " / "; }
 
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE ADAPTIVE (2026-07-21) — бургер + off-canvas сайдбар на ≤920px.
+   Паттерн 1-в-1 с twinr-liquid-glass (проверен 06-10); десктоп не тронут.
+   ═══════════════════════════════════════════════════════════════════ */
+.nav-burger {
+  display: none; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex: none;
+  background: var(--glass-thin); border: 1px solid var(--glass-border);
+  border-radius: 12px; color: var(--ink-1); cursor: pointer;
+  box-shadow: var(--spec-rim);
+}
+.nav-burger svg { width: 22px; height: 22px; }
+.sidebar-scrim {
+  position: fixed; inset: 0; z-index: 110;
+  background: rgba(8, 10, 14, 0.45);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--duration-glass) var(--ease-glass);
+}
+.sidebar-scrim.show { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 920px) {
+  .stage { padding: 14px 14px 36px; }
+
+  /* Сайдбар → off-canvas лист (в открытом виде всегда развёрнут) */
+  .sidebar {
+    top: 12px; left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: min(300px, 82vw);
+    transform: translateX(calc(-100% - 24px));
+    transition: transform var(--duration-glass) var(--ease-glass);
+    z-index: 120;
+  }
+  .sidebar:hover { width: min(300px, 82vw); }
+  .sidebar .brand-name, .sidebar .nav-item .label { opacity: 1; }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .sidebar.mobile-open .nav { min-height: 0; overflow-y: auto; scrollbar-width: none; }
+  .sidebar.mobile-open .nav::-webkit-scrollbar { display: none; }
+  .sidebar:not(:hover) .nav-item[data-tooltip]::after { display: none; }
+  .nav-burger { display: inline-flex; }
+
+  /* Топбар компактный: бургер + текущая крошка + поиск + иконки */
+  .topbar { gap: 10px; padding: 8px 10px; }
+  .crumbs { flex-wrap: nowrap; }
+  .crumbs a, .crumbs .crumb-sep { display: none; }
+  .crumbs .current {
+    display: inline-block; max-width: 30vw;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .search { min-width: 0; }
+  .search input { min-width: 0; }
+  .search-key { display: none; }
+  .dd-panel { max-width: calc(100vw - 24px); }
+
+  /* Сетки: плотнее, чем ≤1280 */
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* Таблицы: горизонтальный скролл внутри карточки — данные не режем */
+  .card:has(.t-table) { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .card .t-table { min-width: 640px; }
+
+  /* Шапка страницы стопкой; ряды кнопок/пагинация переносятся */
+  .page-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .page-actions { flex-wrap: wrap; }
+  .pagination { flex-wrap: wrap; }
+
+  /* Тач-мишени (HIG ≥40px) */
+  .btn, .tab, .page-btn, .input, .select { min-height: 40px; }
+  .page-btn { min-width: 40px; }
+  .icon-btn { width: 44px; height: 44px; }
+
+  /* Модалки — почти во весь экран */
+  .modal-panel { width: calc(100vw - 20px); max-height: 92dvh; }
+
+  /* Длинные текст-ячейки таблиц: 3 строки, полный текст в title —
+     иначе одна услуга растягивает всю строку до полуэкрана */
+  .t-table .service-cell {
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 560px) {
+  .stage { padding: 10px 10px 28px; }
+  .kpi-grid { grid-template-columns: 1fr; }
+  .page-title { font-size: 27px; }
+  .topbar { gap: 8px; }
+  .crumbs { display: none; } /* на телефоне место топбара — поиску и действиям */
+}
+
 </style>
 </head>
 <body>
@@ -1863,7 +1953,12 @@ a.cell-link:active { opacity: 0.8; }
 <div class="stage" id="stage">
 
 <!-- ═══ TOPBAR ═══ -->
+<div class="sidebar-scrim" id="sidebarScrim" aria-hidden="true"></div>
+
 <header class="topbar">
+  <button class="nav-burger" id="navBurger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
   <div class="crumbs" id="crumbs">
     <a href="#page-home">CRM</a>
     <span class="crumb-sep">/</span>
@@ -4544,6 +4639,28 @@ function clearResourceSelection() {
 document.addEventListener('change', (e) => {
   if (e.target.matches('#page-option-resources .row-checkbox')) updateResourceBulkBar();
 });
+
+/* ═══ MOBILE OFF-CANVAS NAV (≤920px) — паттерн twinr 06-10 ═══ */
+(() => {
+  const sb = document.getElementById('sidebar');
+  const burger = document.getElementById('navBurger');
+  const scrim = document.getElementById('sidebarScrim');
+  if (!sb || !burger || !scrim) return;
+  const setOpen = (open) => {
+    sb.classList.toggle('mobile-open', open);
+    scrim.classList.toggle('show', open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  burger.addEventListener('click', () => setOpen(!sb.classList.contains('mobile-open')));
+  scrim.addEventListener('click', () => setOpen(false));
+  sb.addEventListener('click', (e) => { if (e.target.closest('.nav-item')) setOpen(false); });
+  window.addEventListener('hashchange', () => setOpen(false));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sb.classList.contains('mobile-open')) setOpen(false); });
+  const mq = window.matchMedia('(min-width: 921px)');
+  (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))((m) => { if (m.matches) setOpen(false); });
+})();
 </script>
 
 </body>
