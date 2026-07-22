@@ -199,6 +199,27 @@ input,textarea{font-family:inherit}
 .my-station.is-locked h3{color:var(--muted)}
 .lock-ico{color:var(--dim)}
 
+/* подборки в рейле */
+.rail-sec{display:flex;align-items:center;gap:8px;padding:14px 6px 4px}
+.rail-sec h2{font-family:var(--display);font-size:13.5px;font-weight:700;letter-spacing:.03em}
+.fav--coll .fav-art{display:grid;place-items:center}
+.coll-n{position:relative;z-index:1;font-size:14px;font-weight:900;color:var(--on-acc);font-style:normal}
+.coll-add{
+  margin:4px 8px 8px;font-size:12px;font-weight:700;color:var(--muted);
+  border:1px dashed var(--line-2);border-radius:999px;padding:9px 14px;transition:.16s;
+}
+.coll-add:hover{color:var(--acc);border-color:rgba(var(--acc-rgb),.4)}
+.coll-name{
+  width:100%;background:var(--bg-2);border:1px solid var(--line-2);border-radius:12px;
+  padding:12px 14px;color:var(--text);font-size:13px;outline:none;margin-bottom:12px;
+}
+.coll-name:focus{border-color:var(--acc)}
+.coll-pick{display:flex;flex-wrap:wrap;gap:7px}
+
+/* режимы «Моей станции» */
+.ms-modes{display:flex;gap:7px;margin-bottom:9px;flex-wrap:wrap}
+.ms-mode-note{font-size:11.5px;color:var(--dim);margin-bottom:4px;line-height:1.5}
+
 /* ---------- chat column ---------- */
 .chat-col{display:flex;flex-direction:column;min-width:0;min-height:0;position:relative}
 
@@ -822,6 +843,10 @@ body:not(.is-playing) .onair{
   <div class="modal" id="mystation-body"></div>
 </div>
 
+<div class="overlay" id="ov-coll">
+  <div class="modal" id="coll-body"></div>
+</div>
+
 <!-- ================= TWEAKS ================= -->
 <aside class="tweaks" id="tweaks" aria-label="Tweaks">
   <h3>Tweaks · демо</h3>
@@ -938,16 +963,39 @@ const AUTHOR_STATIONS = [
   {id:'nightshop', name:'Ночной цех', author:'Лера', hue:'a3', tags:['работа ночью','ровный бит'], earn:['подписки']}
 ];
 
-/* «Моя станция» — слой 3: единственное место, где треки слушаются по одному */
+/* «Моя станция» — слой 3: единственное место, где треки слушаются по одному.
+   modes — контекст-режимы («меняется под настроение и контекст») */
 const MY_STATION = {
   name:'Моя станция', hue:'main',
   tracks:[
-    {t:'Кукушка', a:'Кино', why:'Вы дослушали четыре кавера этой песни до конца — возвращаю оригинал.'},
-    {t:'Комета', a:'Jony', why:'Ставили ♥ на «Дорогу домой» три вечера подряд — это её стержень.'},
-    {t:'Вальс №2', a:'Шостакович', why:'Эксперимент Струны: после рока вы не выключили классику. Проверяем ещё раз.'},
-    {t:'Это любовь', a:'Скриптонит', why:'Самый переслушиваемый трек вашего января. Напоминание, не открытие.'},
-    {t:'Nuvole Bianche', a:'Эйнауди', why:'Под него вы дольше всего не трогали телефон. Беру как якорь спокойствия.'}
+    {t:'Кукушка', a:'Кино', modes:['вечер'], why:'Вы дослушали четыре кавера этой песни до конца — возвращаю оригинал.'},
+    {t:'Комета', a:'Jony', modes:['утро','вечер'], why:'Ставили ♥ на «Дорогу домой» три вечера подряд — это её стержень.'},
+    {t:'Вальс №2', a:'Шостакович', modes:['вечер','фокус'], why:'Эксперимент Струны: после рока вы не выключили классику. Проверяем ещё раз.'},
+    {t:'Это любовь', a:'Скриптонит', modes:['утро'], why:'Самый переслушиваемый трек вашего января. Напоминание, не открытие.'},
+    {t:'Nuvole Bianche', a:'Эйнауди', modes:['фокус','вечер'], why:'Под него вы дольше всего не трогали телефон. Беру как якорь спокойствия.'}
   ]
+};
+const MS_MODES = ['утро','фокус','вечер'];
+const MS_MODE_NOTE = {
+  'утро':'Режим «Утро»: убрал тяжёлое и медленное, поднял темп.',
+  'фокус':'Режим «Фокус»: оставил ровное и без слов — ничего не дёргает.',
+  'вечер':'Режим «Вечер»: длинные линии, можно выдохнуть.'
+};
+
+/* рассказ о потоке — голосом куратора (кнопка «что это?» на карточке станции) */
+const STREAM_ABOUT = {
+  'live-main':'Главный эфир — это всё сразу и по чуть-чуть: я смешиваю то, что готовят остальные редакторы. Если не знаете, что включить, — включайте это.',
+  'reading':'«Читальный зал» слушают как книгу: цельные вещи, без перемотки, вечером. Я рассказываю, что за музыка и почему она написана так.',
+  'garage':'«Гаражный час» — живые гитары и честный драйв. Здесь я слежу, чтобы стены звука не давили одна за другой.',
+  'pulse':'«Пульс города» — электроника под вечерний город: темп около ста двадцати, ни разу не колотит.',
+  'hooks':'«Фабрика припевов» — поп, который прилипает. Не стыдно подпевать: за это её и держим.',
+  'yard':'«Двор-флоу» — хип-хоп, где главное, как слова ложатся на бит. Слушайте ритм речи, не только бас.',
+  'night':'«Ночная смена» — тихая электроника на после полуночи. Ничего не требует внимания; если трек цепляет слишком сильно, я уношу его в день.',
+  'road':'«Дорога домой» — поток на выдох, собран из того, что люди сохраняют по вечерам. Начинается мягко, заканчивается ещё мягче.',
+  'focus':'«Глубокая работа» — без слов и без резких смен. Включили — и можно час не трогать телефон.',
+  'slow-strings':'«Медленные струны» — утренняя классика короткими пьесами: утро не время для симфоний.',
+  'energy':'«Разгон» — каждый следующий трек чуть быстрее. К двадцатой минуте будете на пике.',
+  'morning':'«Утро на связи» — мягкий старт дня: сначала тише, потом бодрее, без резких углов.'
 };
 
 /* новое в эфире (не «новинки»!) */
@@ -984,6 +1032,12 @@ const WHY = {
     text:'Слева — только то, что вы сохранили сами. Рекомендации сюда не подмешиваются: для них есть чат, где редакция хотя бы может объяснить, зачем принесла новое.',
     ask:'Почему в избранном нет рекомендаций?',
     ans:'Избранное — ваша полка, я на неё ничего не подкладываю. Всё новое я приношу <em>в чат с объяснением</em>: согласитесь — сохраните сами. Так граница между «моим» и «предложенным» всегда видна.'
+  },
+  collections:{
+    title:'Почему подборки',
+    text:'Подборка — это несколько потоков под одну жизнь: «вечер после работы», «дорога», «уборка». Избранное — закладки; подборка — сценарий. Собираете сами, редакция не вмешивается.',
+    ask:'Чем подборка отличается от избранного?',
+    ans:'Избранное — закладки на потоки по одному. Подборка — <em>несколько потоков под один сценарий</em>: «вечер после работы», «дорога». Соберёте — она встанет слева, и я не буду в неё лезть без спроса.'
   },
   widget:{
     title:'Почему виджет, а не плеер-страница',
@@ -1074,6 +1128,10 @@ const S = {
   playing:false,
   trackIx:0,
   favs:['night','reading','road','garage'],
+  collections:[{id:'evening', name:'Вечер после работы', streams:['road','night']}],
+  myBuilt:false,            // «Моя станция» собрана диалогом (слой 3)
+  builder:null,             // null | {stage:'desc'|'clarify', desc}
+  msMode:'вечер',
   route:'chat',
   whyKey:null,
   timers:[],
@@ -1088,7 +1146,10 @@ const esc = s => s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"'
 /* персист UI-состояния (роль, метафора, избранное, поток) — переживает перезагрузку */
 const LS_KEY = 'gptsong.v1';
 function saveState(){
-  try{ localStorage.setItem(LS_KEY, JSON.stringify({role:S.role, met:S.met, favs:S.favs, stream:S.stream, theme:S.theme})); }catch(e){}
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({
+    role:S.role, met:S.met, favs:S.favs, stream:S.stream, theme:S.theme,
+    collections:S.collections, myBuilt:S.myBuilt
+  })); }catch(e){}
 }
 function loadState(){
   try{ return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }catch(e){ return {}; }
@@ -1103,6 +1164,12 @@ const edTitle = e => S.met==='office'
   ? (e.id==='signal' ? 'Главред' : cap(e.genre))
   : cap(e.band.toLowerCase());
 const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const streamsWord = n => {
+  const d = n%10, h = n%100;
+  if(d===1 && h!==11) return n+' поток';
+  if(d>=2 && d<=4 && !(h>=12 && h<=14)) return n+' потока';
+  return n+' потоков';
+};
 
 /* ---------- toast ---------- */
 let toastT;
@@ -1344,6 +1411,12 @@ function handleUserText(raw){
   const text = raw.trim();
   if(!text) return;
   addUserMsg(text);
+  /* активный конструктор станции забирает ввод себе */
+  if(S.builder){
+    if(S.builder.stage==='desc') builderDesc(text, true);
+    else builderClarify(text, true);
+    return;
+  }
   const q = text.toLowerCase();
   let ed='signal', ans;
   if(q.includes('почему')){
@@ -1509,23 +1582,160 @@ function renderRail(){
       b.addEventListener('click',()=>playStream(id));
       list.appendChild(b);
     });
+
+    /* подборки — несколько потоков под один сценарий (слой 2) */
+    const sec = el('div','rail-sec');
+    sec.innerHTML = `<h2>Подборки</h2>`;
+    const why = el('button','why','почему?'); why.dataset.why='collections';
+    sec.appendChild(why);
+    list.appendChild(sec);
+    S.collections.forEach(c=>{
+      const b = el('button','fav fav--coll');
+      const first = stById(c.streams[0]);
+      b.innerHTML = `
+        <span class="fav-art" style="background:${grad(first?first.hue:'main')}"><i class="coll-n">${c.streams.length}</i></span>
+        <span class="fav-body">
+          <span class="fav-name">${esc(c.name)}</span>
+          <span class="fav-sub">${c.streams.map(id=>stById(id)?.name).filter(Boolean).slice(0,3).join(' · ')}</span>
+        </span>`;
+      b.addEventListener('click',()=>openCollection(c.id));
+      list.appendChild(b);
+    });
+    const add = el('button','coll-add','+ Собрать подборку');
+    add.addEventListener('click',openNewCollection);
+    list.appendChild(add);
   }
   renderMyStation();
+}
+
+/* --- подборки: просмотр и создание --- */
+function openCollection(id){
+  const c = S.collections.find(x=>x.id===id); if(!c) return;
+  const body = $('#coll-body');
+  body.innerHTML = `
+    <button class="icon-btn modal-x" data-close aria-label="Закрыть">✕</button>
+    <h3>${esc(c.name)}</h3>
+    <p class="sub">Ваша подборка: ${streamsWord(c.streams.length)} под один сценарий. Жмите ▶ — дальше поведёт сама.</p>
+    <div id="coll-list"></div>`;
+  const listEl = body.querySelector('#coll-list');
+  c.streams.forEach(sid=>{
+    const st = stById(sid); if(!st) return;
+    const row = el('div','ms-track');
+    row.innerHTML = `
+      <button class="ms-play" aria-label="Слушать «${esc(st.name)}»"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></button>
+      <div class="ms-body"><div class="ms-name">${esc(st.name)}</div><div class="ms-why">ведёт ${esc(edById(st.cur).name)} · ${esc(st.tags.join(' · '))}</div></div>`;
+    row.querySelector('.ms-play').addEventListener('click',()=>{ closeOverlays(); playStream(sid); });
+    listEl.appendChild(row);
+  });
+  openOverlay('#ov-coll');
+}
+
+function openNewCollection(){
+  const body = $('#coll-body');
+  const picked = new Set();
+  body.innerHTML = `
+    <button class="icon-btn modal-x" data-close aria-label="Закрыть">✕</button>
+    <h3>Новая подборка</h3>
+    <p class="sub">Назовите сценарий и отметьте потоки, которые в него входят.</p>
+    <input id="coll-name" class="coll-name" type="text" maxlength="40" placeholder="Например: «Уборка по субботам»">
+    <div class="coll-pick" id="coll-pick"></div>
+    <div class="msg-actions" style="margin-top:14px">
+      <button class="chip-btn chip-btn--primary" id="coll-save">Сохранить</button>
+    </div>`;
+  const pick = body.querySelector('#coll-pick');
+  STREAMS.forEach(st=>{
+    const chip = el('button','f-chip', esc(st.name));
+    chip.setAttribute('aria-pressed','false');
+    chip.addEventListener('click',()=>{
+      const on = picked.has(st.id);
+      if(on) picked.delete(st.id); else picked.add(st.id);
+      chip.setAttribute('aria-pressed', String(!on));
+    });
+    pick.appendChild(chip);
+  });
+  body.querySelector('#coll-save').addEventListener('click',()=>{
+    if(!picked.size){ toast('Отметьте хотя бы один поток.'); return; }
+    const name = (body.querySelector('#coll-name').value.trim() || 'Моя подборка').slice(0,40);
+    const c = {id:'c'+Date.now().toString(36), name, streams:[...picked]};
+    S.collections.push(c);
+    saveState(); renderRail(); closeOverlays();
+    say('signal', `Собрали «${esc(name)}» — ${streamsWord(picked.size)}. Положил слева, в «Подборки». Я туда не лезу: это ваш сценарий.`, {}, 1300);
+  });
+  openOverlay('#ov-coll');
 }
 
 function renderMyStation(){
   const c = $('#my-station-card');
   const unlocked = S.role==='premium' || S.role==='author';
   c.classList.toggle('is-locked', !unlocked);
-  if(unlocked){
+  if(unlocked && S.myBuilt){
     c.innerHTML = `<h3><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/><path d="M12 2a10 10 0 0 1 10 10h-3a7 7 0 0 0-7-7V2z"/></svg> Моя станция</h3>
       <p>Ваш личный поток — учится на том, что вы слушаете. Только здесь треки можно включать по одному.</p>`;
     c.onclick = openMyStation;
+  } else if(unlocked){
+    c.innerHTML = `<h3><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Собрать мою станцию</h3>
+      <p>Расскажете словами, что любите, — соберём станцию под вас. Пара минут разговора.</p>`;
+    c.onclick = startStationBuilder;
   } else {
     c.innerHTML = `<h3><svg class="lock-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Моя станция</h3>
       <p>Откроется с подпиской: опишете вкус словами — соберём станцию под вас.</p>`;
     c.onclick = ()=>{ openTweaks(); toast('«Моя станция» открывается с подпиской. В Tweaks можно переключить роль и посмотреть.'); };
   }
+}
+
+/* ============================================================
+   КОНСТРУКТОР «МОЕЙ СТАНЦИИ» — слой 3: описали → уточнили → собралось
+   ============================================================ */
+function startStationBuilder(){
+  if(S.builder) return;
+  location.hash = '#/chat'; setMView('chat');
+  closeOverlays(); closeTweaks();
+  S.builder = {stage:'desc', desc:''};
+  addUserMsg('Собери мне мою станцию');
+  say('signal',
+    'Погнали. Расскажите словами, что любите, — как рассказали бы другу, без жанров и терминов. Можно прямо в чат, можно взять готовое:',
+    {actions:[
+      {label:'«Длинные линии и струнные, вечером»', fn:()=>builderDesc('Длинные линии и струнные, вечером')},
+      {label:'«Утром злее, вечером мягче»', fn:()=>builderDesc('Утром злее, вечером мягче')},
+      {label:'«Хип-хоп и ничего лишнего»', fn:()=>builderDesc('Хип-хоп и ничего лишнего')}
+    ]}, 1500);
+}
+
+function builderDesc(text, silentEcho){
+  if(!S.builder || S.builder.stage!=='desc') return;
+  S.builder = {stage:'clarify', desc:text};
+  if(!silentEcho) addUserMsg(text);
+  say('signal',
+    `Понял: «${esc(text)}». Одно уточнение, чтобы не промахнуться: слова в песнях важны — или инструментал тоже пойдёт?`,
+    {actions:[
+      {label:'Со словами', fn:()=>builderClarify('со словами')},
+      {label:'Инструментал тоже', fn:()=>builderClarify('инструментал тоже')},
+      {label:'Всё равно', fn:()=>builderClarify('всё равно')}
+    ]}, 1500);
+}
+
+function builderClarify(answer, silentEcho){
+  if(!S.builder || S.builder.stage!=='clarify') return;
+  const desc = S.builder.desc.toLowerCase();
+  S.builder = null;
+  if(!silentEcho) addUserMsg(cap(answer));
+  /* профильный редактор вступает по описанию */
+  let ed = 'signal', line;
+  if(/струн|классик|линии/.test(desc)){ ed='classic'; line='Струнные беру на себя. Начну с Эйнауди — он мостик между привычным ухом и классикой, дальше поведу глубже.'; }
+  else if(/рок|гитар|злее/.test(desc)){ ed='rock'; line='Злое утро — моя часть. Поставлю живые записи: они честнее студийных, и просыпаться под них проще.'; }
+  else if(/хип|бит|флоу/.test(desc)){ ed='hiphop'; line='Хип-хоп без лишнего — понял. Соберу по ритму слов, а не по чартам.'; }
+  else { line='Соберу пёстро, но со вкусом: посмотрю, что вы дослушиваете, и подкручу на ходу.'; }
+  say(ed, line, {}, 1400);
+  const t = setTimeout(()=>{
+    S.myBuilt = true; saveState(); renderRail();
+    say('signal',
+      'Готово: собрал первую версию — пять вещей, у каждой написано, почему она тут. Станция будет меняться от того, что вы дослушиваете и что пропускаете. Услышите лишнее — скажите, переставлю.',
+      {actions:[
+        {label:'Открыть «Мою станцию»', primary:true, fn:openMyStation},
+        {label:'▶ Слушать сразу', fn:()=>playMyTrack(0)}
+      ]}, 1600);
+  }, 4200);
+  S.timers.push(t);
 }
 
 /* --- страница «Эфир» --- */
@@ -1554,9 +1764,18 @@ function renderStGrid(){
       <div class="st-tags">${st.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
       <div class="st-foot">
         <button class="st-play">${S.stream===st.id?'Сейчас играет':'▶ Слушать'}</button>
-        <span class="st-live">эфир</span>
+        <span style="display:flex;align-items:center;gap:8px">
+          <button class="why st-about">что это?</button>
+          <span class="st-live">эфир</span>
+        </span>
       </div>`;
     c.querySelector('.st-play').addEventListener('click',()=>playStream(st.id));
+    c.querySelector('.st-about').addEventListener('click',()=>{
+      location.hash='#/chat'; setMView('chat');
+      addUserMsg(`Расскажи про «${st.name}»`);
+      say(st.cur, STREAM_ABOUT[st.id] || `«${esc(st.name)}» — ${esc(st.tags.join(', '))}. Включите — расскажу по ходу.`,
+        {actions:[{label:'▶ Включить', primary:true, fn:()=>playStream(st.id)}]}, 1500);
+    });
     grid.appendChild(c);
   });
 }
@@ -1720,21 +1939,23 @@ function openDossier(edId){
 }
 
 function openMyStation(){
+  closeOverlays();
   const body = $('#mystation-body');
   body.innerHTML = `
     <button class="icon-btn modal-x" data-close aria-label="Закрыть">✕</button>
     <h3>Моя станция</h3>
     <p class="sub">Вы описали вкус словами — мы собрали станцию, и она учится дальше. Только здесь треки можно слушать по одному: это ваша полка, а не эфир. <button class="why" data-why="mystation">почему?</button></p>
+    <div class="ms-modes" id="ms-modes"></div>
+    <p class="ms-mode-note" id="ms-mode-note"></p>
     <div id="ms-list"></div>`;
-  const list = body.querySelector('#ms-list');
-  MY_STATION.tracks.forEach((tr,ix)=>{
-    const row = el('div','ms-track');
-    row.innerHTML = `
-      <button class="ms-play" aria-label="Слушать «${esc(tr.t)}»"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></button>
-      <div class="ms-body"><div class="ms-name">${esc(tr.t)} — ${esc(tr.a)}</div><div class="ms-why">${esc(tr.why)}</div></div>`;
-    row.querySelector('.ms-play').addEventListener('click',()=>playMyTrack(ix));
-    list.appendChild(row);
+  const modesEl = body.querySelector('#ms-modes');
+  MS_MODES.forEach(m=>{
+    const chip = el('button','f-chip', esc(cap(m)));
+    chip.setAttribute('aria-pressed', String(S.msMode===m));
+    chip.addEventListener('click',()=>{ S.msMode=m; renderMsList(body); });
+    modesEl.appendChild(chip);
   });
+  renderMsList(body);
   const acts = buildActions([
     {label:'Обсудить станцию в чате', fn:()=>{
       closeOverlays(); location.hash='#/chat'; setMView('chat');
@@ -1744,6 +1965,24 @@ function openMyStation(){
   ]);
   body.appendChild(acts);
   openOverlay('#ov-mystation');
+}
+
+/* треклист «Моей станции» в выбранном режиме — «меняется под настроение и контекст» */
+function renderMsList(body){
+  body.querySelectorAll('#ms-modes .f-chip').forEach(ch=>{
+    ch.setAttribute('aria-pressed', String(ch.textContent.toLowerCase()===S.msMode));
+  });
+  body.querySelector('#ms-mode-note').textContent = MS_MODE_NOTE[S.msMode];
+  const list = body.querySelector('#ms-list'); list.innerHTML='';
+  MY_STATION.tracks.forEach((tr,ix)=>{
+    if(!tr.modes.includes(S.msMode)) return;
+    const row = el('div','ms-track');
+    row.innerHTML = `
+      <button class="ms-play" aria-label="Слушать «${esc(tr.t)}»"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></button>
+      <div class="ms-body"><div class="ms-name">${esc(tr.t)} — ${esc(tr.a)}</div><div class="ms-why">${esc(tr.why)}</div></div>`;
+    row.querySelector('.ms-play').addEventListener('click',()=>playMyTrack(ix));
+    list.appendChild(row);
+  });
 }
 
 /* login (кнопки [data-open-login] — через глобальную делегацию) */
@@ -1783,6 +2022,7 @@ const ROLE_NOTE = {
 function setRole(r){
   const prev = S.role;
   S.role = r;
+  if(r==='author') S.myBuilt = true;   // у автора станция уже есть — она в витрине
   document.body.dataset.role = r;
   $('#role-label').textContent = ROLE_LABEL[r];
   $('#btn-login').hidden = r!=='guest';
@@ -1791,7 +2031,15 @@ function setRole(r){
   });
   renderRail(); renderAuthors();
   saveState();
-  if(prev!==r) addSysMsg(ROLE_NOTE[r], [{label:'почему слои?', fn:()=>openWhyByKey('role')}]);
+  if(prev!==r){
+    if(r==='premium' && !S.myBuilt){
+      addSysMsg('<b>У вас подписка.</b> Реклама пропала. Осталось собрать «Мою станцию» — это разговор на пару минут.',
+        [{label:'Собрать станцию', fn:startStationBuilder},
+         {label:'почему роли?', fn:()=>openWhyByKey('role')}]);
+    } else {
+      addSysMsg(ROLE_NOTE[r], [{label:'почему роли?', fn:()=>openWhyByKey('role')}]);
+    }
+  }
 }
 document.querySelectorAll('[data-role-opt]').forEach(b=>{
   b.addEventListener('click',()=>{ setRole(b.dataset.roleOpt); });
@@ -1899,13 +2147,21 @@ $('#composer-input').addEventListener('keydown',e=>{
 /* ============================================================
    INIT
    ============================================================ */
-/* восстановление сохранённого состояния (роль, метафора, избранное, поток) */
+/* восстановление сохранённого состояния (роль, метафора, избранное, поток, подборки) */
 const saved = loadState();
 if(saved.role && ROLE_LABEL[saved.role]) S.role = saved.role;
 if(Array.isArray(saved.favs)){
   const restored = saved.favs.filter(id=>stById(id));
   if(restored.length) S.favs = restored;
 }
+if(Array.isArray(saved.collections)){
+  const cleaned = saved.collections
+    .filter(c=>c && c.name && Array.isArray(c.streams))
+    .map(c=>({id:c.id||('c'+Math.random().toString(36).slice(2,8)), name:String(c.name).slice(0,60), streams:c.streams.filter(id=>stById(id))}))
+    .filter(c=>c.streams.length);
+  if(cleaned.length) S.collections = cleaned;
+}
+if(saved.myBuilt===true) S.myBuilt = true;
 if(saved.theme==='amber') S.theme = 'amber';
 setRole(S.role);                 // слой 2 по умолчанию — видно «чат + избранное» сразу
 setMet(saved.met==='band' ? 'band' : 'office', true);   // тихая инициализация метафоры
