@@ -17,3 +17,7 @@ __pycache__/
 # Git worktrees (superpowers isolated workspaces)
 .worktrees/
 deliverables/
+
+# Harness state (Claude Code worktrees / superpowers SDD) — transient
+.claude/worktrees/
+.superpowers/
