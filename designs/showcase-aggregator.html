@@ -530,12 +530,12 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--promo-w);
   gap: 22px;
-  align-items: stretch;
+  /* Экран эфира честный 16:9 → hero выше промо 300×600; слот прижат к верху (стандарт рекламы) */
+  align-items: start;
   margin: 8px 0 22px;
 }
 .live-hero {
   position: relative;
-  height: var(--promo-h);
   margin: 0;
   border-radius: var(--r-xl);
   overflow: hidden;
@@ -546,8 +546,8 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 .live-screen {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  /* Стандарт ассетов (Алексей, DFM 07-22): всё видео = 1920×1080 — эфир 16:9 без кропа на любой ширине */
+  aspect-ratio: 16 / 9;
   background-size: cover;
   background-position: center;
   cursor: pointer;
@@ -1187,10 +1187,11 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 }
 .card-artist-meta { font-size: 12px; color: var(--text-tertiary); }
 
-/* CARD: Ведущий — монограмма (реальные фото пришлёт заказчик) */
+/* CARD: Ведущий — монограмма (реальные фото пришлёт заказчик)
+   Стандарт ассетов (DFM 07-22): персоны 1000×1000 (1:1), скругление ок */
 .card-host { flex: 0 0 180px; scroll-snap-align: start; cursor: pointer; }
 .card-host-art {
-  aspect-ratio: 1 / 1.15;
+  aspect-ratio: 1 / 1;
   border-radius: var(--r-lg);
   position: relative;
   overflow: hidden;
@@ -1288,7 +1289,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 
 .chart-row {
   display: grid;
-  grid-template-columns: 56px 56px 1fr auto;
+  grid-template-columns: 56px 80px 1fr auto;
   gap: 16px;
   align-items: center;
   padding: 14px 14px;
@@ -1324,7 +1325,8 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   display: flex; align-items: center; gap: 3px; justify-content: flex-end;
 }
 .chart-art {
-  width: 56px; height: 56px;
+  /* Супер 20 = видеоклипы → превью-кадр 16:9 (стандарт: видео 1920×1080), не трек-квадрат */
+  width: 80px; height: 45px;
   border-radius: 8px;
   background-size: cover; background-position: center;
   border: 1px solid var(--glass-border);
@@ -1819,8 +1821,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
      (мобильный креатив 300×250 — отдельной задачей) */
   .live-layout { grid-template-columns: 1fr; }
   .promo-slot { display: none; }
-  .live-hero { height: auto; }
-  .live-screen { aspect-ratio: 16 / 9; }
+  /* эфир 16:9 теперь в базе (правка 07-22) — отдельные override'ы не нужны */
   .afisha-list { grid-template-columns: 1fr; }
   .news-grid { grid-template-columns: 1fr; }
   .app-footer { grid-template-columns: repeat(2, 1fr); gap: 28px; }
