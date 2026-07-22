@@ -530,8 +530,9 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--promo-w);
   gap: 22px;
-  /* Экран эфира честный 16:9 → hero выше промо 300×600; слот прижат к верху (стандарт рекламы) */
-  align-items: start;
+  /* Паттерн видеосервисов (Twitch/YouTube): боковая колонка ТЯНЕТСЯ к плееру,
+     а не живёт своей высотой — иначе fluid 16:9 и фикс-600 не сходятся ни на одной ширине */
+  align-items: stretch;
   margin: 8px 0 22px;
 }
 .live-hero {
@@ -668,11 +669,14 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Промоблок 300×600 — рекламный слот с ротацией креативов */
+/* Промоблок — рекламная колонка с ротацией креативов.
+   Высота = высоте hero (16:9 экран + инфо-бар) через stretch — кромки сходятся
+   на любой ширине; self-promo креативы (cover) заливают колонку целиком.
+   Продаваемая IAB-зона 300×600 = верхний safe-area слота при ≥1500px
+   (на уже — формат 300×250, RUTV-124) */
 .promo-slot {
   position: relative;
   width: var(--promo-w);
-  height: var(--promo-h);
   border-radius: var(--r-lg);
   overflow: hidden;
   border: 1px solid var(--glass-border);
