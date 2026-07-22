@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<!--
+  GPTSONG — chat-first концепт (пивот от «Город ФМ» storefront, правки owner'а 15.07.2026).
+  Assumptions / reasoning (протокол §1.3):
+  · «Не сайт, а чат + виджет с музыкой» → мессенджер-парадигма: избранное-рейл, чат редакции, плавающий виджет-дека.
+  · Ядро: объяснение = продукт. Каждый блок несёт «почему?» → поповер → мост в чат. ИИ импровизирует и честно это говорит.
+  · Квадратики = группы агентов («муз ред N»); метафора офис/банда — тумблер в Tweaks (открытый вопрос owner'а).
+  · Треки живут только в потоках; исключение — «Моя станция» (слой 3). 4 слоя доступа = роль-переключатель.
+  · Логин: Telegram + почта, без Google/Apple. «Новое в эфире», не «новинки».
+  · Всё сценарное помечено «демо»; факты об артистах не выдумываются (уровень ремесла/формата).
+  · Эстетика: ночная радио-студия — тёплый чёрный, янтарная лампа ON AIR, винил, плёночное зерно,
+    Literata для «музыка как литература». Спека: docs/superpowers/specs/2026-07-22-gptsong-chat-first-design.md
+-->
+<html lang="ru" data-route="chat">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F0E0C">
+<title>GPTSONG — радио, которое объясняет</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F0E0C'/%3E%3Ccircle cx='32' cy='32' r='13' fill='none' stroke='%23FFB454' stroke-width='5'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23FFB454'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400;1,7..72,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   GPTSONG — chat-first концепт. Не сайт: чат + виджет с музыкой.
+   Тёплый студийный чёрный + янтарь «ON AIR». Onest + Literata.
+   ============================================================ */
+:root{
+  --bg:#0F0E0C;
+  --bg-2:#14120F;
+  --panel:#1C1915;
+  --panel-2:#231F19;
+  --line:rgba(242,237,228,.09);
+  --line-2:rgba(242,237,228,.16);
+  --text:#F2EDE4;
+  --muted:#A79D8C;
+  --dim:#7A7263;
+  --amber:#FFB454;
+  --amber-deep:#E08A1E;
+  --amber-soft:rgba(255,180,84,.14);
+  --live:#FF5C5C;
+  --ok:#7ED496;
+  --serif:'Literata',Georgia,serif;
+  --sans:'Onest',sans-serif;
+  --r-lg:20px;
+  --r-md:14px;
+  --r-sm:10px;
+  --header-h:58px;
+  --rail-w:292px;
+  --shadow:0 18px 48px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:var(--sans);
+  background:
+    radial-gradient(1100px 500px at 85% -10%, rgba(255,180,84,.09), transparent 60%),
+    radial-gradient(700px 420px at 40% -8%, rgba(255,140,60,.05), transparent 55%),
+    radial-gradient(900px 600px at -10% 110%, rgba(255,92,92,.04), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* плёночное зерно — атмосфера ночной студии */
+body::after{
+  content:"";position:fixed;inset:0;z-index:600;pointer-events:none;opacity:.05;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* каскадный boot (один раз; body.boot снимается скриптом) */
+@keyframes boot-rise{from{opacity:0;transform:translateY(16px)}}
+body.boot .hdr{animation:boot-rise .5s .05s ease backwards}
+body.boot .rail{animation:boot-rise .55s .14s ease backwards}
+body.boot .crew{animation:boot-rise .55s .24s ease backwards}
+body.boot .chat-log{animation:boot-rise .55s .34s ease backwards}
+body.boot .widget-wrap{animation:boot-rise .55s .44s ease backwards}
+body.boot .composer{animation:boot-rise .55s .52s ease backwards}
+/* типографика: аккуратные переносы */
+.bubble,.rec-why,.rec-hedge,.pp-insight,.noa-in,.noa-also,.sub,.why-pop p,.dossier-desc,
+.rail-empty,.my-station p,.tg-body p,.tw-opt span,.sys-card,.ms-why,.login-note,.au-cta p{text-wrap:pretty}
+h2,h3,.st-name,.noa-track,.rec-title,.au-name,.pp-name{text-wrap:balance}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,textarea{font-family:inherit}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:rgba(242,237,228,.14);border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:6px}
+
+/* ---------- header ---------- */
+.hdr{
+  position:fixed;inset:0 0 auto 0;height:var(--header-h);z-index:100;
+  display:flex;align-items:center;gap:18px;padding:0 20px;
+  background:rgba(15,14,12,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.mark{display:flex;align-items:center;gap:10px;user-select:none}
+.mark-chip{
+  font-weight:900;font-size:13px;letter-spacing:.06em;color:#171310;
+  background:linear-gradient(135deg,var(--amber),var(--amber-deep));
+  padding:5px 8px;border-radius:9px;
+}
+.mark-word{font-weight:900;font-size:17px;letter-spacing:.12em}
+.mark-tag{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--dim);letter-spacing:.01em;margin-left:2px}
+.hdr-nav{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px}
+.hdr-nav button{
+  padding:7px 18px;border-radius:999px;font-size:13px;font-weight:600;color:var(--muted);
+  transition:background .18s,color .18s;
+}
+.hdr-nav button[aria-current="true"]{background:var(--amber);color:#171310}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.role-pill{
+  display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--muted);
+  border:1px solid var(--line-2);border-radius:999px;padding:6px 12px;
+  transition:border-color .18s,color .18s;
+}
+.role-pill:hover{border-color:var(--amber);color:var(--text)}
+.role-pill b{color:var(--amber);font-weight:800}
+.icon-btn{
+  width:36px;height:36px;border-radius:11px;border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--muted);transition:.18s;
+}
+.icon-btn:hover{color:var(--text);border-color:var(--line-2);background:var(--panel)}
+.btn-login{
+  font-size:13px;font-weight:700;color:#171310;background:var(--amber);
+  border-radius:999px;padding:8px 16px;transition:filter .18s;
+}
+.btn-login:hover{filter:brightness(1.08)}
+
+/* ---------- app grid (chat page) ---------- */
+.app{position:fixed;inset:var(--header-h) 0 0 0;display:grid;grid-template-columns:var(--rail-w) 1fr}
+[data-route="air"] .app{display:none}
+[data-route="chat"] .page-air{display:none}
+
+/* ---------- rail: избранное ---------- */
+.rail{
+  border-right:1px solid var(--line);background:var(--bg-2);
+  display:flex;flex-direction:column;min-height:0;
+}
+.rail-head{display:flex;align-items:center;gap:8px;padding:18px 18px 10px}
+.rail-head h2{font-size:14px;font-weight:800;letter-spacing:.04em}
+.rail-list{flex:1;overflow-y:auto;padding:4px 12px 12px;display:flex;flex-direction:column;gap:6px}
+.fav{
+  display:flex;align-items:center;gap:11px;padding:10px 10px;border-radius:var(--r-md);
+  border:1px solid transparent;text-align:left;transition:.16s;width:100%;
+}
+.fav:hover{background:var(--panel);border-color:var(--line)}
+.fav[aria-current="true"]{background:var(--amber-soft);border-color:rgba(255,180,84,.35)}
+.fav-art{width:40px;height:40px;border-radius:12px;flex:none;position:relative;overflow:hidden}
+.fav-art::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 30% 25%,rgba(255,255,255,.28),transparent)}
+.fav-body{min-width:0;flex:1}
+.fav-name{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fav-sub{font-size:11.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.fav-live{width:6px;height:6px;border-radius:50%;background:var(--dim);flex:none;opacity:.7}
+.fav[aria-current="true"] .fav-live{background:var(--amber);opacity:1;box-shadow:0 0 8px rgba(255,180,84,.8);animation:pulse 2s infinite}
+.rail-empty{margin:6px 12px;padding:18px 16px;border:1px dashed var(--line-2);border-radius:var(--r-lg);color:var(--muted);font-size:13px;line-height:1.55}
+.rail-empty b{color:var(--text)}
+.rail-empty .btn-login{display:inline-block;margin-top:12px}
+.my-station{
+  margin:10px 12px 14px;padding:14px;border-radius:var(--r-lg);position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#2A2117,#1C1915 70%);border:1px solid rgba(255,180,84,.3);
+  text-align:left;width:calc(100% - 24px);
+}
+.my-station::before{content:"";position:absolute;inset:-40% -20% auto auto;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,180,84,.22),transparent 65%)}
+.my-station h3{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.my-station p{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+.my-station.is-locked{border-color:var(--line);opacity:.85}
+.my-station.is-locked h3{color:var(--muted)}
+.lock-ico{color:var(--dim)}
+
+/* ---------- chat column ---------- */
+.chat-col{display:flex;flex-direction:column;min-width:0;min-height:0;position:relative}
+
+/* редакция: квадратики */
+.crew{padding:14px 22px 4px}
+.crew-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.crew-head h2{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.crew-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.crew-row::-webkit-scrollbar{display:none}
+.sq{
+  flex:none;width:96px;height:96px;border-radius:18px;border:1px solid var(--line);
+  background:linear-gradient(160deg,var(--panel-2),var(--panel));
+  display:flex;flex-direction:column;justify-content:space-between;padding:9px 10px;
+  text-align:left;position:relative;transition:transform .16s,border-color .16s;
+}
+.sq:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.sq.is-onair{border-color:rgba(255,180,84,.55);box-shadow:0 0 0 1px rgba(255,180,84,.25),0 8px 22px rgba(255,180,84,.08)}
+.sq-top{display:flex;align-items:center;justify-content:space-between}
+.sq-no{font-size:9.5px;font-weight:800;letter-spacing:.08em;color:var(--dim)}
+.sq.is-onair .sq-no{color:var(--amber)}
+.sq-dot{width:6px;height:6px;border-radius:50%;background:var(--dim)}
+.sq.is-onair .sq-dot{background:var(--live);box-shadow:0 0 7px rgba(255,92,92,.9);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.sq-glyph{color:var(--muted);height:22px;display:flex;align-items:center}
+.sq.is-onair .sq-glyph{color:var(--amber)}
+.sq-name{font-size:11px;font-weight:700;line-height:1.25}
+.sq-genre{font-size:9.5px;color:var(--dim);margin-top:1px}
+.sq--classic{background:linear-gradient(160deg,#272117,#1E1A14);border-color:rgba(233,223,203,.18)}
+.sq--classic .sq-name{font-family:var(--serif);font-weight:600;letter-spacing:.01em}
+.sq--ghost{border-style:dashed;background:none;color:var(--dim);align-items:center;justify-content:center;gap:6px;display:flex;flex-direction:column}
+.sq--ghost:hover{color:var(--muted)}
+.sq--ghost span{font-size:10px;line-height:1.3;text-align:center}
+
+/* chat log */
+.chat-log{
+  flex:1;overflow-y:auto;padding:10px 22px 18px;display:flex;flex-direction:column;gap:14px;
+  scroll-behavior:smooth;
+}
+.chat-note{align-self:center;font-size:11px;color:var(--dim);background:var(--panel);
+  border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin-top:4px}
+.msg{display:flex;gap:11px;max-width:660px;animation:msg-in .3s ease}
+@keyframes msg-in{from{opacity:0;transform:translateY(6px)}}
+.msg-ava{width:32px;height:32px;border-radius:10px;flex:none;display:grid;place-items:center;color:#171310;font-weight:900;font-size:12px}
+.msg-body{min-width:0}
+.msg-author{font-size:11.5px;color:var(--muted);margin-bottom:4px;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.msg-author b{color:var(--text);font-weight:700;font-size:12px}
+.msg-author .t{color:var(--dim);font-size:10.5px}
+.bubble{
+  background:var(--panel);border:1px solid var(--line);border-radius:4px 16px 16px 16px;
+  padding:11px 14px;font-size:13.5px;line-height:1.6;color:var(--text);
+}
+.bubble em{color:var(--amber);font-style:normal;font-weight:600}
+.msg--classic .bubble{font-family:var(--serif);font-size:14px;line-height:1.7;background:#201C15;border-color:rgba(233,223,203,.14)}
+.msg--user{align-self:flex-end;flex-direction:row-reverse}
+.msg--user .bubble{background:var(--amber-soft);border-color:rgba(255,180,84,.3);border-radius:16px 4px 16px 16px}
+.msg--user .msg-author{justify-content:flex-end}
+.msg--sys{align-self:center;max-width:560px}
+.msg--sys .sys-card{
+  border:1px solid var(--line-2);border-radius:var(--r-md);padding:11px 14px;font-size:12.5px;
+  color:var(--muted);line-height:1.6;background:var(--bg-2);text-align:center;
+}
+.msg--sys .sys-card b{color:var(--text)}
+.msg--ad .bubble{border-color:rgba(255,92,92,.35);background:#211714}
+.ad-label{font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--live);text-transform:uppercase;margin-bottom:5px}
+.msg-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.chip-btn{
+  font-size:12px;font-weight:700;padding:7px 13px;border-radius:999px;
+  border:1px solid var(--line-2);color:var(--text);transition:.16s;
+}
+.chip-btn:hover{border-color:var(--amber);color:var(--amber)}
+.chip-btn--primary{background:var(--amber);border-color:var(--amber);color:#171310}
+.chip-btn--primary:hover{color:#171310;filter:brightness(1.07)}
+.typing{display:flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:ty 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes ty{30%{transform:translateY(-4px);opacity:1}0%,60%,100%{transform:none;opacity:.45}}
+
+/* rec-card (рекомендация с «почему») */
+.rec{border:1px solid rgba(255,180,84,.35);border-radius:4px 16px 16px 16px;overflow:hidden;background:var(--panel)}
+.rec-head{display:flex;gap:11px;align-items:center;padding:11px 14px;background:linear-gradient(135deg,rgba(255,180,84,.12),transparent 65%)}
+.rec-art{width:42px;height:42px;border-radius:12px;flex:none}
+.rec-title{font-size:13.5px;font-weight:800}
+.rec-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+.rec-why{padding:11px 14px;font-size:13px;line-height:1.6;border-top:1px solid var(--line);color:var(--text)}
+.rec-hedge{font-size:11.5px;color:var(--dim);padding:0 14px 11px;line-height:1.5}
+.rec .msg-actions{padding:0 14px 12px;margin-top:0}
+
+/* composer */
+.composer{padding:10px 22px 16px;position:relative}
+.composer-inner{
+  display:flex;align-items:center;gap:10px;background:var(--panel);
+  border:1px solid var(--line-2);border-radius:999px;padding:6px 6px 6px 18px;
+}
+.composer input{
+  flex:1;background:none;border:none;color:var(--text);font-size:13.5px;outline:none;min-width:0;
+}
+.composer input::placeholder{color:var(--dim)}
+.send-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--amber);color:#171310;
+  display:grid;place-items:center;flex:none;transition:filter .16s;
+}
+.send-btn:hover{filter:brightness(1.08)}
+.composer-lock{
+  position:absolute;inset:4px 22px 10px;border-radius:999px;display:none;
+  align-items:center;justify-content:center;gap:12px;
+  background:rgba(15,14,12,.86);backdrop-filter:blur(4px);
+  font-size:12.5px;color:var(--muted);border:1px dashed var(--line-2);
+}
+body[data-role="guest"] .composer-lock{display:flex}
+
+/* ---------- музыкальный виджет ---------- */
+.widget-wrap{padding:0 22px 12px;display:flex;justify-content:center}
+.widget{
+  width:min(620px,100%);border-radius:var(--r-lg);position:relative;overflow:hidden;
+  background:linear-gradient(160deg,var(--panel-2),#191612);
+  border:1px solid rgba(255,180,84,.28);box-shadow:var(--shadow);
+  padding:12px 16px 14px;
+}
+.widget-row{display:flex;align-items:center;gap:12px}
+.w-play{
+  width:46px;height:46px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,var(--amber),var(--amber-deep));color:#171310;
+  display:grid;place-items:center;transition:transform .15s,filter .15s;
+}
+.w-play:hover{transform:scale(1.05);filter:brightness(1.06)}
+/* конверт + винил: крутится, пока играет */
+.w-art{width:46px;height:46px;border-radius:14px;flex:none;position:relative;overflow:hidden;display:grid;place-items:center}
+.w-art::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 30% 25%,rgba(255,255,255,.22),transparent);pointer-events:none}
+.vinyl{
+  width:38px;height:38px;border-radius:50%;position:relative;flex:none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06), transparent 60%),
+    repeating-radial-gradient(circle at 50% 50%, #16130F 0 1.6px, #221E18 1.6px 3.2px);
+  box-shadow:0 2px 6px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.05);
+  animation:vinyl-spin 5.5s linear infinite;animation-play-state:paused;
+}
+.vinyl::before{ /* блик-сектор, вращается вместе с диском */
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg, transparent 0 40deg, rgba(255,255,255,.08) 55deg, transparent 80deg, transparent 190deg, rgba(255,255,255,.05) 215deg, transparent 240deg);
+}
+.vinyl-label{
+  position:absolute;inset:0;margin:auto;width:15px;height:15px;border-radius:50%;
+  box-shadow:0 0 0 2px rgba(0,0,0,.45);
+}
+.vinyl-label::after{content:"";position:absolute;inset:0;margin:auto;width:3px;height:3px;border-radius:50%;background:#0F0E0C}
+body.is-playing .vinyl{animation-play-state:running}
+.w-meta{min-width:0;flex:1}
+.w-track{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w-stream{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w-stream b{color:var(--amber);font-weight:700}
+.w-side{display:flex;align-items:center;gap:8px;flex:none}
+/* студийная лампа-табло ON AIR */
+.onair{
+  font-size:10px;font-weight:900;letter-spacing:.16em;color:#FFDCA8;white-space:nowrap;
+  background:linear-gradient(180deg,#2C1E10,#1F1408);
+  border:1px solid rgba(255,180,84,.55);border-radius:9px;padding:6px 11px;
+  text-shadow:0 0 14px rgba(255,180,84,.95), 0 0 4px rgba(255,220,168,.6);
+  box-shadow:0 0 20px rgba(255,150,50,.3), inset 0 0 12px rgba(255,160,60,.22);
+  transition:.3s;
+}
+.onair.is-flick{animation:lamp-flick .9s ease-out}
+@keyframes lamp-flick{
+  0%{opacity:.15}9%{opacity:1}14%{opacity:.3}24%{opacity:1}33%{opacity:.65}45%{opacity:1}100%{opacity:1}
+}
+body:not(.is-playing) .onair{
+  color:#5E5649;background:var(--panel);border-color:var(--line-2);
+  text-shadow:none;box-shadow:none;
+}
+.w-fav{color:var(--muted);transition:.16s}
+.w-fav:hover,.w-fav.is-on{color:var(--amber)}
+.w-progress{height:3px;border-radius:3px;background:rgba(242,237,228,.1);margin-top:11px;overflow:hidden}
+.w-progress i{display:block;height:100%;width:34%;background:linear-gradient(90deg,var(--amber-deep),var(--amber));border-radius:3px;transition:width 1s linear}
+
+/* ---------- «почему?» ---------- */
+.why{
+  font-size:10.5px;font-weight:800;color:var(--dim);border:1px solid var(--line);
+  border-radius:999px;padding:3px 9px;letter-spacing:.03em;transition:.16s;flex:none;
+}
+.why:hover{color:var(--amber);border-color:rgba(255,180,84,.4);box-shadow:0 0 12px rgba(255,180,84,.18)}
+.why-pop{
+  position:fixed;z-index:340;width:min(340px,calc(100vw - 24px));
+  background:var(--panel-2);border:1px solid var(--line-2);border-radius:var(--r-md);
+  box-shadow:var(--shadow);padding:14px 16px;display:none;
+}
+.why-pop.is-open{display:block;animation:msg-in .18s ease}
+.why-pop h4{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--amber);margin-bottom:7px;text-transform:uppercase}
+.why-pop p{font-size:12.5px;line-height:1.6;color:var(--text)}
+.why-pop .msg-actions{margin-top:11px}
+
+/* ---------- страница «Эфир» ---------- */
+.page-air{
+  position:fixed;inset:var(--header-h) 0 0 0;overflow-y:auto;padding:26px 26px 120px;
+}
+.air-inner{max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sec-head h2{font-family:var(--serif);font-size:25px;font-weight:600;letter-spacing:.005em}
+.air-inner{animation:msg-in .28s ease}
+.sec-head .cnt{font-size:11.5px;color:var(--dim);font-weight:600}
+.demo-chip{font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:3px 8px;text-transform:uppercase}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.f-chip{font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px;transition:.16s}
+.f-chip:hover{color:var(--text);border-color:var(--line-2)}
+.f-chip[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#171310;font-weight:700}
+.st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.st-card{
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--panel);
+  padding:14px;text-align:left;display:flex;flex-direction:column;gap:10px;
+  transition:transform .16s,border-color .16s;position:relative;
+}
+.st-card:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.st-card.is-current{border-color:rgba(255,180,84,.5)}
+.st-top{display:flex;gap:11px;align-items:center}
+.st-art{width:46px;height:46px;border-radius:14px;flex:none;position:relative;overflow:hidden}
+.st-art::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 30% 25%,rgba(255,255,255,.28),transparent)}
+.st-name{font-size:14.5px;font-weight:800;line-height:1.25}
+.st-cur{font-size:11px;color:var(--dim);margin-top:3px}
+.st-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:10.5px;color:var(--muted);background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.st-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.st-play{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--amber)}
+.st-play:hover{filter:brightness(1.15)}
+.st-live{font-size:10px;color:var(--live);font-weight:700;display:flex;align-items:center;gap:5px}
+.st-live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--live)}
+
+/* новое в эфире */
+.noa-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.noa{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--panel);padding:14px;display:flex;flex-direction:column;gap:9px}
+.noa-track{font-size:14px;font-weight:800}
+.noa-artist{font-size:12px;color:var(--muted)}
+.noa-in{font-size:12px;color:var(--text);line-height:1.55}
+.noa-in b{color:var(--amber);font-weight:700}
+.noa-also{font-size:11px;color:var(--dim);line-height:1.5}
+.noa-date{font-size:10px;color:var(--dim);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.noa .chip-btn{align-self:flex-start}
+
+/* люди */
+.pp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
+.pp{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--panel);padding:16px;display:flex;flex-direction:column;gap:10px}
+.pp-top{display:flex;align-items:center;gap:12px}
+.pp-ava{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#171310;font-size:15px;flex:none}
+.pp-name{font-size:14.5px;font-weight:800}
+.pp-match{font-size:11.5px;color:var(--amber);font-weight:700;margin-top:2px}
+.pp-common{display:flex;gap:6px;flex-wrap:wrap}
+.pp-insight{font-size:12px;color:var(--muted);line-height:1.55}
+.pp .msg-actions{margin-top:2px}
+
+/* витрина авторов */
+.au-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
+.au{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--panel);padding:16px;display:flex;flex-direction:column;gap:10px}
+.au-author{font-size:11px;color:var(--dim)}
+.au-author b{color:var(--muted)}
+.au-name{font-size:15px;font-weight:800}
+.au-earn{display:flex;gap:6px;flex-wrap:wrap}
+.au-cta{
+  border:1px dashed rgba(255,180,84,.4);background:linear-gradient(160deg,rgba(255,180,84,.07),transparent);
+  align-items:flex-start;justify-content:center;gap:8px;
+}
+.au-cta h3{font-size:15px;font-weight:800}
+.au-cta p{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* telegram */
+.tg-card{
+  border:1px solid var(--line-2);border-radius:var(--r-lg);padding:20px;display:flex;gap:18px;align-items:center;
+  background:linear-gradient(135deg,#17202A,var(--panel) 60%);flex-wrap:wrap;
+}
+.tg-ico{width:52px;height:52px;border-radius:16px;background:#2AABEE;display:grid;place-items:center;color:#fff;flex:none}
+.tg-body{flex:1;min-width:240px}
+.tg-body h3{font-size:15.5px;font-weight:800;margin-bottom:5px}
+.tg-body p{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* ---------- модалки ---------- */
+.overlay{position:fixed;inset:0;z-index:300;background:rgba(10,9,7,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.is-open{display:flex}
+.modal{
+  width:min(480px,100%);max-height:min(640px,92vh);overflow-y:auto;background:var(--panel-2);
+  border:1px solid var(--line-2);border-radius:22px;box-shadow:var(--shadow);padding:24px;position:relative;
+  animation:msg-in .22s ease;
+}
+.modal-x{position:absolute;top:14px;right:14px}
+.modal h3{font-size:17px;font-weight:900;margin-bottom:6px;padding-right:34px}
+.modal .sub{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.login-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:800;
+  border-radius:14px;padding:13px;margin-bottom:10px;transition:filter .16s;
+}
+.login-btn--tg{background:#2AABEE;color:#fff}
+.login-btn--tg:hover{filter:brightness(1.08)}
+.login-sep{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:11px;margin:14px 0}
+.login-sep::before,.login-sep::after{content:"";flex:1;height:1px;background:var(--line)}
+.login-mail{display:flex;gap:8px}
+.login-mail input{
+  flex:1;background:var(--bg-2);border:1px solid var(--line-2);border-radius:12px;padding:12px 14px;
+  color:var(--text);font-size:13px;outline:none;min-width:0;
+}
+.login-mail input:focus{border-color:var(--amber)}
+.login-note{font-size:11.5px;color:var(--dim);line-height:1.6;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.login-note b{color:var(--muted)}
+
+/* досье редактора */
+.dossier-head{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.dossier-ava{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#171310;font-weight:900;font-size:18px;flex:none}
+.dossier-name{font-size:16px;font-weight:900}
+.dossier-role{font-size:12px;color:var(--amber);font-weight:700;margin-top:3px}
+.dossier-desc{font-size:13px;line-height:1.65;color:var(--text);margin-bottom:14px}
+.dossier-desc.is-classic{font-family:var(--serif);font-size:13.5px}
+.tools-h{font-size:10.5px;font-weight:800;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.tools{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px}
+.tool{font-size:11.5px;color:var(--text);background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;display:flex;gap:6px;align-items:center}
+.tool i{font-size:9px;font-weight:800;color:var(--amber);font-style:normal}
+.tool i.no-ai{color:var(--dim)}
+
+/* моя станция */
+.ms-track{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.ms-track:last-child{border-bottom:none}
+.ms-play{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--amber);flex:none;transition:.16s}
+.ms-play:hover{background:var(--amber);color:#171310;border-color:var(--amber)}
+.ms-body{flex:1;min-width:0}
+.ms-name{font-size:13.5px;font-weight:700}
+.ms-why{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:3px}
+
+/* ---------- tweaks ---------- */
+.tweaks{
+  position:fixed;top:var(--header-h);right:0;bottom:0;width:min(360px,100vw);z-index:250;
+  background:var(--bg-2);border-left:1px solid var(--line-2);padding:22px;overflow-y:auto;
+  transform:translateX(100%);transition:transform .26s ease;
+}
+.tweaks.is-open{transform:none;box-shadow:var(--shadow)}
+.tweaks h3{font-size:15px;font-weight:900;margin-bottom:4px}
+.tweaks .sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.55}
+.tw-group{margin-bottom:22px}
+.tw-group>.tw-h{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.tw-opt{
+  width:100%;text-align:left;border:1px solid var(--line);border-radius:var(--r-md);
+  padding:12px 14px;margin-bottom:8px;transition:.16s;
+}
+.tw-opt:hover{border-color:var(--line-2);background:var(--panel)}
+.tw-opt[aria-pressed="true"]{border-color:rgba(255,180,84,.55);background:var(--amber-soft)}
+.tw-opt b{font-size:13px;display:flex;align-items:center;gap:8px}
+.tw-opt span{font-size:11.5px;color:var(--muted);display:block;margin-top:4px;line-height:1.5}
+.tw-opt .n{font-size:10px;font-weight:800;color:var(--amber);border:1px solid rgba(255,180,84,.4);border-radius:6px;padding:1px 6px}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;bottom:26px;left:50%;transform:translate(-50%,20px);z-index:400;opacity:0;
+  background:var(--panel-2);border:1px solid var(--line-2);border-radius:999px;padding:10px 20px;
+  font-size:12.5px;box-shadow:var(--shadow);transition:.25s;pointer-events:none;max-width:min(480px,90vw);text-align:center;
+}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- мобильная версия ---------- */
+.tabbar{display:none}
+@media (max-width:860px){
+  :root{--rail-w:0px}
+  .app{grid-template-columns:1fr;inset:var(--header-h) 0 0 0}
+  .hdr{padding:0 12px;gap:10px}
+  .hdr-nav{display:none}
+  .mark-tag{display:none}
+  .role-pill span.rp-l{display:none}
+  .rail{
+    position:fixed;inset:var(--header-h) 0 62px 0;z-index:90;transform:translateX(-102%);
+    transition:transform .26s ease;border-right:none;width:100%;
+  }
+  body[data-mview="favs"] .rail{transform:none}
+  body[data-mview="favs"] .chat-col{visibility:hidden}
+  .crew{padding:10px 14px 2px}
+  .chat-log{padding:8px 14px 14px}
+  .composer{padding:8px 14px 10px}
+  .composer-lock{inset:2px 14px 4px}
+  .widget-wrap{padding:0 14px 8px}
+  .chat-col{padding-bottom:62px}
+  .page-air{padding:18px 14px 140px;inset:var(--header-h) 0 0 0}
+  .tabbar{
+    display:flex;position:fixed;inset:auto 0 0 0;height:62px;z-index:120;
+    background:rgba(15,14,12,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  }
+  .tabbar button{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    font-size:10px;font-weight:700;color:var(--dim);
+  }
+  .tabbar button[aria-current="true"]{color:var(--amber)}
+  .tweaks{top:var(--header-h);bottom:62px}
+  /* hit targets ≥44px (Apple HIG) */
+  .why{padding:9px 13px;font-size:11px}
+  .send-btn{width:44px;height:44px}
+  .icon-btn{width:42px;height:42px}
+  .chip-btn{padding:10px 15px}
+  .ms-play{width:42px;height:42px}
+  .f-chip{padding:9px 15px}
+  .w-fav{padding:10px;margin:-10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s !important;transition-duration:.001s !important}
+}
+</style>
+</head>
+<body data-role="account" data-mview="chat" class="boot">
+
+<!-- ================= HEADER ================= -->
+<header class="hdr">
+  <div class="mark">
+    <span class="mark-chip">GPT</span>
+    <span class="mark-word">SONG</span>
+    <span class="mark-tag">радио, которое объясняет</span>
+  </div>
+  <nav class="hdr-nav" aria-label="Окна">
+    <button id="nav-chat" aria-current="true">Чат</button>
+    <button id="nav-air" aria-current="false">Эфир</button>
+  </nav>
+  <div class="hdr-right">
+    <button class="why" data-why="role" aria-label="Почему слои">почему?</button>
+    <button class="role-pill" id="role-pill" title="Сменить слой (Tweaks)">
+      <span class="rp-l">слой</span> <b id="role-label">2 · Аккаунт</b>
+    </button>
+    <button class="btn-login" id="btn-login" hidden>Войти</button>
+    <button class="icon-btn" id="btn-tweaks" aria-label="Настройки демо (Tweaks)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ================= ГЛАВНОЕ ОКНО: ЧАТ + ИЗБРАННОЕ + ВИДЖЕТ ================= -->
+<div class="app" data-screen-label="01 Чат">
+  <!-- рейл: избранное -->
+  <aside class="rail" aria-label="Избранное">
+    <div class="rail-head">
+      <h2>Избранное</h2>
+      <button class="why" data-why="favorites">почему?</button>
+    </div>
+    <div class="rail-list" id="rail-list"></div>
+    <button class="my-station" id="my-station-card"></button>
+  </aside>
+
+  <!-- колонка чата -->
+  <main class="chat-col" aria-label="Чат с редакцией">
+    <section class="crew" aria-label="Редакция">
+      <div class="crew-head">
+        <h2 id="crew-title">Редакция</h2>
+        <button class="why" data-why="editors">почему?</button>
+      </div>
+      <div class="crew-row" id="crew-row"></div>
+    </section>
+
+    <div class="chat-log" id="chat-log" aria-live="polite">
+      <div class="chat-note">сценарная трансляция · демо</div>
+    </div>
+
+    <div class="widget-wrap">
+      <div class="widget" aria-label="Музыкальный виджет">
+        <div class="widget-row">
+          <button class="w-play" id="w-play" aria-label="Пауза / играть">
+            <svg id="w-play-ico" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+          </button>
+          <div class="w-art" id="w-art">
+            <span class="vinyl"><i class="vinyl-label" id="w-vinyl-label"></i></span>
+          </div>
+          <div class="w-meta">
+            <div class="w-track" id="w-track">—</div>
+            <div class="w-stream" id="w-stream">поток: —</div>
+          </div>
+          <div class="w-side">
+            <button class="w-fav" id="w-fav" aria-label="В избранное">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.7-9.7-9.2C.8 8.6 2.7 5 6.2 5c2.2 0 3.6 1.2 4.3 2.4h3c.7-1.2 2.1-2.4 4.3-2.4 3.5 0 5.4 3.6 3.9 6.8C19.5 16.3 12 21 12 21z" transform="scale(.92) translate(1,1)"/></svg>
+            </button>
+            <span class="onair" id="w-live">ON AIR</span>
+            <button class="why" data-why="widget">почему?</button>
+          </div>
+        </div>
+        <div class="w-progress"><i id="w-bar"></i></div>
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="composer-inner">
+        <input id="composer-input" type="text" placeholder="Спросить редакцию: почему это играет? сделай спокойнее…" autocomplete="off">
+        <button class="send-btn" id="composer-send" aria-label="Отправить">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 11.5 21 3l-8.5 18-2.3-7.2L3 11.5z"/></svg>
+        </button>
+      </div>
+      <div class="composer-lock">
+        Чат читают все — пишут после входа
+        <button class="btn-login" data-open-login>Войти</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ================= ВТОРОЕ ОКНО: «ЭФИР» — куча всего ================= -->
+<div class="page-air" id="page-air" data-screen-label="02 Эфир">
+  <div class="air-inner">
+
+    <section aria-label="Станции">
+      <div class="sec-head">
+        <h2>Станции</h2>
+        <span class="cnt" id="st-cnt"></span>
+        <button class="why" data-why="stations">почему?</button>
+      </div>
+      <div class="filter-row" id="st-filters"></div>
+      <div class="st-grid" id="st-grid"></div>
+    </section>
+
+    <section aria-label="Новое в эфире">
+      <div class="sec-head">
+        <h2>Новое в эфире</h2>
+        <span class="demo-chip">демо</span>
+        <button class="why" data-why="newonair">почему?</button>
+      </div>
+      <div class="noa-row" id="noa-row"></div>
+    </section>
+
+    <section aria-label="Люди на одной волне">
+      <div class="sec-head">
+        <h2>Люди на одной волне</h2>
+        <span class="demo-chip">демо</span>
+        <button class="why" data-why="people">почему?</button>
+      </div>
+      <div class="pp-grid" id="pp-grid"></div>
+    </section>
+
+    <section aria-label="Витрина авторских станций">
+      <div class="sec-head">
+        <h2>Витрина авторов</h2>
+        <span class="demo-chip">демо</span>
+        <button class="why" data-why="authors">почему?</button>
+      </div>
+      <div class="au-grid" id="au-grid"></div>
+    </section>
+
+    <section aria-label="Дайджест в Telegram">
+      <div class="tg-card">
+        <div class="tg-ico">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.4 18.6 20c-.2 1-.9 1.2-1.8.8l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1L18.1 6.4c.4-.4-.1-.6-.6-.2L6 13.5l-4.9-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.7.2 1.4 1.4z"/></svg>
+        </div>
+        <div class="tg-body">
+          <h3>Дайджест — прямо в Telegram</h3>
+          <p>Редакция присылает подборки туда, где вы уже читаете. К дайджесту подключаются живые авторы и журналисты — это не только лента алгоритма.</p>
+        </div>
+        <div class="msg-actions" style="margin:0">
+          <button class="chip-btn chip-btn--primary" data-toast="Подключение Telegram — в проде. Это концепт-демо.">Подключить</button>
+          <button class="why" data-why="telegram">почему?</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ================= МОБИЛЬНЫЙ ТАББАР ================= -->
+<nav class="tabbar" aria-label="Навигация">
+  <button id="tab-chat" aria-current="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2.5-2.5A8 8 0 1 1 21 12z"/></svg>
+    Чат
+  </button>
+  <button id="tab-air" aria-current="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2.2"/><path d="M7.7 16.3a6 6 0 0 1 0-8.6M16.3 7.7a6 6 0 0 1 0 8.6M4.9 19.1a10 10 0 0 1 0-14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></svg>
+    Эфир
+  </button>
+  <button id="tab-favs" aria-current="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.7 6.3.8-4.6 4.3 1.2 6.2-5.6-3.1L6.4 20l1.2-6.2L3 9.5l6.3-.8L12 3z"/></svg>
+    Избранное
+  </button>
+</nav>
+
+<!-- ================= «ПОЧЕМУ?» POPOVER ================= -->
+<div class="why-pop" id="why-pop" role="dialog" aria-label="Почему это здесь">
+  <h4 id="why-title"></h4>
+  <p id="why-text"></p>
+  <div class="msg-actions">
+    <button class="chip-btn chip-btn--primary" id="why-ask">Спросить в чате</button>
+    <button class="chip-btn" id="why-close">Понятно</button>
+  </div>
+</div>
+
+<!-- ================= МОДАЛКИ ================= -->
+<div class="overlay" id="ov-login">
+  <div class="modal">
+    <button class="icon-btn modal-x" data-close aria-label="Закрыть">✕</button>
+    <h3>Вход в GPTSONG</h3>
+    <p class="sub">Слушать можно и без входа. Вход открывает избранное, подборки и чат.</p>
+    <button class="login-btn login-btn--tg" id="login-tg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.4 18.6 20c-.2 1-.9 1.2-1.8.8l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1L18.1 6.4c.4-.4-.1-.6-.6-.2L6 13.5l-4.9-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.7.2 1.4 1.4z"/></svg>
+      Войти через Telegram
+    </button>
+    <div class="login-sep">или по почте</div>
+    <div class="login-mail">
+      <input type="email" id="login-mail" placeholder="почта@пример.ру" aria-label="Почта">
+      <button class="chip-btn chip-btn--primary" id="login-mail-btn">Код</button>
+    </div>
+    <p class="login-note"><b>Google и Apple здесь нет</b> — эти способы входа не работают. Telegram или почта: этого достаточно. <button class="why" data-why="login">почему?</button></p>
+  </div>
+</div>
+
+<div class="overlay" id="ov-dossier">
+  <div class="modal" id="dossier-body"></div>
+</div>
+
+<div class="overlay" id="ov-mystation">
+  <div class="modal" id="mystation-body"></div>
+</div>
+
+<!-- ================= TWEAKS ================= -->
+<aside class="tweaks" id="tweaks" aria-label="Tweaks">
+  <h3>Tweaks · демо</h3>
+  <p class="sub">Переключатели концепта: посмотрите те же экраны глазами разных слоёв и метафор.</p>
+
+  <div class="tw-group">
+    <div class="tw-h">Слой доступа <button class="why" data-why="role">почему?</button></div>
+    <button class="tw-opt" data-role-opt="guest"><b><span class="n">1</span> Гость</b><span>1000 станций и чат-трансляция без регистрации. Реклама помечена. Писать в чат нельзя.</span></button>
+    <button class="tw-opt" data-role-opt="account"><b><span class="n">2</span> Аккаунт</b><span>Избранное и подборки, вопросы редакции. Бесплатно — с рекламой.</span></button>
+    <button class="tw-opt" data-role-opt="premium"><b><span class="n">3</span> Подписка</b><span>Личный поток «Моя станция», без рекламы. Экран чище: только чат и виджет.</span></button>
+    <button class="tw-opt" data-role-opt="author"><b><span class="n">4</span> Автор</b><span>Своя станция в витрине. Доход с рекламы и подписок, советы по монетизации — в чате.</span></button>
+  </div>
+
+  <div class="tw-group">
+    <div class="tw-h">Метафора агентов <button class="why" data-why="metaphor">почему?</button></div>
+    <button class="tw-opt" data-met-opt="office"><b>Офис · редакция</b><span>«Муз ред №1 · Классика», планёрки, дежурства. Спокойный служебный тон.</span></button>
+    <button class="tw-opt" data-met-opt="band"><b>Рок-банда</b><span>«Струнные», «Гитара», «Синты» — группа на репетиции. Тон живее и наглее.</span></button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+   GPTSONG demo engine. Всё сценарное — честно помечено «демо».
+   ============================================================ */
+(function(){
+'use strict';
+
+/* ---------- палитры-монограммы (честный арт без фото) ---------- */
+const HUES = {
+  main:['#FFB454','#E08A1E'], classic:['#E9DFCB','#B9A886'], rock:['#FF7A59','#C74B32'],
+  electro:['#63D3FF','#2E8FC4'], pop:['#FF9BD2','#D75FA4'], hiphop:['#B7F26D','#6FA83C'],
+  chill:['#9F8CFF','#6C5CC9'], road:['#FFD86B','#CE9F2C'], focus:['#7BE0C3','#3FA98A'],
+  slow:['#F2C4A0','#BC8A62'], energy:['#FF6B8A','#C43A5C'], morning:['#FFC98A','#E08A1E'],
+  a1:['#8AD1FF','#4A90C2'], a2:['#FFAF8A','#C46B3F'], a3:['#C1F27E','#7EA843']
+};
+const grad = k => `linear-gradient(135deg,${HUES[k][0]},${HUES[k][1]})`;
+
+/* ---------- редакция: квадратики агентов ---------- */
+/* office = «муз ред», band = «рок-банда» — owner спросил «офис или банда?»: показываем оба тумблером */
+const EDITORS = [
+  {id:'signal', no:'ГЛАВРЕД', band:'ФРОНТМЕН', name:'Сигнал', bandName:'Сигнал', genre:'весь эфир', bandGenre:'ведёт состав', hue:'main',
+   glyph:'M2 11h3l2-6 3 12 3-9 2 3h5', classic:false,
+   desc:'Главный редактор. Собирает эфир из работы жанровых групп, отвечает на «почему» и честно говорит, когда импровизирует.',
+   tools:[['Сборка эфира','ai'],['Баланс жанров','ai'],['Журнал решений','no-ai'],['Ответы «почему»','ai']]},
+  {id:'classic', no:'МУЗ РЕД 1', band:'СТРУННЫЕ', name:'Струна', bandName:'Струна', genre:'классика', bandGenre:'классика', hue:'classic',
+   glyph:'M6 18c4 0 4-12 8-12M6 6h2M12 18h2', classic:true,
+   desc:'Классика слушается иначе — это ближе к литературе, чем к танцполу. Поэтому здесь другой тон: медленные тексты, контекст, сравнение исполнений. Никакой «энергетики трека» — только чтение музыки.',
+   tools:[['Гармонический разбор','ai'],['Сравнение исполнений','ai'],['Исторический контекст','no-ai'],['Партитуры','no-ai']]},
+  {id:'rock', no:'МУЗ РЕД 2', band:'ГИТАРА', name:'Фузз', bandName:'Фузз', genre:'рок', bandGenre:'рок', hue:'rock',
+   glyph:'M4 14 10 4l-2 8h8l-6 10 2-8H4z', classic:false,
+   desc:'Группа рока: рифы, драйв, лайвы. Следит, чтобы подряд не стояли три одинаковые стены гитар.',
+   tools:[['Риф-анализ','ai'],['Энергия и драйв','ai'],['Лайв-версии','no-ai']]},
+  {id:'electro', no:'МУЗ РЕД 3', band:'СИНТЫ', name:'Бит', bandName:'Бит', genre:'электроника', bandGenre:'электроника', hue:'electro',
+   glyph:'M3 12c2-6 4-6 6 0s4 6 6 0 4-6 6 0', classic:false,
+   desc:'Электронная группа: темп, спектр, саунд-дизайн. Ночью снижает BPM сам — и объясняет, зачем.',
+   tools:[['BPM-сетка','ai'],['Спектр и саунд','ai'],['Танцевальность','ai'],['Каталог релизов','no-ai']]},
+  {id:'pop', no:'МУЗ РЕД 4', band:'ВОКАЛ', name:'Припев', bandName:'Припев', genre:'поп', bandGenre:'поп', hue:'pop',
+   glyph:'M12 3l2.2 4.6 5 .7-3.6 3.4.9 4.9L12 14.3 7.5 16.6l.9-4.9L4.8 8.3l5-.7L12 3z', classic:false,
+   desc:'Поп-группа: хуки, припевы, структура. Знает, почему песня прилипает, и не стесняется этого.',
+   tools:[['Хук-детектор','ai'],['Структура куплет-припев','ai'],['Контекст чартов','no-ai']]},
+  {id:'hiphop', no:'МУЗ РЕД 5', band:'РИТМ-СЕКЦИЯ', name:'Флоу', bandName:'Флоу', genre:'хип-хоп', bandGenre:'хип-хоп', hue:'hiphop',
+   glyph:'M4 6h4v4H4zM10 6h4v4h-4zM16 6h4v4h-4zM7 14h4v4H7zM13 14h4v4h-4z', classic:false,
+   desc:'Хип-хоп группа: флоу, ритмика текста, происхождение сэмплов. Любит рассказывать, откуда взялся бит.',
+   tools:[['Ритмика текста','ai'],['Происхождение сэмплов','no-ai'],['Битмейкинг','ai']]}
+];
+const edById = id => EDITORS.find(e=>e.id===id);
+
+/* ---------- потоки (треки живут ТОЛЬКО в потоках) ---------- */
+const STREAMS = [
+  {id:'live-main', name:'Главный эфир', cur:'signal', hue:'main', genre:'все', live:true,
+   tags:['эфир','все жанры'], tracks:[['Любимка','Niletto'],['Сансара','Баста'],['Выхожу один я','Сплин'],['Царица','Anna Asti']]},
+  {id:'reading', name:'Читальный зал', cur:'classic', hue:'classic', genre:'классика', live:true,
+   tags:['классика','вечер','как литература'], tracks:[['Концерт №2, ч. I','Рахманинов'],['Вальс №2','Шостакович'],['Июнь. Баркарола','Чайковский'],['Вальс из «Метели»','Свиридов']]},
+  {id:'garage', name:'Гаражный час', cur:'rock', hue:'rock', genre:'рок', live:true,
+   tags:['рок','гитары','драйв'], tracks:[['Группа крови','Кино'],['Осень','ДДТ'],['Полковнику никто не пишет','Би-2'],['Владивосток 2000','Мумий Тролль']]},
+  {id:'pulse', name:'Пульс города', cur:'electro', hue:'electro', genre:'электроника', live:true,
+   tags:['электроника','вечер','город'], tracks:[['Тем более','Filatov & Karas'],['Никаких больше вечеринок','Cream Soda'],['Life','Zivert'],['Поболело и прошло','Джарахов']]},
+  {id:'hooks', name:'Фабрика припевов', cur:'pop', hue:'pop', genre:'поп', live:true,
+   tags:['поп','хуки','чарты'], tracks:[['Венера-Юпитер','Ваня Дмитриенко'],['Царица','Anna Asti'],['Пряталась в ванной','Мари Краймбрери'],['Любимка','Niletto']]},
+  {id:'yard', name:'Двор-флоу', cur:'hiphop', hue:'hiphop', genre:'хип-хоп', live:true,
+   tags:['хип-хоп','флоу','бит'], tracks:[['Это любовь','Скриптонит'],['Соло','Мот'],['I Got Love','Miyagi & Эндшпиль'],['Панелька','Хаски']]},
+  {id:'night', name:'Ночная смена', cur:'electro', hue:'chill', genre:'электроника', live:true,
+   tags:['медленно','ночь','фон'], tracks:[['Медуза','Matrang'],['Пьяное солнце','Alekseev'],['Зимний сон','Алсу'],['Небо','Дельфин']]},
+  {id:'road', name:'Дорога домой', cur:'signal', hue:'road', genre:'все', live:true,
+   tags:['вечер','в пути'], tracks:[['Комета','Jony'],['Юность','Dabro'],['Фиолетово','Каста'],['Она не такая как все','Дайте танк (!)']]},
+  {id:'focus', name:'Глубокая работа', cur:'electro', hue:'focus', genre:'электроника', live:true,
+   tags:['фокус','без слов'], tracks:[['Ambient 12','инструментал'],['Слои','инструментал'],['Тёплый шум','инструментал'],['Стеклянный час','инструментал']]},
+  {id:'slow-strings', name:'Медленные струны', cur:'classic', hue:'slow', genre:'классика', live:true,
+   tags:['классика','утро','тихо'], tracks:[['Ария','Бах'],['Clair de lune','Дебюсси'],['Nuvole Bianche','Эйнауди'],['Жаворонок','Глинка']]},
+  {id:'energy', name:'Разгон', cur:'rock', hue:'energy', genre:'рок', live:true,
+   tags:['спорт','утро','быстро'], tracks:[['Моя игра','Баста'],['До предела','инструментал'],['Асфальт','инструментал'],['Царица','Anna Asti']]},
+  {id:'morning', name:'Утро на связи', cur:'signal', hue:'morning', genre:'все', live:true,
+   tags:['утро','мягкий старт'], tracks:[['Юность','Dabro'],['Комета','Jony'],['Втюрилась','Дора'],['Медляк','Дайте танк (!)']]}
+];
+const stById = id => STREAMS.find(s=>s.id===id);
+
+/* авторские станции — слой 4 (витрина) */
+const AUTHOR_STATIONS = [
+  {id:'kitchen', name:'Утро на кухне', author:'Марат', hue:'a1', tags:['завтрак','радио-настроение'], earn:['реклама','подписки']},
+  {id:'plackart', name:'Плацкарт', author:'Гоша', hue:'a2', tags:['дорожные','под стук колёс'], earn:['реклама']},
+  {id:'nightshop', name:'Ночной цех', author:'Лера', hue:'a3', tags:['работа ночью','ровный бит'], earn:['подписки']}
+];
+
+/* «Моя станция» — слой 3: единственное место, где треки слушаются по одному */
+const MY_STATION = {
+  name:'Моя станция', hue:'main',
+  tracks:[
+    {t:'Кукушка', a:'Кино', why:'Вы дослушали четыре кавера этой песни до конца — возвращаю оригинал.'},
+    {t:'Комета', a:'Jony', why:'Ставили ♥ на «Дорогу домой» три вечера подряд — это её стержень.'},
+    {t:'Вальс №2', a:'Шостакович', why:'Эксперимент Струны: после рока вы не выключили классику. Проверяем ещё раз.'},
+    {t:'Это любовь', a:'Скриптонит', why:'Самый переслушиваемый трек вашего января. Напоминание, не открытие.'},
+    {t:'Nuvole Bianche', a:'Эйнауди', why:'Под него вы дольше всего не трогали телефон. Беру как якорь спокойствия.'}
+  ]
+};
+
+/* новое в эфире (не «новинки»!) */
+const NEW_ON_AIR = [
+  {t:'Царица', a:'Anna Asti', stream:'hooks', also:['Разгон','Главный эфир'], when:'сегодня'},
+  {t:'Панелька', a:'Хаски', stream:'yard', also:['Ночная смена'], when:'сегодня'},
+  {t:'Nuvole Bianche', a:'Эйнауди', stream:'slow-strings', also:['Глубокая работа'], when:'вчера'},
+  {t:'Владивосток 2000', a:'Мумий Тролль', stream:'garage', also:['Дорога домой'], when:'вчера'},
+  {t:'Комета', a:'Jony', stream:'road', also:['Утро на связи','Фабрика припевов'], when:'на этой неделе'}
+];
+
+/* люди на одной волне (не «друзья») */
+const PEOPLE = [
+  {name:'Вера', match:97, hue:'pop', common:['Ночная смена','Читальный зал','Дорога домой'],
+   insight:'Совпадение почти полное: нового друг для друга у вас мало. Зато на концерт — идеальная пара.'},
+  {name:'Тимур', match:84, hue:'electro', common:['Пульс города','Разгон'],
+   insight:'У Тимура 12 потоков, которых нет у вас. Есть что раскопать — начните с его «тёмной электроники».'},
+  {name:'Ася', match:91, hue:'chill', common:['Читальный зал','Глубокая работа'],
+   insight:'Слушаете классику в одни и те же часы — вечер пятницы. Похоже на общий ритуал.'},
+  {name:'Марк', match:78, hue:'rock', common:['Гаражный час'],
+   insight:'По року вы спорите: он за лайвы, вы за студийные версии. Это тоже совпадение.'}
+];
+
+/* ---------- «почему?» — тексты (ядро концепта) ---------- */
+const WHY = {
+  editors:{
+    title:'Почему квадратики',
+    text:'Это ваша редакция. Вы отметили пять жанров — под каждый собрана группа инструментов: часть на ИИ, часть обычные анализаторы (темп, гармония, история исполнений). Квадратик — не кнопка раздела, а рабочее место: видно, кто сейчас в эфире.',
+    ask:'Почему у меня именно такие квадратики?',
+    ans:'Вы любите пять жанров — вот пять групп, плюс я. Полюбите шестой — <em>наймём шестого редактора</em>. Состав меняется вместе с вами, и я всегда говорю, кого и почему позвал. Это персональная сборка интерфейса, а не общее меню.'
+  },
+  favorites:{
+    title:'Почему только избранное',
+    text:'Слева — только то, что вы сохранили сами. Рекомендации сюда не подмешиваются: для них есть чат, где редакция хотя бы может объяснить, зачем принесла новое.',
+    ask:'Почему в избранном нет рекомендаций?',
+    ans:'Избранное — ваша полка, я на неё ничего не подкладываю. Всё новое я приношу <em>в чат с объяснением</em>: согласитесь — сохраните сами. Так граница между «моим» и «предложенным» всегда видна.'
+  },
+  widget:{
+    title:'Почему виджет, а не плеер-страница',
+    text:'Музыка здесь — не отдельная страница, а виджет при чате. Пауза стоит вплотную к названию трека — то, чем вы управляете, и то, что играет, живут в одном месте, а не по разным углам.',
+    ask:'Почему пауза рядом с треком?',
+    ans:'Раньше пауза была в одном углу, название — в другом: глаз бегал. Теперь кнопка и трек — <em>один кластер</em>: смотришь на музыку — там же ею и управляешь.'
+  },
+  chat:{
+    title:'Почему главный экран — чат',
+    text:'Радио — это разговор, а не каталог. Всё, что делает ИИ, можно спросить словами и получить ответ словами. Поэтому вместо сайта — чат и музыка.',
+    ask:'Почему всё через чат?',
+    ans:'Потому что каталог молчит, а я — нет. Любой блок, любой трек, любое моё решение можно спросить здесь — и я объясню по-человечески. Не согласны — скажите, переставлю.'
+  },
+  stations:{
+    title:'Почему тысяча станций',
+    text:'Это вход в сервис: любую станцию можно слушать сразу и без регистрации, с небольшой рекламой. Текстовый эфир в чате рассказывает, что играет и почему.',
+    ask:'Почему станции доступны без регистрации?',
+    ans:'Первый слой — открытая дверь: <em>слушать можно сразу</em>, реклама небольшая и всегда помечена. Регистрация нужна только когда захотите своё: избранное, подборки, личный поток.'
+  },
+  newonair:{
+    title:'Почему «новое в эфире», а не «новинки»',
+    text:'Трек попадает сюда не датой релиза, а моментом, когда редакция впервые поставила его в поток. Старая песня, впервые прозвучавшая у нас вчера, — тоже новое в эфире.',
+    ask:'Чем «новое в эфире» отличается от «новинок»?',
+    ans:'«Новинки» — про календарь релизов, он у всех одинаковый. «Новое в эфире» — про <em>наш эфир</em>: что редакция впервые поставила и в каком потоке оно живёт. Заодно видно пересечения — где ещё встречается трек.'
+  },
+  people:{
+    title:'Почему не «друзья»',
+    text:'Это люди, с которыми вы совпали репертуаром. 97% совпадения — почти вы: нового мало, зато вместе на концерт — идеально. Меньший процент — наоборот: есть что раскопать.',
+    ask:'Зачем мне люди с совпадением вкуса?',
+    ans:'Репертуар честнее анкеты. Высокое совпадение — это спутник на концерт; среднее — источник новой музыки. Дружба, знакомство или просто чужой плейлист — <em>решаете вы</em>, мы только показываем пересечение потоков.'
+  },
+  authors:{
+    title:'Почему витрина авторов',
+    text:'Четвёртый слой: свою станцию можно выставить в общую витрину. Её слушают другие, автор зарабатывает на рекламе и подписках, а редакция подсказывает, как станцию улучшить.',
+    ask:'Как работает витрина авторов?',
+    ans:'Соберёте свой поток — сможете <em>опубликовать его</em>. Слушатели приносят автору доход с рекламы и подписок, а я подсказываю: где сбавить темп, какие треки добавить, на какую аудиторию смотреть.'
+  },
+  telegram:{
+    title:'Почему Telegram',
+    text:'Подборки приходят туда, где вы уже читаете. К дайджесту подключаются живые авторы и журналисты — это не только лента алгоритма.',
+    ask:'Зачем дайджест в Telegram?',
+    ans:'Чтобы рекомендации жили там, где вы уже есть, а не требовали открывать ещё одно приложение. Плюс к дайджесту <em>подключаются живые люди</em> — авторы и журналисты дописывают контекст, который алгоритм не видит.'
+  },
+  role:{
+    title:'Почему слои',
+    text:'Гость слушает бесплатно с рекламой; аккаунт собирает избранное; подписка получает личный поток и чистый экран; автор публикует станции и зарабатывает. Чем выше слой — тем меньше интерфейса.',
+    ask:'Почему в подписке интерфейс становится проще?',
+    ans:'Потому что подписка — это не «больше кнопок», а <em>меньше лишнего</em>: остаются чат, музыка и ваше. Артисты, витрины и прочий шум уходят — вы платите в том числе за тишину интерфейса.'
+  },
+  metaphor:{
+    title:'Почему офис ↔ банда',
+    text:'Мы сами пока выбираем, кто мы: редакция («муз ред №1») или группа («струнные», «гитара», «синты»). Переключите и посмотрите, как меняется тон — это открытый вопрос концепта.',
+    ask:'Кто вы — редакция или группа?',
+    ans:'Честно — решаем. «Редакция» звучит надёжнее: дежурства, планёрки, ответственность. «Банда» — живее: репетиция, сцена, характер. Тумблер в Tweaks существует, <em>чтобы выбрать не словами, а глазами</em>.'
+  },
+  login:{
+    title:'Почему без Google и Apple',
+    text:'Эти способы входа не работают. Поэтому честно: только Telegram или почта. Этого достаточно — и никаких лишних кнопок, которые ведут в ошибку.',
+    ask:'Почему нельзя войти через Google?',
+    ans:'Кнопка, которая не работает, хуже её отсутствия. Google и Apple недоступны — мы их <em>убрали совсем</em>, вместо того чтобы показывать и извиняться. Telegram или почта закрывают вход полностью.'
+  },
+  mystation:{
+    title:'Почему здесь можно слушать треки по одному',
+    text:'Везде трек живёт только в потоке. «Моя станция» — исключение: это ваша личная полка, собранная из ваших причин. Здесь у каждого трека своя строка «почему он тут».',
+    ask:'Почему в «Моей станции» треки можно слушать отдельно?',
+    ans:'Эфир — это течение, его не разбирают на капли. Но «Моя станция» — не эфир, а <em>ваша полка</em>: сюда треки попали по личным причинам, и каждую причину я записал. Полку можно перебирать по одной вещи.'
+  },
+  ad:{
+    title:'Почему реклама',
+    text:'Реклама держит бесплатный слой — она небольшая и всегда помечена. В подписке её нет совсем.',
+    ask:'Почему я вижу рекламу?',
+    ans:'Вы на бесплатном слое — его оплачивает помеченная реклама. Не хотите её видеть — <em>подписка убирает рекламу полностью</em>, а заодно открывает личный поток.'
+  }
+};
+
+/* ---------- состояние ---------- */
+const S = {
+  role:'account',           // guest | account | premium | author
+  met:'office',             // office | band
+  stream:null,
+  playing:false,
+  trackIx:0,
+  favs:['night','reading','road','garage'],
+  route:'chat',
+  whyKey:null,
+  timers:[],
+  adShown:false,
+  progress:12
+};
+
+const $ = s => document.querySelector(s);
+const el = (tag, cls, html) => { const n=document.createElement(tag); if(cls)n.className=cls; if(html!=null)n.innerHTML=html; return n; };
+const esc = s => s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* персист UI-состояния (роль, метафора, избранное, поток) — переживает перезагрузку */
+const LS_KEY = 'gptsong.v1';
+function saveState(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({role:S.role, met:S.met, favs:S.favs, stream:S.stream})); }catch(e){}
+}
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }catch(e){ return {}; }
+}
+
+/* имена с учётом метафоры */
+const edNo = e => S.met==='office' ? e.no : e.band;
+const edGenre = e => S.met==='office' ? e.genre : e.bandGenre;
+const edTitle = e => S.met==='office'
+  ? (e.id==='signal' ? 'Главред' : e.no.replace('МУЗ РЕД','Муз ред №')) + ' · ' + cap(e.genre)
+  : cap(e.band.toLowerCase());
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(text){
+  const t = $('#toast'); t.textContent = text; t.classList.add('is-on');
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('is-on'), 2600);
+}
+
+/* ============================================================
+   ЧАТ
+   ============================================================ */
+const log = $('#chat-log');
+let typingNode = null;
+
+function scrollLog(){ log.scrollTop = log.scrollHeight; }
+
+function avaFor(ed){
+  const a = el('div','msg-ava');
+  a.style.background = grad(ed.hue);
+  a.textContent = ed.name[0];
+  if(ed.id==='classic') a.style.color = '#3B3425';
+  return a;
+}
+
+function addEditorMsg(edId, html, opts={}){
+  removeTyping();
+  const ed = edById(edId);
+  const m = el('div','msg' + (ed.classic ? ' msg--classic' : ''));
+  m.appendChild(avaFor(ed));
+  const body = el('div','msg-body');
+  const author = el('div','msg-author');
+  author.innerHTML = `<b data-ed="${ed.id}">${esc(edTitle(ed))} — ${esc(ed.name)}</b><span class="t">сейчас</span>`;
+  body.appendChild(author);
+  const b = el('div','bubble', html);
+  body.appendChild(b);
+  if(opts.actions) body.appendChild(buildActions(opts.actions));
+  m.appendChild(body);
+  log.appendChild(m);
+  scrollLog();
+  return m;
+}
+
+function addUserMsg(text){
+  const m = el('div','msg msg--user');
+  const body = el('div','msg-body');
+  body.appendChild(el('div','msg-author','<b>Вы</b>'));
+  body.appendChild(el('div','bubble', esc(text)));
+  m.appendChild(body);
+  log.appendChild(m);
+  scrollLog();
+}
+
+function addSysMsg(html, actions){
+  const m = el('div','msg msg--sys');
+  const c = el('div','sys-card', html);
+  if(actions) c.appendChild(buildActions(actions));
+  m.appendChild(c);
+  log.appendChild(m);
+  scrollLog();
+}
+
+function addAdMsg(){
+  const ed = edById('signal');
+  const m = el('div','msg msg--ad');
+  const a = el('div','msg-ava'); a.style.background='#3A2320'; a.style.color='#FF9C8A'; a.textContent='₽';
+  m.appendChild(a);
+  const body = el('div','msg-body');
+  body.appendChild(el('div','msg-author','<b>Партнёр эфира</b><span class="t">реклама</span>'));
+  const b = el('div','bubble',
+    '<div class="ad-label">Реклама · демо</div>Городской фестиваль винила — в эту субботу. Пластинки, кофе и три сцены.');
+  body.appendChild(b);
+  body.appendChild(buildActions([
+    {label:'Без рекламы — подписка', primary:true, fn:()=>openTweaks()},
+    {label:'почему реклама?', fn:()=>openWhyByKey('ad')}
+  ]));
+  m.appendChild(body);
+  log.appendChild(m);
+  scrollLog();
+}
+
+function buildActions(list){
+  const row = el('div','msg-actions');
+  list.forEach(a=>{
+    const b = el('button','chip-btn'+(a.primary?' chip-btn--primary':''), esc(a.label));
+    b.addEventListener('click',()=>a.fn(b));
+    row.appendChild(b);
+  });
+  return row;
+}
+
+function showTyping(edId){
+  removeTyping();
+  const ed = edById(edId);
+  const m = el('div','msg');
+  m.appendChild(avaFor(ed));
+  const body = el('div','msg-body');
+  body.appendChild(el('div','msg-author',`<b data-ed="${ed.id}">${esc(edTitle(ed))} — ${esc(ed.name)}</b>`));
+  const b = el('div','bubble'); b.appendChild(el('div','typing','<i></i><i></i><i></i>'));
+  b.style.padding='0';
+  body.appendChild(b);
+  m.appendChild(body);
+  typingNode = m;
+  log.appendChild(m);
+  scrollLog();
+}
+function removeTyping(){ if(typingNode){ typingNode.remove(); typingNode=null; } }
+
+/* отложенная реплика с «печатает…» */
+function say(edId, html, opts={}, typeMs=1400){
+  showTyping(edId);
+  const t = setTimeout(()=>addEditorMsg(edId, html, opts), typeMs);
+  S.timers.push(t);
+}
+
+function clearBroadcast(){
+  S.timers.forEach(clearTimeout); S.timers=[]; removeTyping();
+}
+
+/* сценарий трансляции для потока */
+function broadcastFor(streamId){
+  const st = stById(streamId);
+  const seq = [];
+  const [t0,a0] = st.tracks[0];
+  const curEd = st.cur;
+  switch(streamId){
+    case 'live-main':
+      seq.push([curEd, `В эфире — <em>«${esc(t0)}»</em>, ${esc(a0)}. Держу главный поток пёстрым: после плотного бита дал воздуха. Спрашивайте «почему» про что угодно — отвечу.`]);
+      seq.push([curEd, `Дальше поведу в сторону гитар: последние вечера вы чаще выбираете живой звук. Если ошибаюсь — скажите, переставлю без обид.`]);
+      break;
+    case 'reading':
+      seq.push([curEd, `Второй концерт Рахманинова, первая часть. Не торопитесь оценивать: это не трек, а глава. Дочитаем до кульминации — и станет ясно, зачем было длинное вступление.`]);
+      seq.push([curEd, `Замечу: классику вы слушаете как читаете — вечером и без перемотки. Поэтому я не ставлю сюда «отрывки-хиты», только цельные вещи.`]);
+      break;
+    case 'garage':
+      seq.push([curEd, `«${esc(t0)}» — ${esc(a0)}. Три аккорда? Нет — слушайте, как бас держит всю конструкцию. Дальше — ДДТ, чтобы не отпускать драйв.`]);
+      seq.push([curEd, `Подряд три стены гитар не поставлю — после этого блока дам передышку. Это правило группы, а не каприз.`]);
+      break;
+    case 'pulse':
+      seq.push([curEd, `Держу 118–124 BPM: город ещё не спит, но уже выдохнул. «${esc(t0)}» — ${esc(a0)} — ровно этот темп.`]);
+      seq.push([curEd, `К полуночи начну снижать темп сам. Захотите держать разгон — скажите «не сбавляй».`]);
+      break;
+    case 'hooks':
+      seq.push([curEd, `«${esc(t0)}» — ${esc(a0)}. Припев заходит с третьей секунды — так сейчас пишут: хук вперёд, куплет потом. За это и держим в потоке.`]);
+      break;
+    case 'yard':
+      seq.push([curEd, `«${esc(t0)}» — ${esc(a0)}. Следите за ритмикой текста: слог ложится поперёк бита, и это не ошибка, а почерк.`]);
+      break;
+    case 'night':
+      seq.push([curEd, `Ночная смена: темп ниже, громкость ровнее. Здесь ничего не должно требовать внимания — если трек цепляет слишком сильно, я его уношу в дневные потоки.`]);
+      break;
+    case 'road':
+      seq.push([curEd, `Дорога домой — поток на выдох. Собран из того, что вы сохраняли по вечерам: «${esc(t0)}» открывает, дальше — мягче.`]);
+      break;
+    case 'focus':
+      seq.push([curEd, `Глубокая работа: без слов, без резких смен. Следующий час можно не трогать телефон — я подержу ровно.`]);
+      break;
+    case 'slow-strings':
+      seq.push([curEd, `Утренняя классика — короткие пьесы, не симфонии: утро не время для длинных глав. Бах, потом Дебюсси.`]);
+      break;
+    case 'energy':
+      seq.push([curEd, `Разгон: каждый следующий трек чуть быстрее предыдущего. К двадцатой минуте будете на пике — так и задумано.`]);
+      break;
+    case 'morning':
+      seq.push([curEd, `Доброе утро. Начинаю мягко: «${esc(t0)}» — ${esc(a0)}. Новости эфира: за ночь «Новое в эфире» пополнилось — загляните во второе окно.`]);
+      break;
+    default:
+      seq.push([curEd, `Включаю «${esc(st.name)}». В начале — «${esc(t0)}», ${esc(a0)}.`]);
+  }
+  return seq;
+}
+
+/* рекомендация с объяснением — ядро: «правдоподобно объясни — и человек послушает» */
+function pushRecommendation(){
+  const target = stById(S.stream==='reading' ? 'slow-strings' : 'reading');
+  removeTyping();
+  const m = el('div','msg');
+  m.appendChild(avaFor(edById('signal')));
+  const body = el('div','msg-body');
+  body.appendChild(el('div','msg-author',`<b data-ed="signal">${esc(edTitle(edById('signal')))} — Сигнал</b><span class="t">рекомендация</span>`));
+  const rec = el('div','rec');
+  const head = el('div','rec-head');
+  const art = el('div','rec-art'); art.style.background = grad(target.hue);
+  head.appendChild(art);
+  const ht = el('div','', `<div class="rec-title">Поток «${esc(target.name)}»</div><div class="rec-sub">классика · ведёт Струна</div>`);
+  head.appendChild(ht);
+  rec.appendChild(head);
+  rec.appendChild(el('div','rec-why',
+    `Почему предлагаю: вы трижды дослушали струнные аранжировки в «Дороге домой» — ни разу не переключили. Классика — это те же длинные линии, только без барабанов. Начнём не с симфонии, а с одной части концерта.`));
+  rec.appendChild(el('div','rec-hedge','Могу ошибаться — это импровизация по вашим следам, а не приговор. Не зайдёт — скажите, и я пойму почему.'));
+  rec.appendChild(buildActions([
+    {label:'▶ Послушать', primary:true, fn:()=>{ playStream(target.id); }},
+    {label:'Не моё', fn:(btn)=>{
+      btn.closest('.rec').style.opacity=.55;
+      say('signal','Принято, помечаю. Логика была честная, но вкус ваш главнее. Вернусь с другим заходом — не с классикой, а, может, с живыми записями рока.',{},1200);
+    }}
+  ]));
+  body.appendChild(rec);
+  m.appendChild(body);
+  log.appendChild(m);
+  scrollLog();
+}
+
+/* системное сообщение о пересборке интерфейса («ИИ что-то берёт и что-то убирает») */
+function pushResortMsg(){
+  addSysMsg(
+    `<b>Редакция пересобрала вашу сборку.</b> Убрали полку «Чарты» — вы не открывали её три недели. Добавили квадрат хип-хопа: последние дни вы чаще в ритмах.`,
+    [
+      {label:'почему?', fn:()=>openWhyByKey('editors')},
+      {label:'Вернуть чарты', fn:()=>{ say('signal','Вернул «Чарты» в сборку. Через месяц спрошу, пригодились ли, — если нет, снова предложу убрать. Ничего не исчезает молча.',{},1200); }}
+    ]
+  );
+}
+
+/* стартовый сценарий чата */
+function bootChat(){
+  const t1 = setTimeout(()=>{
+    say('signal',
+      `Здесь не сайт, а разговор: слева — ваше избранное, ниже — музыка, остальное — во втором окне «Эфир». Я — Сигнал, веду вашу сборку. <em>Я иногда ошибаюсь и импровизирую — так задумано.</em> Но каждый трек и каждый блок я могу объяснить: жмите «почему?» где угодно.`,
+      {}, 1600);
+  }, 500);
+  const t2 = setTimeout(pushResortMsg, 4600);
+  const t3 = setTimeout(()=>{
+    const seq = broadcastFor(S.stream);
+    say(seq[0][0], seq[0][1], {}, 1500);
+  }, 6400);
+  const t4 = setTimeout(pushRecommendation, 11200);
+  const t5 = setTimeout(()=>{
+    if(S.role==='guest' || S.role==='account'){ addAdMsg(); S.adShown=true; }
+  }, 15200);
+  const t6 = setTimeout(()=>{
+    const seq = broadcastFor(S.stream);
+    if(seq[1]) say(seq[1][0], seq[1][1], {}, 1500);
+  }, 19000);
+  S.timers.push(t1,t2,t3,t4,t5,t6);
+}
+
+/* ---------- composer: сценарные интенты ---------- */
+function handleUserText(raw){
+  const text = raw.trim();
+  if(!text) return;
+  addUserMsg(text);
+  const q = text.toLowerCase();
+  let ed='signal', ans;
+  if(q.includes('почему')){
+    const k = S.whyKey && WHY[S.whyKey] ? S.whyKey : 'chat';
+    ans = WHY[k].ans;
+  } else if(q.includes('классик')){
+    ed='classic';
+    ans = 'Классика — это чтение, а не фон. Если хотите войти, начните с «Читального зала»: я не дам сразу симфонию, начнём с одной части концерта — как с короткого рассказа перед романом.';
+  } else if(q.includes('спокой')||q.includes('тише')||q.includes('устал')){
+    ans = 'Понял. Тогда — «Ночная смена»: темп ниже, громкость ровнее, ничего не требует внимания. Включаю?';
+  } else if(q.includes('рок')||q.includes('гитар')){
+    ed='rock';
+    ans = 'Гаражный час к вашим услугам: рифы и живой звук. Могу собрать блок из одних лайвов — они честнее студийных.';
+  } else if(q.includes('не сбавляй')||q.includes('быстрее')||q.includes('разгон')){
+    ed='electro';
+    ans = 'Держу темп. Ставлю «Разгон»: каждый следующий трек чуть быстрее. Скажете «хватит» — выдохнем вместе.';
+  } else {
+    ans = 'Я — сценарный прототип: в проде здесь отвечает живой ИИ-редактор. Сейчас я умею: «почему это играет», «сделай спокойнее», «включи рок», «расскажи про классику». Всё остальное — честно за пределами демо.';
+  }
+  const withPlay = q.includes('спокой')||q.includes('тише')||q.includes('устал');
+  say(ed, ans, withPlay ? {actions:[
+    {label:'▶ Ночная смена', primary:true, fn:()=>playStream('night')},
+    {label:'Не надо', fn:()=>say('signal','Хорошо, остаёмся здесь.',{},900)}
+  ]}:{}, 1500);
+}
+
+/* ============================================================
+   ПЛЕЕР-ВИДЖЕТ
+   ============================================================ */
+function playStream(id, silent){
+  const st = stById(id);
+  if(!st) return;
+  const prev = S.stream;
+  S.stream = id; S.trackIx = 0; S.playing = true;
+  document.body.classList.add('is-playing');
+  updateWidget(); updateLamp(prev!==id);
+  renderCrew(); renderRail(); renderStGrid();
+  saveState();
+  if(!silent && prev && prev!==id){
+    const ed = st.cur;
+    clearBroadcast();
+    say(ed, switchLine(st), {}, 1300);
+    const t = setTimeout(()=>{
+      const seq = broadcastFor(id);
+      if(seq[0]) say(seq[0][0], seq[0][1], {}, 1500);
+    }, 4200);
+    S.timers.push(t);
+  }
+  if(S.route==='air') toast(`Играет: «${st.name}» — комментарий редакции в чате`);
+}
+
+function switchLine(st){
+  const map = {
+    signal:`Переключаю на «${esc(st.name)}». Пара слов, куда попали: ${esc(st.tags.join(', '))}.`,
+    classic:`Вы в «${esc(st.name)}». Устраивайтесь: здесь слушают медленно, как читают. Первую вещь просто дослушайте — обсудим после.`,
+    rock:`«${esc(st.name)}», поехали. Первый риф — и всё станет ясно без слов.`,
+    electro:`«${esc(st.name)}» включён. Смотрите не на названия, а на темп: я веду его волной.`,
+    pop:`«${esc(st.name)}» — тут не стыдно подпевать. Хук прилетит быстро.`,
+    hiphop:`«${esc(st.name)}». Слушайте, как слог ложится на бит, — в этом всё.`
+  };
+  return map[st.cur] || map.signal;
+}
+
+function playMyTrack(ix){
+  const tr = MY_STATION.tracks[ix];
+  S.stream = null; S.trackIx = ix; S.playing = true;
+  document.body.classList.add('is-playing');
+  $('#w-track').textContent = `${tr.t} — ${tr.a}`;
+  $('#w-stream').innerHTML = `трек · <b>Моя станция</b> — единственное место, где так можно`;
+  $('#w-art').style.background = grad('main');
+  $('#w-vinyl-label').style.background = grad('main');
+  updateLamp(true);
+  $('#w-fav').classList.add('is-on');
+  renderCrew(); renderRail(); renderStGrid();
+  saveState();
+  closeOverlays();
+  toast('Личный поток: треки можно слушать по одному');
+}
+
+/* лампа-табло: ON AIR (поток) / ТРЕК (личная полка) / OFF AIR (пауза) */
+function updateLamp(flick){
+  const lamp = $('#w-live');
+  lamp.textContent = !S.playing ? 'OFF AIR' : (S.stream ? 'ON AIR' : 'ТРЕК');
+  if(flick && S.playing){
+    lamp.classList.remove('is-flick'); void lamp.offsetWidth; lamp.classList.add('is-flick');
+  }
+}
+
+function updateWidget(){
+  const st = stById(S.stream);
+  if(!st) return;
+  const [t,a] = st.tracks[S.trackIx % st.tracks.length];
+  $('#w-track').textContent = `${t} — ${a}`;
+  $('#w-stream').innerHTML = `в потоке: <b>${esc(st.name)}</b> · ведёт ${esc(edById(st.cur).name)}`;
+  $('#w-art').style.background = grad(st.hue);
+  $('#w-vinyl-label').style.background = grad(st.hue);
+  $('#w-fav').classList.toggle('is-on', S.favs.includes(st.id));
+}
+
+function togglePlay(){
+  S.playing = !S.playing;
+  document.body.classList.toggle('is-playing', S.playing);
+  $('#w-play-ico').innerHTML = S.playing
+    ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>'
+    : '<path d="M7 4l13 8-13 8z"/>';
+  updateLamp(true);
+}
+
+/* трек-ротация + прогресс (демо) */
+setInterval(()=>{
+  if(!S.playing) return;
+  S.progress += 4;
+  if(S.progress >= 100){
+    S.progress = 6;
+    if(S.stream){ S.trackIx++; updateWidget(); }
+  }
+  $('#w-bar').style.width = S.progress + '%';
+}, 1000);
+
+/* ============================================================
+   РЕНДЕР: редакция, рейл, эфир
+   ============================================================ */
+function glyphSvg(d){
+  return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+}
+
+function renderCrew(){
+  $('#crew-title').textContent = S.met==='office' ? 'Редакция' : 'Состав группы';
+  const row = $('#crew-row'); row.innerHTML='';
+  const curEd = S.stream ? stById(S.stream).cur : null;
+  EDITORS.forEach(e=>{
+    const b = el('button','sq'+(e.classic?' sq--classic':'')+(e.id===curEd?' is-onair':''));
+    b.setAttribute('aria-label', `${edTitle(e)} — ${e.name}`);
+    b.innerHTML = `
+      <div class="sq-top"><span class="sq-no">${esc(edNo(e))}</span><span class="sq-dot"></span></div>
+      <div class="sq-glyph">${glyphSvg(e.glyph)}</div>
+      <div><div class="sq-name">${esc(e.name)}</div><div class="sq-genre">${esc(edGenre(e))}</div></div>`;
+    b.addEventListener('click',()=>openDossier(e.id));
+    row.appendChild(b);
+  });
+  const ghost = el('button','sq sq--ghost','<span style="font-size:20px;line-height:1">+</span><span>шестой жанр —<br>шестой редактор</span>');
+  ghost.addEventListener('click',()=>toast('Полюбите шестой жанр — редакция наймёт под него редактора. Сборка меняется вместе с вами.'));
+  row.appendChild(ghost);
+}
+
+function renderRail(){
+  const list = $('#rail-list'); list.innerHTML='';
+  if(S.role==='guest'){
+    list.appendChild(el('div','rail-empty',
+      `<b>Избранное появится после входа.</b><br>Слушать можно и так — тысяча станций во втором окне. Вход — Telegram или почта; Google и Apple не работают, поэтому их здесь нет.<br><button class="btn-login" data-open-login>Войти</button>`));
+  } else {
+    S.favs.forEach(id=>{
+      const st = stById(id);
+      const b = el('button','fav');
+      if(S.stream===id) b.setAttribute('aria-current','true');
+      b.innerHTML = `
+        <span class="fav-art" style="background:${grad(st.hue)}"></span>
+        <span class="fav-body">
+          <span class="fav-name">${esc(st.name)}</span>
+          <span class="fav-sub">${esc(edById(st.cur).name)} · ${esc(st.tags[0])}</span>
+        </span>
+        <span class="fav-live" aria-hidden="true"></span>`;
+      b.addEventListener('click',()=>playStream(id));
+      list.appendChild(b);
+    });
+  }
+  renderMyStation();
+}
+
+function renderMyStation(){
+  const c = $('#my-station-card');
+  const unlocked = S.role==='premium' || S.role==='author';
+  c.classList.toggle('is-locked', !unlocked);
+  if(unlocked){
+    c.innerHTML = `<h3><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/><path d="M12 2a10 10 0 0 1 10 10h-3a7 7 0 0 0-7-7V2z"/></svg> Моя станция</h3>
+      <p>Личный поток: учится вместе с вами. Единственное место, где треки слушаются по одному.</p>`;
+    c.onclick = openMyStation;
+  } else {
+    c.innerHTML = `<h3><svg class="lock-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Моя станция</h3>
+      <p>Личный поток открывается с подпиской: опишете вкус словами — редакция соберёт звук.</p>`;
+    c.onclick = ()=>{ openTweaks(); toast('«Моя станция» — слой 3 · Подписка. Переключите роль в Tweaks, чтобы посмотреть.'); };
+  }
+}
+
+/* --- страница «Эфир» --- */
+let stFilter='все';
+function renderStFilters(){
+  const wrap = $('#st-filters'); wrap.innerHTML='';
+  ['все','классика','рок','электроника','поп','хип-хоп'].forEach(g=>{
+    const b = el('button','f-chip', esc(cap(g)));
+    b.setAttribute('aria-pressed', String(g===stFilter));
+    b.addEventListener('click',()=>{ stFilter=g; renderStFilters(); renderStGrid(); });
+    wrap.appendChild(b);
+  });
+}
+
+function renderStGrid(){
+  const grid = $('#st-grid'); grid.innerHTML='';
+  const list = STREAMS.filter(s=> stFilter==='все' || s.genre===stFilter);
+  $('#st-cnt').textContent = `в проде — 1000 · в демо — ${STREAMS.length}`;
+  list.forEach(st=>{
+    const c = el('div','st-card'+(S.stream===st.id?' is-current':''));
+    c.innerHTML = `
+      <div class="st-top">
+        <span class="st-art" style="background:${grad(st.hue)}"></span>
+        <div><div class="st-name">${esc(st.name)}</div><div class="st-cur">ведёт ${esc(edById(st.cur).name)} · ${esc(edGenre(edById(st.cur)))}</div></div>
+      </div>
+      <div class="st-tags">${st.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+      <div class="st-foot">
+        <button class="st-play">${S.stream===st.id?'Сейчас играет':'▶ Слушать'}</button>
+        <span class="st-live">эфир</span>
+      </div>`;
+    c.querySelector('.st-play').addEventListener('click',()=>playStream(st.id));
+    grid.appendChild(c);
+  });
+}
+
+function renderNoa(){
+  const row = $('#noa-row'); row.innerHTML='';
+  NEW_ON_AIR.forEach(n=>{
+    const st = stById(n.stream);
+    const c = el('div','noa');
+    c.innerHTML = `
+      <div class="noa-date">${esc(n.when)}</div>
+      <div><div class="noa-track">${esc(n.t)}</div><div class="noa-artist">${esc(n.a)}</div></div>
+      <div class="noa-in">впервые в потоке <b>«${esc(st.name)}»</b></div>
+      <div class="noa-also">встречается ещё: ${esc(n.also.join(' · '))}</div>`;
+    const btn = el('button','chip-btn','▶ Слушать в потоке');
+    btn.addEventListener('click',()=>playStream(n.stream));
+    c.appendChild(btn);
+    row.appendChild(c);
+  });
+}
+
+function renderPeople(){
+  const gridEl = $('#pp-grid'); gridEl.innerHTML='';
+  PEOPLE.forEach(p=>{
+    const c = el('div','pp');
+    c.innerHTML = `
+      <div class="pp-top">
+        <span class="pp-ava" style="background:${grad(p.hue)}">${esc(p.name[0])}</span>
+        <div><div class="pp-name">${esc(p.name)}</div><div class="pp-match">совпадение ${p.match}%</div></div>
+      </div>
+      <div class="pp-common">${p.common.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+      <div class="pp-insight">${esc(p.insight)}</div>`;
+    c.appendChild(buildActions([
+      {label:'Написать', fn:()=>toast('Личные сообщения — в проде. Это концепт-демо.')},
+      {label:'Вместе на концерт', fn:()=>toast('Подбор концертов по общему репертуару — в проде.')}
+    ]));
+    gridEl.appendChild(c);
+  });
+}
+
+function renderAuthors(){
+  const gridEl = $('#au-grid'); gridEl.innerHTML='';
+  if(S.role==='author'){
+    const mine = el('div','au');
+    mine.style.borderColor='rgba(255,180,84,.5)';
+    mine.innerHTML = `
+      <div class="au-author">ваша станция · опубликована</div>
+      <div class="au-name">Ночной цех</div>
+      <div class="au-earn"><span class="tag">доход: реклама</span><span class="tag">доход: подписки</span></div>`;
+    mine.appendChild(buildActions([
+      {label:'Советы по монетизации', primary:true, fn:()=>{
+        location.hash='#/chat';
+        say('signal','По «Ночному цеху»: слушатели уходят на седьмом треке — там подряд два тяжёлых. Разбавьте серединой потише, рекламную паузу сдвиньте после пикового блока, а в описании скажите прямо: «для тех, кто работает ночами». Аудитория у вас уже правильная — ей просто надо себя узнать.',{},1700);
+      }},
+      {label:'почему?', fn:()=>openWhyByKey('authors')}
+    ]));
+    gridEl.appendChild(mine);
+  }
+  AUTHOR_STATIONS.forEach(a=>{
+    if(S.role==='author' && a.id==='nightshop') return; // «Ночной цех» стал вашим
+    const c = el('div','au');
+    c.innerHTML = `
+      <div class="au-author">станция слушателя · автор — <b>${esc(a.author)}</b></div>
+      <div class="au-name">${esc(a.name)}</div>
+      <div class="au-earn">${a.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`;
+    c.appendChild(buildActions([
+      {label:'▶ Слушать', fn:()=>toast(`«${a.name}» — авторский поток. В демо играет заглушка концепта.`)},
+      {label:'Подписаться', fn:()=>toast('Подписка на автора — в проде: доход делится с автором станции.')}
+    ]));
+    gridEl.appendChild(c);
+  });
+  const cta = el('div','au au-cta');
+  cta.innerHTML = `<h3>Опубликовать свою станцию</h3>
+    <p>Соберите личный поток — и выставьте его в витрину. Слушатели приносят доход с рекламы и подписок; редакция подскажет, как станцию улучшить.</p>`;
+  cta.appendChild(buildActions([
+    {label:S.role==='author'?'Ещё одну':'Начать', primary:true, fn:()=>{
+      if(S.role==='premium'||S.role==='author'){ toast('Публикация станции — в проде. В демо посмотрите роль «Автор» в Tweaks.'); }
+      else { openTweaks(); toast('Сначала личный поток (слой 3), потом витрина (слой 4). Роли — в Tweaks.'); }
+    }}
+  ]));
+  gridEl.appendChild(cta);
+}
+
+/* ============================================================
+   «ПОЧЕМУ?» — поповер + мост в чат
+   ============================================================ */
+const pop = $('#why-pop');
+function openWhy(key, anchor){
+  const w = WHY[key]; if(!w) return;
+  S.whyKey = key;
+  $('#why-title').textContent = w.title;
+  $('#why-text').textContent = w.text;
+  pop.classList.add('is-open');
+  const r = anchor.getBoundingClientRect();
+  const pw = Math.min(340, window.innerWidth-24);
+  let x = Math.min(Math.max(12, r.left), window.innerWidth - pw - 12);
+  let y = r.bottom + 10;
+  pop.style.left = x+'px';
+  pop.style.top = y+'px';
+  requestAnimationFrame(()=>{
+    const ph = pop.offsetHeight;
+    if(y + ph > window.innerHeight - 12) pop.style.top = Math.max(12, r.top - ph - 10) + 'px';
+  });
+}
+function openWhyByKey(key){
+  const w = WHY[key]; if(!w) return;
+  S.whyKey = key;
+  askInChat();
+}
+function closeWhy(){ pop.classList.remove('is-open'); }
+function askInChat(){
+  const w = WHY[S.whyKey]; if(!w) return;
+  closeWhy(); closeOverlays(); closeTweaks();
+  location.hash = '#/chat';
+  setMView('chat');
+  addUserMsg(w.ask);
+  say('signal', w.ans, {}, 1600);
+}
+$('#why-ask').addEventListener('click', askInChat);
+$('#why-close').addEventListener('click', closeWhy);
+document.addEventListener('click', e=>{
+  if(pop.classList.contains('is-open') && !pop.contains(e.target) && !e.target.closest('.why')) closeWhy();
+});
+
+/* ============================================================
+   МОДАЛКИ
+   ============================================================ */
+function openOverlay(id){ $(id).classList.add('is-open'); }
+function closeOverlays(){ document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('is-open')); }
+document.querySelectorAll('.overlay').forEach(o=>{
+  o.addEventListener('click', e=>{ if(e.target===o) closeOverlays(); });
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeOverlays(); closeWhy(); closeTweaks(); }
+});
+
+function openDossier(edId){
+  const e = edById(edId);
+  const body = $('#dossier-body');
+  body.innerHTML = `
+    <button class="icon-btn modal-x" data-close aria-label="Закрыть">✕</button>
+    <div class="dossier-head">
+      <span class="dossier-ava" style="background:${grad(e.hue)}${e.id==='classic'?';color:#3B3425':''}">${esc(e.name[0])}</span>
+      <div><div class="dossier-name">${esc(e.name)}</div><div class="dossier-role">${esc(edTitle(e))}</div></div>
+    </div>
+    <p class="dossier-desc${e.classic?' is-classic':''}">${esc(e.desc)}</p>
+    <div class="tools-h">Инструменты группы</div>
+    <div class="tools">${e.tools.map(([t,kind])=>`<span class="tool"><i class="${kind}">${kind==='ai'?'ИИ':'НЕ-ИИ'}</i>${esc(t)}</span>`).join('')}</div>`;
+  const acts = buildActions([
+    {label:'Что сейчас в работе?', primary:true, fn:()=>{
+      closeOverlays(); location.hash='#/chat'; setMView('chat');
+      const line = e.id==='classic'
+        ? 'Сейчас готовлю вечерний блок: сравниваю три исполнения Второго концерта Рахманинова. Разница — в дыхании оркестра; вечером расскажу, какое выбрал и почему.'
+        : `Сейчас в работе: собираю следующий блок для своих потоков. Загляните в «${esc(STREAMS.find(s=>s.cur===e.id)?.name || 'Главный эфир')}» — там слышно, чем занят.`;
+      say(e.id, line, {}, 1500);
+    }},
+    {label:'почему квадратики?', fn:()=>{ closeOverlays(); openWhyByKey('editors'); }}
+  ]);
+  body.appendChild(acts);
+  openOverlay('#ov-dossier');
+}
+
+function openMyStation(){
+  const body = $('#mystation-body');
+  body.innerHTML = `
+    <button class="icon-btn modal-x" data-close aria-label="Закрыть">✕</button>
+    <h3>Моя станция</h3>
+    <p class="sub">Личный поток: вы описали вкус словами, редакция собрала звук — и он учится дальше. Здесь, в виде исключения, треки можно слушать по одному: это ваша полка, а не эфир. <button class="why" data-why="mystation">почему?</button></p>
+    <div id="ms-list"></div>`;
+  const list = body.querySelector('#ms-list');
+  MY_STATION.tracks.forEach((tr,ix)=>{
+    const row = el('div','ms-track');
+    row.innerHTML = `
+      <button class="ms-play" aria-label="Слушать «${esc(tr.t)}»"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></button>
+      <div class="ms-body"><div class="ms-name">${esc(tr.t)} — ${esc(tr.a)}</div><div class="ms-why">${esc(tr.why)}</div></div>`;
+    row.querySelector('.ms-play').addEventListener('click',()=>playMyTrack(ix));
+    list.appendChild(row);
+  });
+  const acts = buildActions([
+    {label:'Обсудить станцию в чате', fn:()=>{
+      closeOverlays(); location.hash='#/chat'; setMView('chat');
+      addUserMsg('Давай обсудим мою станцию');
+      say('signal','Смотрю на неё каждый день. Сейчас она про длинные линии и вечер; если хотите сдвинуть в утро или в темп — опишите словами, я пересоберу и покажу, что поменял и почему.',{},1600);
+    }}
+  ]);
+  body.appendChild(acts);
+  openOverlay('#ov-mystation');
+}
+
+/* login (кнопки [data-open-login] — через глобальную делегацию) */
+$('#btn-login').addEventListener('click',()=>openOverlay('#ov-login'));
+$('#login-tg').addEventListener('click',()=>{
+  closeOverlays(); setRole('account');
+  toast('Вход через Telegram — демо: вы на слое 2 · Аккаунт');
+});
+$('#login-mail-btn').addEventListener('click',()=>{
+  const v = $('#login-mail').value.trim();
+  if(!v){ toast('Введите почту — пришлём код. Это демо, код не понадобится.'); return; }
+  closeOverlays(); setRole('account');
+  toast('Код принят (демо): вы на слое 2 · Аккаунт');
+});
+
+/* ============================================================
+   TWEAKS: роли + метафора
+   ============================================================ */
+const tweaks = $('#tweaks');
+function openTweaks(){ tweaks.classList.add('is-open'); }
+function closeTweaks(){ tweaks.classList.remove('is-open'); }
+$('#btn-tweaks').addEventListener('click',()=>tweaks.classList.toggle('is-open'));
+$('#role-pill').addEventListener('click',openTweaks);
+document.addEventListener('click',e=>{
+  if(tweaks.classList.contains('is-open')
+     && !tweaks.contains(e.target)
+     && !e.target.closest('#btn-tweaks') && !e.target.closest('#role-pill')) closeTweaks();
+});
+
+const ROLE_LABEL = {guest:'1 · Гость', account:'2 · Аккаунт', premium:'3 · Подписка', author:'4 · Автор'};
+const ROLE_NOTE = {
+  guest:'<b>Слой 1 · Гость.</b> Чат читается, писать нельзя; тысяча станций открыта; реклама помечена. Избранное появится после входа.',
+  account:'<b>Слой 2 · Аккаунт.</b> Открылись избранное и вопросы редакции. Бесплатно — значит с помеченной рекламой.',
+  premium:'<b>Слой 3 · Подписка.</b> Реклама исчезла, появилась «Моя станция». Экран стал чище — остались чат и музыка.',
+  author:'<b>Слой 4 · Автор.</b> Ваша станция — в витрине. Советы по монетизации спрашивайте в чате.'
+};
+function setRole(r){
+  const prev = S.role;
+  S.role = r;
+  document.body.dataset.role = r;
+  $('#role-label').textContent = ROLE_LABEL[r];
+  $('#btn-login').hidden = r!=='guest';
+  document.querySelectorAll('[data-role-opt]').forEach(b=>{
+    b.setAttribute('aria-pressed', String(b.dataset.roleOpt===r));
+  });
+  renderRail(); renderAuthors();
+  saveState();
+  if(prev!==r) addSysMsg(ROLE_NOTE[r], [{label:'почему слои?', fn:()=>openWhyByKey('role')}]);
+}
+document.querySelectorAll('[data-role-opt]').forEach(b=>{
+  b.addEventListener('click',()=>{ setRole(b.dataset.roleOpt); });
+});
+
+function setMet(m, silent){
+  S.met = m;
+  document.querySelectorAll('[data-met-opt]').forEach(b=>{
+    b.setAttribute('aria-pressed', String(b.dataset.metOpt===m));
+  });
+  renderCrew();
+  /* обновить подписи уже отправленных сообщений */
+  document.querySelectorAll('.msg-author b[data-ed]').forEach(bEl=>{
+    const e = edById(bEl.dataset.ed);
+    if(e) bEl.textContent = `${edTitle(e)} — ${e.name}`;
+  });
+  saveState();
+  if(!silent) addSysMsg(m==='office'
+    ? 'Метафора: <b>офис-редакция</b>. Муз ред №1, №2… — дежурства, планёрки, служебный тон.'
+    : 'Метафора: <b>рок-банда</b>. Струнные, гитара, синты — состав на репетиции, тон живее.',
+    [{label:'почему тумблер?', fn:()=>openWhyByKey('metaphor')}]);
+}
+document.querySelectorAll('[data-met-opt]').forEach(b=>{
+  b.addEventListener('click',()=>setMet(b.dataset.metOpt));
+});
+
+/* ============================================================
+   РОУТИНГ + мобильные вкладки
+   ============================================================ */
+function applyRoute(){
+  const h = location.hash;
+  const r = h==='#/air' ? 'air' : 'chat';
+  S.route = r;
+  document.documentElement.dataset.route = r;
+  $('#nav-chat').setAttribute('aria-current', String(r==='chat'));
+  $('#nav-air').setAttribute('aria-current', String(r==='air'));
+  $('#tab-chat').setAttribute('aria-current', String(r==='chat' && document.body.dataset.mview!=='favs'));
+  $('#tab-air').setAttribute('aria-current', String(r==='air'));
+}
+$('#nav-chat').addEventListener('click',()=>{ location.hash='#/chat'; });
+$('#nav-air').addEventListener('click',()=>{ location.hash='#/air'; });
+window.addEventListener('hashchange',applyRoute);
+
+function setMView(v){
+  document.body.dataset.mview = v;
+  $('#tab-favs').setAttribute('aria-current', String(v==='favs'));
+  $('#tab-chat').setAttribute('aria-current', String(v==='chat' && S.route==='chat'));
+}
+$('#tab-chat').addEventListener('click',()=>{ location.hash='#/chat'; setMView('chat'); });
+$('#tab-air').addEventListener('click',()=>{ location.hash='#/air'; setMView('chat'); });
+$('#tab-favs').addEventListener('click',()=>{ location.hash='#/chat'; setMView(document.body.dataset.mview==='favs'?'chat':'favs'); });
+
+/* ============================================================
+   ГЛОБАЛЬНЫЕ БАЙНДЫ
+   ============================================================ */
+document.addEventListener('click', e=>{
+  const whyBtn = e.target.closest('.why[data-why]');
+  if(whyBtn){ e.stopPropagation(); openWhy(whyBtn.dataset.why, whyBtn); return; }
+  const loginOpen = e.target.closest('[data-open-login]');
+  if(loginOpen){ openOverlay('#ov-login'); return; }
+  const closeBtn = e.target.closest('[data-close]');
+  if(closeBtn){ closeOverlays(); return; }
+  const toastBtn = e.target.closest('[data-toast]');
+  if(toastBtn){ toast(toastBtn.dataset.toast); return; }
+});
+
+$('#w-play').addEventListener('click',togglePlay);
+$('#w-fav').addEventListener('click',()=>{
+  if(!S.stream){ toast('Трек из «Моей станции» уже ваш.'); return; }
+  if(S.role==='guest'){ openOverlay('#ov-login'); return; }
+  const id = S.stream;
+  const i = S.favs.indexOf(id);
+  if(i>=0){ S.favs.splice(i,1); toast('Поток убран из избранного'); }
+  else { S.favs.unshift(id); toast('Поток в избранном — рекомендации туда не подмешиваются'); }
+  renderRail(); updateWidget(); saveState();
+});
+$('#composer-send').addEventListener('click',()=>{
+  const inp = $('#composer-input');
+  handleUserText(inp.value); inp.value='';
+});
+$('#composer-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ handleUserText(e.target.value); e.target.value=''; }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+/* восстановление сохранённого состояния (роль, метафора, избранное, поток) */
+const saved = loadState();
+if(saved.role && ROLE_LABEL[saved.role]) S.role = saved.role;
+if(Array.isArray(saved.favs)){
+  const restored = saved.favs.filter(id=>stById(id));
+  if(restored.length) S.favs = restored;
+}
+setRole(S.role);                 // слой 2 по умолчанию — видно «чат + избранное» сразу
+setMet(saved.met==='band' ? 'band' : 'office', true);   // тихая инициализация метафоры
+renderCrew(); renderStFilters(); renderStGrid(); renderNoa(); renderPeople(); renderAuthors();
+playStream(saved.stream && stById(saved.stream) ? saved.stream : 'live-main', true);  // тихий старт
+applyRoute();
+bootChat();
+setTimeout(()=>document.body.classList.remove('boot'), 1500);  // каскад появления — один раз
+
+})();
+</script>
+</body>
+</html>
