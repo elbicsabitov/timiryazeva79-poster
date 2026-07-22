@@ -43,7 +43,7 @@
 [data-style="glass"] {
   --bg-base: #08070d;
   --bg-overlay: rgba(8,7,13,0.42);
-  --backdrop-image: url('assets/rutv/image 1.png');
+  --backdrop-image: url('assets/rutv/hero-lazarev-shepotom.jpg');
 
   --glass-bg: rgba(40,40,46,0.36);
   --glass-bg-strong: rgba(46,44,54,0.52);
@@ -1974,7 +1974,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
       <!-- Прямой эфир + рекламный промоблок 300×600 -->
       <div class="live-layout">
         <figure class="live-hero" id="liveHero">
-          <div class="live-screen" id="liveScreen" style="background-image: url('assets/rutv/image 1.png');">
+          <div class="live-screen" id="liveScreen" style="background-image: url('assets/rutv/hero-lazarev-shepotom.jpg');">
             <div class="live-screen-top">
               <span class="live-badge"><span class="live-pulse"></span>В эфире</span>
               <span class="live-tag" id="liveTag">RU.TV — основной эфир</span>
@@ -1982,7 +1982,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
             </div>
             <div class="live-play"><span class="live-play-btn" id="livePlayIcon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
             <div class="live-screen-meta">
-              <h1 class="live-screen-title" id="liveTitle">SHAMAN — Я русский</h1>
+              <h1 class="live-screen-title" id="liveTitle">Сергей Лазарев — Шёпотом</h1>
               <p class="live-screen-sub" id="liveSub">Лучшие русские клипы 24/7 в прямом эфире RU.TV</p>
             </div>
           </div>
@@ -2282,7 +2282,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 <!-- PIP МИНИ-ПЛЕЕР — эфир всегда рядом (картинка-в-картинке)            -->
 <!-- =================================================================== -->
 <div class="pip" id="pip" data-on="false" role="complementary" aria-label="Мини-плеер эфира">
-  <div class="pip-screen" id="pipScreen" style="background-image: url('assets/rutv/image 1.png');" title="Развернуть эфир">
+  <div class="pip-screen" id="pipScreen" style="background-image: url('assets/rutv/hero-lazarev-shepotom.jpg');" title="Развернуть эфир">
     <span class="pip-live live-badge"><span class="live-pulse"></span>LIVE</span>
     <div class="pip-actions">
       <button class="pip-act" id="pipExpand" aria-label="Развернуть эфир">
@@ -2298,7 +2298,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
       <svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
     </button>
     <div class="pip-meta">
-      <div class="pip-track" id="pipTrack">SHAMAN — Я русский</div>
+      <div class="pip-track" id="pipTrack">Сергей Лазарев — Шёпотом</div>
       <div class="pip-channel" id="pipChannel">RU.TV · Прямой эфир</div>
     </div>
     <span class="pip-points" id="pipPoints">
@@ -2339,8 +2339,8 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 // Основной эфир
 const mainLive = {
   id: 'main',
-  img: 'assets/rutv/image 1.png',
-  title: 'SHAMAN — Я русский',
+  img: 'assets/rutv/hero-lazarev-shepotom.jpg',
+  title: 'Сергей Лазарев — Шёпотом',
   sub: 'Лучшие русские клипы 24/7 в прямом эфире RU.TV',
 };
 
@@ -2403,7 +2403,7 @@ const promos = [
 
 // TV-каналы — RU.TV приоритет + партнёры РМГ. Реальные images из export rutv
 const channels = [
-  { code: 'RU', name: 'RU.TV', now: 'SHAMAN — Я русский', next: '22:00 — Супер 20', progress: 64,
+  { code: 'RU', name: 'RU.TV', now: 'Сергей Лазарев — Шёпотом', next: '22:00 — Супер 20', progress: 64,
     img: 'assets/rutv/Rectangle 4322-1.png' },
   { code: 'РР', name: 'Русское Радио ТВ', now: 'Звёздное караоке', next: '23:00 — Хит-парад', progress: 28,
     img: 'assets/rutv/Rectangle 4322-2.png' },
@@ -2419,7 +2419,7 @@ const channels = [
 
 // Новые клипы — прямоугольные карточки 16:9, три в ряд
 const newClips = [
-  { artist: 'SHAMAN', track: 'Я русский', dur: '3:24', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { artist: 'Сергей Лазарев', track: 'Шёпотом', dur: '3:01', img: 'assets/rutv/Rectangle 4322-16.png' },
   { artist: 'JONY', track: 'Комета', dur: '3:06', img: 'assets/rutv/Rectangle 4322-21.jpg' },
   { artist: 'Полина Гагарина', track: 'Кукушка', dur: '3:35', img: 'assets/rutv/Rectangle 4322-18.png' },
   { artist: 'Macan', track: 'Пополам', dur: '3:18', img: 'assets/rutv/Rectangle 4322-23.jpg' },
@@ -2442,7 +2442,7 @@ const programs = [
 
 // Супер 20 — главный чарт RU.TV
 const chart = [
-  { rank: 1,  artist: 'SHAMAN', track: 'Я русский', trend: '+3', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { rank: 1,  artist: 'Сергей Лазарев', track: 'Шёпотом', trend: '+3', img: 'assets/rutv/Rectangle 4322-16.png' },
   { rank: 2,  artist: 'JONY', track: 'Комета', trend: '+1', img: 'assets/rutv/Rectangle 4322-21.jpg' },
   { rank: 3,  artist: 'MIYAGI & Andy Panda', track: 'Минимал', trend: '−1', img: 'assets/rutv/Rectangle 4322-22.jpg' },
   { rank: 4,  artist: 'Macan', track: 'Пополам', trend: '+2', img: 'assets/rutv/Rectangle 4322-23.jpg' },
@@ -2466,7 +2466,7 @@ const chart = [
 
 // Артисты — русская сцена с реальными RU.TV artwork
 const artists = [
-  { name: 'SHAMAN', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { name: 'Сергей Лазарев', meta: 'Поп · Эстрада', img: 'assets/rutv/Rectangle 4322-16.png' },
   { name: 'Полина Гагарина', meta: 'Поп', img: 'assets/rutv/Rectangle 4322-18.png' },
   { name: 'Григорий Лепс', meta: 'Эстрада', img: 'assets/rutv/Rectangle 4322-17.png' },
   { name: 'JONY', meta: 'Поп · R&B', img: 'assets/rutv/Rectangle 4322-21.jpg' },
@@ -2490,7 +2490,7 @@ const hosts = [
 
 // Новости RU.TV (правка 603079: заголовок + подзаголовок-лид)
 const news = [
-  { tag: 'Премьера', title: 'SHAMAN представил новый клип «Я русский»', lead: 'Премьера прошла в прямом эфире — клип уже в ротации и в разделе «Видео»', time: '15 мин назад', source: 'RU.TV News', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { tag: 'Премьера', title: 'Сергей Лазарев представил новый клип «Шёпотом»', lead: 'Премьера прошла в прямом эфире — клип уже в ротации и в разделе «Видео»', time: '15 мин назад', source: 'RU.TV News', img: 'assets/rutv/Rectangle 4322-16.png' },
   { tag: 'Концерт', title: 'Звёзды Хайпа: большой концерт 6 декабря', lead: 'На сцене LIVE Арены — Лепс, Билан, Лобода и Меладзе; билеты уже в продаже', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-2.png' },
   { tag: 'Чарт', title: 'JONY возглавил Супер 20', lead: '«Комета» держит первую строчку главного чарта четвёртую неделю подряд', time: '1 ч назад', source: 'RU.TV Chart', img: 'assets/rutv/Rectangle 4322-21.jpg' },
   { tag: 'Премьера', title: 'Полевой — авторский сериал стартовал на RU.TV', lead: 'Музыкальная история о пути молодого артиста — новые серии каждую неделю', time: '2 ч назад', source: 'RU.TV', img: 'assets/rutv/image 2.png' },
@@ -2510,7 +2510,7 @@ const afisha = [
 
 // Видео — страница «Видео» (новинки = newClips)
 const videos = [
-  { tag: 'Клип', name: 'SHAMAN — Я русский', dur: '3:24', img: 'assets/rutv/Rectangle 4322-16.png' },
+  { tag: 'Клип', name: 'Сергей Лазарев — Шёпотом', dur: '3:01', img: 'assets/rutv/Rectangle 4322-16.png' },
   { tag: 'Шоу', name: 'Звёзды Хайпа · выпуск 12', dur: '52:10', img: 'assets/rutv/Rectangle 4322-2.png' },
   { tag: 'Концерт', name: 'Дискотека 2000-х · Live', dur: '1:48:20', img: 'assets/rutv/Rectangle 4322-9.png' },
   { tag: 'Клип', name: 'JONY — Комета', dur: '3:06', img: 'assets/rutv/Rectangle 4322-21.jpg' },
