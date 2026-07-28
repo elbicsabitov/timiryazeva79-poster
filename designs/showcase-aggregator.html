@@ -23,7 +23,8 @@
   --r-xs: 8px;
   --t-fast: 200ms cubic-bezier(.2,.8,.2,1);
   --t-mid: 380ms cubic-bezier(.2,.8,.2,1);
-  --sidebar-w: 216px; /* правка Стаса 07-16 (msg 602802): «еще уже меню» — минимум по самому широкому пункту «Витрина подарков» (Onest 129.9px + икона 18 + gap 14 + пад 12×2 + пад сайдбара 14×2 ≈ 214) */
+  /* Ширины сайдбара в сетке больше нет: меню спрятано в drawer (правка Марго 27.07);
+     история: 216px = «еще уже меню» Стаса 07-16 (msg 602802) */
   --content-pad: 40px;
   --promo-w: 300px;  /* рекламный слот IAB Half Page 300×600 */
   --promo-h: 600px;
@@ -330,18 +331,23 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
    ========================================================================= */
 .app {
   display: grid;
-  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-columns: 1fr; /* правка Марго 27.07 (#606696): меню слева спрятано — контент во всю ширину */
   min-height: 100dvh;
 }
 
-/* ---------- SIDEBAR ---------- */
+/* ---------- SIDEBAR — скрытый drawer (правка Марго 27.07: «меню слева прячем»).
+   Открывается бургером в шапке; разделы Каналы/Артисты/Ведущие живут тут же
+   отдельными пунктами. Один паттерн на все ширины — закрывает и мобильное меню ---------- */
 .sidebar {
-  position: sticky;
-  top: 0;
-  align-self: start;
-  height: 100dvh;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: min(280px, 86vw);
+  z-index: 70;
+  transform: translateX(-104%);
+  visibility: hidden;
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0.24, 1), visibility 0.32s;
   padding: 22px 14px 18px;
-  background: var(--glass-bg-weak);
+  background: var(--glass-bg-strong);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
   border-right: 1px solid var(--glass-border);
@@ -350,11 +356,30 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   gap: 18px;
   overflow-y: auto;
 }
+body[data-menu="open"] .sidebar {
+  transform: translateX(0);
+  visibility: visible;
+  box-shadow: 24px 0 80px rgba(0, 0, 0, 0.4);
+}
 [data-style="apple"] .sidebar {
   background: rgba(0,0,0,0.78);
   backdrop-filter: blur(40px) saturate(1.4);
   -webkit-backdrop-filter: blur(40px) saturate(1.4);
 }
+
+/* Скрим под открытым меню */
+.menu-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(0, 0, 0, 0.44);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.32s, visibility 0.32s;
+}
+body[data-menu="open"] .menu-scrim { opacity: 1; visibility: visible; }
+/* При открытом меню плавающая пилюля тем прячется — в drawer'е есть свой «Стиль» */
+body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 
 /* Официальный логотип RU.TV — SVG с ru.tv, одноцветный (цвет через currentColor).
    Правка редакции №1: брендовый розовый во ВСЕХ темах, включая Glass и Apple Dark */
@@ -421,7 +446,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 
 /* ---------- CONTENT AREA ---------- */
 .content {
-  grid-column: 2;
+  grid-column: 1;
   padding: 0 var(--content-pad) 96px;
   max-width: 100%;
   min-width: 0;
@@ -445,6 +470,33 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   -webkit-backdrop-filter: blur(30px) saturate(1.4);
 }
 .tb-spacer { flex: 1; }
+
+/* Бургер + бренд в шапке: меню спрятано (правка Марго 27.07),
+   лого переезжает из сайдбара в topbar — бренд всегда на экране */
+.tb-menu {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex: 0 0 44px;
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.tb-menu:hover { background: var(--glass-bg); }
+.tb-menu svg {
+  width: 20px; height: 20px;
+  stroke: currentColor; fill: none; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.tb-brand { display: block; cursor: pointer; margin-left: 2px; }
+.tb-logo {
+  height: 36px; width: auto; display: block;
+  color: var(--brand-pink); /* правка редакции №1: брендовый розовый во всех темах */
+  transition: opacity var(--t-fast);
+}
+.tb-brand:hover .tb-logo { opacity: 0.82; }
+
 .tb-search {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 16px;
@@ -1576,6 +1628,28 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 .program-grid .card-program-time { font-size: 9.5px; padding: 3px 8px; }
 .program-grid .card-program-meta { font-size: 11.5px; margin-top: 8px; }
 
+/* Страницы «Каналы» / «Артисты» / «Ведущие» — разделы спрятаны в меню
+   (правка Марго 27.07, #606696); карточки те же, раскладка — сетка вместо карусели */
+.channel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+.channel-grid .card-tv { flex: none; min-width: 0; }
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 26px 18px;
+}
+.artist-grid .card-artist { flex: none; }
+.artist-grid .card-artist-avatar { width: 100%; height: auto; aspect-ratio: 1 / 1; }
+.host-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 26px 18px;
+}
+.host-grid .card-host { flex: none; }
+
 .app-footer {
   margin-top: 16px;
   display: grid;
@@ -1816,7 +1890,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
    RESPONSIVE
    ========================================================================= */
 @media (min-width: 1800px) {
-  :root { --content-pad: 60px; --sidebar-w: 224px; }
+  :root { --content-pad: 60px; }
   .row-title { font-size: 26px; }
 }
 @media (max-width: 1100px) {
@@ -1832,9 +1906,11 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   .points-hero { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
-  :root { --sidebar-w: 0; --content-pad: 16px; }
-  .sidebar { display: none; }
+  :root { --content-pad: 16px; }
+  /* Сайдбар-drawer работает и на мобиле (правка Марго 27.07) — display:none снят,
+     бургер в шапке открывает то же меню (закрывает долг RUTV-128) */
   .topbar { padding: 12px 0; gap: 8px; }
+  .tb-logo { height: 30px; }
   .tb-search { min-width: 0; }
   .live-info { flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
   .live-info-actions { margin-left: 0; width: 100%; }
@@ -1875,13 +1951,18 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 <div class="app-backdrop" aria-hidden="true"></div>
 <div class="dynamic-backdrop" aria-hidden="true" id="dynamicBackdrop"></div>
 
+
 <div class="app">
 
   <!-- =================================================================== -->
   <!-- SIDEBAR                                                              -->
   <!-- =================================================================== -->
-  <aside class="sidebar">
-    <!-- Официальный логотип RU.TV (SVG из шапки ru.tv, без подписей) -->
+  <aside class="sidebar" id="sideMenu" aria-label="Меню">
+    <!-- Официальный логотип RU.TV (SVG из шапки ru.tv, без подписей).
+         Вектор задублирован инлайном здесь и в topbar НАМЕРЕННО: use/symbol на file://
+         Chromium блокирует («Unsafe attempt to load URL», уникальные origin'ы) —
+         а standalone-сборка открывается именно с file:// -->
+
     <a class="sb-brand" data-route="home" aria-label="RU.TV — на главную">
       <svg class="sb-logo" viewBox="416.11 700.231 1086.721 525.264" role="img" aria-label="RU.TV">
         <!-- Белая подложка под кругом «ТВ» (правка 603091): прорезные буквы
@@ -1894,6 +1975,7 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
           <path d="m1314.108 978.332h-36.075v33.52h36.075c6.84 0 11.95-1.428 15.258-4.283 3.306-2.857 5.035-7.141 5.035-12.703s-1.653-9.77-5.035-12.476c-3.308-2.705-8.418-4.058-15.258-4.058z"/>
           <path d="m1236.996 704.387c-141.224 0-255.614 114.466-255.614 255.614 0 141.146 114.39 255.612 255.614 255.612 141.222 0 255.612-114.466 255.612-255.612.001-141.148-114.465-255.614-255.612-255.614zm127.393 328.141c-11.124 8.341-27.057 12.476-47.876 12.476h-83.877v-126.491h-49.83v126.491h-45.395v-126.491h-49.83v-36.602h224.572c19.391 0 34.498 3.682 45.32 11.048 10.823 7.365 16.159 17.812 16.159 31.34 0 13.529-5.035 23.6-15.181 31.116-2.18 1.653-4.661 3.082-7.216 4.36 5.336 1.727 10.221 3.907 14.28 6.838 10.297 7.366 15.484 17.964 15.484 31.793s-5.562 25.854-16.686 34.122z"/>
         </g>
+        
       </svg>
     </a>
 
@@ -1913,6 +1995,20 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
       <button class="sb-item" data-route="programs">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
         Программы
+      </button>
+      <!-- Каналы / Артисты / Ведущие — с главной спрятаны отдельными пунктами меню
+           (правка Марго 27.07, #606696) -->
+      <button class="sb-item" data-route="channels">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="3"/><path d="m8 2 4 5 4-5"/></svg>
+        Каналы
+      </button>
+      <button class="sb-item" data-route="artists">
+        <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
+        Артисты
+      </button>
+      <button class="sb-item" data-route="hosts">
+        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Ведущие
       </button>
       <button class="sb-item" data-route="gifts">
         <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
@@ -1944,6 +2040,9 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
     </div>
   </aside>
 
+  <!-- Скрим под открытым меню: клик — закрыть (esc работает тоже) -->
+  <div class="menu-scrim" id="menuScrim" aria-hidden="true"></div>
+
   <!-- =================================================================== -->
   <!-- CONTENT                                                              -->
   <!-- =================================================================== -->
@@ -1951,7 +2050,26 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
 
     <header class="topbar">
       <!-- Кнопка «Прямой эфир» убрана из шапки (правка 603096);
-           вход в эфир — hero, PiP и LIVE-плитки рубрик -->
+           вход в эфир — hero, PiP и LIVE-плитки рубрик.
+           Бургер + лого: меню слева спрятано (правка Марго 27.07) -->
+      <button class="tb-menu" id="menuBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="sideMenu">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <a class="tb-brand" data-route="home" aria-label="RU.TV — на главную">
+        <svg class="tb-logo" viewBox="416.11 700.231 1086.721 525.264" role="img" aria-label="RU.TV">
+        <!-- Белая подложка под кругом «ТВ» (правка 603091): прорезные буквы
+             читаются белым во всех темах — канонный полноцвет лого -->
+        <circle cx="1236.996" cy="960.001" r="252" fill="#fff"/>
+        <g fill="currentColor">
+          <path d="m616.94 834.844c-18.263-8.042-39.834-12.101-64.862-12.101h-124.687v273.576h77.413v-71.551h47.274c25.028 0 46.673-4.133 64.862-12.326 18.263-8.192 32.242-19.766 42.013-34.798 9.77-14.957 14.656-32.995 14.656-54.115s-4.885-38.481-14.656-53.737c-9.771-15.257-23.75-26.906-42.013-34.948zm-33.22 118.223c-8.042 6.915-20.217 10.373-36.376 10.373h-42.615v-79.744h42.615c16.159 0 28.259 3.608 36.376 10.748 8.042 7.139 12.1 16.836 12.1 29.086 0 12.252-4.058 22.623-12.1 29.537z"/>
+          <path d="m866.989 822.21v48.026c0 21.345-5.035 36.602-15.031 45.696s-22.773 13.679-38.105 13.679c-16.385 0-28.786-4.586-37.127-13.679-8.343-9.094-12.477-22.923-12.477-41.412v-52.31h-77.413v56.97c0 37.279 9.169 65.688 27.584 85.229 18.337 19.541 44.718 29.313 79.142 29.313 20.593 0 38.405-4.661 53.512-14.055 7.441-4.66 14.13-10.447 19.916-17.362v11.875c0 21.872-4.809 37.88-14.43 48.101-9.621 10.147-24.877 15.258-45.696 15.258-14.881 0-29.463-2.33-43.741-7.065-14.356-4.66-27.884-11.499-40.661-20.293l-30.064 54.715c13.829 10.973 30.589 19.691 50.431 26.155 19.766 6.538 42.238 9.77 67.191 9.77 27.359 0 51.108-5.035 71.326-15.031s35.85-24.727 46.898-44.193c11.048-19.467 16.61-43.216 16.61-71.326v-148.061h-77.788z"/>
+          <path d="m1322.075 942.935c3.232-2.63 4.885-6.614 4.885-11.875s-1.653-9.244-4.885-12.025c-3.232-2.707-8.042-4.059-14.43-4.059h-29.613v31.942h29.613c6.389.001 11.198-1.352 14.43-3.983z"/>
+          <path d="m1314.108 978.332h-36.075v33.52h36.075c6.84 0 11.95-1.428 15.258-4.283 3.306-2.857 5.035-7.141 5.035-12.703s-1.653-9.77-5.035-12.476c-3.308-2.705-8.418-4.058-15.258-4.058z"/>
+          <path d="m1236.996 704.387c-141.224 0-255.614 114.466-255.614 255.614 0 141.146 114.39 255.612 255.614 255.612 141.222 0 255.612-114.466 255.612-255.612.001-141.148-114.465-255.614-255.612-255.614zm127.393 328.141c-11.124 8.341-27.057 12.476-47.876 12.476h-83.877v-126.491h-49.83v126.491h-45.395v-126.491h-49.83v-36.602h224.572c19.391 0 34.498 3.682 45.32 11.048 10.823 7.365 16.159 17.812 16.159 31.34 0 13.529-5.035 23.6-15.181 31.116-2.18 1.653-4.661 3.082-7.216 4.36 5.336 1.727 10.221 3.907 14.28 6.838 10.297 7.366 15.484 17.964 15.484 31.793s-5.562 25.854-16.686 34.122z"/>
+        </g>
+        
+        </svg>
+      </a>
       <div class="tb-spacer"></div>
       <label class="tb-search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -2005,33 +2123,44 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
         </aside>
       </div>
 
-      <!-- Каналы РМГ — поднят на место плиток подканалов; «в онлайне», не «в эфире»
-           (правка 603080: поменять местами + переименовать) -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Каналы — сейчас в онлайне</h2>
-        </div>
-        <div class="row-track" id="trackChannels"></div>
-      </section>
-
-      <!-- Промо-полоса: широкие баннеры-креативы, ротация как на dfm.ru
-           (правка 603093: промоблок после блока каналов) -->
+      <!-- Порядок главной — правка Марго 27.07 (#606696): карусель баннеров сразу
+           под окном прямого эфира, дальше Программы → Свежие новости → Супер-20.
+           Каналы / Артисты / Ведущие спрятаны отдельными пунктами меню (свои страницы),
+           детский поток исключён -->
       <section class="row-section promo-strip-section" aria-label="Промо">
         <div class="row-track" id="trackPromoStrip"></div>
       </section>
 
-      <!-- Тематические рубрики (правки 603081-84): плитки подканалов развёрнуты
-           в карусели — LIVE-поток первым, дальше клипы по тегу рубрики.
-           В проде материалы получают теги: новый материал с тегом рубрики
-           автоматически появляется в её карусели -->
+      <!-- Программы как видеоподкасты -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Детям</h2>
-          <a href="#video" class="row-link" data-route="video">Всё детское →</a>
+          <h2 class="row-title">Программы</h2>
+          <a href="#programs" class="row-link" data-route="programs">Все программы →</a>
         </div>
-        <div class="row-track" id="trackKids"></div>
+        <div class="row-track" id="trackPrograms"></div>
       </section>
 
+      <!-- Новости -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Свежие новости</h2>
+          <a href="#news" class="row-link" data-route="news">Все новости →</a>
+        </div>
+        <div class="row-track" id="trackNews"></div>
+      </section>
+
+      <!-- Супер 20: на главной — топ-10, полная двадцатка по переходу -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Супер 20</h2>
+          <a href="#chart" class="row-link" data-route="chart">Вся двадцатка →</a>
+        </div>
+        <div class="chart-grid" id="chartGrid"></div>
+      </section>
+
+      <!-- Тематические рубрики (правки 603081-84): LIVE-поток первым, дальше клипы
+           по тегу рубрики. «Детям» снята с главной вместе с детским потоком
+           (правка Марго 27.07: «абсолютно точно исключаем „Дети“») -->
       <section class="row-section">
         <div class="row-head">
           <h2 class="row-title">80-е</h2>
@@ -2055,49 +2184,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
           <a href="#video" class="row-link" data-route="video">Все клипы →</a>
         </div>
         <div class="row-track" id="trackNewClips"></div>
-      </section>
-
-      <!-- Программы как видеоподкасты -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Программы</h2>
-          <a href="#programs" class="row-link" data-route="programs">Все программы →</a>
-        </div>
-        <div class="row-track" id="trackPrograms"></div>
-      </section>
-
-      <!-- Супер 20: на главной — топ-10, полная двадцатка по переходу -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Супер 20</h2>
-          <a href="#chart" class="row-link" data-route="chart">Вся двадцатка →</a>
-        </div>
-        <div class="chart-grid" id="chartGrid"></div>
-      </section>
-
-      <!-- Новости -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Свежие новости</h2>
-          <a href="#news" class="row-link" data-route="news">Все новости →</a>
-        </div>
-        <div class="row-track" id="trackNews"></div>
-      </section>
-
-      <!-- Артисты -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Артисты</h2>
-        </div>
-        <div class="row-track" id="trackArtists"></div>
-      </section>
-
-      <!-- Ведущие -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Ведущие</h2>
-        </div>
-        <div class="row-track" id="trackHosts"></div>
       </section>
 
       <!-- Полоса брендов РМГ (правка 603088): семейство станций холдинга.
@@ -2275,6 +2361,40 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
       <div class="gift-grid" id="giftGrid"></div>
     </section>
 
+    <!-- ============================================================ -->
+    <!-- PAGE: Каналы — раздел спрятан в меню (правка Марго 27.07);    -->
+    <!-- детского канала в составе нет и не будет («исключаем Дети»)   -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="channels">
+      <div class="page-head">
+        <h2>Каналы</h2>
+        <p>Телеканалы Русской Медиагруппы — что в онлайне прямо сейчас.</p>
+      </div>
+      <div class="channel-grid" id="channelGrid"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: Артисты — раздел спрятан в меню (правка Марго 27.07)    -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="artists">
+      <div class="page-head">
+        <h2>Артисты</h2>
+        <p>Русская сцена в эфире RU.TV — от новых имён до главных звёзд.</p>
+      </div>
+      <div class="artist-grid" id="artistGrid"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: Ведущие — раздел спрятан в меню (правка Марго 27.07)    -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="hosts">
+      <div class="page-head">
+        <h2>Ведущие</h2>
+        <p>Лица канала — те, кто каждый день ведёт эфир RU.TV.</p>
+      </div>
+      <div class="host-grid" id="hostGrid"></div>
+    </section>
+
   </main>
 </div>
 
@@ -2346,10 +2466,10 @@ const mainLive = {
 
 // Тематические потоки RU.TV — рубрики главной (правки 603081-84).
 // LIVE-плитка рубрики переключает эфир; в проде материалы получают теги,
-// и новый материал с тегом рубрики сам появляется в её карусели
+// и новый материал с тегом рубрики сам появляется в её карусели.
+// Детский поток исключён целиком — правка Марго 27.07 (#606696):
+// «Из „Каналы“ абсолютно точно исключаем „Дети“»
 const subChannels = [
-  { id: 'kids',  name: 'Детям', tag: 'Мультклипы и песни', grad: 'linear-gradient(135deg,#FFC700,#E40087)',
-    title: 'Детский эфир RU.TV', sub: 'Добрые клипы и песни для самых маленьких' },
   { id: 'retro', name: '80-е',  tag: 'Золотая эстрада',    img: 'assets/rutv/Rectangle 4322-13.png',
     title: 'Эфир 80-х', sub: 'Золотая отечественная эстрада и любимые клипы' },
   { id: '2000s', name: '2000-е', tag: 'Ностальгия',        img: 'assets/rutv/Rectangle 4322-14.png',
@@ -2357,14 +2477,6 @@ const subChannels = [
 ];
 
 // Клипы рубрик — демо-наполнение по тегам (обложки-заглушки до артворков)
-const kidsClips = [
-  { artist: 'Барбарики', track: 'С днём рождения', dur: '2:58', grad: 'linear-gradient(135deg,#FFC700,#FF7A45)' },
-  { artist: 'Волшебники двора', track: 'Бибика', dur: '3:05', grad: 'linear-gradient(135deg,#21B5FF,#7a2be2)' },
-  { artist: 'Кукутики', track: 'Машинка', dur: '2:35', grad: 'linear-gradient(135deg,#FF4D8F,#FFC700)' },
-  { artist: 'Детский хор', track: 'Солнечный круг', dur: '2:40', grad: 'linear-gradient(135deg,#1a8a5a,#FFC700)' },
-  { artist: 'Мультконцерт', track: 'Песенка друзей', dur: '2:52', grad: 'linear-gradient(135deg,#E40087,#FF9D2E)' },
-  { artist: 'Непоседы', track: 'Праздник детства', dur: '3:10', grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
-];
 const clips80s = [
   { artist: 'Мираж', track: 'Музыка нас связала', dur: '3:42', grad: 'linear-gradient(135deg,#7a2be2,#E40087)' },
   { artist: 'Форум', track: 'Белая ночь', dur: '3:55', grad: 'linear-gradient(135deg,#21B5FF,#1a0d30)' },
@@ -2382,7 +2494,8 @@ const clips2000s = [
   { artist: 'Фабрика', track: 'Про любовь', dur: '3:18', grad: 'linear-gradient(135deg,#E40087,#FFC700)' },
 ];
 
-// Промо-полоса — широкие self-promo баннеры после блока каналов (правка 603093)
+// Промо-полоса — широкие self-promo баннеры; стоит сразу под окном
+// прямого эфира (правка Марго 27.07; раньше — после блока каналов, 603093)
 const promoStrip = [
   { kicker: 'Премия', title: 'Премия РУ.ТВ 2026', sub: 'Голосование открыто — выбирай любимых артистов', cta: 'Голосовать',
     grad: 'linear-gradient(115deg,#E40087,#5a0f3f)' },
@@ -2566,10 +2679,10 @@ function liveTileCard(s) {
     </button>`;
 }
 
-// Тематические карусели (правки 603081-84): LIVE-поток первым + клипы по тегу
+// Тематические карусели (правки 603081-84): LIVE-поток первым + клипы по тегу.
+// «Детям» исключена — правка Марго 27.07
 function renderThemedRows() {
   [
-    ['trackKids', 'kids', kidsClips],
     ['track80s', 'retro', clips80s],
     ['track2000s', '2000s', clips2000s],
   ].forEach(([elId, subId, clips]) => {
@@ -2630,8 +2743,9 @@ function promoStart() {
   promoTimer = setInterval(() => promoGo(promoIdx + 1), 6000);
 }
 
+// Каналы — страница «Каналы» (раздел спрятан в меню, правка Марго 27.07)
 function renderChannels() {
-  document.getElementById('trackChannels').innerHTML = channels.map(c => `
+  document.getElementById('channelGrid').innerHTML = channels.map(c => `
     <article class="card-tv" tabindex="0">
       <div class="card-tv-thumb" style="${bg(c)}">
         <span class="card-tv-live live-badge"><span class="live-pulse"></span>LIVE</span>
@@ -2706,8 +2820,9 @@ function renderChart() {
   document.getElementById('chartGridFull').innerHTML = chart.map(chartRow).join('');
 }
 
+// Артисты — страница «Артисты» (раздел спрятан в меню, правка Марго 27.07)
 function renderArtists() {
-  document.getElementById('trackArtists').innerHTML = artists.map(a => `
+  document.getElementById('artistGrid').innerHTML = artists.map(a => `
     <article class="card-artist" tabindex="0">
       <div class="card-artist-avatar" style="${bg(a)}"></div>
       <div class="card-artist-name">${a.name}</div>
@@ -2716,8 +2831,9 @@ function renderArtists() {
   `).join('');
 }
 
+// Ведущие — страница «Ведущие» (раздел спрятан в меню, правка Марго 27.07)
 function renderHosts() {
-  document.getElementById('trackHosts').innerHTML = hosts.map(h => `
+  document.getElementById('hostGrid').innerHTML = hosts.map(h => `
     <article class="card-host" tabindex="0">
       <div class="card-host-art" style="background: ${h.grad};"><span class="card-host-initials">${h.initials}</span></div>
       <div class="card-host-name">${h.name}</div>
@@ -2829,10 +2945,25 @@ const titles = {
   chart: 'Супер 20',
   news: 'Новости',
   programs: 'Программы',
+  channels: 'Каналы',
+  artists: 'Артисты',
+  hosts: 'Ведущие',
   video: 'Видео',
   gifts: 'Витрина подарков',
 };
 let route = 'home';
+
+/* Меню-drawer (правка Марго 27.07: «меню слева прячем») — бургер в шапке,
+   скрим и Esc закрывают, переход по пункту закрывает тоже */
+const menuBtn = document.getElementById('menuBtn');
+function setMenu(open) {
+  document.body.dataset.menu = open ? 'open' : 'closed';
+  menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  menuBtn.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+}
+menuBtn.addEventListener('click', () => setMenu(document.body.dataset.menu !== 'open'));
+document.getElementById('menuScrim').addEventListener('click', () => setMenu(false));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
 
 function setRoute(r) {
   if (!titles[r]) r = 'home';
@@ -2847,6 +2978,7 @@ function setRoute(r) {
   document.title = `${titles[r]} — RU.TV`;
   root.dataset.page = r;
   localStorage.setItem(ROUTE_KEY, r);
+  setMenu(false);
   window.scrollTo({ top: 0, behavior: 'smooth' });
   updatePip();
 }
@@ -3044,6 +3176,7 @@ function showToast(msg) {
 document.getElementById('sbPremia').addEventListener('click', function (e) {
   if (this.getAttribute('href') === '#') {
     e.preventDefault();
+    setMenu(false); // drawer закрывается, тост видно
     showToast('Лендинг Премии РУ.ТВ подключается — ссылка появится здесь');
   }
 });
