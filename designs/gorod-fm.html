@@ -9126,6 +9126,10 @@
        видимость/гейты (демо, бэкенда нет). Правила добавляются послойно.
        ------------------------------------------------------------------------- */
     /* --- слой 1 · гость: рейл read-only, композер закрыт до входа ---------- */
+    /* v3-правило #rail-profile{display:flex} перебивало [hidden] — профиль
+       «собран из вкуса» светился гостю в эфирном режиме (walkthrough 29.07) */
+    #rail-profile[hidden] { display: none !important; }
+    html[data-role="guest"] #rail-profile { display: none !important; }
     .rail-guest { display: none; padding: 10px 12px 12px; border-top: 1px solid var(--hairline); }
     html[data-role="guest"] .rail-guest { display: block; }
     html[data-role="guest"] #rail-input-form,
