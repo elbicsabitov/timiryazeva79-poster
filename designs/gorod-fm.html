@@ -9803,6 +9803,12 @@
           <ul class="rmg-track" id="rmg-track" role="list"><!-- cards injected by Task 3 --></ul>
         </section>
 
+        <!-- Вариант C «Стили-агенты» (Tweaks «Главная — вариант»): сетка стилей ПОД
+             каруселью станций (owner 29.07: карусель остаётся главным блоком сверху);
+             каждый тайл = обученный агент (редакции или слушателя).
+             Скрыта в вариантах A/B; контент строит GorodAgents (конец документа). -->
+        <section class="agents-home" id="agents-home" aria-labelledby="agents-home-h" hidden></section>
+
         <!-- GOROD-L4 слой 3: «Мой стрим» — личный поток, собирается диалогом с диджеем.
              Имя сознательно НЕ «Моя волна» (DEBT GHS-028: бренд Яндекс Музыки). -->
         <section class="mystream" id="mystream" aria-labelledby="mystream-title">
@@ -11617,6 +11623,10 @@
             </div>
           </header>
 
+          <!-- Вариант C «Стили-агенты»: карусели агентов ПОВЕРХ облака (облако остаётся ниже —
+               механика весов не теряется). Скрыто в вариантах A/B; строит GorodAgents. -->
+          <section class="agents-taste" id="agents-taste" aria-label="Агенты по стилям" hidden></section>
+
           <section class="ctx-strip" aria-labelledby="ctx-strip-h">
             <div class="ctx-strip-head">
               <h2 class="ctx-strip-title" id="ctx-strip-h">Контекстный старт</h2>
@@ -12973,6 +12983,14 @@
             aria-pressed="false"
             aria-label="Вариант B: боковая шторка слева"
           >Боковая шторка слева</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="home-variant"
+            data-value="agents"
+            aria-pressed="false"
+            aria-label="Вариант C: стили-агенты — сетка стилей вместо карусели, каждый стиль ведёт обученный агент"
+          >Стили-агенты</button>
         </div>
       </div>
 
@@ -13501,6 +13519,8 @@
         document.documentElement.setAttribute('data-home-variant', variant);
         updateTweakButtonStates('home-variant', variant);
         lsSet(LS_KEYS.homeVariant, variant);
+        /* вариант C «Стили-агенты» строится decoupled-модулем GorodAgents — ему нужно событие */
+        document.dispatchEvent(new CustomEvent('gorodfm-home-variant', { detail: { variant: variant } }));
       }
 
       function applyHideFlowMap(hidden) {
@@ -14667,7 +14687,9 @@
           var li = document.createElement('li'); li.className = 'mystream-track';
           li.innerHTML = '<button type="button" class="mystream-play" aria-label="Слушать «' + esc(tr.t) + '» (демо)">' + PLAY_SVG + '</button>' +
             '<div class="mystream-track-meta"><div class="mystream-track-title">' + esc(tr.t) + ' — ' + esc(tr.a) + '</div>' +
-            '<div class="mystream-track-why">' + esc(tr.why) + '</div></div>' +
+            '<div class="mystream-track-why">' + esc(tr.why) + '</div>' +
+            /* провенанс: трек реально подобран матчером по этому описанию — честный источник, не выдумка */
+            '<div class="mystream-track-prov">из твоего запроса: «' + esc(s.desc || '') + '» · демо</div></div>' +
             '<button type="button" class="mystream-notmine" aria-label="Не моё: «' + esc(tr.t) + '» — заменить и поучиться">Не моё</button>';
           li.querySelector('.mystream-play').addEventListener('click', function () { playDemo(tr); });
           li.querySelector('.mystream-notmine').addEventListener('click', function () {
@@ -15599,6 +15621,31 @@
           'Медленная песня прощает слушателю всё, кроме фальши: поэтому её почти не правят в студии.',
           'Такие вещи ставят между быстрыми не для отдыха, а чтобы вернуть тебе внимание.',
           'Спроси, о чём эта песня на самом деле — разберу текст.'
+        ] },
+
+      /* ---- Агенты слушателей (слой 4 × вариант C «Стили-агенты») ----------------
+         Опубликованная «школа» автора: НЕ станция (в карусель не попадает — фильтр
+         в STATION_TO_ROOM ниже), но комната строится тем же циклом ROOMS. Имена
+         консистентны полке «Станции слушателей». Реплики без {t}/{a}: у авторского
+         потока нет станционного now-playing; говорим о правилах школы, факты про
+         реальных артистов не выдумываем (канон GHS-023). */
+      'a-matvey': { dj: 'Ночная смена', c: '#caa6ff', station: 'агент Матвея', author: true,
+        about: 'поздний поток: меньше событий, больше воздуха',
+        lines: [
+          'Я — агент Матвея: он собрал меня из своих поздних вечеров. Ставлю то, что не будит.',
+          'Правило школы: после полуночи ничего резче девяноста ударов. Матвей проверил на себе.',
+          'Если трек просит внимания — он не отсюда. Ночью музыка идёт фоном, а не аттракционом.',
+          'Матвей учил меня кнопкой «Не моё»: всё, что дёргало, ушло. Осталось ровное.',
+          'Спроси, почему поток такой тихий — расскажу, как Матвей его собирал.'
+        ] },
+      'a-sonya': { dj: 'Бег по утрам', c: '#3fb6a8', station: 'агент Сони', author: true,
+        about: 'ровный темп на 40 минут — под движение',
+        lines: [
+          'Я — агент Сони: собран из её утренних пробежек. Держу ровный темп без провалов.',
+          'Правило школы: темп не ниже ста двадцати, чтобы шаг не сбивался. Соня отбирала на дистанции.',
+          'Плотный бит здесь не ради громкости — он держит ритм движения.',
+          'Соня убирала всё, под что хочется остановиться. Осталось то, что несёт вперёд.',
+          'Спроси, как собран утренний поток — объясню правила Сони.'
         ] }
     };
 
@@ -15626,22 +15673,26 @@
     var ROOMS = {};
     Object.keys(DJS).forEach(function (id) {
       var d = DJS[id];
+      var voice = d.author ? 'агент слушателя' : 'ИИ-диджей';
       ROOMS[id] = {
-        id: id, pin: '🎙', dj: d.dj, name: d.dj + ' · ' + d.station, station: id, c: d.c,
-        ctxTitle: d.dj + ' · ИИ-диджей «' + d.station + '»',
-        ctxWhy: 'Рассказывает про то, что играет прямо сейчас — ' + d.about + '. <b>Демо: реплики сценарные.</b>',
-        presence: '1 240 слушают', slow: 'Факт каждые ~10 сек',
+        id: id, pin: d.author ? '✦' : '🎙', dj: d.dj, name: d.dj + ' · ' + d.station, station: id, c: d.c,
+        ctxTitle: d.author ? d.dj + ' · школа слушателя (' + d.station + ')' : d.dj + ' · ИИ-диджей «' + d.station + '»',
+        ctxWhy: d.author
+          ? 'Агент обучен слушателем на своём потоке — ' + d.about + '. <b>Демо: реплики сценарные.</b>'
+          : 'Рассказывает про то, что играет прямо сейчас — ' + d.about + '. <b>Демо: реплики сценарные.</b>',
+        presence: d.author ? '214 слушают' : '1 240 слушают', slow: 'Факт каждые ~10 сек',
         // первые две реплики комнаты = первые две из пула (подставятся под now-playing при сиде)
         peers: [
-          { h: d.dj + ' · ИИ-диджей', c: d.c, tpl: d.lines[0] },
-          { h: d.dj + ' · ИИ-диджей', c: d.c, tpl: d.lines[1] }
+          { h: d.dj + ' · ' + voice, c: d.c, tpl: d.lines[0] },
+          { h: d.dj + ' · ' + voice, c: d.c, tpl: d.lines[1] }
         ]
       };
     });
-    /* станция → комната: 1:1 (id цифровой станции = id комнаты её диджея) */
+    /* станция → комната: 1:1 (id цифровой станции = id комнаты её диджея).
+       Агенты слушателей (author) — комнаты БЕЗ станции: в карту станций не попадают. */
     var STATION_TO_ROOM = {};
     var STATION_LABEL = {};
-    Object.keys(DJS).forEach(function (id) { STATION_TO_ROOM[id] = id; STATION_LABEL[id] = DJS[id].station; });
+    Object.keys(DJS).forEach(function (id) { if (DJS[id].author) return; STATION_TO_ROOM[id] = id; STATION_LABEL[id] = DJS[id].station; });
     var HOME_ROOM = 'gorod';        // станция по умолчанию в карусели = Город ФМ
     var store = {};                 // roomId → {html, scrollTop, draft, mode, seeded}
     var currentRoom = HOME_ROOM;
@@ -15803,6 +15854,18 @@
       }
       document.addEventListener('gorod:tune', function (e) { followStationSoon(e && e.detail && e.detail.id); });
       document.addEventListener('gorod:activecard', function (e) { followStationSoon(e && e.detail && e.detail.id); });
+
+      /* Вариант C «Стили-агенты»: тап по тайлу агента слушателя открывает ЕГО комнату.
+         Станции у агента нет — gorod:tune не для него, отдельное событие. Дебаунс не
+         нужен (одиночный явный тап), но отменяем отложенный follow станции, чтобы он
+         не перебил комнату агента через 650 мс. */
+      document.addEventListener('gorod:agent-room', function (e) {
+        var id = e && e.detail && e.detail.id;
+        if (!id || !ROOMS[id]) return;
+        clearTimeout(followT); followPending = null;
+        railEnsureOpen();
+        switchRoom(id);
+      });
 
       /* Диджей реагирует на смену трека (⏭, карточка витрины): в демо правду о том,
          что играет, знает мини-плеер — за ним и наблюдаем. */
@@ -16111,8 +16174,19 @@
       var lbl = document.createElement('div'); lbl.className = 'rail-rooms-label'; lbl.textContent = 'Диджеи станций · демо'; el.appendChild(lbl);
       Object.keys(ROOMS).forEach(function (id) {
         if (id === SESSION_ROOM || id === (playingRoom || HOME_ROOM)) return;   // уже приколот сверху
+        if (DJS[id] && DJS[id].author) return;               // агенты слушателей — своей группой ниже
         item(ROOMS[id], false);
       });
+      /* Агенты слушателей (слой 4): опубликованные «школы» — отдельной группой,
+         чтобы не выдавать их за диджеев станций. */
+      var authorIds = Object.keys(ROOMS).filter(function (id) {
+        return DJS[id] && DJS[id].author && id !== (playingRoom || HOME_ROOM);
+      });
+      if (authorIds.length) {
+        var adiv = document.createElement('div'); adiv.className = 'rail-rooms-divider'; el.appendChild(adiv);
+        var albl = document.createElement('div'); albl.className = 'rail-rooms-label'; albl.textContent = 'Агенты слушателей · демо'; el.appendChild(albl);
+        authorIds.forEach(function (id) { item(ROOMS[id], false); });
+      }
     }
 
     /* snapshot current room state before leaving (non-destructive scroll/draft/mode) */
@@ -16400,6 +16474,14 @@
         .then(function () { setChips(DEFAULT_CHIPS); });
     }
     window.GorodStreamBuilder = { start: builderStart, advice: authorAdvice };
+    /* Вариант C «Стили-агенты»: read-only мост к данным диджеев/агентов — single source
+       of truth для тайлов (имя, цвет, школа), чтобы GorodAgents не дублировал DJS. */
+    window.GorodDJs = {
+      get: function (id) {
+        var d = DJS[id];
+        return d ? { id: id, dj: d.dj, c: d.c, station: d.station, about: d.about, author: !!d.author } : null;
+      }
+    };
 
     /* ---- GOROD-L4: роль-слой в рейле — вход гостя + реакция диджея на смену слоя ---- */
     function wireRoleLayer() {
@@ -16443,7 +16525,10 @@
       var st = store[currentRoom] || (store[currentRoom] = {});
       if (st.seeded) return; st.seeded = true;
       var r = ROOMS[currentRoom];
-      if (r.dj) {
+      if (r.dj && DJS[r.id] && DJS[r.id].author) {
+        /* у школы слушателя нет станционного now-playing — не подставляем заглушку «трек — артист» */
+        addRoomDivider('✦ ' + r.dj + ' — школа слушателя (' + DJS[r.id].station + ') · демо');
+      } else if (r.dj) {
         var np = npFor(r.id);
         addRoomDivider('🎙 ' + r.dj + ' ведёт «' + DJS[r.id].station + '» · сейчас «' + np.t + '» — ' + np.a + ' · демо');
       } else {
@@ -16460,7 +16545,9 @@
       var m = document.createElement('div'); m.className = 'ai-msg ai-msg--mine';
       var b = document.createElement('div'); b.className = 'ai-msg-bubble'; b.textContent = text;
       var s = document.createElement('div'); s.className = 'ai-msg-sent';
-      s.textContent = (ROOMS[currentRoom] && ROOMS[currentRoom].dj) ? 'вопрос диджею · 🟢' : 'отправлено всем · 🟢';
+      s.textContent = (ROOMS[currentRoom] && ROOMS[currentRoom].dj)
+        ? ((DJS[currentRoom] && DJS[currentRoom].author) ? 'вопрос агенту · 🟢' : 'вопрос диджею · 🟢')
+        : 'отправлено всем · 🟢';
       m.appendChild(b); m.appendChild(s); msgs.appendChild(m); capLog(); scrollDown(); return m;
     }
 
@@ -16474,7 +16561,7 @@
     function dripActive() { return !!(msgs && currentRoom && ROOMS[currentRoom] && (ROOMS[currentRoom].peers || currentRoom === SESSION_ROOM)); }
     function dripNearBottom() { return !!(msgs && (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight) < 90); }
     function scheduleDrip(ms) { clearTimeout(dripTimer); dripTimer = setTimeout(dripTick, ms); }
-    function djHandle(r) { return r.dj + ' · ИИ-диджей'; }
+    function djHandle(r) { return r.dj + ((DJS[r.id] && DJS[r.id].author) ? ' · агент слушателя' : ' · ИИ-диджей'); }
 
     /* одна реплика диджея: пузырь «печатает…» → текст. text=null → следующий факт из пула станции */
     function djSpeak(text, thenMs) {
@@ -21471,6 +21558,533 @@
     };
   })();
   </script>
+<style>
+  /* =========================================================================
+     Вариант C «Стили-агенты» (Tweaks «Главная — вариант», spec 2026-07-29)
+     Higgsfield-паттерн: стиль = крупная карточка с превью, включается в 1 тап.
+     Грид на главной ЗАМЕНЯЕТ карусель станций; на «Моём вкусе» ряды агентов
+     встают ПОВЕРХ облака (облако остаётся). Живёт только при
+     html[data-home-variant="agents"]; A/B-варианты не тронуты.
+     ========================================================================= */
+  /* Карусель станций ОСТАЁТСЯ главным блоком сверху (owner 29.07: «сверху главный блок
+     каруселью как в до этого дизе»), грид стилей-агентов встаёт под ней. */
+  /* вариант C не пользуется шторками A/B — их вариантные правила сюда не дотягиваются,
+     а базовый .home-bottom-sheet видим по умолчанию (вскрылось на #/taste) */
+  [data-home-variant="agents"] .home-bottom-sheet,
+  [data-home-variant="agents"] .home-side-drawer,
+  [data-home-variant="agents"] .home-panel-backdrop { display: none; }
+
+  .agents-home { margin-top: 30px; }  /* отступ от карусели; топбар отбит самой каруселью */
+
+  /* Ритм отступов — 8pt: шапка 8 → группа (24 сверху / 12 снизу) → грид gap 16 */
+  .agents-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 8px; }
+  .agents-head-title { font-family: 'Onest', sans-serif; font-size: 22px; font-weight: 800; color: var(--text-pri); margin: 0; }
+  .agents-head-note { font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 500; color: var(--text-sec); }
+
+  .agents-group-label { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 24px 0 12px;
+    font-family: 'Onest', sans-serif; font-size: 15px; font-weight: 800; color: var(--text-pri); }
+  .agents-group-label small { font-size: 12px; font-weight: 500; color: var(--text-sec); }
+  .agents-head + .agents-group-label { margin-top: 16px; }
+
+  .agents-grid { list-style: none; margin: 0; padding: 0; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+
+  .agent-tile { position: relative; }
+  .agent-tile-face { display: block; width: 100%; aspect-ratio: 1; position: relative; overflow: hidden;
+    border: 1px solid var(--hairline); border-radius: var(--r-xl); background: var(--surface-2);
+    cursor: pointer; padding: 0; text-align: left; transition: border-color var(--t-fast), transform var(--t-fast); }
+  .agent-tile-face:hover { border-color: var(--border-strong); }
+  .agent-tile-face:active { transform: scale(.98); }
+  .agent-tile-face:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+  .agent-tile[aria-current="true"] .agent-tile-face { border-color: var(--brand-blue-light); }
+
+  .agent-tile-art { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .agent-tile-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .agent-tile-mono { font-family: 'Onest', sans-serif; font-size: 64px; font-weight: 800; opacity: .5; }
+  /* скрим только над фото — чтобы белый текст читался в обеих темах */
+  .agent-tile-scrim { position: absolute; inset: 55% 0 0 0; display: none;
+    background: linear-gradient(180deg, rgba(11,12,15,0) 0%, rgba(11,12,15,.78) 78%); }
+  .agent-tile--photo .agent-tile-scrim { display: block; }
+  .agent-tile--photo .agent-tile-style, .agent-tile--photo .agent-tile-sub, .agent-tile--photo .agent-tile-np { color: #fff; }
+  .agent-tile--photo .agent-tile-sub, .agent-tile--photo .agent-tile-np { color: rgba(255,255,255,.78); }
+
+  .agent-tile-text { position: absolute; left: 14px; right: 14px; bottom: 12px; display: flex; flex-direction: column; gap: 3px;
+    padding-right: 74px; }  /* не заезжаем под кнопку «почему?» в правом нижнем углу */
+  .agent-tile-style { font-family: 'Onest', sans-serif; font-size: 21px; font-weight: 800; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--text-pri); line-height: 1.05; }
+  .agent-tile-sub { font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--text-sec); }
+  .agent-tile-np { font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 500; color: var(--text-ter);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .agent-tile-badge { position: absolute; top: 12px; left: 12px; z-index: 2; padding: 4px 9px;
+    border-radius: var(--r-pill); background: rgba(11,12,15,.62); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: rgba(255,255,255,.85); }
+  .agent-tile-live { position: absolute; top: 12px; right: 12px; z-index: 2; padding: 4px 9px;
+    border-radius: var(--r-pill); background: var(--brand-blue-light);
+    font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: #fff; }
+  .agent-tile[aria-current="true"] .agent-tile-badge { left: 12px; }
+
+  /* «почему?» — вход в единый поповер причины+провенанса */
+  .agent-why { position: absolute; z-index: 3; right: 10px; bottom: 10px; padding: 5px 10px; border: 1px solid var(--hairline);
+    border-radius: var(--r-pill); background: rgba(11,12,15,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.85); cursor: pointer; }
+  .agent-why::before { content: ''; position: absolute; inset: -9px; }  /* hit-зона: 26px кнопка + 2×9 = 44 (HARD GATE моб.) */
+  .agent-why:hover { background: rgba(11,12,15,.8); color: #fff; }
+  .agent-why:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+  .agent-why[aria-expanded="true"] { background: var(--brand-blue-light); border-color: transparent; color: #fff; }
+
+  /* ghost-тайл «Свой агент» (роль-гейт: конструктор — на подписке) */
+  .agent-tile--ghost .agent-tile-face { border-style: dashed; border-color: var(--border-strong); background: transparent; }
+  .agent-tile--ghost .agent-tile-face:hover { border-color: var(--brand-blue-light); }
+  .agent-ghost-plus { position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Onest', sans-serif; font-size: 44px; font-weight: 300; color: var(--text-sec); }
+  .agent-tile--ghost .agent-tile-style { text-transform: none; letter-spacing: 0; font-size: 17px; }
+
+  /* ---- «Найти агента»: фильтр-каталог внизу главной ---- */
+  .agents-find { margin-top: 34px; }
+  .agents-find-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; }
+  .agents-find-tab { padding: 8px 14px; border: 1px solid var(--hairline); border-radius: var(--r-pill);
+    background: var(--surface-1); font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--text-sec); cursor: pointer; transition: background var(--t-fast), color var(--t-fast); }
+  .agents-find-tab:hover { color: var(--text-pri); background: var(--surface-2); }
+  .agents-find-tab:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+  .agents-find-tab[aria-pressed="true"] { background: var(--brand-blue-light); border-color: transparent; color: #fff; }
+  .agents-find-chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+  .agents-find-chip { padding: 6px 12px; border: 1px solid var(--hairline); border-radius: var(--r-pill);
+    background: transparent; font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 500;
+    color: var(--text-sec); cursor: pointer; transition: border-color var(--t-fast), color var(--t-fast); }
+  .agents-find-chip:hover { color: var(--text-pri); border-color: var(--border-strong); }
+  .agents-find-chip:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+  .agents-find-chip[aria-pressed="true"] { border-color: var(--brand-blue-light); color: var(--accent-text); font-weight: 600; }
+
+  /* ---- alt-«Мой вкус»: ряды-карусели агентов (поверх облака) ---- */
+  .agents-taste { display: flex; flex-direction: column; gap: 26px; margin: 26px 0 6px; }
+  .agents-shelf-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; }
+  .agents-shelf-title { font-family: 'Onest', sans-serif; font-size: 17px; font-weight: 800; color: var(--text-pri); margin: 0; }
+  .agents-shelf-sub { font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-sec); }
+  .agents-shelf-track { list-style: none; margin: 0; padding: 2px; display: flex; gap: 14px; overflow-x: auto;
+    scroll-snap-type: x proximity; scrollbar-width: none; }
+  .agents-shelf-track::-webkit-scrollbar { display: none; }
+  .agent-card { position: relative; flex: 0 0 168px; scroll-snap-align: start; }
+  .agent-card-face { display: block; width: 100%; border: none; background: none; padding: 0; cursor: pointer; text-align: left; border-radius: var(--r-lg); }
+  .agent-card-face:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+  .agent-card-art { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 1;
+    border-radius: var(--r-lg); border: 1px solid var(--hairline); background: var(--surface-2); overflow: hidden;
+    transition: border-color var(--t-fast); }
+  .agent-card-face:hover .agent-card-art { border-color: var(--border-strong); }
+  .agent-card[aria-current="true"] .agent-card-art { border-color: var(--brand-blue-light); }
+  .agent-card-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .agent-card-mono { font-family: 'Onest', sans-serif; font-size: 40px; font-weight: 800; opacity: .5; }
+  .agent-card-body { display: block; padding: 10px 2px 0; }
+  .agent-card-title { display: block; font-family: 'Onest', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-pri); }
+  .agent-card-meta { display: block; font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 500; color: var(--text-sec); margin-top: 2px; }
+  /* причина видна сразу (экран рекомендаций); полный провенанс — в «почему?» */
+  .agent-card-why { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    margin-top: 6px; font-family: 'Onest', sans-serif; font-size: 12px; font-weight: 500; line-height: 1.35;
+    color: var(--accent-text); text-wrap: pretty; }
+  /* на карточке причина видна текстом — кнопка «почему?» уходит на арт, чтобы не лечь поверх текста;
+     бейдж «от слушателя» — в противоположный угол арта (на узкой карточке им тесно в одной строке) */
+  .agent-card .agent-why { top: 8px; right: 8px; bottom: auto; }
+  .agent-card .agent-tile-badge { top: auto; bottom: 8px; left: 8px; }
+
+  /* ---- единый поповер «почему + из какой волны» (канон why-pop, non-modal) ---- */
+  .agent-pop { position: fixed; z-index: 120; width: min(300px, calc(100vw - 24px));
+    background: var(--surface-2); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+    border: 1px solid var(--border-strong); border-radius: var(--r-lg); padding: 13px 14px;
+    box-shadow: 0 18px 44px rgba(0,0,0,.35);
+    opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity var(--t-fast), transform var(--t-fast); }
+  .agent-pop.is-open { opacity: 1; transform: none; pointer-events: auto; }
+  .agent-pop-why { font-family: 'Onest', sans-serif; font-size: 13.5px; font-weight: 600; color: var(--text-pri); line-height: 1.4; }
+  .agent-pop-wave { font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 500; color: var(--text-sec); line-height: 1.4; margin-top: 7px;
+    padding-top: 8px; border-top: 1px solid var(--hairline); }
+  .agent-pop-wave b { color: var(--accent-text); font-weight: 700; }
+  .agent-pop-demo { display: inline-block; margin-top: 9px; padding: 3px 8px; border-radius: var(--r-pill);
+    background: var(--surface-3); font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 600; color: var(--text-sec); }
+
+  /* провенанс-строка трека «Моего стрима» (спека: у why добавить «из какой волны») */
+  .mystream-track-prov { font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 500; color: var(--text-ter); margin-top: 2px; }
+
+  @media (max-width: 768px) {
+    .agents-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .agent-tile-style { font-size: 18px; }
+    .agent-card { flex-basis: 148px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .agent-tile-face, .agent-pop, .agent-card-art { transition: none; }
+  }
+</style>
+<script>
+  /* =========================================================================
+     GorodAgents — вариант C «Стили-агенты» (spec 2026-07-29, Higgsfield-паттерн).
+     Decoupled-модуль: строит грид стилей на главной и ряды агентов на «Моём вкусе».
+       • Редакция: стиль ↔ цифровая станция 1:1 — агент уже существует (DJS/ROOMS,
+         GHS-020). Тап = GorodRail.center + gorod:tune (канон «Под настроение»).
+       • Слушатели: опубликованные «школы» (слой 4, консистентно полке «Станции
+         слушателей»). Тап = демо-трек в мини-плеер (канон playDemo) + gorod:agent-room
+         (рейл откроет комнату агента).
+       • «почему + из какой волны» — единый поповер; ВСЕ причины сценарные и
+         помечены «демо» (канон GHS-023: факты не выдумываем).
+     ========================================================================= */
+  (function () {
+    'use strict';
+
+    /* стиль/школа/причина/«волна» — сценарный слой поверх живых данных станций;
+       имена и цвета агентов НЕ дублируем — тянем из GorodDJs (single source) */
+    var ED = [
+      /* artIdx: у станции gorod дефолтный арт — шоу-тайл с чужим FM-брендом (GHS-024) → нейтральный из пула */
+      { st: 'gorod',  style: 'Город',   school: 'городская школа редакции', artIdx: 8, why: 'ровный вечерний пульс — совпадает с твоими будними вечерами', wave: 'Город ФМ, будни вечером, ~40 мин' },
+      { st: 'pop',    style: 'Поп',     school: 'песенная школа редакции',  why: 'цепкие припевы — ты дослушиваешь их до конца',                wave: 'Город Поп, выходные днём, ~25 мин' },
+      { st: 'disco',  style: 'Диско',   school: 'танцевальная школа',       why: 'ровный грув 120–128 — под твои дороги',                       wave: 'Город Диско, пятница вечер, ~35 мин' },
+      { st: 'rock',   style: 'Рок',     school: 'рок-школа редакции',       why: 'гитары и широкий припев — твои самые частые лайки',           wave: 'Город Рок, вторник вечер, ~40 мин' },
+      { st: 'hiphop', style: 'Хип-хоп', school: 'бит-школа редакции',       why: 'плотный бит — твой спорт-паттерн',                            wave: 'Город Хип-хоп, утро в зале, ~30 мин' },
+      { st: 'chill',  style: 'Чил',     school: 'школа воздуха и пауз',     why: 'меньше событий в звуке — твой поздний режим',                 wave: 'Город Chill, после 23:00, ~50 мин' },
+      { st: 'lirika', style: 'Лирика',  school: 'вокальная школа редакции', why: 'голос и динамика — ты возвращаешься к балладам',              wave: 'Город Лирика, воскресенье утром, ~20 мин' }
+    ];
+    /* треки авторских потоков — из живущих в приложении (BUILD_POOL / станции), канон GHS-032 */
+    var AUTHORS = [
+      { id: 'a-matvey', style: 'Ночь', artIdx: 0, why: 'после полуночи ты выбираешь тихое — правило №1 этой школы', wave: 'Город Chill, ночью, ~30 мин', track: { t: 'Пачка сигарет', a: 'Кино' } },
+      { id: 'a-sonya',  style: 'Темп', artIdx: 3, why: 'ровные 120+ ударов — как твои утренние отрезки',            wave: 'Город Хип-хоп, утром, ~40 мин', track: { t: 'Районы-кварталы', a: 'Звери' } }
+    ];
+
+    var built = { home: false, taste: false };
+    var activeId = null;
+
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function isOn() { return (document.documentElement.getAttribute('data-home-variant') || 'fab') === 'agents'; }
+    function photos() { return !!(window.GOROD_ART && GOROD_ART.on()); }
+    function dj(id) { return (window.GorodDJs && GorodDJs.get(id)) || null; }
+    function npLine(st) {
+      var np = (window.GorodStations && GorodStations.nowPlaying) ? GorodStations.nowPlaying(st) : null;
+      return np && np.artist ? np.artist + ' — ' + np.title : '';
+    }
+
+    /* ---- данные одного тайла (общая форма для ED и AUTHORS) ---- */
+    function agents() {
+      var list = [];
+      ED.forEach(function (e) {
+        var d = dj(e.st) || { dj: '', c: '#5168FC', station: '' };
+        list.push({ id: e.st, kind: 'ed', style: e.style, name: d.dj, school: e.school, c: d.c, artIdx: e.artIdx,
+          sub: d.dj + ' · ' + e.school, why: e.why, wave: e.wave, np: npLine(e.st) });
+      });
+      AUTHORS.forEach(function (a) {
+        var d = dj(a.id) || { dj: '', c: '#5168FC', station: '' };
+        list.push({ id: a.id, kind: 'author', style: a.style, name: d.dj, school: d.station, c: d.c, artIdx: a.artIdx,
+          sub: d.dj + ' · ' + d.station, why: a.why, wave: a.wave, np: a.track.a + ' — ' + a.track.t, track: a.track });
+      });
+      return list;
+    }
+    function byId(id) { var m = null; agents().forEach(function (a) { if (a.id === id) m = a; }); return m; }
+
+    /* ---- превью: у стиль-агентов фото ВСЕГДА (owner 29.07: «везде картинки поставь») —
+       Higgsfield-паттерн живёт на превью; тянем из существующих ассет-пулов GOROD_ART.
+       Тихий tint цвета агента + буква — только fallback, если GOROD_ART недоступен. ---- */
+    function agentArt() { return !!(window.GOROD_ART && typeof GOROD_ART.station === 'function'); }
+    function artHTML(a, i, monoCls) {
+      if (agentArt()) {
+        var src = (a.artIdx != null) ? GOROD_ART.shelf('agents', a.name, a.artIdx)
+          : (a.kind === 'ed' ? GOROD_ART.station(a.id) : GOROD_ART.shelf('agents', a.name, i + 3));
+        return '<img src="' + esc(src) + '" alt="" loading="lazy">';
+      }
+      return '<span class="' + monoCls + '" style="color:' + esc(a.c) + '" aria-hidden="true">' + esc((a.style || '?').charAt(0).toUpperCase()) + '</span>';
+    }
+    function tintStyle(a) { return agentArt() ? '' : ' style="background:linear-gradient(165deg,' + esc(a.c) + '22 0%, var(--surface-2) 60%)"'; }
+
+    /* ---- грид на главной ---- */
+    function tileHTML(a, i) {
+      var photo = agentArt();
+      return '<li class="agent-tile' + (photo ? ' agent-tile--photo' : '') + '" data-agent="' + esc(a.id) + '">' +
+        '<button type="button" class="agent-tile-face"' + tintStyle(a) +
+          ' aria-label="Слушать стиль ' + esc(a.style) + ' — ведёт ' + esc(a.name) + ', ' + esc(a.school) + '">' +
+          '<span class="agent-tile-art" aria-hidden="true">' + artHTML(a, i, 'agent-tile-mono') + '</span>' +
+          '<span class="agent-tile-scrim" aria-hidden="true"></span>' +
+          (a.kind === 'author' ? '<span class="agent-tile-badge">от слушателя</span>' : '') +
+          '<span class="agent-tile-live" hidden>В эфире</span>' +
+          '<span class="agent-tile-text">' +
+            '<span class="agent-tile-style">' + esc(a.style) + '</span>' +
+            '<span class="agent-tile-sub">' + esc(a.sub) + '</span>' +
+            (a.np ? '<span class="agent-tile-np">' + esc(a.np) + '</span>' : '') +
+          '</span>' +
+        '</button>' +
+        '<button type="button" class="agent-why" aria-controls="agent-pop" aria-expanded="false"' +
+          ' aria-label="Почему стиль ' + esc(a.style) + ' рекомендуется — и из какой волны">почему?</button>' +
+      '</li>';
+    }
+    function ghostSub() {
+      var r = (window.GorodRole && GorodRole.get()) || 'guest';
+      if (r === 'guest') return 'после входа и подписки · демо';
+      if (r === 'account') return 'на подписке · демо';
+      return 'соберём диалогом с диджеем';
+    }
+    function ghostHTML() {
+      return '<li class="agent-tile agent-tile--ghost" data-agent-ghost>' +
+        '<button type="button" class="agent-tile-face" aria-label="Обучить своего агента — как «Мой стрим», диалогом (демо)">' +
+          '<span class="agent-ghost-plus" aria-hidden="true">＋</span>' +
+          '<span class="agent-tile-text">' +
+            '<span class="agent-tile-style">Свой агент</span>' +
+            '<span class="agent-tile-sub" data-ghost-sub>' + esc(ghostSub()) + '</span>' +
+          '</span>' +
+        '</button>' +
+      '</li>';
+    }
+    function buildHome() {
+      var mount = $('agents-home'); if (!mount) return;
+      var list = agents();
+      var ed = list.filter(function (a) { return a.kind === 'ed'; });
+      var au = list.filter(function (a) { return a.kind === 'author'; });
+      /* owner 29.07: «по группам разбить визуально» — редакция и слушатели отдельными
+         грид-секциями; ghost «Свой агент» логично живёт в группе слушателей */
+      mount.innerHTML =
+        '<div class="agents-head">' +
+          '<h2 class="agents-head-title" id="agents-home-h">Стили</h2>' +
+          '<span class="agents-head-note">каждый стиль ведёт обученный агент · в демо — ' + list.length + ', в рабочей версии — тысячи школ</span>' +
+        '</div>' +
+        '<div class="agents-group-label">Школы редакции <small>семь стилей — семь агентов эфира</small></div>' +
+        '<ul class="agents-grid" role="list">' + ed.map(tileHTML).join('') + '</ul>' +
+        '<div class="agents-group-label">От слушателей <small>публикуют свои школы из «Моего стрима»</small></div>' +
+        '<ul class="agents-grid" role="list">' + au.map(tileHTML).join('') + ghostHTML() + '</ul>' +
+        /* owner 29.07: «внизу на главной — искать обученные станции по артистам, по стилям, от людей» */
+        '<section class="agents-find" aria-labelledby="agents-find-h">' +
+          '<div class="agents-shelf-head">' +
+            '<h3 class="agents-shelf-title" id="agents-find-h">Найти агента</h3>' +
+            '<span class="agents-shelf-sub">по артисту в эфире, по стилю или от людей · демо</span>' +
+          '</div>' +
+          '<div class="agents-find-tabs" role="group" aria-label="Ось поиска агентов">' +
+            '<button type="button" class="agents-find-tab" data-ftab="artists" aria-pressed="true">По артистам</button>' +
+            '<button type="button" class="agents-find-tab" data-ftab="styles" aria-pressed="false">По стилям</button>' +
+            '<button type="button" class="agents-find-tab" data-ftab="people" aria-pressed="false">От людей</button>' +
+          '</div>' +
+          '<div class="agents-find-chips" id="agents-find-chips" role="group" aria-label="Значения фильтра"></div>' +
+          '<ul class="agents-shelf-track" id="agents-find-results" role="list" aria-label="Найденные агенты"></ul>' +
+        '</section>';
+      built.home = true;
+      renderFind();
+      mark(activeId || (window.GorodStations && GorodStations.active) || null);
+    }
+
+    /* ---- «Найти агента»: фильтр-каталог по честным данным ----------------------
+       Артисты собираются из реального now-playing каждого агента (ничего не
+       выдумываем: артист «находит» тех агентов, в чьём потоке он звучит сейчас). */
+    var findTab = 'artists', findVal = null;
+    function findAxes() {
+      var list = agents();
+      var artists = {};                     // артист -> [{id, np}]
+      list.forEach(function (a) {
+        if (!a.np) return;
+        var artist = a.np.split(' — ')[0];
+        (artists[artist] = artists[artist] || []).push(a.id);
+      });
+      var styles = [];
+      list.forEach(function (a) { if (styles.indexOf(a.style) === -1) styles.push(a.style); });
+      var people = list.filter(function (a) { return a.kind === 'author'; }).map(function (a) { return { label: a.school, id: a.id }; });
+      return { artists: artists, styles: styles, people: people, list: list };
+    }
+    function findClone(a, why) {
+      var c = {}; for (var k in a) if (Object.prototype.hasOwnProperty.call(a, k)) c[k] = a[k];
+      if (why) c.why = why;
+      return c;
+    }
+    function renderFind() {
+      var chipsEl = $('agents-find-chips'), resEl = $('agents-find-results');
+      if (!chipsEl || !resEl) return;
+      var ax = findAxes();
+      var chips = findTab === 'artists' ? Object.keys(ax.artists)
+        : findTab === 'styles' ? ax.styles
+        : ax.people.map(function (p) { return p.label; });
+      if (findVal == null || chips.indexOf(findVal) === -1) findVal = chips[0] || null;
+      chipsEl.innerHTML = chips.map(function (cName) {
+        return '<button type="button" class="agents-find-chip" data-fchip="' + esc(cName) + '" aria-pressed="' + (cName === findVal ? 'true' : 'false') + '">' + esc(cName) + '</button>';
+      }).join('');
+      var results = [];
+      if (findTab === 'artists' && findVal) {
+        (ax.artists[findVal] || []).forEach(function (id) {
+          var a = byId(id); if (!a) return;
+          results.push(findClone(a, 'в потоке сейчас: ' + a.np));
+        });
+      } else if (findTab === 'styles' && findVal) {
+        results = ax.list.filter(function (a) { return a.style === findVal; });
+      } else if (findTab === 'people' && findVal) {
+        ax.people.forEach(function (p) { if (p.label === findVal) { var a = byId(p.id); if (a) results.push(a); } });
+      }
+      resEl.innerHTML = results.map(cardHTML).join('');
+      mark(activeId);
+    }
+
+    /* ---- ряды на «Моём вкусе» ---- */
+    function cardHTML(a, i) {
+      return '<li class="agent-card" data-agent="' + esc(a.id) + '">' +
+        '<button type="button" class="agent-card-face" aria-label="Слушать: ' + esc(a.name) + ' — ' + esc(a.school) + '">' +
+          '<span class="agent-card-art"' + tintStyle(a) + '>' + artHTML(a, i, 'agent-card-mono') +
+            (a.kind === 'author' ? '<span class="agent-tile-badge">от слушателя</span>' : '') + '</span>' +
+          '<span class="agent-card-body">' +
+            '<span class="agent-card-title">' + esc(a.name) + '</span>' +
+            '<span class="agent-card-meta">' + esc(a.style.toUpperCase()) + ' · ' + esc(a.school) + '</span>' +
+            /* owner 29.07: на «Моём вкусе» причина видна сразу — это экран рекомендаций;
+               полный провенанс («из какой волны») — в поповере «почему?» */
+            '<span class="agent-card-why">' + esc(a.why) + '</span>' +
+          '</span>' +
+        '</button>' +
+        '<button type="button" class="agent-why" aria-controls="agent-pop" aria-expanded="false"' +
+          ' aria-label="Почему агент ' + esc(a.name) + ' рекомендуется — и из какой волны">почему?</button>' +
+      '</li>';
+    }
+    function shelfHTML(title, sub, ids) {
+      var cards = '';
+      ids.forEach(function (id, i) { var a = byId(id); if (a) cards += cardHTML(a, i); });
+      if (!cards) return '';
+      return '<section class="agents-shelf"><div class="agents-shelf-head">' +
+        '<h3 class="agents-shelf-title">' + esc(title) + '</h3>' +
+        '<span class="agents-shelf-sub">' + esc(sub) + '</span></div>' +
+        '<ul class="agents-shelf-track" role="list">' + cards + '</ul></section>';
+    }
+    function buildTaste() {
+      var mount = $('agents-taste'); if (!mount) return;
+      var act = activeId || (window.GorodStations && GorodStations.active) || 'gorod';
+      var yours = [act]; if (act !== 'gorod') yours.push('gorod'); if (act !== 'chill') yours.push('chill');
+      mount.innerHTML =
+        shelfHTML('Твои агенты', 'кого ты слушал · демо', yours) +
+        shelfHTML('Под твой вкус', 'причины — в «почему?» · демо', ['chill', 'lirika', 'pop']) +
+        shelfHTML('От слушателей', 'опубликованные школы · слой автора', ['a-matvey', 'a-sonya']) +
+        shelfHTML('Новые школы', 'редакция расширяет стили', ['disco', 'rock', 'hiphop']);
+      built.taste = true;
+      mark(activeId || (window.GorodStations && GorodStations.active) || null);
+    }
+
+    /* ---- активация: редакция = станция (tune), автор = поток + комната ---- */
+    function monoArt(letter, c) {
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" fill="#1B1E26"/>' +
+        '<text x="48" y="50" font-family="Onest, sans-serif" font-size="44" font-weight="700" fill="' + c + '" text-anchor="middle" dominant-baseline="central">' + letter + '</text></svg>';
+      return 'data:image/svg+xml,' + encodeURIComponent(svg);
+    }
+    function activate(id) {
+      var a = byId(id); if (!a) return;
+      if (a.kind === 'ed') {
+        if (window.GorodRail && GorodRail.center) GorodRail.center(id);
+        document.dispatchEvent(new CustomEvent('gorod:tune', { detail: { id: id } }));
+      } else {
+        /* демо-поток автора: трек в мини-плеер (канон playDemo) + честная обложка-монограмма */
+        var t = $('player-track-title'), ar = $('player-track-artist'), cov = $('mini-art-img');
+        if (t) t.textContent = a.track.t;
+        if (ar) ar.textContent = a.name + ' · ' + a.track.a;
+        if (cov) {
+          var src = agentArt() ? GOROD_ART.shelf('agents', a.name, a.artIdx != null ? a.artIdx : 4) : monoArt(a.name.charAt(0).toUpperCase(), a.c);
+          cov.setAttribute('src', src);
+          cov.setAttribute('alt', 'Обложка: ' + a.name + ' — ' + a.track.t);
+        }
+        document.dispatchEvent(new CustomEvent('gorod:agent-room', { detail: { id: id } }));
+        mark(id);
+      }
+    }
+    function mark(id) {
+      activeId = id;
+      ['agents-home', 'agents-taste'].forEach(function (mid) {
+        var mount = $(mid); if (!mount) return;
+        [].forEach.call(mount.querySelectorAll('[data-agent]'), function (li) {
+          var on = li.getAttribute('data-agent') === id;
+          if (on) li.setAttribute('aria-current', 'true'); else li.removeAttribute('aria-current');
+          var live = li.querySelector('.agent-tile-live'); if (live) live.hidden = !on;
+        });
+      });
+    }
+
+    /* ---- ghost-CTA: роль-гейт как у «Моего стрима» (канон lockCta) ---- */
+    function ghostCta() {
+      var r = (window.GorodRole && GorodRole.get()) || 'guest';
+      if (r === 'guest') { if (window.GorodAuthFlow) GorodAuthFlow.login(); else if (window.GorodRole) GorodRole.set('account'); return; }
+      if (r === 'account') { if (window.GorodAuthFlow) GorodAuthFlow.subscribe(); else if (window.GorodRole) GorodRole.set('paid'); return; }
+      if (window.GorodStreamBuilder) GorodStreamBuilder.start();
+    }
+
+    /* ---- единый поповер «почему + из какой волны» (non-modal, focus остаётся на кнопке) ---- */
+    var pop = null, popOpenBtn = null;
+    function ensurePop() {
+      if (pop) return pop;
+      pop = document.createElement('div');
+      pop.className = 'agent-pop'; pop.id = 'agent-pop';
+      pop.setAttribute('role', 'note'); pop.setAttribute('aria-hidden', 'true');
+      pop.innerHTML = '<div class="agent-pop-why" id="agent-pop-why"></div>' +
+        '<div class="agent-pop-wave" id="agent-pop-wave"></div>' +
+        '<span class="agent-pop-demo">демо — причины и «волны» сценарные</span>';
+      document.body.appendChild(pop);
+      return pop;
+    }
+    function closePop() {
+      if (!pop) return;
+      pop.classList.remove('is-open'); pop.setAttribute('aria-hidden', 'true');
+      if (popOpenBtn) { popOpenBtn.setAttribute('aria-expanded', 'false'); popOpenBtn = null; }
+    }
+    function openPop(btn, a) {
+      ensurePop();
+      if (popOpenBtn === btn) { closePop(); return; }
+      closePop();
+      $('agent-pop-why').textContent = a.why;
+      $('agent-pop-wave').innerHTML = 'выросло из волны: <b>' + esc(a.wave) + '</b>';
+      pop.classList.add('is-open'); pop.setAttribute('aria-hidden', 'false');
+      popOpenBtn = btn; btn.setAttribute('aria-expanded', 'true');
+      var r = btn.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+      var left = Math.min(Math.max(12, r.right - pw), window.innerWidth - pw - 12);
+      var top = r.bottom + 8;
+      if (top + ph > window.innerHeight - 12) top = Math.max(12, r.top - ph - 8);
+      pop.style.left = left + 'px'; pop.style.top = top + 'px';
+    }
+
+    /* ---- показ/скрытие секций по варианту (ленивая постройка) ---- */
+    function sync() {
+      var on = isOn();
+      var home = $('agents-home'), taste = $('agents-taste');
+      if (home) { if (on && !built.home) buildHome(); home.hidden = !on; }
+      if (taste) { if (on && !built.taste) buildTaste(); taste.hidden = !on; }
+      if (!on) closePop();
+    }
+
+    function init() {
+      var wire = function (mountId) {
+        var mount = $(mountId); if (!mount) return;
+        mount.addEventListener('click', function (e) {
+          var ftab = e.target.closest ? e.target.closest('[data-ftab]') : null;
+          if (ftab) { findTab = ftab.getAttribute('data-ftab'); findVal = null;
+            [].forEach.call(mount.querySelectorAll('[data-ftab]'), function (b) { b.setAttribute('aria-pressed', b === ftab ? 'true' : 'false'); });
+            renderFind(); return; }
+          var fchip = e.target.closest ? e.target.closest('[data-fchip]') : null;
+          if (fchip) { findVal = fchip.getAttribute('data-fchip'); renderFind(); return; }
+          var why = e.target.closest ? e.target.closest('.agent-why') : null;
+          if (why) {
+            var li = why.closest('[data-agent]');
+            var a = li && byId(li.getAttribute('data-agent'));
+            /* в «Найти агента» карточка несёт контекстное «почему» (совпадение по артисту) — читаем его с карточки */
+            var whyText = li && li.querySelector('.agent-card-why') ? li.querySelector('.agent-card-why').textContent : null;
+            if (a) openPop(why, whyText ? findClone(a, whyText) : a);
+            return;
+          }
+          if (e.target.closest && e.target.closest('[data-agent-ghost]')) { ghostCta(); return; }
+          var face = e.target.closest ? e.target.closest('[data-agent]') : null;
+          if (face) activate(face.getAttribute('data-agent'));
+        });
+      };
+      wire('agents-home'); wire('agents-taste');
+
+      /* активная подсветка следует за эфиром (канон карусели) */
+      document.addEventListener('gorod:tune', function (e) { if (e.detail && e.detail.id) mark(e.detail.id); });
+      document.addEventListener('gorod:activecard', function (e) { if (e.detail && e.detail.id) mark(e.detail.id); });
+      document.addEventListener('gorodfm-home-variant', sync);
+      document.addEventListener('gorodfm-role-changed', function () {
+        var s = document.querySelector('#agents-home [data-ghost-sub]');
+        if (s) s.textContent = ghostSub();
+      });
+      /* закрытие поповера: клик-вне, Esc, скролл, ресайз (fixed-позиция отстаёт от якоря) */
+      document.addEventListener('click', function (e) {
+        if (!pop || !pop.classList.contains('is-open')) return;
+        if (pop.contains(e.target) || (popOpenBtn && popOpenBtn.contains(e.target))) return;
+        closePop();
+      }, true);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
+      window.addEventListener('scroll', closePop, true);
+      window.addEventListener('resize', closePop);
+      sync();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+</script>
 <script>
   /* Responsive surface (items 6+7): narrow screens/phones adopt the app's built-in mobile shell
      (sidebar → bottom tabbar, mini-player above tabbar) by toggling data-surface, instead of
