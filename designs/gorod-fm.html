@@ -9412,6 +9412,7 @@
       <button class="topbar-theme" id="topbar-theme" type="button" aria-label="Переключить тему">
         <svg class="topbar-theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
         <svg class="topbar-theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/></svg>
+        <svg class="topbar-theme-glass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><line x1="18.5" y1="15.5" x2="18.5" y2="19.5"/><line x1="16.5" y1="17.5" x2="20.5" y2="17.5"/></svg>
       </button>
 
       <!-- "Личный кабинет" pill -->
@@ -11476,6 +11477,7 @@
             <div class="account-pills" role="group" aria-label="Тема оформления">
               <button class="account-pill" type="button" data-theme-set="cinema" aria-pressed="true">Тёмная</button>
               <button class="account-pill" type="button" data-theme-set="light" aria-pressed="false">Светлая <span class="account-beta">бета</span></button>
+              <button class="account-pill" type="button" data-theme-set="glass" aria-pressed="false">Стекло <span class="account-beta">бета</span></button>
               <button class="account-pill" type="button" data-theme-set="system" aria-pressed="false">Как в системе</button>
             </div>
           </div>
@@ -12934,6 +12936,14 @@
             aria-pressed="false"
             aria-label="Светлая тема (Apple-grade, бета)"
           >Light</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="theme"
+            data-value="glass"
+            aria-pressed="false"
+            aria-label="Стеклянная тема (glassmorphism, как в rutv)"
+          >Glass</button>
         </div>
       </div>
 
@@ -21653,8 +21663,11 @@
   [data-home-variant="agents"] .sidebar-nav,
   [data-home-variant="agents"] .sidebar-footer { display: none; }
   html[data-surface="web"][data-home-variant="agents"] .app-shell { grid-template-columns: 0 1fr var(--rail-cur) !important; }
-  [data-home-variant="agents"] .sidebar { width: auto; height: auto; background: transparent;
-    -webkit-backdrop-filter: none; backdrop-filter: none; border-right: none; padding: 20px 24px; overflow: visible; }
+  [data-home-variant="agents"] .sidebar { width: auto; height: var(--topbar-h); background: transparent;
+    -webkit-backdrop-filter: none; backdrop-filter: none; border-right: none; padding: 0 24px; overflow: visible;
+    justify-content: center; }
+  /* вордмарк на одной оси с поиском и ЛК (свой вертикальный паддинг колонки убран) */
+  [data-home-variant="agents"] .sidebar-logo { padding: 0; min-height: 0; font-size: 28px; }
   /* Топбар первой версии: во всю ширину (колонки нет), слева место под плавающий вордмарк.
      Рутв-паттерн «стекло на скролле»: прозрачный сверху, glass + hairline после начала
      прокрутки (класс .is-stuck вешает GorodAgents; эффект только в скоупе варианта C). */
@@ -21713,10 +21726,13 @@
   .topbar-theme:hover { color: var(--text-pri); background: var(--surface-2); }
   .topbar-theme:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
   .topbar-theme svg { width: 19px; height: 19px; }
-  /* иконка = что получишь по клику: в тёмной — солнце, в светлой — луна */
-  .topbar-theme .topbar-theme-moon { display: none; }
+  /* иконка = что получишь по клику (цикл тёмная → светлая → стекло → тёмная):
+     в тёмной — солнце, в светлой — искра «стекло», в стекле — луна */
+  .topbar-theme .topbar-theme-moon, .topbar-theme .topbar-theme-glass { display: none; }
   html[data-theme="light"] .topbar-theme .topbar-theme-sun { display: none; }
-  html[data-theme="light"] .topbar-theme .topbar-theme-moon { display: block; }
+  html[data-theme="light"] .topbar-theme .topbar-theme-glass { display: block; }
+  html[data-theme="glass"] .topbar-theme .topbar-theme-sun { display: none; }
+  html[data-theme="glass"] .topbar-theme .topbar-theme-moon { display: block; }
   [data-home-variant="agents"] .agents-home { margin-bottom: 8px; padding-bottom: calc(var(--player-mini-h, 72px) + 24px); }
   /* вариант C не пользуется шторками A/B — их вариантные правила сюда не дотягиваются,
      а базовый .home-bottom-sheet видим по умолчанию (вскрылось на #/taste) */
@@ -21861,6 +21877,53 @@
 
   /* провенанс-строка трека «Моего стрима» (спека: у why добавить «из какой волны») */
   .mystream-track-prov { font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 500; color: var(--text-ter); margin-top: 2px; }
+
+  /* =========================================================================
+     ТЕМА «СТЕКЛО» (третья, owner 29.07: «стеклянная как в rutv», включая чат).
+     Тёмная база cinema + цветная подсветка на фон-слое — стеклу нужно, чтобы
+     сквозь него что-то просвечивало; поверхности — тонкие rgba + blur.
+     ========================================================================= */
+  html[data-theme="glass"] .bg-cinema {
+    opacity: 1;   /* фон-слои включаются по теме — glass переиспользует cinema-слой */
+    background:
+      radial-gradient(46% 40% at 16% 10%, rgba(81, 104, 252, .38), transparent 70%),
+      radial-gradient(38% 34% at 86% 18%, rgba(158, 118, 255, .26), transparent 70%),
+      radial-gradient(50% 44% at 68% 92%, rgba(56, 178, 224, .20), transparent 72%),
+      var(--bg-base);
+  }
+  /* карусель: плитки станций — стеклянные */
+  html[data-theme="glass"] .rmg-card-art { background: rgba(255, 255, 255, .06);
+    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, .12); }
+  /* каталог: вкладки и чипы-теги */
+  html[data-theme="glass"] .agents-find-tab { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .14);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+  html[data-theme="glass"] .agents-find-tab[aria-pressed="true"] { background: #4A5FE8; }
+  html[data-theme="glass"] .agents-find-chip { background: rgba(255, 255, 255, .04); border-color: rgba(255, 255, 255, .12);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+  html[data-theme="glass"] .agent-tile-face { border-color: rgba(255, 255, 255, .16); }
+  html[data-theme="glass"] .agent-tile--ghost .agent-tile-face { background: rgba(255, 255, 255, .04);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+  /* правый чат — стеклянный (owner: «и правый чат стеклянный?» — да) */
+  html[data-theme="glass"] .chat-rail { background: rgba(16, 18, 28, .46);
+    -webkit-backdrop-filter: blur(34px) saturate(1.6); backdrop-filter: blur(34px) saturate(1.6);
+    border-left-color: rgba(255, 255, 255, .10); }
+  html[data-theme="glass"] .rail-head { background: rgba(81, 104, 252, .14);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  html[data-theme="glass"] .ai-msg-bubble { background: rgba(255, 255, 255, .09); }
+  html[data-theme="glass"] .rail-composer { background: rgba(255, 255, 255, .05); }
+  /* нижняя планка и топбар — то же стекло */
+  html[data-theme="glass"][data-surface="web"] .player-mini { background: rgba(12, 14, 22, .40);
+    -webkit-backdrop-filter: blur(34px) saturate(1.7); backdrop-filter: blur(34px) saturate(1.7); }
+  html[data-theme="glass"][data-home-variant="agents"] .topbar.is-stuck { background: rgba(13, 15, 22, .42); }
+  /* оверлеи: поповер, ЛК, гейт */
+  html[data-theme="glass"] .agent-pop { background: rgba(20, 22, 32, .62);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5); backdrop-filter: blur(30px) saturate(1.5);
+    border-color: rgba(255, 255, 255, .16); }
+  html[data-theme="glass"] .account-panel, html[data-theme="glass"] .role-gate-card {
+    background: rgba(20, 22, 32, .66) !important;
+    -webkit-backdrop-filter: blur(34px) saturate(1.5); backdrop-filter: blur(34px) saturate(1.5);
+    border: 1px solid rgba(255, 255, 255, .14); }
 
   @media (max-width: 768px) {
     .agents-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
@@ -22321,7 +22384,8 @@
       var btn = document.getElementById('topbar-theme'); if (!btn) return;
       btn.addEventListener('click', function () {
         setMode('manual');
-        var next = (document.documentElement.getAttribute('data-theme') === 'light') ? 'cinema' : 'light';
+        var CYCLE = { cinema: 'light', light: 'glass', glass: 'cinema' };
+        var next = CYCLE[document.documentElement.getAttribute('data-theme')] || 'cinema';
         var tb = document.querySelector('.tweak-btn[data-tweak="theme"][data-value="' + next + '"]');
         if (tb && !tb.disabled) tb.click();
         else document.documentElement.setAttribute('data-theme', next);
