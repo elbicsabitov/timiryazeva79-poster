@@ -9156,6 +9156,29 @@
     .rmg-head-note { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); }
     html[data-surface="mobile"] .rmg-head { top: 10px; }
     @media (max-width: 640px) { .rmg-head { top: 10px; } }
+    /* --- слой 2 · гейт гостя на страницах «своего» -------------------------- */
+    .role-gate { position: fixed; inset: 0; z-index: 88; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(5, 6, 10, .55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .role-gate[hidden] { display: none; }
+    .role-gate-card { width: min(420px, 100%); background: var(--surface-1, #14161d); border: 1px solid var(--hairline); border-radius: 18px; padding: 22px 22px 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, .5); }
+    .role-gate-kicker { font: 700 10px 'Onest', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 8px; }
+    .role-gate-title { margin: 0 0 8px; font: 700 20px/1.25 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; text-wrap: balance; }
+    .role-gate-text { margin: 0 0 16px; font: 400 13.5px/1.55 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .role-gate-actions { display: flex; flex-direction: column; gap: 8px; }
+    .role-gate-btn { width: 100%; min-height: 44px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 600 13.5px 'Onest', sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .role-gate-btn:hover { background: var(--surf-active); }
+    .role-gate-btn--primary { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .role-gate-btn--primary:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .role-gate-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .role-gate-btn-note { font: 600 10px 'Onest', sans-serif; letter-spacing: .04em; text-transform: uppercase; opacity: .7; }
+
+    /* --- слой 2 · карточка-развилка и кнопки в пузыре диджея ---------------- */
+    .ai-upsell-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .ai-upsell-btn { min-height: 34px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 6px 12px; cursor: pointer; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .ai-upsell-btn:hover { background: var(--surf-active); }
+    .ai-upsell-btn--pri { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .ai-upsell-btn--pri:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .ai-upsell-btn:disabled { opacity: .5; cursor: default; }
+    .ai-upsell-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
     /* ===== /GOROD-L4 ===== */
   </style>
 
@@ -12823,6 +12846,19 @@
     <!-- /.tweaks-body -->
   </aside>
 
+  <!-- GOROD-L4 слой 2: мягкий гейт гостя на страницах «своего» (подборки/вкус/профиль) -->
+  <div class="role-gate" id="role-gate" hidden role="dialog" aria-modal="true" aria-labelledby="role-gate-title">
+    <div class="role-gate-card">
+      <div class="role-gate-kicker">откроется после входа</div>
+      <h2 class="role-gate-title" id="role-gate-title">Подборки и свой вкус</h2>
+      <p class="role-gate-text" id="role-gate-text">Гостю открыты все станции и эфир диджея. После входа появится своё: подборки, вкус, любимое.</p>
+      <div class="role-gate-actions">
+        <button class="role-gate-btn role-gate-btn--primary" id="role-gate-login" type="button">Войти <span class="role-gate-btn-note">демо · без формы</span></button>
+        <button class="role-gate-btn" id="role-gate-back" type="button">Пока послушаю станции</button>
+      </div>
+    </div>
+  </div>
+
   <!-- FAB to reopen tweaks after close -->
   <button
     class="tweaks-fab"
@@ -14145,6 +14181,58 @@
   })();
   </script>
 
+  <script>
+  /* ---- GOROD-L4 слой 2 — гейт гостя на страницах «своего» ----------------- */
+  (function () {
+    'use strict';
+    /* Лист owner'а 29.07: гость «ничего не заполняет, просто слушает и читает».
+       Страницы вкуса/подборок остаются видимыми позади размытого гейта — ценность
+       видно, забор мягкий. Вход в демо мгновенный, роль двигает GorodRole. */
+    var GATED = {
+      '#/podborki': { title: 'Подборки', text: 'Гостю открыты все станции и эфир. После входа диджей поможет собирать свои подборки — под настроение и ситуацию.' },
+      '#/taste': { title: 'Мой вкус', text: 'Вкус копится после входа: из него диджей собирает рекомендации, а на подписке — ваш собственный стрим.' },
+      '#/profile': { title: 'Профиль', text: 'Профиль и его настройки появляются после входа.' },
+      '#/recap': { title: 'Итоги недели', text: 'Итоги собираются из вашей истории прослушиваний — она начинается после входа.' },
+      '#/onboarding': { title: 'Сбор вкуса', text: 'Гость ничего не заполняет: слушайте станции и читайте эфир. Вход откроет сбор вкуса — из него растут рекомендации.' }
+    };
+    var gate, titleEl, textEl, lastFocus = null;
+    function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
+    function sync() {
+      if (!gate) return;
+      var cfg = GATED[location.hash];
+      var show = !!cfg && role() === 'guest';
+      if (show) {
+        titleEl.textContent = cfg.title;
+        textEl.textContent = cfg.text;
+        if (gate.hidden) {
+          gate.hidden = false;
+          lastFocus = document.activeElement;
+          setTimeout(function () { var b = document.getElementById('role-gate-login'); if (b) b.focus(); }, 40);
+        }
+      } else if (!gate.hidden) {
+        gate.hidden = true;
+        if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} lastFocus = null; }
+      }
+    }
+    function init() {
+      gate = document.getElementById('role-gate'); if (!gate) return;
+      titleEl = document.getElementById('role-gate-title');
+      textEl = document.getElementById('role-gate-text');
+      document.getElementById('role-gate-login').addEventListener('click', function () {
+        if (window.GorodRole) GorodRole.set('account');
+      });
+      document.getElementById('role-gate-back').addEventListener('click', function () { location.hash = '#/home'; });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !gate.hidden) { e.preventDefault(); location.hash = '#/home'; }
+      });
+      window.addEventListener('hashchange', sync);
+      document.addEventListener('gorodfm-role-changed', sync);
+      sync();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
   <!-- =======================================================================
        Город ФМ v2 — AI-product layer (onboarding bubbles + Twinr AI chat)
        Self-contained; decoupled from the main app IIFE. See
@@ -15172,6 +15260,18 @@
       if (msgs) msgs.addEventListener('scroll', onLogScroll);
       if (newpillEl) newpillEl.addEventListener('click', function () { scrollDown(); clearNewPill(); });
 
+      /* GOROD-L4: клики по кнопкам-развилкам в пузырях диджея */
+      if (msgs) msgs.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-upsell]') : null;
+        if (!b || b.disabled) return;
+        var kind = b.getAttribute('data-upsell');
+        var row = b.closest('.ai-upsell-row');
+        if (row) [].forEach.call(row.querySelectorAll('button'), function (x) { x.disabled = true; });
+        if (kind === 'login') { if (window.GorodRole) GorodRole.set('account'); }
+        else if (kind === 'paid') { if (window.GorodRole) GorodRole.set('paid'); }
+        else if (kind === 'stay') { clearTimeout(dripTimer); setTimeout(function () { djSpeak('Принято, остаёмся как есть. Реклама помечена бейджем, и её правда немного.'); }, 500); }
+      });
+
       wireModePopover();
       wireCtxBlurb();
       renderMenuActions();
@@ -15668,12 +15768,61 @@
 
     function setRoomChips() {
       chipsEl.innerHTML = '';
+      /* GOROD-L4 слой 2: диджей помогает выбрать стрим под настроение/ситуацию */
+      var mood = document.createElement('button'); mood.type = 'button'; mood.className = 'ai-chip'; mood.textContent = 'Под настроение';
+      mood.setAttribute('aria-label', 'Подобрать станцию под настроение или ситуацию');
+      mood.addEventListener('click', moodFlow);
+      chipsEl.appendChild(mood);
       REACTIONS.forEach(function (r) {
         var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = r;
         b.setAttribute('aria-label', 'Реакция ' + r + ' — диджею в эфир');
         b.addEventListener('click', function () { showUndo(addRoomUser(r)); djAck(); });
         chipsEl.appendChild(b);
       });
+    }
+
+    /* ---- GOROD-L4 слой 2: «под настроение» — сценарный подбор станции ------ */
+    var MOODS = [
+      { label: 'Собраться', id: 'hiphop', why: 'плотный бит держит темп, а голосу есть место' },
+      { label: 'Отпустить', id: 'chill', why: 'меньше событий, больше воздуха — вечер снимается, как куртка' },
+      { label: 'В дорогу', id: 'disco', why: 'ровный грув около 120 ударов — дорога едет сама' }
+    ];
+    function moodFlow() {
+      showUndo(addRoomUser('Подскажи станцию под настроение'));
+      clearTimeout(dripTimer);
+      setTimeout(function () {
+        djSpeak('Скажи, как сейчас: собраться, отпустить или в дорогу? Подберу станцию и объясню почему.', 30000);
+        setTimeout(moodChips, 1600);
+      }, 650);
+    }
+    function moodChips() {
+      chipsEl.innerHTML = '';
+      MOODS.forEach(function (m) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = m.label;
+        b.addEventListener('click', function () {
+          showUndo(addRoomUser(m.label));
+          chipsEl.innerHTML = '';
+          clearTimeout(dripTimer);
+          setTimeout(function () {
+            djSpeak('Моя ставка — «' + DJS[m.id].station + '»: ' + m.why + '. Могу переключить прямо сейчас.', 30000);
+            setTimeout(function () { moodGoChips(m.id); }, 1600);
+          }, 650);
+        });
+        chipsEl.appendChild(b);
+      });
+    }
+    function moodGoChips(id) {
+      chipsEl.innerHTML = '';
+      var go = document.createElement('button'); go.type = 'button'; go.className = 'ai-chip'; go.textContent = 'Включай «' + DJS[id].station + '»';
+      go.addEventListener('click', function () {
+        showUndo(addRoomUser('Включай'));
+        setRoomChips();
+        if (window.GorodRail) GorodRail.center(id);
+        setTimeout(function () { document.dispatchEvent(new CustomEvent('gorod:tune', { detail: { id: id } })); }, 400);
+      });
+      var stay = document.createElement('button'); stay.type = 'button'; stay.className = 'ai-chip'; stay.textContent = 'Останусь тут';
+      stay.addEventListener('click', function () { showUndo(addRoomUser('Останусь тут')); setRoomChips(); djAck(); });
+      chipsEl.appendChild(go); chipsEl.appendChild(stay);
     }
 
     /* ---- GOROD-L4: роль-слой в рейле — вход гостя + реакция диджея на смену слоя ---- */
@@ -15693,7 +15842,14 @@
         if (!ROLE_LINES[role]) return;
         clearTimeout(dripTimer);
         setTimeout(function () { djSpeak(ROLE_LINES[role], 9000); }, 450);
+        /* слой 2: сразу после входа — развилка «бесплатно ↔ подписка» из листа */
+        if (role === 'account' && e.detail.prev === 'guest') setTimeout(function () { upsellCard('account'); }, 3400);
       });
+
+      /* мост для внешних CTA («Убрать рекламу» на брейке, карточка «Мой стрим») */
+      window.GorodRailBridge = {
+        openUpsell: function (r) { railEnsureOpen(); upsellCard(r === 'guest' ? 'guest' : 'account'); }
+      };
     }
 
     function addRoomDivider(text) {
@@ -15763,6 +15919,39 @@
         if (atBottom) scrollDown();
         scheduleDrip(thenMs || (8500 + (r.__i % 4) * 1500));   // новый факт каждые ~8-13 сек
       }, 1100 + ((r.__i || 0) % 3) * 300);
+    }
+
+    /* GOROD-L4: пузырь диджея с локальным HTML (кнопки-развилки). Контент —
+       только наши строки, никогда пользовательский ввод. */
+    function djCard(html, thenMs) {
+      var r = ROOMS[currentRoom]; if (!r || !r.dj || !msgs) return null;
+      var m = document.createElement('div'); m.className = 'ai-msg ai-msg--room';
+      m.innerHTML = '<div class="ai-room-av" style="background:' + r.c + '" aria-hidden="true">' + esc(r.dj.charAt(0).toUpperCase()) + '</div>' +
+        '<div class="ai-room-col"><div class="ai-room-handle">' + esc(djHandle(r)) + '</div><div class="ai-msg-bubble">' + html + '</div></div>';
+      msgs.appendChild(m); capLog(); scrollDown();
+      if (thenMs) scheduleDrip(thenMs);
+      return m;
+    }
+
+    /* GOROD-L4 слой 2: развилка «бесплатно с рекламой ↔ подписка без неё» */
+    function upsellCard(forRole) {
+      clearTimeout(dripTimer);
+      if (forRole === 'guest') {
+        djCard('Реклама выключается на подписке, а подписка начинается со входа — он бесплатный: появятся подборки и вкус.' +
+          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="login">Войти (демо)</button>' +
+          '<button type="button" class="ai-upsell-btn" data-upsell="stay">Позже</button></div>', 30000);
+      } else {
+        djCard('Можно остаться на бесплатном — реклама помечена и нечастая. Подписка убирает её совсем и открывает ваш собственный стрим.' +
+          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка (демо)</button>' +
+          '<button type="button" class="ai-upsell-btn" data-upsell="stay">Останусь на бесплатном</button></div>', 30000);
+      }
+    }
+
+    /* развернуть рейл, если он свёрнут (или открыть мобильный диалог) */
+    function railEnsureOpen() {
+      var mob = (document.documentElement.getAttribute('data-surface') === 'mobile') || window.innerWidth < 640;
+      if (mob) { if (document.documentElement.getAttribute('data-rail-mobile') !== 'open') openMobile(); }
+      else setRail('expanded');
     }
 
     function dripTick() {
