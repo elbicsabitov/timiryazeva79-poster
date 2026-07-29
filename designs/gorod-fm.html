@@ -9325,7 +9325,9 @@
     /* Topbar inset so it never overlaps the rail (full-width minus the live rail width).
        --rail-cur resolves from data-rail on <html>; on off-routes --rail-cur is 0px → full width. */
     html[data-surface="web"] .topbar            { right: var(--rail-cur) !important; transition: right var(--t-slow); }
-    html[data-surface="web"] .player-mini       { display: flex !important; bottom: 0 !important; padding: 0 20px !important; padding-bottom: max(0px, env(safe-area-inset-bottom)) !important; }
+    /* owner 29.07: обложка и транспорт разъезжались по краям 1440+ — содержимое бара
+       сжато к центральной колонке ~960px (фон остаётся во всю ширину) */
+    html[data-surface="web"] .player-mini       { display: flex !important; bottom: 0 !important; padding: 0 max(20px, calc((100vw - 960px) / 2)) !important; padding-bottom: max(0px, env(safe-area-inset-bottom)) !important; }
     @media (prefers-reduced-motion: reduce) {
       html[data-surface="web"] .topbar          { transition: none !important; }
     }
