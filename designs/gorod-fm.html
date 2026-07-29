@@ -14184,6 +14184,13 @@
         // 3c. GOROD-L4: restore role (слой доступа); дефолт — гость (слой 1)
         applyRole(lsGet(LS_KEYS.role, 'guest'));
 
+        // 3d. Tweaks стартует свёрнутой в FAB (owner 29.07: «tweaks панель убери») —
+        //     не заслоняет рейл; открыть — шестерёнка снизу справа.
+        if (tweaksPanel && tweaksFab) {
+          tweaksPanel.hidden = true;
+          tweaksFab.style.display = 'flex';
+        }
+
         // 4. Resolve initial route:
         //    current hash → saved last route → default #/map
         var hashRoute    = routeFromHash(window.location.hash);
