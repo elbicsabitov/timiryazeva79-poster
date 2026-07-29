@@ -9115,6 +9115,17 @@
     /* light is dev-gated (incomplete on secondary routes) → hide the light/system pills in prod (review w5iwcj491 MED) */
     html[data-dev="false"] .account-pill[data-theme-set="light"],
     html[data-dev="false"] .account-pill[data-theme-set="system"] { display: none; }
+
+    /* =========================================================================
+       GOROD-L4 — 4-слойная логика доступа (лист owner'а 29.07)
+       Слой 1 Гость: все станции + эфир диджея, реклама помечена, чат read-only.
+       Слой 2 Аккаунт: подборки/вкус/избранное, диалог с диджеем, реклама остаётся.
+       Слой 3 Подписка: без рекламы + «Мой стрим» (конструктор диалогом).
+       Слой 4 Автор: стрим в общей витрине + панель монетизации.
+       Роль в localStorage `gorod-fm.role` → html[data-role]; здесь ТОЛЬКО
+       видимость/гейты (демо, бэкенда нет). Правила добавляются послойно.
+       ------------------------------------------------------------------------- */
+    /* ===== /GOROD-L4 ===== */
   </style>
 
   <!-- Surface overrides: outside @layer to guarantee cascade win at desktop viewports.
@@ -12603,6 +12614,45 @@
     <!-- Body: groups of controls -->
     <div class="tweaks-body" id="tweaks-body">
 
+      <!-- GOROD-L4: Role group — 4 слоя доступа из листа owner'а 29.07 -->
+      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-role">
+        <div class="tweaks-group-label" id="tweak-label-role">Роль · слои 1–4</div>
+        <div class="tweaks-row" role="group" aria-label="Выбор роли пользователя">
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="guest"
+            aria-pressed="true"
+            aria-label="Слой 1: гость — станции и эфир без регистрации"
+          >Гость</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="account"
+            aria-pressed="false"
+            aria-label="Слой 2: аккаунт — подборки и диалог, реклама остаётся"
+          >Аккаунт</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="paid"
+            aria-pressed="false"
+            aria-label="Слой 3: подписка — без рекламы, свой стрим"
+          >Подписка</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="author"
+            aria-pressed="false"
+            aria-label="Слой 4: автор — стрим в витрине, монетизация"
+          >Автор</button>
+        </div>
+      </div>
+
       <!-- Theme group -->
       <div class="tweaks-group" role="group" aria-labelledby="tweak-label-theme">
         <div class="tweaks-group-label" id="tweak-label-theme">Тема</div>
@@ -12752,6 +12802,7 @@
         playerView:   'gorod-fm.player-view',
         hideFlowMap:  'gorod-fm.hide-flow-map',
         trackView:    'gorod-fm.track-view',
+        role:         'gorod-fm.role',          // GOROD-L4: guest | account | paid | author
       };
 
       const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste', '#/profile', '#/recap'];
@@ -13209,6 +13260,32 @@
         lsSet(LS_KEYS.hideFlowMap, boolVal ? 'true' : 'false');
       }
 
+      /* ---- GOROD-L4: роль (4 слоя доступа) --------------------------------- */
+      var ROLE_ORDER = ['guest', 'account', 'paid', 'author'];
+
+      function applyRole(role) {
+        if (ROLE_ORDER.indexOf(role) === -1) role = 'guest';
+        var prev = document.documentElement.getAttribute('data-role') || null;
+        document.documentElement.setAttribute('data-role', role);
+        updateTweakButtonStates('role', role);
+        lsSet(LS_KEYS.role, role);
+        if (prev !== role) {
+          document.dispatchEvent(new CustomEvent('gorodfm-role-changed', {
+            detail: { role: role, prev: prev }
+          }));
+        }
+      }
+
+      /* Мост для остальных модулей (рейл, витрина, мой стрим): читают роль и
+         двигают её из продуктовых CTA («Войти», «Оформить», «В витрину»). */
+      window.GorodRole = {
+        get: function () { return document.documentElement.getAttribute('data-role') || 'guest'; },
+        set: applyRole,
+        atLeast: function (min) {
+          return ROLE_ORDER.indexOf(this.get()) >= ROLE_ORDER.indexOf(min);
+        }
+      };
+
       // Delegate click on all tweak buttons
       document.querySelectorAll('.tweak-btn[data-tweak]').forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -13218,6 +13295,7 @@
           else if (group === 'surface')      applySurface(value);
           else if (group === 'home-variant') applyHomeVariant(value);
           else if (group === 'hide-flow-map') applyHideFlowMap(value);
+          else if (group === 'role')          applyRole(value);
         });
       });
 
@@ -13914,6 +13992,9 @@
         // 3b. Restore hide-flow-map
         var savedHideFlowMap = lsGet(LS_KEYS.hideFlowMap, 'false');
         applyHideFlowMap(savedHideFlowMap);
+
+        // 3c. GOROD-L4: restore role (слой доступа); дефолт — гость (слой 1)
+        applyRole(lsGet(LS_KEYS.role, 'guest'));
 
         // 4. Resolve initial route:
         //    current hash → saved last route → default #/map
