@@ -15709,7 +15709,7 @@
     var STATION_TO_ROOM = {};
     var STATION_LABEL = {};
     Object.keys(DJS).forEach(function (id) { if (DJS[id].author) return; STATION_TO_ROOM[id] = id; STATION_LABEL[id] = DJS[id].station; });
-    var HOME_ROOM = 'gorod';        // станция по умолчанию в карусели = Город ФМ
+    var HOME_ROOM = 'disco';        // станция по умолчанию = 3-я ячейка карусели (центр с соседями, owner 29.07)
     var store = {};                 // roomId → {html, scrollTop, draft, mode, seeded}
     var currentRoom = HOME_ROOM;
     var playingRoom = HOME_ROOM;    // комната станции, которая играет сейчас
@@ -20003,6 +20003,8 @@
       });
     }
     function setTheme(v) {
+      /* режим темы: ручной выбор фиксируется, «Как в системе» включает живое авто-слежение */
+      if (window.GorodThemeAuto) { if (v === 'system') GorodThemeAuto.system(); else GorodThemeAuto.manual(); }
       var t = v === 'system' ? ((window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'cinema') : v;
       var tb = document.querySelector('.tweak-btn[data-tweak="theme"][data-value="' + t + '"]');
       if (tb && !tb.disabled) { tb.click(); }   // route through real applyTheme (syncs attr + LS + tweaks + sidebar icon)
@@ -20089,7 +20091,7 @@
     chill:{title:'Вечно молодой', artist:'Смысловые Галлюцинации', source:'demo', ts:0},
     lirika:{title:'Знаешь ли ты', artist:'МакSим', source:'demo', ts:0},
   };
-  let active = 'gorod';
+  let active = 'disco';   /* старт = 3-я ячейка: у центра сразу есть соседи слева и справа (owner 29.07) */
   window.GorodStations = {
     list: S,
     get active(){ return active; },
@@ -20184,7 +20186,7 @@
       new MutationObserver(reflectPlay).observe(miniPlay, {attributes:true, attributeFilter:['aria-pressed']});
     }
     reflectPlay();
-    requestAnimationFrame(()=> requestAnimationFrame(()=> center('gorod', true)));
+    requestAnimationFrame(()=> requestAnimationFrame(()=> center('disco', true)));
   }
   function reflectPlay(){
     var playing = !!(window.TwinrTransition && typeof TwinrTransition.isPlaying==='function' && TwinrTransition.isPlaying());
@@ -20232,7 +20234,7 @@
         // ACTIVE station once home is visible so the full-scale/aria-current card matches the
         // visually-centered one (review M4).
         requestAnimationFrame(function(){ requestAnimationFrame(function(){
-          GorodRail.center((window.GorodStations && GorodStations.active) || 'gorod', true);
+          GorodRail.center((window.GorodStations && GorodStations.active) || 'disco', true);
         }); });
       }
     }
@@ -20288,7 +20290,7 @@
   }
   document.addEventListener('gorod:tune', function(e){ tune(e.detail.id); });
   document.addEventListener('gorod:activecard', function(e){ paint(e.detail.id); });
-  document.addEventListener('DOMContentLoaded', function(){ paint('gorod'); });
+  document.addEventListener('DOMContentLoaded', function(){ paint('disco'); });
   window.GorodPlayer = { paint:paint, tune:tune };
 })();
 </script>
@@ -21627,10 +21629,24 @@
   [data-home-variant="agents"] [data-page="home"] .vitrina,
   [data-home-variant="agents"] .sidebar-item[data-route="#/taste"],
   [data-home-variant="agents"] .tabbar-item[data-route="#/taste"] { display: none; }
-  /* …и сама левая колонка в первой версии — только лого (owner: «пусть там лого просто»):
-     навигация из одной «Главной» смысла не несёт, тема переключается в ЛК */
+  /* …и сама левая колонка в первой версии — только лого (owner: «пусть там лого просто»,
+     затем «колонку убери — иначе там линия»): грид-колонка схлопнута, сайдбар превращён
+     в плавающий вордмарк поверх (без фона и границы); тема переключается в ЛК */
   [data-home-variant="agents"] .sidebar-nav,
   [data-home-variant="agents"] .sidebar-footer { display: none; }
+  html[data-surface="web"][data-home-variant="agents"] .app-shell { grid-template-columns: 0 1fr var(--rail-cur) !important; }
+  [data-home-variant="agents"] .sidebar { width: auto; height: auto; background: transparent;
+    -webkit-backdrop-filter: none; backdrop-filter: none; border-right: none; padding: 20px 24px; overflow: visible; }
+  /* Топбар первой версии: во всю ширину (колонки нет), слева место под плавающий вордмарк.
+     Рутв-паттерн «стекло на скролле»: прозрачный сверху, glass + hairline после начала
+     прокрутки (класс .is-stuck вешает GorodAgents; эффект только в скоупе варианта C). */
+  [data-surface="web"][data-home-variant="agents"] .topbar { left: 0; padding-left: 246px;
+    background: transparent; border-bottom: 1px solid transparent;
+    transition: background var(--t-fast), border-color var(--t-fast); }
+  [data-surface="web"][data-home-variant="agents"] .topbar.is-stuck { background: rgba(11, 12, 15, .72);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4); backdrop-filter: blur(28px) saturate(1.4);
+    border-bottom-color: var(--hairline); }
+  html[data-theme="light"][data-home-variant="agents"] .topbar.is-stuck { background: rgba(250, 250, 247, .82); }
   [data-home-variant="agents"] .agents-home { margin-bottom: 8px; padding-bottom: calc(var(--player-mini-h, 72px) + 24px); }
   /* вариант C не пользуется шторками A/B — их вариантные правила сюда не дотягиваются,
      а базовый .home-bottom-sheet видим по умолчанию (вскрылось на #/taste) */
@@ -22174,6 +22190,14 @@
       }
       document.addEventListener('gorodfm-role-changed', rebuilt);
       document.addEventListener('gorodfm-mystream-changed', rebuilt);
+      /* рутв-паттерн: стекло топбара после начала прокрутки (скролл = window) */
+      var tbEl = document.querySelector('.topbar');
+      if (tbEl) {
+        var onTbScroll = function () { tbEl.classList.toggle('is-stuck', (window.scrollY || 0) > 8); };
+        window.addEventListener('scroll', onTbScroll, { passive: true });
+        onTbScroll();
+      }
+
       /* закрытие поповера: клик-вне, Esc, скролл, ресайз (fixed-позиция отстаёт от якоря) */
       document.addEventListener('click', function (e) {
         if (!pop || !pop.classList.contains('is-open')) return;
@@ -22191,6 +22215,38 @@
       sync();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+</script>
+<script>
+  /* =========================================================================
+     GorodThemeAuto — тема первой версии следует за системой (рутв-паттерн
+     prefers-color-scheme, owner 29.07: «темы чтоб так же переключались»).
+     Живёт только в варианте C и пока пользователь не выбрал тему руками в ЛК
+     ('gorod-fm.theme-mode' = 'manual'); пилюля «Как в системе» возвращает авто
+     и теперь СЛЕДИТ за сменой системной темы (раньше была one-shot).
+     ========================================================================= */
+  (function () {
+    'use strict';
+    var LSM = 'gorod-fm.theme-mode';
+    function mode() { try { return localStorage.getItem(LSM) || 'system'; } catch (e) { return 'system'; } }
+    function setMode(m) { try { localStorage.setItem(LSM, m); } catch (e) {} }
+    function variantOn() { return (document.documentElement.getAttribute('data-home-variant') || 'fab') === 'agents'; }
+    var mq = window.matchMedia ? matchMedia('(prefers-color-scheme: light)') : null;
+    function apply() {
+      if (!mq || !variantOn() || mode() === 'manual') return;
+      var t = mq.matches ? 'light' : 'cinema';
+      if (document.documentElement.getAttribute('data-theme') === t) return;
+      var tb = document.querySelector('.tweak-btn[data-tweak="theme"][data-value="' + t + '"]');
+      if (tb && !tb.disabled) tb.click();
+      else document.documentElement.setAttribute('data-theme', t);
+    }
+    if (mq) { if (mq.addEventListener) mq.addEventListener('change', apply); else if (mq.addListener) mq.addListener(apply); }
+    document.addEventListener('gorodfm-home-variant', apply);
+    window.GorodThemeAuto = {
+      manual: function () { setMode('manual'); },
+      system: function () { setMode('system'); apply(); }
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply); else apply();
   })();
 </script>
 <script>
