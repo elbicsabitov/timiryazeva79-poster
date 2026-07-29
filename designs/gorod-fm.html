@@ -20225,6 +20225,17 @@
   // Self-contained listener — mirrors this file's established pattern of independent
   // `hashchange` observers (e.g. updateHomeFabVisibility) rather than editing the
   // shared activatePage()/routeFromHash() router.
+  /* Ресайз сбрасывает горизонтальный скролл ленты → IntersectionObserver честно
+     «активировал» первую карточку, и эфир съезжал со станции (вскрылось при 1440→390).
+     Возвращаем центр на дейcтвительно активную станцию после ресайза. */
+  var rzT = 0;
+  window.addEventListener('resize', function () {
+    programmatic = true;                 // глушим observer на время reflow, иначе он успеет «активировать» первую
+    clearTimeout(rzT);
+    rzT = setTimeout(function () {
+      if (window.GorodStations && cards.length) center(GorodStations.active, true);
+    }, 200);
+  });
   window.addEventListener('hashchange', function(){
     if ((window.location.hash || '') === '#/home') {
       if (window.GorodRail) {
