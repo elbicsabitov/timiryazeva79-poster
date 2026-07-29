@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-<script>window.GOROD_PHOTOS = true; /* gorod-fm-images.html — thematic photos instead of monograms (generated from gorod-fm.html) */</script>
   <style>
     /* =========================================================================
        CSS layers declaration — order is load order for specificity cascade.
@@ -9116,6 +9115,174 @@
     /* light is dev-gated (incomplete on secondary routes) → hide the light/system pills in prod (review w5iwcj491 MED) */
     html[data-dev="false"] .account-pill[data-theme-set="light"],
     html[data-dev="false"] .account-pill[data-theme-set="system"] { display: none; }
+
+    /* =========================================================================
+       GOROD-L4 — 4-слойная логика доступа (лист owner'а 29.07)
+       Слой 1 Гость: все станции + эфир диджея, реклама помечена, чат read-only.
+       Слой 2 Аккаунт: подборки/вкус/избранное, диалог с диджеем, реклама остаётся.
+       Слой 3 Подписка: без рекламы + «Мой стрим» (конструктор диалогом).
+       Слой 4 Автор: стрим в общей витрине + панель монетизации.
+       Роль в localStorage `gorod-fm.role` → html[data-role]; здесь ТОЛЬКО
+       видимость/гейты (демо, бэкенда нет). Правила добавляются послойно.
+       ------------------------------------------------------------------------- */
+    /* --- слой 1 · гость: рейл read-only, композер закрыт до входа ---------- */
+    /* v3-правило #rail-profile{display:flex} перебивало [hidden] — профиль
+       «собран из вкуса» светился гостю в эфирном режиме (walkthrough 29.07) */
+    #rail-profile[hidden] { display: none !important; }
+    html[data-role="guest"] #rail-profile { display: none !important; }
+    .rail-guest { display: none; padding: 10px 12px 12px; border-top: 1px solid var(--hairline); }
+    html[data-role="guest"] .rail-guest { display: block; }
+    html[data-role="guest"] #rail-input-form,
+    html[data-role="guest"] #rail-chips,
+    html[data-role="guest"] #rail-undo { display: none !important; }
+    .rail-guest-text { margin: 0 0 8px; font: 400 12.5px/1.5 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .rail-guest-btn { width: 100%; min-height: 44px; border: none; border-radius: var(--r-md, 12px); background: var(--brand-blue-light); color: #fff; font: 700 13.5px 'Onest', sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: filter var(--t-fast, .15s); }
+    .rail-guest-btn:hover { filter: brightness(1.12); }
+    .rail-guest-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .rail-guest-btn-note { font: 600 10px 'Onest', sans-serif; letter-spacing: .04em; text-transform: uppercase; opacity: .75; }
+
+    /* --- слои 1-2 · помеченный рекламный брейк над мини-плеером ------------ */
+    .player-ad { position: absolute; left: 12px; right: auto; max-width: min(560px, calc(100vw - 24px)); bottom: calc(100% + 8px); z-index: 61; display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--r-md, 12px); background: var(--surface-1, #14161d); border: 1px solid var(--hairline); box-shadow: 0 10px 28px rgba(0, 0, 0, .35); }
+    .player-ad[hidden] { display: none; }
+    .player-ad-badge { flex: none; font: 700 9.5px 'Onest', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 7px; }
+    .player-ad-text { flex: 1 1 auto; min-width: 0; font: 500 12.5px/1.4 'Onest', sans-serif; color: var(--text-pri); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .player-ad-timer { flex: none; font: 600 11px 'Onest', sans-serif; color: var(--text-sec); font-variant-numeric: tabular-nums; }
+    .player-ad-off { flex: none; min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 5px 12px; cursor: pointer; transition: background var(--t-fast, .15s); }
+    .player-ad-off:hover { background: var(--surf-active); }
+    .player-ad-off:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    @media (max-width: 640px) { .player-ad { left: 8px; right: 8px; max-width: calc(100vw - 16px); } .player-ad-text { white-space: normal; } }
+    /* mobile: открытый рейл-диалог главнее транзиентного брейка (review L4-audit MINOR) */
+    html[data-rail-mobile="open"] .player-ad { display: none; }
+    /* web 1440: шестерёнка Tweaks не перекрывает CTA гостя (review L4-audit MINOR) */
+    @media (min-width: 641px) { html[data-role="guest"]:not([data-surface="mobile"]) .rail-guest { padding-right: 68px; } }
+
+    /* --- слой 1 · шапка карусели станций: честный масштаб ------------------
+       Живёт в свободной зоне padding-top карусели (главная уходит под fixed
+       topbar на -64px, сама карусель начинается с 96px) — поток не двигаем. */
+    .rmg-head { position: absolute; top: 66px; left: 24px; right: 24px; z-index: 5; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; justify-content: center; pointer-events: none; }
+    .rmg-head-title { margin: 0; font: 700 15px/1.2 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; }
+    .rmg-head-note { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); }
+    /* на узких экранах зона паддинга мала — шапка встаёт в поток над каруселью */
+    html[data-surface="mobile"] .rmg-head,
+    html[data-surface="mobile"] .rmg-head-title { position: static; }
+    html[data-surface="mobile"] .rmg-head { margin: 6px 2px 10px; justify-content: flex-start; pointer-events: auto; }
+    @media (max-width: 640px) {
+      .rmg-head { position: static; margin: 6px 2px 10px; justify-content: flex-start; pointer-events: auto; }
+    }
+    /* --- слой 2 · гейт гостя на страницах «своего» -------------------------- */
+    .role-gate { position: fixed; inset: 0; z-index: 88; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(5, 6, 10, .55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .role-gate[hidden] { display: none; }
+    .role-gate-card { width: min(420px, 100%); background: var(--surface-1, #14161d); border: 1px solid var(--hairline); border-radius: 18px; padding: 22px 22px 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, .5); }
+    .role-gate-kicker { font: 700 10px 'Onest', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 8px; }
+    .role-gate-title { margin: 0 0 8px; font: 700 20px/1.25 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; text-wrap: balance; }
+    .role-gate-text { margin: 0 0 16px; font: 400 13.5px/1.55 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .role-gate-actions { display: flex; flex-direction: column; gap: 8px; }
+    .role-gate-btn { width: 100%; min-height: 44px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 600 13.5px 'Onest', sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .role-gate-btn:hover { background: var(--surf-active); }
+    .role-gate-btn--primary { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .role-gate-btn--primary:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .role-gate-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .role-gate-btn-note { font: 600 10px 'Onest', sans-serif; letter-spacing: .04em; text-transform: uppercase; opacity: .7; }
+
+    /* --- слой 2 · карточка-развилка и кнопки в пузыре диджея ---------------- */
+    .ai-upsell-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .ai-upsell-btn { min-height: 34px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 6px 12px; cursor: pointer; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .ai-upsell-btn:hover { background: var(--surf-active); }
+    .ai-upsell-btn--pri { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .ai-upsell-btn--pri:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .ai-upsell-btn:disabled { opacity: .5; cursor: default; }
+    .ai-upsell-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    /* --- слой 3 · «Мой стрим»: карточка на главной -------------------------- */
+    .mystream { max-width: 1120px; margin: 8px auto 26px; padding: 0 24px; }
+    .mystream-lock, .mystream-build, .mystream-card { background: var(--surface-1, #14161d); border: 1px solid var(--hairline); border-radius: 18px; padding: 18px 20px 16px; }
+    .mystream-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .mystream-title { margin: 0; font: 700 17px/1.25 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; }
+    .mystream-badge { font: 700 9.5px 'Onest', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 8px; }
+    .mystream-badge--on { color: var(--accent-text, var(--brand-blue-light)); border-color: currentColor; }
+    .mystream-tags { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
+    .mystream-text { margin: 0 0 12px; font: 400 13.5px/1.55 'Onest', sans-serif; color: var(--text-sec); max-width: 60ch; text-wrap: pretty; }
+    .mystream-learn { margin: 0 0 10px; font: 400 12.5px/1.5 'Onest', sans-serif; color: var(--text-sec); }
+    .mystream-btn { min-height: 40px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 600 13px 'Onest', sans-serif; padding: 8px 16px; cursor: pointer; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .mystream-btn:hover { background: var(--surf-active); }
+    .mystream-btn--primary { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .mystream-btn--primary:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .mystream-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .mystream-tracks { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; }
+    .mystream-track { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid var(--divider, var(--hairline)); }
+    .mystream-track:first-child { border-top: none; }
+    .mystream-play { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--hairline); background: var(--surf-hover); color: var(--text-pri); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background var(--t-fast, .15s); }
+    .mystream-play:hover { background: var(--surf-active); }
+    .mystream-play:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .mystream-play svg { width: 14px; height: 14px; }
+    .mystream-track-meta { flex: 1 1 auto; min-width: 0; }
+    .mystream-track-title { font: 600 13.5px/1.3 'Onest', sans-serif; color: var(--text-pri); }
+    .mystream-track-why { font: 400 12px/1.45 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .mystream-notmine { flex: none; min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: transparent; color: var(--text-sec); font: 600 11.5px 'Onest', sans-serif; padding: 5px 11px; cursor: pointer; transition: background var(--t-fast, .15s), color var(--t-fast, .15s); }
+    .mystream-notmine:hover { background: var(--surf-hover); color: var(--text-pri); }
+    .mystream-notmine:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .mystream-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mystream-pubnote { font: 400 12px/1.4 'Onest', sans-serif; color: var(--text-sec); }
+    html[data-surface="mobile"] .mystream { padding: 0 16px; }
+    @media (max-width: 640px) { .mystream { padding: 0 16px; } .mystream-tags { max-width: 100%; } }
+
+    /* --- hit-targets ≥44px на мобиле (Apple HIG, DESIGN_PROTOCOL §2.3) ------ */
+    html[data-surface="mobile"] .player-ad-off,
+    html[data-surface="mobile"] .ai-upsell-btn,
+    html[data-surface="mobile"] .mystream-notmine,
+    html[data-surface="mobile"] .mystream-advice,
+    html[data-surface="mobile"] .mystream-btn { min-height: 44px; }
+    html[data-surface="mobile"] .mystream-play { width: 44px; height: 44px; }
+    @media (max-width: 640px) {
+      .player-ad-off, .ai-upsell-btn, .mystream-notmine, .mystream-advice, .mystream-btn { min-height: 44px; }
+      .mystream-play { width: 44px; height: 44px; }
+    }
+
+    /* --- слой 4 · панель автора --------------------------------------------- */
+    .mystream-author { border-top: 1px solid var(--divider, var(--hairline)); padding-top: 12px; margin-bottom: 12px; }
+    .mystream-author-stats { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+    .mystream-stat { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); }
+    .mystream-stat b { font-weight: 700; color: var(--text-pri); font-variant-numeric: tabular-nums; }
+    .mystream-stat-note { font: 600 9.5px 'Onest', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 7px; }
+    .mystream-author-label { display: block; font: 600 11.5px 'Onest', sans-serif; color: var(--text-sec); margin-bottom: 7px; }
+    .mystream-author-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .mystream-advice { min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 5px 12px; cursor: pointer; transition: background var(--t-fast, .15s); }
+    .mystream-advice:hover { background: var(--surf-active); }
+    .mystream-advice:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    /* --- промежуточные экраны воронки: вход · подписка · публикация --------- */
+    .authflow { position: fixed; inset: 0; z-index: 92; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(5, 6, 10, .6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .authflow[hidden] { display: none; }
+    .authflow-card { position: relative; width: min(430px, 100%); background: var(--surface-1, #14161d); border: 1px solid var(--hairline); border-radius: 18px; padding: 22px 22px 20px; box-shadow: 0 24px 60px rgba(0, 0, 0, .5); }
+    .authflow-x { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: none; border-radius: 50%; background: transparent; color: var(--text-sec); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background var(--t-fast, .15s); }
+    .authflow-x:hover { background: var(--surf-hover); }
+    .authflow-x:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .authflow-x svg { width: 16px; height: 16px; }
+    .authflow-kicker { font: 700 10px 'Onest', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 8px; }
+    .authflow-title { margin: 0 0 8px; font: 700 20px/1.25 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; text-wrap: balance; }
+    .authflow-text { margin: 0 0 14px; font: 400 13.5px/1.55 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .authflow-stack { display: flex; flex-direction: column; gap: 8px; }
+    .authflow-btn { width: 100%; min-height: 44px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 600 13.5px 'Onest', sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .authflow-btn:hover { background: var(--surf-active); }
+    .authflow-btn--primary { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .authflow-btn--primary:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .authflow-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .authflow-note { margin: 10px 0 0; font: 400 11.5px/1.5 'Onest', sans-serif; color: var(--text-sec); text-align: center; text-wrap: pretty; }
+    .authflow-label { display: block; font: 600 11.5px 'Onest', sans-serif; color: var(--text-sec); margin: 0 0 6px; }
+    .authflow-input { width: 100%; min-height: 44px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 500 14px 'Onest', sans-serif; padding: 10px 12px; margin-bottom: 10px; }
+    .authflow-input:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; border-color: var(--brand-blue-light); }
+    .authflow-benefits { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .authflow-benefits li { position: relative; padding-left: 24px; font: 400 13px/1.5 'Onest', sans-serif; color: var(--text-pri); text-wrap: pretty; }
+    .authflow-benefits li::before { content: ''; position: absolute; left: 2px; top: 6px; width: 12px; height: 7px; border-left: 2px solid var(--brand-blue-light); border-bottom: 2px solid var(--brand-blue-light); transform: rotate(-45deg); }
+    .authflow-price { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; }
+    .authflow-price b { font: 700 24px/1 'Onest', sans-serif; color: var(--text-pri); font-variant-numeric: tabular-nums; }
+    .authflow-price span { font: 600 9.5px 'Onest', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 7px; }
+    .authflow-wait { display: flex; align-items: center; gap: 10px; font: 400 13px/1.5 'Onest', sans-serif; color: var(--text-sec); margin: 4px 0 12px; text-wrap: pretty; }
+    .authflow-spin { width: 16px; height: 16px; border: 2px solid var(--hairline); border-top-color: var(--brand-blue-light); border-radius: 50%; animation: authflow-spin .8s linear infinite; flex: none; }
+    @keyframes authflow-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .authflow-spin { animation: none; } }
+    .authflow-done { display: flex; align-items: center; gap: 12px; margin: 6px 0 4px; font: 600 14px/1.4 'Onest', sans-serif; color: var(--text-pri); }
+    .authflow-done-ic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--brand-blue-light); display: inline-flex; align-items: center; justify-content: center; }
+    .authflow-done-ic svg { width: 16px; height: 16px; stroke: #fff; }
+    /* ===== /GOROD-L4 ===== */
   </style>
 
   <!-- Surface overrides: outside @layer to guarantee cascade win at desktop viewports.
@@ -9177,6 +9344,7 @@
       .discover-track-play::before, .ai-track-play::before, .discover-dial-btn::before,
       .taste-pin::before, .taste-ctrl::before { content: ''; position: absolute; inset: -9px; }
   </style>
+<script>window.GOROD_PHOTOS = true; /* gorod-fm-images.html — thematic photos instead of monograms (generated from gorod-fm.html) */</script>
 </head>
 
 <body>
@@ -9198,9 +9366,10 @@
       try { localStorage.setItem('gorod-fm.theme', 'cinema'); localStorage.setItem('gorod-fm.hide-flow-map', 'true'); } catch (e) {}
       var h = location.hash || '';
       if (h === '' || h === '#/map') {
-        var onb = false, tst = false;
-        try { onb = !!localStorage.getItem('gorodfm_onboarded'); tst = !!localStorage.getItem('gorodfm_taste'); } catch (e) {}
-        location.hash = (!onb && !tst) ? '#/onboarding' : '#/home';  // cold-start → onboarding (ВОЛНА-0); returning → home
+        var onb = false, tst = false, role = 'guest';
+        try { onb = !!localStorage.getItem('gorodfm_onboarded'); tst = !!localStorage.getItem('gorodfm_taste'); role = localStorage.getItem('gorod-fm.role') || 'guest'; } catch (e) {}
+        // GOROD-L4 слой 1: гость ничего не заполняет — cold-start ведёт в эфир; онбординг вкуса после входа
+        location.hash = (role === 'guest') ? '#/home' : ((!onb && !tst) ? '#/onboarding' : '#/home');
       }
     }
     document.addEventListener('keydown', function (e) {
@@ -9627,8 +9796,66 @@
         </button>
 
         <section class="rmg-rail" id="rmg-rail" role="group" aria-roledescription="карусель" aria-label="Радиостанции">
+          <!-- GOROD-L4 слой 1: масштаб честно — в демо 7 каналов, слушать можно без входа -->
+          <div class="rmg-head" id="rmg-head">
+            <h2 class="rmg-head-title">Станции</h2>
+            <span class="rmg-head-note">в демо — 7, в рабочей версии — 1000 · слушать можно без регистрации</span>
+          </div>
           <ul class="rmg-track" id="rmg-track" role="list"><!-- cards injected by Task 3 --></ul>
         </section>
+
+        <!-- GOROD-L4 слой 3: «Мой стрим» — личный поток, собирается диалогом с диджеем.
+             Имя сознательно НЕ «Моя волна» (DEBT GHS-028: бренд Яндекс Музыки). -->
+        <section class="mystream" id="mystream" aria-labelledby="mystream-title">
+          <div class="mystream-lock" id="mystream-lock">
+            <div class="mystream-row">
+              <h2 class="mystream-title" id="mystream-title">Мой стрим</h2>
+              <span class="mystream-badge">подписка</span>
+            </div>
+            <p class="mystream-text">Описываете словами, что любите, — диджей уточняет и собирает личный поток. Он меняется под настроение, а если трек не зайдёт — жмите «Не моё», и поток подстроится.</p>
+            <button class="mystream-btn" id="mystream-lock-cta" type="button">Оформить подписку (демо)</button>
+          </div>
+          <div class="mystream-build" id="mystream-build" hidden>
+            <div class="mystream-row">
+              <h2 class="mystream-title">Мой стрим</h2>
+              <span class="mystream-badge mystream-badge--on">включено</span>
+            </div>
+            <p class="mystream-text">Потока пока нет. Соберём диалогом: расскажете, что любите, — диджей уточнит и поставит первые треки, у каждого будет «почему».</p>
+            <button class="mystream-btn mystream-btn--primary" id="mystream-build-cta" type="button">Собрать в чате</button>
+          </div>
+          <div class="mystream-card" id="mystream-card" hidden>
+            <div class="mystream-row">
+              <h2 class="mystream-title">Мой стрим</h2>
+              <span class="mystream-tags" id="mystream-tags"></span>
+            </div>
+            <p class="mystream-learn" id="mystream-learn" role="status"></p>
+            <ul class="mystream-tracks" id="mystream-tracks"></ul>
+            <!-- GOROD-L4 слой 4: панель автора — станция в витрине, честные демо-цифры -->
+            <div class="mystream-author" id="mystream-author" hidden>
+              <div class="mystream-author-stats">
+                <span class="mystream-stat"><b>214</b> слушали сегодня</span>
+                <span class="mystream-stat"><b>1 840 ₽</b> за месяц — реклама и платные подписки</span>
+                <span class="mystream-stat-note">цифры демо — сценарные</span>
+              </div>
+              <div class="mystream-author-advice">
+                <span class="mystream-author-label">Спросить диджея, как зарабатывать больше:</span>
+                <div class="mystream-author-chips">
+                  <button type="button" class="mystream-advice" data-advice="tracks">Какие треки добавить</button>
+                  <button type="button" class="mystream-advice" data-advice="energy">Баланс энергии</button>
+                  <button type="button" class="mystream-advice" data-advice="adtime">Когда ставить рекламу</button>
+                  <button type="button" class="mystream-advice" data-advice="audience">На кого ориентироваться</button>
+                </div>
+              </div>
+            </div>
+            <div class="mystream-foot">
+              <button class="mystream-btn" id="mystream-rebuild" type="button">Пересобрать в чате</button>
+              <button class="mystream-btn mystream-btn--primary" id="mystream-publish" type="button" hidden>Отправить в витрину</button>
+              <span class="mystream-pubnote" id="mystream-pubhint" hidden>станция станет доступна другим слушателям — а вы начнёте зарабатывать на рекламе и платных подписках</span>
+              <span class="mystream-pubnote" id="mystream-pubnote" hidden></span>
+            </div>
+          </div>
+        </section>
+
         <section class="vitrina" id="vitrina"></section>
 
         <div class="home-tiles" hidden>
@@ -9947,15 +10174,15 @@
 
               <!-- ── ROW 1 ───────────────────────────────────────────── -->
 
-              <!-- Tile 1: Album — Believer / IMAGINE DRAGONS -->
+              <!-- Tile 1: Album — Группа крови / КИНО -->
               <button
                 class="library-tile"
                 type="button"
                 role="listitem"
                 data-tile-type="album"
-                data-tile-title="Believer"
-                data-tile-artist="Imagine Dragons"
-                aria-label="Открыть альбом Believer — Imagine Dragons"
+                data-tile-title="Группа крови"
+                data-tile-artist="КИНО"
+                aria-label="Открыть альбом Группа крови — КИНО"
               >
                 <div class="library-tile-cover library-tile-cover--album">
                   <!-- Record / circle icon -->
@@ -9968,10 +10195,10 @@
                   </svg>
                 </div>
                 <div class="library-tile-meta">
-                  <div class="library-tile-name">Believer</div>
+                  <div class="library-tile-name">Группа крови</div>
                   <div class="library-tile-sub-row">
                     <span class="library-tile-badge">АЛЬБОМ</span>
-                    <span class="library-tile-info">IMAGINE DRAGONS</span>
+                    <span class="library-tile-info">КИНО</span>
                   </div>
                 </div>
               </button>
@@ -10003,15 +10230,15 @@
                 </div>
               </button>
 
-              <!-- Tile 3: Album — Glitch / MARTIN GARRIX × JULIAN JORDAN -->
+              <!-- Tile 3: Album — Сет Вадима Адамова -->
               <button
                 class="library-tile"
                 type="button"
                 role="listitem"
                 data-tile-type="album"
-                data-tile-title="Glitch"
-                data-tile-artist="Martin Garrix × Julian Jordan"
-                aria-label="Открыть альбом Glitch — Martin Garrix × Julian Jordan"
+                data-tile-title="Сет Вадима Адамова"
+                data-tile-artist="Вадим Адамов"
+                aria-label="Открыть сет Вадима Адамова"
               >
                 <div class="library-tile-cover library-tile-cover--album" style="background:var(--surface-1);">
                   <svg class="library-tile-art" viewBox="0 0 56 56" fill="none" aria-hidden="true">
@@ -10023,10 +10250,10 @@
                   </svg>
                 </div>
                 <div class="library-tile-meta">
-                  <div class="library-tile-name">Glitch</div>
+                  <div class="library-tile-name">Сет Вадима Адамова</div>
                   <div class="library-tile-sub-row">
                     <span class="library-tile-badge">АЛЬБОМ</span>
-                    <span class="library-tile-info">MARTIN GARRIX × JULIAN JORDAN</span>
+                    <span class="library-tile-info">ВАДИМ АДАМОВ</span>
                   </div>
                 </div>
               </button>
@@ -10038,8 +10265,8 @@
                 role="listitem"
                 data-tile-type="track"
                 data-tile-title="Roads Untraveled"
-                data-tile-artist="Linkin Park"
-                aria-label="Открыть трек Roads Untraveled — Linkin Park"
+                data-tile-artist="Сплин"
+                aria-label="Открыть трек Выхода нет — Сплин"
               >
                 <div class="library-tile-cover library-tile-cover--track">
                   <!-- Music note icon -->
@@ -10053,7 +10280,7 @@
                   <div class="library-tile-name">Roads Untraveled</div>
                   <div class="library-tile-sub-row">
                     <span class="library-tile-badge">ТРЕК</span>
-                    <span class="library-tile-info">LINKIN PARK</span>
+                    <span class="library-tile-info">СПЛИН</span>
                   </div>
                 </div>
               </button>
@@ -10641,98 +10868,98 @@
                 <div class="track-history-list" id="track-history-list">
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">LP</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">СП</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Roads Untraveled</div>
+                      <div class="track-history-title">Выхода нет</div>
                       <div class="track-history-subtitle">
-                        <span>Linkin Park</span>
+                        <span>Сплин</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Roads Untraveled в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить «Выхода нет» в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">06:45</div>
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DG</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">МК</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Baby Don't Hurt Me</div>
+                      <div class="track-history-title">Знаешь ли ты</div>
                       <div class="track-history-subtitle">
-                        <span>David Guetta, Anne-Marie</span>
+                        <span>МакSим</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Baby Don't Hurt Me в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить «Знаешь ли ты» в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">06:45</div>
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DG</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">ДР</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Stay (Don't Go Away)</div>
+                      <div class="track-history-title">Втюрилась</div>
                       <div class="track-history-subtitle">
-                        <span>David Guetta, An-marie</span>
+                        <span>Дора</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Stay в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить «Втюрилась» в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">06:45</div>
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">БА</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Dance The Night (Ayur Tyre…)</div>
+                      <div class="track-history-title">Сансара</div>
                       <div class="track-history-subtitle">
-                        <span>Dua Lipa</span>
+                        <span>Баста</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Dance The Night в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить «Сансара» в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">06:45</div>
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">ЗВ</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Jana Schaefer</div>
+                      <div class="track-history-title">Районы-кварталы</div>
                       <div class="track-history-subtitle">
-                        <span>Dua Lipa</span>
+                        <span>Звери</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Jana Schaefer в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить «Районы-кварталы» в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">06:45</div>
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">СГ</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Pat Hauck MD</div>
+                      <div class="track-history-title">Вечно молодой</div>
                       <div class="track-history-subtitle">
-                        <span>Dua Lipa</span>
+                        <span>Смысловые Галлюцинации</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Pat Hauck MD в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить «Вечно молодой» в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">06:45</div>
                   </div>
 
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">DL</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">КН</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Lynda Kuhn</div>
+                      <div class="track-history-title">Пачка сигарет</div>
                       <div class="track-history-subtitle">
-                        <span>Dua Lipa</span>
+                        <span>Кино</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Lynda Kuhn в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить «Пачка сигарет» в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">06:45</div>
@@ -10740,11 +10967,11 @@
 
                   <!-- Dimmed via CSS :last-child → opacity 0.6 on 10th item, so add explicit class -->
                   <div class="track-history-row">
-                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">CH</div>
+                    <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">МТ</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Metro</div>
+                      <div class="track-history-title">Капкан</div>
                       <div class="track-history-subtitle">
-                        <span>Calvin Harris &amp; Ellie Goulding</span>
+                        <span>Мот</span>
                       </div>
                     </div>
                     <button class="track-history-plus" type="button" aria-label="Добавить Metro в плейлист">
@@ -10758,7 +10985,7 @@
                     <div class="track-history-meta">
                       <div class="track-history-title">Demons</div>
                       <div class="track-history-subtitle">
-                        <span>Imagine Dragons</span>
+                        <span>КИНО</span>
                       </div>
                     </div>
                     <button class="track-history-plus" type="button" aria-label="Добавить Demons в плейлист">
@@ -10770,12 +10997,12 @@
                   <div class="track-history-row">
                     <div class="track-history-cover" style="background: color-mix(in oklab, var(--np-accent) 20%, #15171D);" aria-hidden="true">MG</div>
                     <div class="track-history-meta">
-                      <div class="track-history-title">Glitch</div>
+                      <div class="track-history-title">Сет Вадима Адамова</div>
                       <div class="track-history-subtitle">
-                        <span>Martin Garrix × Julian Jordan</span>
+                        <span>Вадим Адамов</span>
                       </div>
                     </div>
-                    <button class="track-history-plus" type="button" aria-label="Добавить Glitch в плейлист">
+                    <button class="track-history-plus" type="button" aria-label="Добавить сет Вадима Адамова в плейлист">
                       <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                     </button>
                     <div class="track-history-duration">04:00</div>
@@ -10819,7 +11046,7 @@
               <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
               <span class="lives-card-name">ГОРОД РОК</span>
               <span class="lives-card-meta">103.5 FM · 4 832 слушателя</span>
-              <span class="lives-now-playing" aria-hidden="true">Believer · IMAGINE DRAGONS</span>
+              <span class="lives-now-playing" aria-hidden="true">Группа крови · КИНО</span>
             </button>
             <button class="lives-card" role="listitem" type="button" data-station="pop"
                     aria-label="ГОРОД ПОП — слушать в прямом эфире">
@@ -10833,7 +11060,7 @@
               <span class="lives-live-pill" aria-hidden="true"><span class="lives-live-dot"></span>LIVE</span>
               <span class="lives-card-name">ГОРОД ДИСКО</span>
               <span class="lives-card-meta">104.5 FM · 2 188 слушателей</span>
-              <span class="lives-now-playing" aria-hidden="true">Glitch · MARTIN GARRIX</span>
+              <span class="lives-now-playing" aria-hidden="true">Сет · ВАДИМ АДАМОВ</span>
             </button>
             <button class="lives-card" role="listitem" type="button" data-station="hiphop"
                     aria-label="ГОРОД ХИП-ХОП — слушать в прямом эфире">
@@ -10909,12 +11136,12 @@
 
           <!-- Row 1: track -->
           <div class="favorites-row" role="listitem" tabindex="0"
-            data-fav-type="track" data-fav-title="Believer" data-fav-artist="IMAGINE DRAGONS"
-            aria-label="Believer, трек, Imagine Dragons">
+            data-fav-type="track" data-fav-title="Группа крови" data-fav-artist="КИНО"
+            aria-label="Группа крови, трек, КИНО">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
-              <span class="favorites-row-title">Believer</span>
-              <span class="favorites-row-sub">IMAGINE DRAGONS · 03:38</span>
+              <span class="favorites-row-title">Группа крови</span>
+              <span class="favorites-row-sub">КИНО · 04:45</span>
             </div>
             <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
             <span class="favorites-row-info tabular" aria-hidden="true">03:38</span>
@@ -10925,11 +11152,11 @@
 
           <!-- Row 2: artist -->
           <div class="favorites-row" role="listitem" tabindex="0"
-            data-fav-type="artist" data-fav-title="IMAGINE DRAGONS"
-            aria-label="Imagine Dragons, артист, 47 треков">
+            data-fav-type="artist" data-fav-title="КИНО"
+            aria-label="КИНО, артист, 47 треков">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
-              <span class="favorites-row-title">IMAGINE DRAGONS</span>
+              <span class="favorites-row-title">КИНО</span>
               <span class="favorites-row-sub">артист · 47 треков</span>
             </div>
             <span class="favorites-type-badge favorites-type-badge--artist" aria-hidden="true">АРТИСТ</span>
@@ -10973,11 +11200,11 @@
 
           <!-- Row 5: track -->
           <div class="favorites-row" role="listitem" tabindex="0"
-            data-fav-type="track" data-fav-title="Glitch" data-fav-artist="MARTIN GARRIX × JULIAN JORDAN"
-            aria-label="Glitch, трек, Martin Garrix">
+            data-fav-type="track" data-fav-title="Сет Вадима Адамова" data-fav-artist="ВАДИМ АДАМОВ"
+            aria-label="Сет Вадима Адамова, трек, Вадим Адамов">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
-              <span class="favorites-row-title">Glitch</span>
+              <span class="favorites-row-title">Сет Вадима Адамова</span>
               <span class="favorites-row-sub">MARTIN GARRIX × JULIAN JORDAN · 04:00</span>
             </div>
             <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
@@ -11022,7 +11249,7 @@
           <!-- Row 8: artist -->
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="artist" data-fav-title="LINKIN PARK"
-            aria-label="Linkin Park, артист, 32 трека">
+            aria-label="Сплин, артист, 32 трека">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">LINKIN PARK</span>
@@ -11038,7 +11265,7 @@
           <!-- Row 9: track -->
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Roads Untraveled" data-fav-artist="LINKIN PARK"
-            aria-label="Roads Untraveled, трек, Linkin Park">
+            aria-label="Выхода нет, трек, Сплин">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Roads Untraveled</span>
@@ -11085,11 +11312,11 @@
 
           <!-- Row 12: track -->
           <div class="favorites-row" role="listitem" tabindex="0"
-            data-fav-type="track" data-fav-title="Dance The Night" data-fav-artist="DUA LIPA"
-            aria-label="Dance The Night, трек, Dua Lipa">
+            data-fav-type="track" data-fav-title="Сансара" data-fav-artist="БАСТА"
+            aria-label="Сансара, трек, Баста">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
-              <span class="favorites-row-title">Dance The Night</span>
+              <span class="favorites-row-title">Сансара</span>
               <span class="favorites-row-sub">DUA LIPA · 02:56</span>
             </div>
             <span class="favorites-type-badge favorites-type-badge--track" aria-hidden="true">ТРЕК</span>
@@ -11101,11 +11328,11 @@
 
           <!-- Row 13: artist -->
           <div class="favorites-row" role="listitem" tabindex="0"
-            data-fav-type="artist" data-fav-title="JONY"
-            aria-label="JONY, артист, 21 трек">
+            data-fav-type="artist" data-fav-title="МакSим"
+            aria-label="МакSим, артист, 21 трек">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
-              <span class="favorites-row-title">JONY</span>
+              <span class="favorites-row-title">МакSим</span>
               <span class="favorites-row-sub">артист · 21 трек</span>
             </div>
             <span class="favorites-type-badge favorites-type-badge--artist" aria-hidden="true">АРТИСТ</span>
@@ -11134,7 +11361,7 @@
           <!-- Row 15: track -->
           <div class="favorites-row" role="listitem" tabindex="0"
             data-fav-type="track" data-fav-title="Roads Untraveled (acoustic)" data-fav-artist="LINKIN PARK"
-            aria-label="Roads Untraveled acoustic, трек, Linkin Park">
+            aria-label="Выхода нет (акустика), трек, Сплин">
             <div class="favorites-row-thumb" aria-hidden="true" style="background:var(--surface-1)"></div>
             <div class="favorites-row-meta">
               <span class="favorites-row-title">Roads Untraveled (acoustic)</span>
@@ -11705,6 +11932,12 @@
           </button>
         </div>
       </form>
+
+      <!-- GOROD-L4 слой 1: гость слушает и читает; свой голос — после входа -->
+      <div class="rail-guest rail-expanded-only" id="rail-guest-note">
+        <p class="rail-guest-text">Вы в эфире как гость: все станции открыты, диджей рассказывает сам. Отвечать ему и собирать своё — после входа.</p>
+        <button class="rail-guest-btn" id="rail-guest-login" type="button">Войти <span class="rail-guest-btn-note">демо · без формы</span></button>
+      </div>
     </aside>
     <!-- /.chat-rail -->
     <!-- Mobile chat FAB — opens the rail as a full-height dialog (mobile surface / <640px web) -->
@@ -11782,8 +12015,8 @@
           <span style="position:relative;z-index:1;">BELIEVER</span>
         </div>
         <div class="home-tf-meta">
-          <div class="home-tf-title" id="home-bs-title">Believer</div>
-          <div class="home-tf-artist" id="home-bs-artist">IMAGINE DRAGON</div>
+          <div class="home-tf-title" id="home-bs-title">Группа крови</div>
+          <div class="home-tf-artist" id="home-bs-artist">КИНО</div>
         </div>
       </div>
 
@@ -11884,8 +12117,8 @@
           <span style="position:relative;z-index:1;">BELIEVER</span>
         </div>
         <div class="home-tf-meta">
-          <div class="home-tf-title" id="home-sd-title">Believer</div>
-          <div class="home-tf-artist" id="home-sd-artist">IMAGINE DRAGON</div>
+          <div class="home-tf-title" id="home-sd-title">Группа крови</div>
+          <div class="home-tf-artist" id="home-sd-artist">КИНО</div>
         </div>
       </div>
 
@@ -11967,6 +12200,14 @@
     <!-- Thin progress bar at very top edge -->
     <div class="player-mini-progress-bar" aria-hidden="true">
       <div class="player-mini-progress-fill" id="mini-progress-fill"></div>
+    </div>
+
+    <!-- GOROD-L4 слои 1-2: помеченный рекламный брейк (демо-ритм; подписка не видит) -->
+    <div class="player-ad" id="player-ad" hidden role="status" aria-live="polite">
+      <span class="player-ad-badge">Реклама</span>
+      <span class="player-ad-text" id="player-ad-text"></span>
+      <span class="player-ad-timer" id="player-ad-timer" aria-hidden="true">8</span>
+      <button class="player-ad-off" id="player-ad-off" type="button">Убрать рекламу</button>
     </div>
 
     <!-- Album art — real cover; color-from-art tints the player (GOROD-042/043) -->
@@ -12184,9 +12425,9 @@
               <div class="player-full-carousel-track-artist">ODESZA</div>
             </div>
             <div class="player-full-carousel-item" aria-label="Текущий трек">
-              <div class="player-full-carousel-cover player-full-carousel-cover--center" style="background: var(--surface-1);">Believer</div>
-              <div class="player-full-carousel-track-title">Believer</div>
-              <div class="player-full-carousel-track-artist">Imagine Dragons</div>
+              <div class="player-full-carousel-cover player-full-carousel-cover--center" style="background: var(--surface-1);">Группа крови</div>
+              <div class="player-full-carousel-track-title">Группа крови</div>
+              <div class="player-full-carousel-track-artist">КИНО</div>
             </div>
             <div class="player-full-carousel-item" aria-label="Следующий трек">
               <div class="player-full-carousel-cover player-full-carousel-cover--side" style="background: var(--surface-1);">Shortwave</div>
@@ -12197,8 +12438,8 @@
 
           <!-- Track meta: title + artist -->
           <div class="player-full-meta">
-            <div class="player-full-title" id="player-full-title">Believer</div>
-            <div class="player-full-artist" id="player-full-artist">Imagine Dragons</div>
+            <div class="player-full-title" id="player-full-title">Группа крови</div>
+            <div class="player-full-artist" id="player-full-artist">КИНО</div>
           </div>
         </div>
         <!-- /cover view -->
@@ -12227,11 +12468,11 @@
           <div class="player-full-history" id="player-history-list">
 
             <div class="player-history-item">
-              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #2c3e50, #4a6fa5);">LP</div>
+              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #2c3e50, #4a6fa5);">СП</div>
               <div class="player-history-item-meta">
-                <div class="player-history-item-title">Roads Untraveled</div>
+                <div class="player-history-item-title">Выхода нет</div>
                 <div class="player-history-item-subtitle">
-                  <span>Linkin Park</span>
+                  <span>Сплин</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12241,11 +12482,11 @@
             </div>
 
             <div class="player-history-item">
-              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #e91e63, #ff5722);">DG</div>
+              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #e91e63, #ff5722);">МК</div>
               <div class="player-history-item-meta">
-                <div class="player-history-item-title">Baby Don't Hurt Me</div>
+                <div class="player-history-item-title">Знаешь ли ты</div>
                 <div class="player-history-item-subtitle">
-                  <span>David Guetta, Anne-Marie</span>
+                  <span>МакSим</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12255,11 +12496,11 @@
             </div>
 
             <div class="player-history-item">
-              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #ff4081, #9c27b0);">DL</div>
+              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #ff4081, #9c27b0);">БА</div>
               <div class="player-history-item-meta">
-                <div class="player-history-item-title">Dance The Night</div>
+                <div class="player-history-item-title">Сансара</div>
                 <div class="player-history-item-subtitle">
-                  <span>Dua Lipa</span>
+                  <span>Баста</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12269,11 +12510,11 @@
             </div>
 
             <div class="player-history-item">
-              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #1565c0, #00bcd4);">DL</div>
+              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #1565c0, #00bcd4);">ЗВ</div>
               <div class="player-history-item-meta">
-                <div class="player-history-item-title">Jana Schaefer</div>
+                <div class="player-history-item-title">Районы-кварталы</div>
                 <div class="player-history-item-subtitle">
-                  <span>Dua Lipa</span>
+                  <span>Звери</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12283,11 +12524,11 @@
             </div>
 
             <div class="player-history-item">
-              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #37474f, #78909c);">DL</div>
+              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #37474f, #78909c);">СГ</div>
               <div class="player-history-item-meta">
-                <div class="player-history-item-title">Pat Hauck MD</div>
+                <div class="player-history-item-title">Вечно молодой</div>
                 <div class="player-history-item-subtitle">
-                  <span>Dua Lipa</span>
+                  <span>Смысловые Галлюцинации</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12297,11 +12538,11 @@
             </div>
 
             <div class="player-history-item">
-              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #4a148c, #7b1fa2);">DL</div>
+              <div class="player-history-item-cover" style="background: linear-gradient(135deg, #4a148c, #7b1fa2);">КН</div>
               <div class="player-history-item-meta">
-                <div class="player-history-item-title">Lynda Kuhn</div>
+                <div class="player-history-item-title">Пачка сигарет</div>
                 <div class="player-history-item-subtitle">
-                  <span>Dua Lipa</span>
+                  <span>Кино</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12313,9 +12554,9 @@
             <div class="player-history-item">
               <div class="player-history-item-cover" style="background: linear-gradient(135deg, #006064, #00897b);">CH</div>
               <div class="player-history-item-meta">
-                <div class="player-history-item-title">Metro</div>
+                <div class="player-history-item-title">Капкан</div>
                 <div class="player-history-item-subtitle">
-                  <span>Calvin Harris &amp; Ellie Goulding</span>
+                  <span>Мот</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12330,7 +12571,7 @@
               <div class="player-history-item-meta">
                 <div class="player-history-item-title">Baby Don't Hurt Me</div>
                 <div class="player-history-item-subtitle">
-                  <span>David Guetta, An-marie</span>
+                  <span>Дора</span>
                   <span class="player-history-item-plus" aria-label="Добавить в плейлист">
                     <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
                   </span>
@@ -12604,6 +12845,45 @@
     <!-- Body: groups of controls -->
     <div class="tweaks-body" id="tweaks-body">
 
+      <!-- GOROD-L4: Role group — 4 слоя доступа из листа owner'а 29.07 -->
+      <div class="tweaks-group" role="group" aria-labelledby="tweak-label-role">
+        <div class="tweaks-group-label" id="tweak-label-role">Роль · слои 1–4</div>
+        <div class="tweaks-row" role="group" aria-label="Выбор роли пользователя">
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="guest"
+            aria-pressed="true"
+            aria-label="Слой 1: гость — станции и эфир без регистрации"
+          >Гость</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="account"
+            aria-pressed="false"
+            aria-label="Слой 2: аккаунт — подборки и диалог, реклама остаётся"
+          >Аккаунт</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="paid"
+            aria-pressed="false"
+            aria-label="Слой 3: подписка — без рекламы, свой стрим"
+          >Подписка</button>
+          <button
+            class="tweak-btn"
+            type="button"
+            data-tweak="role"
+            data-value="author"
+            aria-pressed="false"
+            aria-label="Слой 4: автор — стрим в витрине, монетизация"
+          >Автор</button>
+        </div>
+      </div>
+
       <!-- Theme group -->
       <div class="tweaks-group" role="group" aria-labelledby="tweak-label-theme">
         <div class="tweaks-group-label" id="tweak-label-theme">Тема</div>
@@ -12724,6 +13004,31 @@
     <!-- /.tweaks-body -->
   </aside>
 
+  <!-- GOROD-L4 слой 2: мягкий гейт гостя на страницах «своего» (подборки/вкус/профиль) -->
+  <div class="role-gate" id="role-gate" hidden role="dialog" aria-modal="true" aria-labelledby="role-gate-title">
+    <div class="role-gate-card">
+      <div class="role-gate-kicker">откроется после входа</div>
+      <h2 class="role-gate-title" id="role-gate-title">Подборки и свой вкус</h2>
+      <p class="role-gate-text" id="role-gate-text">Гостю открыты все станции и эфир диджея. После входа появится своё: подборки, вкус, любимое.</p>
+      <div class="role-gate-actions">
+        <button class="role-gate-btn role-gate-btn--primary" id="role-gate-login" type="button">Войти <span class="role-gate-btn-note">демо · без формы</span></button>
+        <button class="role-gate-btn" id="role-gate-back" type="button">Пока послушаю станции</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOROD-L4: промежуточные экраны воронки — вход · подписка · публикация (демо-флоу) -->
+  <div class="authflow" id="authflow" hidden role="dialog" aria-modal="true" aria-labelledby="authflow-title">
+    <div class="authflow-card">
+      <button class="authflow-x" id="authflow-x" type="button" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="authflow-kicker" id="authflow-kicker">вход</div>
+      <h2 class="authflow-title" id="authflow-title">Свой голос в эфире</h2>
+      <div class="authflow-body" id="authflow-body"><!-- шаги рендерит GorodAuthFlow --></div>
+    </div>
+  </div>
+
   <!-- FAB to reopen tweaks after close -->
   <button
     class="tweaks-fab"
@@ -12753,6 +13058,7 @@
         playerView:   'gorod-fm.player-view',
         hideFlowMap:  'gorod-fm.hide-flow-map',
         trackView:    'gorod-fm.track-view',
+        role:         'gorod-fm.role',          // GOROD-L4: guest | account | paid | author
       };
 
       const VALID_ROUTES = ['#/map', '#/home', '#/lives', '#/podborki', '#/library', '#/artist', '#/track', '#/favorites', '#/onboarding', '#/taste', '#/profile', '#/recap'];
@@ -13050,8 +13356,8 @@
         var titleEl  = document.getElementById('track-page-title');
         var artistEl = document.getElementById('track-page-artist');
         var albumEl  = document.getElementById('track-page-album');
-        if (titleEl)  titleEl.textContent  = title  || 'Believer';
-        if (artistEl) artistEl.textContent = artist || 'IMAGINE DRAGONS';
+        if (titleEl)  titleEl.textContent  = title  || 'Группа крови';
+        if (artistEl) artistEl.textContent = artist || 'КИНО';
         if (albumEl)  albumEl.textContent  = album  || 'альбом · Night Visions · 2012';
 
         setTrackView('cover');
@@ -13210,6 +13516,32 @@
         lsSet(LS_KEYS.hideFlowMap, boolVal ? 'true' : 'false');
       }
 
+      /* ---- GOROD-L4: роль (4 слоя доступа) --------------------------------- */
+      var ROLE_ORDER = ['guest', 'account', 'paid', 'author'];
+
+      function applyRole(role) {
+        if (ROLE_ORDER.indexOf(role) === -1) role = 'guest';
+        var prev = document.documentElement.getAttribute('data-role') || null;
+        document.documentElement.setAttribute('data-role', role);
+        updateTweakButtonStates('role', role);
+        lsSet(LS_KEYS.role, role);
+        if (prev !== role) {
+          document.dispatchEvent(new CustomEvent('gorodfm-role-changed', {
+            detail: { role: role, prev: prev }
+          }));
+        }
+      }
+
+      /* Мост для остальных модулей (рейл, витрина, мой стрим): читают роль и
+         двигают её из продуктовых CTA («Войти», «Оформить», «В витрину»). */
+      window.GorodRole = {
+        get: function () { return document.documentElement.getAttribute('data-role') || 'guest'; },
+        set: applyRole,
+        atLeast: function (min) {
+          return ROLE_ORDER.indexOf(this.get()) >= ROLE_ORDER.indexOf(min);
+        }
+      };
+
       // Delegate click on all tweak buttons
       document.querySelectorAll('.tweak-btn[data-tweak]').forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -13219,6 +13551,7 @@
           else if (group === 'surface')      applySurface(value);
           else if (group === 'home-variant') applyHomeVariant(value);
           else if (group === 'hide-flow-map') applyHideFlowMap(value);
+          else if (group === 'role')          applyRole(value);
         });
       });
 
@@ -13339,7 +13672,7 @@
       /* ---- Home page — data ---------------------------------------------- */
 
       var STATION_TRACKS = {
-        rock:    { track: 'Believer',           artist: 'IMAGINE DRAGON · Z. CITY SHOW',  overline: 'СЕЙЧАС В ЭФИРЕ · РОК',    coverClass: 'home-tf-cover-rock'    },
+        rock:    { track: 'Группа крови',       artist: 'КИНО · Z. CITY SHOW',            overline: 'СЕЙЧАС В ЭФИРЕ · РОК',    coverClass: 'home-tf-cover-rock'    },
         pop:     { track: 'Blinding Lights',    artist: 'THE WEEKND · РАДИО ПОП',          overline: 'СЕЙЧАС В ЭФИРЕ · ПОП',    coverClass: 'home-tf-cover-pop'     },
         disko:   { track: 'Stayin\' Alive',     artist: 'BEE GEES · DISCO GOLD',           overline: 'СЕЙЧАС В ЭФИРЕ · ДИСКО',  coverClass: 'home-tf-cover-disko'   },
         hiphop:  { track: 'HUMBLE.',            artist: 'KENDRICK LAMAR · HIP CITY',       overline: 'СЕЙЧАС В ЭФИРЕ · ХИП-ХОП', coverClass: 'home-tf-cover-hiphop' },
@@ -13354,10 +13687,10 @@
       };
 
       var QUEUE_TRACKS = [
-        { title: 'Thunder',        artist: 'Imagine Dragons', dur: '3:07', grad: 'linear-gradient(135deg, #1a3a6e, #5168FC)' },
-        { title: 'Enemy',          artist: 'Imagine Dragons', dur: '2:54', grad: 'linear-gradient(135deg, #2d1547, #c43a6e)' },
-        { title: 'Radioactive',    artist: 'Imagine Dragons', dur: '3:06', grad: 'linear-gradient(135deg, #1a5c30, #2ecc71)' },
-        { title: 'Demons',         artist: 'Imagine Dragons', dur: '2:57', grad: 'linear-gradient(135deg, #4a1a00, #d4662d)' },
+        { title: 'Звезда по имени Солнце', artist: 'КИНО',    dur: '3:44', grad: 'linear-gradient(135deg, #1a3a6e, #5168FC)' },
+        { title: 'Кукушка',        artist: 'КИНО',            dur: '6:11', grad: 'linear-gradient(135deg, #2d1547, #c43a6e)' },
+        { title: 'Группа крови',   artist: 'КИНО',            dur: '4:45', grad: 'linear-gradient(135deg, #1a5c30, #2ecc71)' },
+        { title: 'Пачка сигарет',  artist: 'КИНО',            dur: '4:28', grad: 'linear-gradient(135deg, #4a1a00, #d4662d)' },
       ];
 
       function buildQueueHtml() {
@@ -13916,6 +14249,16 @@
         var savedHideFlowMap = lsGet(LS_KEYS.hideFlowMap, 'false');
         applyHideFlowMap(savedHideFlowMap);
 
+        // 3c. GOROD-L4: restore role (слой доступа); дефолт — гость (слой 1)
+        applyRole(lsGet(LS_KEYS.role, 'guest'));
+
+        // 3d. Tweaks стартует свёрнутой в FAB (owner 29.07: «tweaks панель убери») —
+        //     не заслоняет рейл; открыть — шестерёнка снизу справа.
+        if (tweaksPanel && tweaksFab) {
+          tweaksPanel.hidden = true;
+          tweaksFab.style.display = 'flex';
+        }
+
         // 4. Resolve initial route:
         //    current hash → saved last route → default #/map
         var hashRoute    = routeFromHash(window.location.hash);
@@ -13962,6 +14305,424 @@
     })();
   </script>
 
+  <script>
+  /* ---- GOROD-L4 слои 1-2 — рекламные брейки (демо) ------------------------ */
+  (function () {
+    'use strict';
+    /* Лист owner'а 29.07: гость и бесплатный аккаунт слушают «с небольшим
+       количеством рекламы», подписка и автор — без. Брейк помечен «Реклама»,
+       ротация из спонсоров вкуса; демо-ритм ужат, чтобы был виден на показе.
+       gorodfm_ad_less=1 (обещание «реже и точнее» из «Мой вкус») — вдвое реже. */
+    var BASE_EVERY = 100000, LEN = 8000, FIRST_AFTER = 25000;
+    var ADS = [
+      { brand: 'Яндекс Афиша', line: 'концерты ваших артистов — рядом и со скидкой' },
+      { brand: 'The Coffee', line: 'раф «Твоя волна» — −20% в приложении' },
+      { brand: 'Винил Маркет', line: 'пластинки, которые звучат теплее' }
+    ];
+    var strip, textEl, timerEl, offBtn, idx = 0, hideT = 0, tickT = 0, cntT = 0;
+    function $(id) { return document.getElementById(id); }
+    function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
+    function adFree() { return role() === 'paid' || role() === 'author'; }
+    function everyMs() {
+      var less = false; try { less = localStorage.getItem('gorodfm_ad_less') === '1'; } catch (e) {}
+      return less ? BASE_EVERY * 2 : BASE_EVERY;
+    }
+    function hide() { if (strip) strip.hidden = true; clearInterval(cntT); }
+    function show() {
+      if (adFree() || document.hidden || !strip) return;
+      var ad = ADS[idx++ % ADS.length];
+      textEl.textContent = ad.brand + ' — ' + ad.line + ' (демо)';
+      strip.hidden = false;
+      var left = Math.round(LEN / 1000);
+      timerEl.textContent = left;
+      clearInterval(cntT);
+      cntT = setInterval(function () { left--; timerEl.textContent = Math.max(left, 0); }, 1000);
+      clearTimeout(hideT); hideT = setTimeout(hide, LEN);
+    }
+    function loop() {
+      clearTimeout(tickT);
+      tickT = setTimeout(function () { show(); loop(); }, everyMs());
+    }
+    function init() {
+      strip = $('player-ad'); if (!strip) return;
+      textEl = $('player-ad-text'); timerEl = $('player-ad-timer'); offBtn = $('player-ad-off');
+      offBtn.addEventListener('click', function () {
+        hide();
+        /* развилка слоя 2: гостю — вход, аккаунту — подписка (мост в рейл, C3) */
+        if (window.GorodRailBridge && GorodRailBridge.openUpsell) GorodRailBridge.openUpsell(role());
+      });
+      document.addEventListener('gorodfm-role-changed', function () { if (adFree()) hide(); });
+      clearTimeout(tickT); tickT = setTimeout(function () { show(); loop(); }, FIRST_AFTER);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-L4 слой 2 — гейт гостя на страницах «своего» ----------------- */
+  (function () {
+    'use strict';
+    /* Лист owner'а 29.07: гость «ничего не заполняет, просто слушает и читает».
+       Страницы вкуса/подборок остаются видимыми позади размытого гейта — ценность
+       видно, забор мягкий. Вход в демо мгновенный, роль двигает GorodRole. */
+    var GATED = {
+      '#/podborki': { title: 'Подборки', text: 'Гостю открыты все станции и эфир. После входа диджей поможет собирать свои подборки — под настроение и ситуацию.' },
+      '#/taste': { title: 'Мой вкус', text: 'Вкус копится после входа: из него диджей собирает рекомендации, а на подписке — ваш собственный стрим.' },
+      '#/profile': { title: 'Профиль', text: 'Профиль и его настройки появляются после входа.' },
+      '#/recap': { title: 'Итоги недели', text: 'Итоги собираются из вашей истории прослушиваний — она начинается после входа.' },
+      '#/onboarding': { title: 'Сбор вкуса', text: 'Гость ничего не заполняет: слушайте станции и читайте эфир. Вход откроет сбор вкуса — из него растут рекомендации.' }
+    };
+    var gate, titleEl, textEl, lastFocus = null;
+    function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
+    function sync() {
+      if (!gate) return;
+      var cfg = GATED[location.hash];
+      var show = !!cfg && role() === 'guest';
+      if (show) {
+        titleEl.textContent = cfg.title;
+        textEl.textContent = cfg.text;
+        if (gate.hidden) {
+          gate.hidden = false;
+          lastFocus = document.activeElement;
+          setTimeout(function () { var b = document.getElementById('role-gate-login'); if (b) b.focus(); }, 40);
+        }
+      } else if (!gate.hidden) {
+        gate.hidden = true;
+        if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} lastFocus = null; }
+      }
+    }
+    function init() {
+      gate = document.getElementById('role-gate'); if (!gate) return;
+      titleEl = document.getElementById('role-gate-title');
+      textEl = document.getElementById('role-gate-text');
+      document.getElementById('role-gate-login').addEventListener('click', function () {
+        if (window.GorodAuthFlow) GorodAuthFlow.login();
+        else if (window.GorodRole) GorodRole.set('account');
+      });
+      document.getElementById('role-gate-back').addEventListener('click', function () { location.hash = '#/home'; });
+      document.addEventListener('keydown', function (e) {
+        if (gate.hidden) return;
+        if (e.key === 'Escape') { e.preventDefault(); location.hash = '#/home'; return; }
+        /* focus-trap: модал держит Tab внутри карточки (WCAG 2.4.3) */
+        if (e.key === 'Tab') {
+          var f = [].filter.call(gate.querySelectorAll('button:not([disabled])'), function (el) { return el.offsetParent !== null; });
+          if (!f.length) return;
+          var first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+          else if (!gate.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+        }
+      });
+      window.addEventListener('hashchange', sync);
+      document.addEventListener('gorodfm-role-changed', sync);
+      sync();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-L4 — промежуточные экраны воронки (вход · подписка · витрина) --
+     Owner 29.07: «продумай экраны регистрации и т.д., чтобы фулл-флоу
+     проходился как в листе». Всё демо: бэкенда нет, успех двигает роль через
+     GorodRole. Способы входа — только Telegram и почта (директива owner'а
+     15.07: Google/Apple забанены — их кнопок нет вовсе). ---- */
+  (function () {
+    'use strict';
+    var wrap, card, kicker, titleEl, body, lastFocus = null, flow = null, tgTimer = 0;
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function open(f) { flow = f; lastFocus = document.activeElement; wrap.hidden = false; render(); }
+    function close() {
+      clearTimeout(tgTimer);
+      wrap.hidden = true; flow = null;
+      if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} lastFocus = null; }
+    }
+    function focusFirst() {
+      setTimeout(function () {
+        var f = card.querySelector('input, .authflow-body button');
+        (f || $('authflow-x')).focus();
+      }, 40);
+    }
+    function set(k, t, html) { kicker.textContent = k; titleEl.textContent = t; body.innerHTML = html; focusFirst(); }
+
+    function stepLoginMethod() {
+      set('вход', 'Свой голос в эфире',
+        '<p class="authflow-text">Станции открыты и так. Вход добавит своё: отвечать диджею, собирать подборки и вкус.</p>' +
+        '<div class="authflow-stack">' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="tg">Продолжить в Telegram</button>' +
+        '<button type="button" class="authflow-btn" data-af="email">По почте</button>' +
+        '</div>' +
+        '<p class="authflow-note">Вход — только Telegram или почта.</p>');
+    }
+    function stepTg() {
+      set('вход', 'Подтвердите в Telegram',
+        '<div class="authflow-wait"><span class="authflow-spin" aria-hidden="true"></span><span>Ждём подтверждение из приложения… <b>демо: подтвердится само</b></span></div>');
+      clearTimeout(tgTimer);
+      tgTimer = setTimeout(function () { stepDone('login'); }, 1600);
+    }
+    function stepEmail() {
+      set('вход', 'Вход по почте',
+        '<label class="authflow-label" for="af-email">Почта</label>' +
+        '<input class="authflow-input" id="af-email" type="email" placeholder="you@mail.ru" autocomplete="email">' +
+        '<div class="authflow-stack"><button type="button" class="authflow-btn authflow-btn--primary" data-af="email-code">Получить код</button></div>');
+    }
+    function stepEmailCode() {
+      var v = ($('af-email') && $('af-email').value.trim()) || '';
+      if (v.indexOf('@') === -1) v = 'you@mail.ru';
+      set('вход', 'Код из письма',
+        '<p class="authflow-text">Отправили код на <b>' + esc(v) + '</b>.</p>' +
+        '<label class="authflow-label" for="af-code">Код</label>' +
+        '<input class="authflow-input" id="af-code" inputmode="numeric" value="1234" aria-describedby="af-code-note">' +
+        '<div class="authflow-stack"><button type="button" class="authflow-btn authflow-btn--primary" data-af="login-done">Войти</button></div>' +
+        '<p class="authflow-note" id="af-code-note">Демо: код подставили за вас.</p>');
+    }
+    function stepSubscribe() {
+      set('подписка', 'Эфир без рекламы и свой стрим',
+        '<ul class="authflow-benefits">' +
+        '<li>Реклама выключается совсем</li>' +
+        '<li>«Мой стрим»: описываете словами — диджей собирает поток и подстраивает его под вас</li>' +
+        '<li>Дальше стрим можно отправить в витрину и зарабатывать</li>' +
+        '</ul>' +
+        '<div class="authflow-price"><b>299 ₽/мес</b><span>цена демо — сценарная</span></div>' +
+        '<div class="authflow-stack">' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="sub-done">Оформить подписку (демо)</button>' +
+        '<button type="button" class="authflow-btn" data-af="close">Позже</button>' +
+        '</div>');
+    }
+    function stepPublish() {
+      var s = null; try { s = JSON.parse(localStorage.getItem('gorodfm_mystream') || 'null'); } catch (e) {}
+      var name = (s && s.name) || 'Мой стрим';
+      set('в витрину', 'Отправить станцию всем',
+        '<label class="authflow-label" for="af-name">Название станции</label>' +
+        '<input class="authflow-input" id="af-name" maxlength="36" value="' + esc(name) + '">' +
+        '<ul class="authflow-benefits">' +
+        '<li>Станет доступна другим слушателям</li>' +
+        '<li>Доход — от рекламы и платных подписок</li>' +
+        '<li>Диджей подскажет, как зарабатывать больше</li>' +
+        '</ul>' +
+        '<div class="authflow-stack">' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="pub-done">Отправить (демо)</button>' +
+        '<button type="button" class="authflow-btn" data-af="close">Отмена</button>' +
+        '</div>');
+    }
+    function doneHtml(text) {
+      return '<div class="authflow-done"><span class="authflow-done-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>' + text + '</span></div>';
+    }
+    function stepDone(kind) {
+      if (kind === 'login') {
+        set('вход', 'Готово', doneHtml('Вы в эфире под своим именем.'));
+        setTimeout(function () { close(); if (window.GorodRole) GorodRole.set('account'); }, 1000);
+      } else if (kind === 'sub') {
+        set('подписка', 'Подписка активна', doneHtml('Рекламу выключил. Соберём ваш стрим?') +
+          '<div class="authflow-stack" style="margin-top:12px">' +
+          '<button type="button" class="authflow-btn authflow-btn--primary" data-af="sub-build">Собрать мой стрим</button>' +
+          '<button type="button" class="authflow-btn" data-af="close">Позже</button></div>');
+        if (window.GorodRole) GorodRole.set('paid');
+      } else if (kind === 'pub') {
+        var nameEl = $('af-name');
+        var name = (nameEl && nameEl.value.trim()) || 'Мой стрим';
+        var s = null; try { s = JSON.parse(localStorage.getItem('gorodfm_mystream') || 'null'); } catch (e) {}
+        if (s) { s.published = true; s.name = name; try { localStorage.setItem('gorodfm_mystream', JSON.stringify(s)); } catch (e) {} }
+        set('в витрину', 'В эфире у всех', doneHtml('«' + esc(name) + '» — в полке «Станции слушателей».'));
+        setTimeout(function () {
+          close();
+          if (window.GorodRole && GorodRole.get() !== 'author') GorodRole.set('author');
+          document.dispatchEvent(new CustomEvent('gorodfm-mystream-changed'));
+        }, 1100);
+      }
+    }
+    function render() {
+      if (flow === 'login') stepLoginMethod();
+      else if (flow === 'subscribe') stepSubscribe();
+      else if (flow === 'publish') stepPublish();
+    }
+    function onKey(e) {
+      if (!wrap || wrap.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') {
+        var f = [].filter.call(card.querySelectorAll('button, input'), function (el) { return el.offsetParent !== null && !el.disabled; });
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        else if (!card.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      }
+      if (e.key === 'Enter' && document.activeElement) {
+        if (document.activeElement.id === 'af-email') { e.preventDefault(); stepEmailCode(); }
+        else if (document.activeElement.id === 'af-code') { e.preventDefault(); stepDone('login'); }
+        else if (document.activeElement.id === 'af-name') { e.preventDefault(); stepDone('pub'); }
+      }
+    }
+    function init() {
+      wrap = $('authflow'); if (!wrap) return;
+      card = wrap.querySelector('.authflow-card');
+      kicker = $('authflow-kicker'); titleEl = $('authflow-title'); body = $('authflow-body');
+      $('authflow-x').addEventListener('click', close);
+      wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+      body.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-af]') : null;
+        if (!b) return;
+        var k = b.getAttribute('data-af');
+        if (k === 'tg') stepTg();
+        else if (k === 'email') stepEmail();
+        else if (k === 'email-code') stepEmailCode();
+        else if (k === 'login-done') stepDone('login');
+        else if (k === 'sub-done') stepDone('sub');
+        else if (k === 'sub-build') { close(); if (window.GorodStreamBuilder) GorodStreamBuilder.start(); }
+        else if (k === 'pub-done') stepDone('pub');
+        else if (k === 'close') close();
+      });
+      document.addEventListener('keydown', onKey);
+      window.GorodAuthFlow = {
+        login: function () { open('login'); },
+        subscribe: function () { open('subscribe'); },
+        publish: function () { open('publish'); }
+      };
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-L4 слой 3 — карточка «Мой стрим» на главной ------------------ */
+  (function () {
+    'use strict';
+    var LS = 'gorodfm_mystream';
+    var PLAY_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20" fill="currentColor"/></svg>';
+    /* Замены для «Не моё» — реальные русские песни (часть живёт в витрине) */
+    var SWAPS = [
+      { t: 'Сансара', a: 'Баста', why: 'та же энергия, другой голос — проверяю границу вкуса' },
+      { t: 'Потрачу', a: 'Егор Крид', why: 'тёплый поп той же температуры — смотрю, дело было в артисте или в жанре' },
+      { t: 'Выхода нет', a: 'Сплин', why: 'та же температура, но тише — смотрю, дело в громкости или в настроении' }
+    ];
+    var swapIdx = 0;
+    var lock, lockCta, buildEl, card, tracksEl, tagsEl, learnEl, authorEl, publishBtn, pubnote;
+    /* слой 4: полка «Станции слушателей» в витрине — демо-станции + ваша после публикации */
+    var LISTENER_SHELF = [
+      { title: 'Ночная смена — от Матвея', meta: 'спокойный поздний поток', badge: { label: 'от слушателя' } },
+      { title: 'Бег по утрам — от Сони', meta: 'ровный темп на 40 минут', badge: { label: 'от слушателя' } },
+      { title: 'Гараж 90-х — от Даниила', meta: 'гитары и кассетный шум', badge: { label: 'от слушателя' } }
+    ];
+    function $(id) { return document.getElementById(id); }
+    function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
+    function read() { try { return JSON.parse(localStorage.getItem(LS) || 'null'); } catch (e) { return null; } }
+    function write(s) { try { localStorage.setItem(LS, JSON.stringify(s)); } catch (e) {} }
+    function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function playDemo(tr) {
+      /* демо: ставим трек в мини-плеер; диджей в рейле заметит смену и откомментирует */
+      var t = $('player-track-title'), a = $('player-track-artist');
+      if (t) t.textContent = tr.t;
+      if (a) a.textContent = 'Мой стрим · ' + tr.a;
+    }
+    /* слой 4: перестроить полку слушателей (ваша станция первой после публикации) */
+    function renderListenersShelf() {
+      var mount = document.getElementById('vitrina');
+      if (!mount || !window.GorodVitrina) return;
+      if (mount.getAttribute('data-vitrina-rendered') !== 'true') { setTimeout(renderListenersShelf, 150); return; }
+      var old = document.getElementById('vitrina-listeners'); if (old) old.remove();
+      var s = read();
+      var items = LISTENER_SHELF.slice();
+      if (role() === 'author' && s && s.published) {
+        items.unshift({ title: (s.name || 'Мой стрим') + ' — ваш', meta: s.desc || 'личный поток', badge: { label: 'в эфире у всех', live: true } });
+      }
+      var shelf = GorodVitrina.renderShelf({
+        id: 'vitrina-listeners', title: 'Станции слушателей',
+        subtitle: 'Собраны в диалоге с диджеем — как «Мой стрим» · демо',
+        geometry: 'wide', items: items
+      });
+      if (!shelf) return;
+      var friends = document.getElementById('vitrina-friends');
+      if (friends && friends.nextSibling) mount.insertBefore(shelf, friends.nextSibling);
+      else mount.appendChild(shelf);
+    }
+    function render() {
+      var r = role(), s = read();
+      var paidUp = (r === 'paid' || r === 'author');
+      if (!lock) return;
+      lock.hidden = paidUp;
+      if (!paidUp) lockCta.textContent = (r === 'guest') ? 'Войти и попробовать (демо)' : 'Оформить подписку (демо)';
+      buildEl.hidden = !(paidUp && !s);
+      card.hidden = !(paidUp && s);
+      /* слой 4: кнопка публикации, панель автора, заметка о витрине.
+         Опубликованный стрим публикуется один раз — кнопка не возвращается
+         и при демо-откате роли в «Подписку» (review L4-audit NIT). */
+      var isAuthor = (r === 'author');
+      if (publishBtn) publishBtn.hidden = !(paidUp && s && !s.published);
+      var pubhint = $('mystream-pubhint');
+      if (pubhint && publishBtn) pubhint.hidden = publishBtn.hidden;
+      if (authorEl) authorEl.hidden = !(isAuthor && s && s.published);
+      if (pubnote) {
+        var showNote = paidUp && s && s.published;
+        pubnote.hidden = !showNote;
+        if (showNote) pubnote.textContent = 'В общей витрине — полка «Станции слушателей» ниже.';
+      }
+      renderListenersShelf();
+      if (paidUp && s) {
+        tagsEl.textContent = (s.vocal === 'instr' ? 'инструментал · ' : '') + (s.desc || '');
+        learnEl.textContent = (s.learned && s.learned.length)
+          ? 'Учусь: ' + s.learned[s.learned.length - 1]
+          : 'Меняется под время суток. Не зашёл трек — жмите «Не моё», и он подстроится.';
+        tracksEl.innerHTML = '';
+        (s.tracks || []).forEach(function (tr, i) {
+          var li = document.createElement('li'); li.className = 'mystream-track';
+          li.innerHTML = '<button type="button" class="mystream-play" aria-label="Слушать «' + esc(tr.t) + '» (демо)">' + PLAY_SVG + '</button>' +
+            '<div class="mystream-track-meta"><div class="mystream-track-title">' + esc(tr.t) + ' — ' + esc(tr.a) + '</div>' +
+            '<div class="mystream-track-why">' + esc(tr.why) + '</div></div>' +
+            '<button type="button" class="mystream-notmine" aria-label="Не моё: «' + esc(tr.t) + '» — заменить и поучиться">Не моё</button>';
+          li.querySelector('.mystream-play').addEventListener('click', function () { playDemo(tr); });
+          li.querySelector('.mystream-notmine').addEventListener('click', function () {
+            var swap = SWAPS[swapIdx++ % SWAPS.length];
+            var learned = 'реже ставлю ' + tr.a + ', попробовал ' + swap.a + ' — скажите, если снова мимо.';
+            s.tracks[i] = { t: swap.t, a: swap.a, why: swap.why };
+            s.learned = (s.learned || []).concat(learned);
+            write(s); render();
+            /* фокус не теряем: возвращаем на «Не моё» той же строки (список перерисован) */
+            var row = tracksEl.children[i];
+            var btn = row && row.querySelector('.mystream-notmine');
+            if (btn) btn.focus();
+          });
+          tracksEl.appendChild(li);
+        });
+      }
+    }
+    function init() {
+      lock = $('mystream-lock'); if (!lock) return;
+      lockCta = $('mystream-lock-cta'); buildEl = $('mystream-build'); card = $('mystream-card');
+      tracksEl = $('mystream-tracks'); tagsEl = $('mystream-tags'); learnEl = $('mystream-learn');
+      authorEl = $('mystream-author'); publishBtn = $('mystream-publish'); pubnote = $('mystream-pubnote');
+      lockCta.addEventListener('click', function () {
+        if (role() === 'guest') {
+          if (window.GorodAuthFlow) GorodAuthFlow.login();
+          else if (window.GorodRole) GorodRole.set('account');
+        } else {
+          if (window.GorodAuthFlow) GorodAuthFlow.subscribe();
+          else if (window.GorodRole) GorodRole.set('paid');
+        }
+      });
+      $('mystream-build-cta').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
+      $('mystream-rebuild').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
+      /* слой 4: публикация в витрину = переход в авторы */
+      publishBtn.addEventListener('click', function () {
+        var s = read(); if (!s) return;
+        if (window.GorodAuthFlow) { GorodAuthFlow.publish(); return; }
+        s.published = true; write(s);
+        if (window.GorodRole && role() !== 'author') GorodRole.set('author');
+        document.dispatchEvent(new CustomEvent('gorodfm-mystream-changed'));
+      });
+      authorEl.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-advice]') : null;
+        if (!b) return;
+        if (window.GorodStreamBuilder && GorodStreamBuilder.advice) GorodStreamBuilder.advice(b.getAttribute('data-advice'));
+      });
+      document.addEventListener('gorodfm-role-changed', render);
+      document.addEventListener('gorodfm-mystream-changed', render);
+      render();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
   <!-- =======================================================================
        Город ФМ v2 — AI-product layer (onboarding bubbles + Twinr AI chat)
        Self-contained; decoupled from the main app IIFE. See
@@ -13982,41 +14743,36 @@
       { t: 'ЭЛЕКТРО', hue: 190, w: 1.05, img: 'genre-electro.jpg' },
       { t: 'Дима Билан', img: 'favs-artist-dima-bilan-overlay.png', w: 1.0, g: 'ПОП' },
       { t: 'ЛОФАЙ', hue: 222, w: 0.95, img: 'genre-lofi.jpg' },
-      { t: 'Martin Garrix', img: 'favs-dj-martin-garrix.png', w: 1.05, g: 'ЭЛЕКТРО' },
       { t: 'ИНДИ', hue: 152, w: 0.95, img: 'genre-indie.jpg' },
-      { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК' },
       { t: 'ДЖАЗ', hue: 36, w: 0.9, img: 'genre-jazz.jpg' },
       { t: 'Вадим Адамов', img: 'home-tile-vadim-adamov-base.png', w: 1.0, g: 'ЭЛЕКТРО' },
       { t: 'РЭП', hue: 278, w: 1.0, img: 'genre-rap.jpg' },
       { t: 'Мия Бойка', img: 'favs-artist-mia-boyka.png', w: 0.95, g: 'ПОП' },
       { t: 'R&B', hue: 320, w: 0.9, img: 'genre-rnb.jpg' },
-      { t: 'Рамиль', img: 'favs-artist-ramil.png', w: 0.95, g: 'ПОП' },
       { t: 'МЕТАЛЛ', hue: 210, w: 0.9, img: 'genre-metal.jpg' },
       { t: 'КЛАССИКА', hue: 45, w: 0.85, img: 'genre-classic.jpg' }
     ];
     // Apple-Music-style: tapping a bubble spawns related ones.
     // genre -> representative artists; artist -> similar artists.
     var REL = {
-      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина'],
-      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons'],
-      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит'],
+      'ПОП': ['Zivert','Ваня Дмитриенко','Артур Пирожков','П.Гагарина'],
+      'РОК': ['КИНО','Би-2','Сплин','ДДТ'],
+      'ХИП-ХОП': ['Баста','Каста','Гуф','Мот'],
       'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин'],
-      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker'],
+      'ЭЛЕКТРО': ['Вадим Адамов','DJ Pitkin','Filatov & Karas','Swanky Tunes'],
       'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib'],
       'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco'],
       'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong'],
-      'РЭП': ['Eminem','Kendrick Lamar','Drake','ЛСП'],
+      'РЭП': ['Баста','Гуф','Каста','Смоки Мо'],
       'R&B': ['The Weeknd','Frank Ocean','SZA','Бьянка'],
       'МЕТАЛЛ': ['Metallica','Rammstein','Ария','S.O.A.D.'],
       'КЛАССИКА': ['Чайковский','Моцарт','L.Einaudi','H.Zimmer'],
-      'Егор Крид': ['Niletto','MONATIK','JONY','Артур Пирожков'],
-      'Макс Корж': ['Баста','Скриптонит','Каста','ЛСП'],
+      'Егор Крид': ['Niletto','Ваня Дмитриенко','Мот','Артур Пирожков'],
+      'Макс Корж': ['Баста','Каста','Гуф','Мот'],
       'Дима Билан': ['С.Лазарев','П.Гагарина','Zivert','Егор Крид'],
-      'Martin Garrix': ['David Guetta','Avicii','Tiësto','Alan Walker'],
-      'Linkin Park': ['Imagine Dragons','Papa Roach','3 Days Grace','Limp Bizkit'],
       'Вадим Адамов': ['DJ Smash','Filatov & Karas','Burito','Niletto'],
       'Мия Бойка': ['INSTASAMKA','Клава Кока','Зомб','Дора'],
-      'Рамиль': ['JONY','HammAli & Navai','Niletto','Zivert']
+      'МакSим': ['Niletto','Юлианна Караулова','Полина Гагарина','Zivert']
     };
     var MAX_BUBBLES = 80;
     var GENRE_HUE = {
@@ -14027,11 +14783,11 @@
     // Deep fallback pool so ANY bubble keeps blooming coherent "similar" ones
     // (genre-tagged) — endless Apple-Music-style expansion.
     var POOL = {
-      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина','Niletto','JONY','Дора','Клава Кока','Dua Lipa','The Weeknd'],
-      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons','ДДТ','Nirvana','Coldplay','Muse','The Beatles','Queen'],
-      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит','Каста','ЛСП','Travis Scott','Kanye West','Тимати','Гуф'],
+      'ПОП': ['Zivert','Ваня Дмитриенко','Артур Пирожков','П.Гагарина','Niletto','МакSим','Дора','Клава Кока','Люся Чеботина','Дима Билан'],
+      'РОК': ['КИНО','Би-2','Сплин','ДДТ','Наутилус Помпилиус','Земфира','Алиса','Король и Шут'],
+      'ХИП-ХОП': ['Баста','Каста','Гуф','Мот','Тимати','Смоки Мо','Кравц','ST'],
       'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин','Bee Gees','Daft Punk','Donna Summer','CHIC'],
-      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker','Calvin Harris','Skrillex','deadmau5','Zedd','ODESZA'],
+      'ЭЛЕКТРО': ['Вадим Адамов','DJ Pitkin','Filatov & Karas','Swanky Tunes','DJ Smash','Руки Вверх'],
       'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib','Idealism','Jinsang','mac ayres','Powfu'],
       'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco','Tame Impala','The Strokes','Cigarettes A.S.','Phoenix'],
       'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong','John Coltrane','Ella Fitzgerald','Чет Бейкер','Norah Jones'],
@@ -14301,14 +15057,14 @@
       { kw: ['студент', 'student', 'универ', 'univers', 'школ', 'college', 'стажёр', 'intern'], picks: ['ХИП-ХОП', 'ПОП'], why: 'студенческая энергия — хип-хоп и поп' },
       { kw: ['препод', 'учител', 'teacher', 'наук', 'science', 'research', 'исследов', 'phd', 'академ'], picks: ['КЛАССИКА', 'ДЖАЗ'], why: 'академический бэкграунд — классика и джаз' },
       { kw: ['кофе', 'coffee', 'винил', 'vinyl', 'бариста', 'barista', 'книг', 'book', 'читаю'], picks: ['ИНДИ', 'ДЖАЗ'], why: 'кофе и винил — инди и тёплый джаз' },
-      { kw: ['спорт', 'gym', 'зал', 'бег', 'run', 'фитнес', 'fitness', 'трениров', 'marathon', 'workout'], picks: ['ЭЛЕКТРО', 'Martin Garrix'], why: 'спорт и бег — электро и EDM (Garrix)' },
+      { kw: ['спорт', 'gym', 'зал', 'бег', 'run', 'фитнес', 'fitness', 'трениров', 'marathon', 'workout'], picks: ['ЭЛЕКТРО', 'Вадим Адамов'], why: 'спорт и бег — электро и диджей-сеты (Адамов)' },
       { kw: ['игр', 'game', 'gaming', 'гейм', 'киберспорт', 'esports', 'twitch', 'стрим'], picks: ['ЭЛЕКТРО', 'МЕТАЛЛ'], why: 'гейминг — драйвовое электро и тяжёлое' },
       { kw: ['кино', 'film', 'movie', 'сериал', 'режисс', 'фото', 'photo', 'видео', 'video', 'монтаж'], picks: ['КЛАССИКА', 'ИНДИ'], why: 'кино и визуал — саундтреки и инди' },
       { kw: ['путешеств', 'travel', 'тревел', 'explore', 'хайк', 'hike', 'дорог'], picks: ['ИНДИ', 'ЛОФАЙ'], why: 'любите дорогу — инди и лофай в путь' },
-      { kw: ['рок', 'rock', 'гитар', 'guitar', 'группа', 'band', 'панк', 'punk', 'гранж', 'grunge'], picks: ['РОК', 'Linkin Park'], why: 'рок и гитара — рок и Linkin Park' },
+      { kw: ['рок', 'rock', 'гитар', 'guitar', 'группа', 'band', 'панк', 'punk', 'гранж', 'grunge'], picks: ['РОК', 'КИНО'], why: 'рок и гитара — русский рок и «Кино»' },
       { kw: ['рэп', 'rap', 'хип-хоп', 'hip-hop', 'хип хоп', 'баттл', 'battle'], picks: ['ХИП-ХОП', 'РЭП'], why: 'тяга к рэпу — хип-хоп и рэп' },
       { kw: ['танц', 'dance', 'клуб', 'club', 'вечеринк', 'party', 'диджей', 'techno', 'хаус', 'house'], picks: ['ДИСКО', 'ЭЛЕКТРО'], why: 'танцы и клубы — диско и электро' },
-      { kw: ['казах', 'алмат', 'almaty', 'astana', 'астан', 'караганд'], picks: ['Макс Корж', 'Рамиль'], why: 'постсоветская волна — Макс Корж и Рамиль' }
+      { kw: ['екатеринбург', 'урал', 'новосибирск', 'сибир', 'таганрог', 'ростов'], picks: ['Смысловые Галлюцинации', 'Звери'], why: 'региональная сцена — Смысловые Галлюцинации и Звери' }
     ];
     var RESUME_FALLBACK = [
       { name: 'ПОП', why: 'универсальный старт — потом сузим' },
@@ -14479,7 +15235,7 @@
       var GENRE_LC = { 'ПОП':'поп','РОК':'рок','ХИП-ХОП':'хип-хоп','ДИСКО':'диско','ЭЛЕКТРО':'электронику',
         'ЛОФАЙ':'лофай','ИНДИ':'инди','ДЖАЗ':'джаз','РЭП':'рэп','R&B':'r&b','МЕТАЛЛ':'тяжёлое','КЛАССИКА':'классику' };
       var MOOD = [
-        { any:['РОК','МЕТАЛЛ','Linkin Park'], name:'Энергичное', why:'рок и тяжёлое в выборе → энергичный профиль' },
+        { any:['РОК','МЕТАЛЛ','КИНО'], name:'Энергичное', why:'рок и тяжёлое в выборе → энергичный профиль' },
         { any:['ХИП-ХОП','ЭЛЕКТРО','ДИСКО','РЭП'], name:'Драйв', why:'хип-хоп и электро в выборе → ритм и драйв' },
         { any:['ЛОФАЙ','ДЖАЗ','КЛАССИКА','ИНДИ'], name:'Спокойное', why:'инди и лофай в выборе → спокойный профиль' }
       ];
@@ -14626,7 +15382,7 @@
           { disp:'Рэп',     kind:'genre', why:'много рэпа в <b>ВК Музыке</b> — добавил.' },
           { disp:'Поп',     kind:'genre', why:'заметная доля в <b>ВК</b>.' },
           { disp:'Макс Корж',  kind:'artist', why:'часто слушал <b>Макса Коржа</b> в ВК.' },
-          { disp:'Скриптонит', kind:'artist', why:'часто слушал <b>Скриптонита</b> в ВК.' } ] }
+          { disp:'Баста', kind:'artist', why:'часто слушал <b>Басту</b> в ВК.' } ] }
       };
       function refs(){
         if (I.root) return;
@@ -14902,7 +15658,7 @@
     // 2-3 seeded demo friends — fixed taste vectors, art-tint monogram avatars (reuses .ai-room-av).
     var FRIENDS = {
       anya: { id: 'anya', name: 'Аня', gen: 'Ани', c: '#8b6df6', vec: ['пост-панк', 'darkwave', 'dream-pop'], compat: 73 },
-      timur:{ id: 'timur', name: 'Тимур', gen: 'Тимура', c: '#f6a26a', vec: ['синтвейв', 'IDM', 'ретровейв'], compat: 61 },
+      timur:{ id: 'timur', name: 'Фёдор', gen: 'Фёдора', c: '#f6a26a', vec: ['синтвейв', 'IDM', 'ретровейв'], compat: 61 },
       lera: { id: 'lera', name: 'Лера', gen: 'Леры', c: '#3fb6a8', vec: ['инди', 'дрим-поп', 'эмбиент'], compat: 68 }
     };
     // owner ↔ guest mix dial: 'owner' = «Моя станция» (tighter), 'even' = «Поровну» (more adventurous).
@@ -14989,11 +15745,27 @@
       if (msgs) msgs.addEventListener('scroll', onLogScroll);
       if (newpillEl) newpillEl.addEventListener('click', function () { scrollDown(); clearNewPill(); });
 
+      /* GOROD-L4: клики по кнопкам-развилкам в пузырях диджея */
+      if (msgs) msgs.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-upsell]') : null;
+        if (!b || b.disabled) return;
+        var kind = b.getAttribute('data-upsell');
+        var row = b.closest('.ai-upsell-row');
+        if (row) [].forEach.call(row.querySelectorAll('button'), function (x) { x.disabled = true; });
+        if (kind === 'login') { if (window.GorodAuthFlow) GorodAuthFlow.login(); else if (window.GorodRole) GorodRole.set('account'); }
+        else if (kind === 'paid') { if (window.GorodAuthFlow) GorodAuthFlow.subscribe(); else if (window.GorodRole) GorodRole.set('paid'); }
+        else if (kind === 'stay') {
+          if (mode === 'ai') { aiSay('Принято. Если передумаете — скажите «собери мой стрим», продолжим с этого места.'); }
+          else { clearTimeout(dripTimer); setTimeout(function () { djSpeak('Принято, остаёмся как есть. Реклама помечена бейджем, и её правда немного.'); }, 500); }
+        }
+      });
+
       wireModePopover();
       wireCtxBlurb();
       renderMenuActions();
       wireRailChrome();
       buildRoomDropdown();
+      wireRoleLayer();
 
       // Native AI: the player itself is an entry point (research 07 — "AI is a layer")
       var pw = document.getElementById('player-track-reason');
@@ -15484,12 +16256,178 @@
 
     function setRoomChips() {
       chipsEl.innerHTML = '';
+      /* GOROD-L4 слой 2: диджей помогает выбрать стрим под настроение/ситуацию */
+      var mood = document.createElement('button'); mood.type = 'button'; mood.className = 'ai-chip'; mood.textContent = 'Под настроение';
+      mood.setAttribute('aria-label', 'Подобрать станцию под настроение или ситуацию');
+      mood.addEventListener('click', moodFlow);
+      chipsEl.appendChild(mood);
       REACTIONS.forEach(function (r) {
         var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = r;
         b.setAttribute('aria-label', 'Реакция ' + r + ' — диджею в эфир');
         b.addEventListener('click', function () { showUndo(addRoomUser(r)); djAck(); });
         chipsEl.appendChild(b);
       });
+    }
+
+    /* ---- GOROD-L4 слой 2: «под настроение» — сценарный подбор станции ------ */
+    var MOODS = [
+      { label: 'Собраться', id: 'hiphop', why: 'плотный бит держит темп, а голосу есть место' },
+      { label: 'Отпустить', id: 'chill', why: 'меньше событий, больше воздуха — вечер снимается, как куртка' },
+      { label: 'В дорогу', id: 'disco', why: 'ровный грув около 120 ударов — дорога едет сама' }
+    ];
+    function moodFlow() {
+      showUndo(addRoomUser('Подскажи станцию под настроение'));
+      clearTimeout(dripTimer);
+      setTimeout(function () {
+        djSpeak('Скажи, как сейчас: собраться, отпустить или в дорогу? Подберу станцию и объясню почему.', 30000);
+        setTimeout(moodChips, 1600);
+      }, 650);
+    }
+    function moodChips() {
+      chipsEl.innerHTML = '';
+      MOODS.forEach(function (m) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = m.label;
+        b.addEventListener('click', function () {
+          showUndo(addRoomUser(m.label));
+          chipsEl.innerHTML = '';
+          clearTimeout(dripTimer);
+          setTimeout(function () {
+            djSpeak('Моя ставка — «' + DJS[m.id].station + '»: ' + m.why + '. Могу переключить прямо сейчас.', 30000);
+            setTimeout(function () { moodGoChips(m.id); }, 1600);
+          }, 650);
+        });
+        chipsEl.appendChild(b);
+      });
+    }
+    function moodGoChips(id) {
+      chipsEl.innerHTML = '';
+      var go = document.createElement('button'); go.type = 'button'; go.className = 'ai-chip'; go.textContent = 'Включай «' + DJS[id].station + '»';
+      go.addEventListener('click', function () {
+        showUndo(addRoomUser('Включай'));
+        setRoomChips();
+        if (window.GorodRail) GorodRail.center(id);
+        setTimeout(function () { document.dispatchEvent(new CustomEvent('gorod:tune', { detail: { id: id } })); }, 400);
+      });
+      var stay = document.createElement('button'); stay.type = 'button'; stay.className = 'ai-chip'; stay.textContent = 'Останусь тут';
+      stay.addEventListener('click', function () { showUndo(addRoomUser('Останусь тут')); setRoomChips(); djAck(); });
+      chipsEl.appendChild(go); chipsEl.appendChild(stay);
+    }
+
+    /* ---- GOROD-L4 слой 3: конструктор «Мой стрим» — диалогом в «Моём диджее».
+       Пул — реальные песни российской сцены и русской классики (owner 29.07:
+       «русские песни»); часть живёт в станциях/чартах витрины. Ничего не
+       выдумываем; «почему» шаблонное от описания и выбора вокала. ---- */
+    var bStep = 0, bDesc = '';
+    var BUILD_POOL = [
+      { t: 'Пачка сигарет', a: 'Кино', vocal: true, tags: ['спокой', 'инди', 'вечер', 'чилл', 'тих'], why: 'ровный пульс и много воздуха — вечер, который едет домой' },
+      { t: 'Знаешь ли ты', a: 'МакSим', vocal: true, tags: ['поп', 'лирик', 'вечер', 'спокой'], why: 'тёплый вокал без давления — вход в поток, а не аттракцион' },
+      { t: 'Районы-кварталы', a: 'Звери', vocal: true, tags: ['рок', 'энерг', 'драйв', 'спорт'], why: 'широкий припев держит энергию, которую вы просили' },
+      { t: 'Life', a: 'Zivert', vocal: true, tags: ['поп', 'диско', 'дорог', 'танц'], why: 'ровный грув — не отвлекает и не отпускает' },
+      { t: 'Бенз', a: 'MACAN', vocal: true, tags: ['хип-хоп', 'бит', 'энерг', 'спорт'], why: 'плотный бит — по вашему запросу про ритм' },
+      { t: 'Феникс', a: 'ANNA ASTI', vocal: true, tags: ['поп', 'танц', 'энерг'], why: 'подъём к припеву — маленькая победа каждые три минуты' },
+      { t: 'Вальс из «Метели»', a: 'Георгий Свиридов', vocal: false, tags: ['инструмент', 'фокус', 'спокой', 'работ', 'тих'], why: 'без слов — кружит фоном и не спорит с мыслями' },
+      { t: 'Танец рыцарей', a: 'Сергей Прокофьев', vocal: false, tags: ['инструмент', 'фокус', 'энерг', 'работ'], why: 'инструментальная мощь — собирает, не отвлекая словами' }
+    ];
+    function builderMatches(desc, vocal) {
+      var d = (desc || '').toLowerCase();
+      return BUILD_POOL.map(function (p) {
+        var s = 0;
+        p.tags.forEach(function (tg) { if (d.indexOf(tg) !== -1) s += 2; });
+        if (vocal === 'instr') s += p.vocal ? -2 : 3;
+        if (vocal === 'vocal' && p.vocal) s += 1;
+        return { p: p, s: s };
+      }).sort(function (a, b) { return b.s - a.s; }).slice(0, 4).map(function (x) { return x.p; });
+    }
+    function builderStart() {
+      if (!(window.GorodRole && GorodRole.atLeast('paid'))) { railEnsureOpen(); setMode('ai'); greeted = true; builderUpsell(); return; }
+      railEnsureOpen();
+      setMode('ai');
+      greeted = true;
+      bStep = 1;
+      aiSay('Соберём ваш стрим. Расскажите словами, что любите: жанры, настроение, можно примерами артистов — как объяснили бы другу.', 600)
+        .then(function () {
+          chipsEl.innerHTML = '';
+          ['Спокойный инди на вечер', 'Рок и энергия под спорт'].forEach(function (ex) {
+            var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = ex;
+            b.addEventListener('click', function () { addUser(ex); chipsEl.innerHTML = ''; builderClarify(ex); });
+            chipsEl.appendChild(b);
+          });
+        });
+    }
+    function builderClarify(text) {
+      bDesc = text; bStep = 2;
+      return aiSay('Понял: «' + esc(text) + '». Одно уточнение — со словами или инструментал? От этого зависит, сколько места отдам голосу.', 700)
+        .then(function () {
+          chipsEl.innerHTML = '';
+          [['Со словами', 'vocal'], ['Инструментал', 'instr'], ['50/50', 'mix']].forEach(function (v) {
+            var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = v[0];
+            b.addEventListener('click', function () { addUser(v[0]); chipsEl.innerHTML = ''; builderFinish(v[1]); });
+            chipsEl.appendChild(b);
+          });
+        });
+    }
+    function builderFinish(vocal) {
+      bStep = 0;
+      var tracks = builderMatches(bDesc, vocal).map(function (p) { return { t: p.t, a: p.a, why: p.why }; });
+      var stream = { desc: bDesc, vocal: vocal, tracks: tracks, learned: [], published: false };
+      try { localStorage.setItem('gorodfm_mystream', JSON.stringify(stream)); } catch (e) {}
+      document.dispatchEvent(new CustomEvent('gorodfm-mystream-changed'));
+      aiSay('Собрал — «Мой стрим» уже на главной: первые ' + tracks.length + ' трека, у каждого своё «почему». Поток будет меняться под время суток, а если что-то не зайдёт — жмите «Не моё», и я его подстрою. Могу ошибаться — но каждый выбор объясню.', 900)
+        .then(function () {
+          /* GOROD-L4: мост в слой 4 — заработок виден ДО публикации, не после */
+          return aiSay('И на вырост: когда стрим обживётся, его можно отправить в общую витрину — он станет доступен другим слушателям, а вы начнёте зарабатывать на рекламе и платных подписках. Кнопка на карточке, я подскажу, как поднять доход.');
+        })
+        .then(function () { setChips(DEFAULT_CHIPS); });
+    }
+    function builderUpsell() {
+      addAI('Свой стрим открывается на подписке: вы описываете словами, я собираю поток и объясняю каждый трек. Реклама при этом выключается совсем.' +
+        '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка (демо)</button>' +
+        '<button type="button" class="ai-upsell-btn" data-upsell="stay">Позже</button></div>');
+    }
+
+    /* ---- GOROD-L4 слой 4: советы по монетизации — 4 темы из листа owner'а -- */
+    var AUTHOR_ADVICE = {
+      tracks: ['Какие треки добавить?', 'Смотрю на дослушивания: вечер ваш поток держит, а утро провисает. Добавьте две-три вещи полегче в темпе около ста — из той же вашей ветки. Слушатель заходит до работы: дайте ему вход.'],
+      energy: ['Как сбалансировать энергию?', 'Сейчас плотные вещи стоят подряд — к третьей слушатель устаёт и уходит. Правило простое: после двух плотных — одна воздушная. Кривая удержания станет ровнее, а с ней и доход.'],
+      adtime: ['Когда ставить рекламу?', 'Не в начале часа — там входят новые, им нельзя рекламу в лоб. Лучшее окно — после третьего трека, когда слушатель уже в потоке: брейк дослушивают заметно чаще.'],
+      audience: ['На кого ориентироваться?', 'Ваш поток чаще включают вечером и в дороге — это аудитория «отпустить». Не гонитесь за чартами, держите настроение: у станции с предсказуемым слушателем реклама продаётся дороже.']
+    };
+    function authorAdvice(kind) {
+      var a = AUTHOR_ADVICE[kind]; if (!a) return;
+      railEnsureOpen(); setMode('ai'); greeted = true;
+      addUser(a[0]);
+      chipsEl.innerHTML = '';
+      aiSay(a[1] + ' <span class="ai-why">Совет сценарный — в рабочей версии посчитаю по статистике вашей станции.</span>')
+        .then(function () { setChips(DEFAULT_CHIPS); });
+    }
+    window.GorodStreamBuilder = { start: builderStart, advice: authorAdvice };
+
+    /* ---- GOROD-L4: роль-слой в рейле — вход гостя + реакция диджея на смену слоя ---- */
+    function wireRoleLayer() {
+      var loginBtn = $('rail-guest-login');
+      if (loginBtn) loginBtn.addEventListener('click', function () {
+        if (window.GorodAuthFlow) GorodAuthFlow.login();
+        else if (window.GorodRole) GorodRole.set('account');
+      });
+      var ROLE_LINES = {
+        account: 'Теперь вы в эфире под своим именем: можно отвечать мне, собирать подборки и вкус. Станции как были открыты, так и остались.',
+        paid: 'Подписка активна — рекламу выключил. И главное: теперь соберём ваш собственный стрим. Карточка «Мой стрим» ждёт на главной, или напишите мне «собери мой стрим».',
+        author: 'Ваш стрим ушёл в общую витрину. Слушатели и доход — на карточке «Мой стрим», а как зарабатывать больше — спрашивайте меня прямо здесь.',
+        guest: 'Вы снова гость. Станции и эфир открыты; свой голос, подборки и стрим — после входа.'
+      };
+      document.addEventListener('gorodfm-role-changed', function (e) {
+        var role = e.detail && e.detail.role;
+        if (!ROLE_LINES[role]) return;
+        clearTimeout(dripTimer);
+        setTimeout(function () { djSpeak(ROLE_LINES[role], 9000); }, 450);
+        /* слой 2: сразу после входа — развилка «бесплатно ↔ подписка» из листа */
+        if (role === 'account' && e.detail.prev === 'guest') setTimeout(function () { upsellCard('account'); }, 3400);
+      });
+
+      /* мост для внешних CTA («Убрать рекламу» на брейке, карточка «Мой стрим») */
+      window.GorodRailBridge = {
+        openUpsell: function (r) { railEnsureOpen(); upsellCard(r === 'guest' ? 'guest' : 'account'); }
+      };
     }
 
     function addRoomDivider(text) {
@@ -15531,7 +16469,7 @@
        («печатает…» → сообщение), но отправитель ОДИН: ИИ-диджей станции, и он рассказывает
        про то, что играет. Near-bottom-aware, замирает при скрытой вкладке.
        В комнате «Слушаем вместе» пишут по-прежнему ЛЮДИ (друзья) — там drip остался людской. ---- */
-    var DRIP_WHO = [{ h: 'Аня', c: '#8b6df6' }, { h: 'Тимур', c: '#f6a26a' }, { h: 'Лера', c: '#3fb6a8' }];
+    var DRIP_WHO = [{ h: 'Аня', c: '#8b6df6' }, { h: 'Фёдор', c: '#f6a26a' }, { h: 'Лера', c: '#3fb6a8' }];
     var DRIP_LINES = ['о, эту я знаю 🔥', 'ставь громче', 'под это работается', 'плюсую', '🎧', 'а дальше что?'];
     var dripTimer = 0, dripIdx = 0;
     function dripActive() { return !!(msgs && currentRoom && ROOMS[currentRoom] && (ROOMS[currentRoom].peers || currentRoom === SESSION_ROOM)); }
@@ -15559,6 +16497,39 @@
         if (atBottom) scrollDown();
         scheduleDrip(thenMs || (8500 + (r.__i % 4) * 1500));   // новый факт каждые ~8-13 сек
       }, 1100 + ((r.__i || 0) % 3) * 300);
+    }
+
+    /* GOROD-L4: пузырь диджея с локальным HTML (кнопки-развилки). Контент —
+       только наши строки, никогда пользовательский ввод. */
+    function djCard(html, thenMs) {
+      var r = ROOMS[currentRoom]; if (!r || !r.dj || !msgs) return null;
+      var m = document.createElement('div'); m.className = 'ai-msg ai-msg--room';
+      m.innerHTML = '<div class="ai-room-av" style="background:' + r.c + '" aria-hidden="true">' + esc(r.dj.charAt(0).toUpperCase()) + '</div>' +
+        '<div class="ai-room-col"><div class="ai-room-handle">' + esc(djHandle(r)) + '</div><div class="ai-msg-bubble">' + html + '</div></div>';
+      msgs.appendChild(m); capLog(); scrollDown();
+      if (thenMs) scheduleDrip(thenMs);
+      return m;
+    }
+
+    /* GOROD-L4 слой 2: развилка «бесплатно с рекламой ↔ подписка без неё» */
+    function upsellCard(forRole) {
+      clearTimeout(dripTimer);
+      if (forRole === 'guest') {
+        djCard('Реклама выключается на подписке, а подписка начинается со входа — он бесплатный: появятся подборки и вкус.' +
+          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="login">Войти (демо)</button>' +
+          '<button type="button" class="ai-upsell-btn" data-upsell="stay">Позже</button></div>', 30000);
+      } else {
+        djCard('Можно остаться на бесплатном — реклама помечена и нечастая. Подписка убирает её совсем и открывает ваш собственный стрим.' +
+          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка (демо)</button>' +
+          '<button type="button" class="ai-upsell-btn" data-upsell="stay">Останусь на бесплатном</button></div>', 30000);
+      }
+    }
+
+    /* развернуть рейл, если он свёрнут (или открыть мобильный диалог) */
+    function railEnsureOpen() {
+      var mob = (document.documentElement.getAttribute('data-surface') === 'mobile') || window.innerWidth < 640;
+      if (mob) { if (document.documentElement.getAttribute('data-rail-mobile') !== 'open') openMobile(); }
+      else setRail('expanded');
     }
 
     function dripTick() {
@@ -15698,9 +16669,9 @@
           .then(function () { setChips(DEFAULT_CHIPS); });
       },
       different: function () {
-        aiSay('Понял — убираю арена-рок из ближайшей волны и беру более тёмный электронный бит:' + track('The Motto — darkwave edit', 'Tiësto'))
+        aiSay('Понял — убираю арена-рок из ближайшей волны и беру более тёмный пост-панк-бит:' + track('Спортивные очки', 'Буерак'))
           .then(function () { updateProfile(['Арена-рок'], ['Darkwave']); return aiSay('Готово — обновил ваш <b>Twinr-профиль</b> (слева: −арена-рок, +darkwave). Волна перестроена на лету. Так и работает «скажи — и радио поменяется».'); })
-          .then(function () { setChips([{ label: '↩️ Верни как было', intent: 'revert' }, { label: '🌑 Ещё темнее', intent: 'darker' }, { label: '🎓 Путь к Imagine Dragons', intent: 'tour' }]); });
+          .then(function () { setChips([{ label: '↩️ Верни как было', intent: 'revert' }, { label: '🌑 Ещё темнее', intent: 'darker' }, { label: '🎓 Путь к «Кино»', intent: 'tour' }]); });
       },
       revert: function () {
         updateProfile(['Darkwave', 'Индастриал'], ['Арена-рок']);
@@ -15708,28 +16679,28 @@
       },
       darker: function () {
         updateProfile([], ['Индастриал']);
-        aiSay('Ещё мрачнее — добавил индастриал-грань:' + track('Closer', 'Nine Inch Nails')).then(function () { setChips(DEFAULT_CHIPS); });
+        aiSay('Ещё мрачнее — добавил тёмной электроники:' + track('Смерти больше нет', 'IC3PEAK')).then(function () { setChips(DEFAULT_CHIPS); });
       },
       more: function () {
         updateProfile([], ['Стадион-звук']);
-        aiSay('Отлично, усиливаю линию. Добавил в очередь:' + track('Counting Stars', 'OneRepublic') + track('Heathens', 'twenty one pilots'))
+        aiSay('Отлично, усиливаю линию. Добавил в очередь:' + track('Полковнику никто не пишет', 'Би-2') + track('Выхода нет', 'Сплин'))
           .then(function () { return aiSay('Ваш профиль теперь сильнее тянет в стадион-звук — учту это и завтра, не только сейчас.'); })
           .then(function () { setChips(DEFAULT_CHIPS); });
       },
       ads: function () {
-        aiSay('Уменьшаю частоту рекламы. И главное — реклама у нас <b>подбирается под ваш вкус</b>: вместо случайных баннеров вы увидите, например, концерт Imagine Dragons в вашем городе или новый альбом в любимом жанре. Это наша модель — а не раздражитель.')
+        aiSay('Уменьшаю частоту рекламы. И главное — реклама у нас <b>подбирается под ваш вкус</b>: вместо случайных баннеров вы увидите, например, концерт Полины Гагариной в вашем городе или новый альбом в любимом жанре. Это наша модель — а не раздражитель.')
           .then(function () { setChips(DEFAULT_CHIPS); });
       },
       tour: function () {
-        aiSay('Поехали. Путь к звуку Imagine Dragons — это ~20 лет эволюции громкого рока. Покажу ключевые точки и дам послушать:', 500)
-          .then(function () { return aiSay('<b>1) Нач. 90-х — гранж.</b> Nirvana дают сырую эмоцию и динамику «тихо→громко».' + track('Smells Like Teen Spirit', 'Nirvana')); })
-          .then(function () { return aiSay('<b>2) 2000-е — эмо / поп-панк.</b> Fall Out Boy и My Chemical Romance добавляют театральность и припевы-гимны.' + track('Welcome to the Black Parade', 'My Chemical Romance')); })
-          .then(function () { return aiSay('<b>3) Кон. 2000-х — арена-инди.</b> Kings of Leon выводят звук на стадионы.' + track('Sex on Fire', 'Kings of Leon')); })
-          .then(function () { return aiSay('<b>4) 2012 — синтез.</b> Imagine Dragons соединяют стадион-динамику + электронику + фолк-удар = «Radioactive». Так родился их звук.' + track('Radioactive', 'Imagine Dragons')); })
+        aiSay('Поехали. Путь к звуку «Кино» — короткая история того, как русский рок дошёл до стадионов. Покажу ключевые точки и дам послушать:', 500)
+          .then(function () { return aiSay('<b>1) Начало 80-х — Ленинградский рок-клуб.</b> Гитарная новая волна: минимум средств, максимум слова.' + track('Город золотой', 'Аквариум')); })
+          .then(function () { return aiSay('<b>2) Ранние «Кино».</b> Простые ходы и честная интонация — звук, который можно повторить на кухне.' + track('Восьмиклассница', 'Кино')); })
+          .then(function () { return aiSay('<b>3) 1988 — «Группа крови».</b> Тот же минимализм, но уже стадионный: ровный бит и припев, который поёт зал.' + track('Группа крови', 'Кино')); })
+          .then(function () { return aiSay('<b>4) Наследие.</b> «Кукушку» продолжают перепевать до сих пор — значит, конструкция песни живёт.' + track('Кукушка', 'Кино')); })
           .then(function () { return aiSay('Это и есть AI-экскурс: я не просто играю — объясняю <i>почему</i> и показываю связи. Собрать дорожку в плейлист в вашу Медиатеку?'); })
           .then(function () { setChips([{ label: '💾 Собрать плейлист', intent: 'savetour' }, { label: '↩️ Вернуться к радио', intent: 'backradio' }]); });
       },
-      savetour: function () { aiSay('Готово — плейлист «Путь к Imagine Dragons» (5 треков) сохранён в вашу Медиатеку. ✅').then(function () { setChips(DEFAULT_CHIPS); }); },
+      savetour: function () { aiSay('Готово — плейлист «Путь к «Кино» (4 трека) сохранён в вашу Медиатеку. ✅').then(function () { setChips(DEFAULT_CHIPS); }); },
       backradio: function () { aiSay('Возвращаю вашу волну. Сейчас — Слеза, дальше Любимка. Приятного!').then(function () { setChips(DEFAULT_CHIPS); }); }
     };
 
@@ -15744,7 +16715,10 @@
     var myFactIdx = -1;
 
     function handleText(text) {
+      /* GOROD-L4 слой 3: конструктор ведёт диалог — перехватывает свободный текст */
+      if (bStep === 1) return builderClarify(text);
       var t = text.toLowerCase();
+      if (/собер|собрать|мой стрим|свой стрим/.test(t)) return builderStart();
       var tags = (profile && profile.length) ? profile.join(' · ') : 'ваш вкус';
       if (/кто ты|ты кто|какой ты|о себе|представ/.test(t))
         return aiSay('Я <b>ваш диджей</b> — собран из вашего вкуса: <b>' + esc(tags) + '</b>. Диджей станции ведёт свой эфир, а я рассказываю про <b>вашу</b> музыку: откуда звук, почему цепляет, что слушать дальше.')
@@ -15758,8 +16732,8 @@
       if (/почему|why|обоснуй/.test(t)) return intents.why();
       if (/экскурс|истори|tour|путь|эволюц/.test(t)) return intents.tour();
       if (/реклам|ads/.test(t)) return intents.ads();
-      if (/грустн|спокойн|тих|чилл|calm|sad|расслаб/.test(t)) { updateProfile([], ['Чилл']); return aiSay('Сбавляю темп — спокойная волна: меньше ударных, тёплые синты, лоу-фай грань.' + track('Weightless', 'Marconi Union')).then(function () { setChips(DEFAULT_CHIPS); }); }
-      if (/бодр|энерг|качай|трениров|workout|драйв/.test(t)) { updateProfile([], ['Энергия']); return aiSay('Поднимаю энергию — забойная волна для движения.' + track('Stronger', 'Kanye West')).then(function () { setChips(DEFAULT_CHIPS); }); }
+      if (/грустн|спокойн|тих|чилл|calm|sad|расслаб/.test(t)) { updateProfile([], ['Чилл']); return aiSay('Сбавляю темп — спокойная волна: меньше ударных, больше воздуха.' + track('Вальс из «Метели»', 'Георгий Свиридов')).then(function () { setChips(DEFAULT_CHIPS); }); }
+      if (/бодр|энерг|качай|трениров|workout|драйв/.test(t)) { updateProfile([], ['Энергия']); return aiSay('Поднимаю энергию — забойная волна для движения.' + track('Районы-кварталы', 'Звери')).then(function () { setChips(DEFAULT_CHIPS); }); }
       return aiSay('Услышал: «' + esc(text) + '». В проде разберу это по вашему вкусовому вектору (<b>' + esc(tags) + '</b>) и перестрою подборку на лету. Пока попробуйте кнопки — они показывают, как это работает.').then(function () { setChips(DEFAULT_CHIPS); });
     }
 
@@ -15838,14 +16812,14 @@
         ask: 'добавь синтвейва для драйва',
         owner: [
           { title: 'Nightcall', artist: 'Kavinsky', cover: '#f6a26a',
-            askClause: 'Тимур просил синтвейв для драйва',
+            askClause: 'Фёдор просил синтвейв для драйва',
             ownerClause: 'ретро-синты 80-х — твой вечерний драйв, уже в волне',
             counter: 'без его запроса Twinr держал бы темп ниже',
             tasteFacet: 'синтвейв', floor: true }
         ],
         even: [
           { title: 'Tech Noir', artist: 'Gunship', cover: '#ffb27a',
-            askClause: 'Тимур хочет синтвейв поярче',
+            askClause: 'Фёдор хочет синтвейв поярче',
             ownerClause: 'чуть энергичнее твоего ядра, но в том же неон-ретро — порог пройден',
             counter: 'на «Моей станции» Twinr взял бы более тёмный синт',
             tasteFacet: 'ретровейв', floor: true }
@@ -15979,7 +16953,7 @@
       var demoBar =
         '<div class="sr-demo-bar" role="group" aria-label="Демо-сценарии сессии">' +
           '<button type="button" class="sr-demo-btn" data-sugg="anya">✦ Аня предложит</button>' +
-          '<button type="button" class="sr-demo-btn" data-sugg="timur">✦ Тимур предложит</button>' +
+          '<button type="button" class="sr-demo-btn" data-sugg="timur">✦ Фёдор предложит</button>' +
           '<button type="button" class="sr-demo-btn sr-demo-btn--guard" data-dupe="anya">дубль (гард)</button>' +
           '<button type="button" class="sr-demo-btn sr-demo-btn--guard" data-offvibe="anya">офф-вайб (гард)</button>' +
         '</div>';
@@ -16386,7 +17360,7 @@
     var DEFAULT = {
       'Жанры': [{ n: 'Арена-рок', w: 80 }, { n: 'Хип-хоп 2010-х', w: 66 }, { n: 'Электро-поп', w: 54 }, { n: 'Инди', w: 40 }],
       'Настроения': [{ n: 'Энергичное', w: 74 }, { n: 'Драйв', w: 60 }, { n: 'Меланхолия', w: 46 }],
-      'Артисты': [{ n: 'Imagine Dragons', w: 90 }, { n: 'Егор Крид', w: 62 }, { n: 'twenty one pilots', w: 55 }, { n: 'OneRepublic', w: 44 }],
+      'Артисты': [{ n: 'КИНО', w: 90 }, { n: 'Егор Крид', w: 62 }, { n: 'Звери', w: 55 }, { n: 'Би-2', w: 44 }],
       'Эпохи': [{ n: '2010-е', w: 80 }, { n: '2020-е', w: 64 }, { n: '2000-е', w: 50 }, { n: '90-е', w: 30 }]
     };
     var data, built = false, rejList = [];
@@ -16799,10 +17773,10 @@
     }
     /* ---- Спонсор по вкусу (VISION #9): taste-based, explainable, steerable - */
     var SPONSORS = [
-      { tags: ['РОК', 'МЕТАЛЛ', 'Linkin Park', 'Imagine Dragons', 'Арена-рок', 'ПОП', 'Егор Крид', 'twenty one pilots'], brand: 'Яндекс Афиша', offer: 'Концерты ваших артистов в этом месяце — −15% по промокоду ВОЛНА', reason: 'живые выступления тех, кого вы слушаете — рядом и со скидкой.' },
+      { tags: ['РОК', 'МЕТАЛЛ', 'КИНО', 'Звери', 'Арена-рок', 'ПОП', 'Егор Крид', 'Би-2'], brand: 'Яндекс Афиша', offer: 'Концерты ваших артистов в этом месяце — −15% по промокоду ВОЛНА', reason: 'живые выступления тех, кого вы слушаете — рядом и со скидкой.' },
       { tags: ['ИНДИ', 'ЛОФАЙ', 'ДЖАЗ'], brand: 'The Coffee', offer: 'Раф «Твоя волна» — −20% в приложении', reason: 'это музыка для кофеен и неспешных вечеров — как ваш плейлист.' },
-      { tags: ['ДЖАЗ', 'КЛАССИКА', 'ЛОФАЙ', 'Martin Garrix', 'ЭЛЕКТРО'], brand: 'Звук Аудио', offer: 'Наушники с тёплым звуком — тест-драйв в шоуруме', reason: 'на хорошем звуке ваши жанры раскрываются богаче.' },
-      { tags: ['ЭЛЕКТРО', 'ДИСКО', 'Martin Garrix', 'ХИП-ХОП'], brand: 'World Class', offer: 'Беговой плейлист под ваш темп + 7 дней зала', reason: 'ваш бит задаёт темп для тренировок.' },
+      { tags: ['ДЖАЗ', 'КЛАССИКА', 'ЛОФАЙ', 'Вадим Адамов', 'ЭЛЕКТРО'], brand: 'Звук Аудио', offer: 'Наушники с тёплым звуком — тест-драйв в шоуруме', reason: 'на хорошем звуке ваши жанры раскрываются богаче.' },
+      { tags: ['ЭЛЕКТРО', 'ДИСКО', 'Вадим Адамов', 'ХИП-ХОП'], brand: 'World Class', offer: 'Беговой плейлист под ваш темп + 7 дней зала', reason: 'ваш бит задаёт темп для тренировок.' },
       { tags: ['РОК', 'ИНДИ', 'ДЖАЗ', 'КЛАССИКА'], brand: 'Винил Маркет', offer: 'Пластинки ваших артистов — кураторская подборка', reason: 'эти жанры звучат особенно тепло на виниле.' }
     ];
     var sponsorWired = false;
@@ -17043,7 +18017,7 @@
       dark:  { label: 'тёмный пост-панк', tracks: [['Судно', 'Молчат Дома'], ['Звёзды', 'Buerak'], ['Кукушка', 'Цой'], ['Toska', 'Motorama']] },
       calm:  { label: 'лофай для фокуса',  tracks: [['Aruarian Dance', 'Nujabes'], ['Slow Dancing', 'Joji'], ['Snowman', 'WYS'], ['Reflections', 'Idealism']] },
       up:    { label: 'бодрый поп',        tracks: [['Любимка', 'Niletto'], ['Credo', 'Zivert'], ['Кружит', 'MONATIK'], ['Втюрилась', 'Дора']] },
-      drive: { label: 'электро для драйва', tracks: [['Animals', 'Martin Garrix'], ['Levels', 'Avicii'], ['The Motto', 'Tiësto'], ['Faded', 'Alan Walker']] },
+      drive: { label: 'электро для драйва', tracks: [['Зацепила', 'Артур Пирожков'], ['Розовое вино', 'Элджей & Feduk'], ['Он тебя целует', 'Руки Вверх'], ['Втюрилась', 'Дора']] },
       indie: { label: 'инди в дорогу',      tracks: [['Heat Waves', 'Glass Animals'], ['Do I Wanna Know?', 'Arctic Monkeys'], ['The Less I Know', 'Tame Impala'], ['Sweater Weather', 'The Neighbourhood']] }
     };
     var Q2V = [
@@ -17310,7 +18284,7 @@
     var FLOW = [
       { title: 'Любимка',            artist: 'Niletto',         reason: 'Тёплый поп ~95 BPM, как «Слеза» — её ты дослушал до конца <b>3 раза</b>', pill: 'Тёплый поп, как «Слеза»' },
       { title: 'Я не могу без тебя', artist: 'ANNA ASTI',       reason: 'Тот же мягкий женский вокал — за месяц <b>7 раз</b> не пропустил такие вечером', pill: 'Мягкий вокал — твой вечер' },
-      { title: 'Прятки',            artist: 'HammAli & Navai',  reason: 'Меланхоличная грустинка в поп-форме — твой паттерн по пятницам', pill: 'Меланхоличный поп по пятницам' },
+      { title: 'Знаешь ли ты',      artist: 'МакSим',           reason: 'Меланхоличная грустинка в поп-форме — твой паттерн по пятницам', pill: 'Меланхоличный поп по пятницам' },
       { title: 'Розовое вино',      artist: 'Элджей & Feduk',   reason: 'Держу тёплый вектор и ровный темп — так ты слушаешь под вечер', pill: 'Ровный тёплый темп' },
       { title: 'Где ты, где я',     artist: 'jakone & Кравц',   reason: 'Соседний по вектору трек — ты лайкнул двум с похожим битом', pill: 'Сосед по вектору' }
     ];
@@ -17541,10 +18515,10 @@
       'Инди':           { tex: 'туман',       gen: 'с туманом',       mood: 'melancholy', heat: 1 }
     };
     var ARTIST = {
-      'Martin Garrix': { tex: 'дроп',     gen: 'с дропом',     mood: 'synthetic',  heat: 3 },
-      'Linkin Park':   { tex: 'перегруз', gen: 'с перегрузом', mood: 'raw',        heat: 3 },
+      'Вадим Адамов':  { tex: 'дроп',     gen: 'с дропом',     mood: 'synthetic',  heat: 3 },
+      'КИНО':          { tex: 'перегруз', gen: 'с перегрузом', mood: 'raw',        heat: 3 },
       'Макс Корж':     { tex: 'улица',    gen: 'с улицей',     mood: 'street',     heat: 2 },
-      'Рамиль':        { tex: 'хук',      gen: 'с хуком',      mood: 'tender',     heat: 1 },
+      'МакSим':        { tex: 'хук',      gen: 'с хуком',      mood: 'tender',     heat: 1 },
       'Niletto':       { tex: 'хук',      gen: 'с хуком',      mood: 'tender',     heat: 1 },
       'Любимка':       { tex: 'нерв',     gen: 'с нервом',     mood: 'melancholy', heat: 2 }
     };
@@ -17617,10 +18591,10 @@
       melancholy: { who: 'Любимка',       why: 'дослушал до конца 3 раза' },
       tender:     { who: 'Niletto',       why: 'по времени суток — вечер' },
       street:     { who: 'Макс Корж',     why: 'из прослушивания за месяц' },
-      synthetic:  { who: 'Martin Garrix', why: 'смежное — рядом с твоим вектором' },
-      raw:        { who: 'Linkin Park',   why: 'усилено: дослушиваешь до конца' },
+      synthetic:  { who: 'Вадим Адамов',  why: 'смежное — рядом с твоим вектором' },
+      raw:        { who: 'КИНО',          why: 'усилено: дослушиваешь до конца' },
       arena:      { who: 'Любимка',       why: 'рядом с твоим вектором — и ты дослушал' },
-      classic:    { who: 'Рамиль',        why: 'по времени суток — вечер' },
+      classic:    { who: 'Валерий Меладзе', why: 'по времени суток — вечер' },
       groove:     { who: 'Niletto',       why: 'из прослушивания за месяц' },
       eclectic:   { who: 'Любимка',       why: 'смежное — рядом с твоим вектором' }
     };
@@ -18102,10 +19076,10 @@
     'use strict';
     var TASTE_KEY = 'gorodfm_taste';
     var SAVED = [
-      { type: 'track',    name: 'Believer',                sub: 'Imagine Dragons · 03:38', fed: 'усилил Арена-рок' },
-      { type: 'track',    name: 'Stressed Out',            sub: 'twenty one pilots · 03:22', fed: 'добавил Меланхолию' },
+      { type: 'track',    name: 'Группа крови',            sub: 'КИНО · 04:45', fed: 'усилил Арена-рок' },
+      { type: 'track',    name: 'Демоны',                  sub: 'Три дня дождя · 03:22', fed: 'добавил Меланхолию' },
       { type: 'artist',   name: 'Молчат Дома',             sub: 'артист · 12 треков',       fed: 'открыл пост-панк' },
-      { type: 'artist',   name: 'OneRepublic',             sub: 'артист · 31 трек',         fed: 'поднял Электро-поп' },
+      { type: 'artist',   name: 'Би-2',                    sub: 'артист · 31 трек',         fed: 'поднял Электро-поп' },
       { type: 'playlist', name: 'Город ФМ · Тёмный вечер', sub: 'плейлист · 24 трека',      fed: 'сместил к darkwave' },
       { type: 'playlist', name: 'Дорога домой',            sub: 'плейлист · 18 треков',     fed: 'добавил 108 BPM' },
       { type: 'station',  name: 'ГОРОД РОК',               sub: 'станция · 103.5 FM',       fed: 'закрепил Драйв' }
@@ -18169,9 +19143,9 @@
       { k: 'Акустичность', v: 'низкая',          pct: 30, why: 'электронная аранжировка' }
     ];
     var NEIGHBORS = [
-      { mono: 'ЧA', title: 'Часики',      artist: 'Miyagi & Эндшпиль', why: 'тот же темп ~105 BPM' },
-      { mono: 'ГИ', title: 'Гипнозы',     artist: 'Markul',            why: 'тот же тёплый мужской вокал' },
-      { mono: 'НE', title: 'Не свидимся', artist: 'Скриптонит',        why: 'та же эпоха — релизы 2022–23' }
+      { mono: 'КА', title: 'Капкан',      artist: 'Мот',               why: 'тот же темп ~105 BPM' },
+      { mono: 'ВЫ', title: 'Выпускной (Медлячок)', artist: 'Баста',    why: 'тот же тёплый мужской вокал' },
+      { mono: 'ДЕ', title: 'Демоны',      artist: 'Три дня дождя',     why: 'та же эпоха — релизы 2022–23' }
     ];
     function $(id) { return document.getElementById(id); }
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -18253,7 +19227,7 @@
       { id:null,          t:'Не пропустил ни один трек этого артиста на «Городе»',         prov:'0 скипов' }
     ];
     var TRACKS = [
-      { t:'Believer',          al:'Night Visions',   d:'03:38' },
+      { t:'Группа крови',      al:'Группа крови',    d:'04:45' },
       { t:'Thunder',           al:'Evolve',          d:'03:08' },
       { t:'Radioactive',       al:'Night Visions',   d:'03:07' },
       { t:'Demons',            al:'Night Visions',   d:'02:58' },
@@ -18432,15 +19406,12 @@
       {n:'DJ Pitkin',w:252,img:'assets/gorod-fm/podborki-tile-dj-pitkin.png',rel:'Танцевальный — дальше от твоего'}
         ];
     var ARTISTS = [
-      {n:'Akon',img:'assets/gorod-fm/favs-artist-akon.png'},
       {n:'Дима Билан',img:'assets/gorod-fm/favs-artist-dima-bilan-overlay.png'},
       {n:'Макс Корж',img:'assets/gorod-fm/favs-artist-maks-korzh-base.png'},
       {n:'Мия Бойка',img:'assets/gorod-fm/favs-artist-mia-boyka.png'},
-      {n:'Рамиль',img:'assets/gorod-fm/favs-artist-ramil.png'},
       {n:'Rem Digga',img:'assets/gorod-fm/favs-artist-rem-diga-overlay.png'}
     ];
     var GROUPS = [
-      {n:'Linkin Park',img:'assets/gorod-fm/favs-group-linkin-park-overlay.png'},
       {n:'Ludovico Einaudi',img:'assets/gorod-fm/favs-group-ludovico-overlay.png'},
       {n:'Bernhoft',img:'assets/gorod-fm/favs-group-bernhoft.png'},
       {n:'Crystal Castles',img:'assets/gorod-fm/favs-group-crystal-castles.png'},
@@ -18554,11 +19525,9 @@
       { t: 'ПОП', hue: 330, w: 1.15, pop: true, img: 'genre-pop.jpg' },
       { t: 'Егор Крид', img: 'home-featured-egor-krid.png', w: 1.15, g: 'ПОП', pop: true },
       { t: 'Макс Корж', img: 'favs-artist-maks-korzh-base.png', w: 1.1, g: 'ХИП-ХОП', pop: true },
-      { t: 'Linkin Park', img: 'favs-group-linkin-park-overlay.png', w: 1.1, g: 'РОК', pop: true },
       { t: 'РОК', hue: 2, w: 1.1, img: 'genre-rock.jpg' },
       { t: 'ДИСКО', hue: 292, w: 1.0, img: 'genre-disco.jpg' },
       { t: 'Дима Билан', img: 'favs-artist-dima-bilan-overlay.png', w: 1.0, g: 'ПОП' },
-      { t: 'Martin Garrix', img: 'favs-dj-martin-garrix.png', w: 1.05, g: 'ЭЛЕКТРО' },
       { t: 'ЛОФАЙ', hue: 222, w: 0.95, img: 'genre-lofi.jpg' },
       { t: 'ИНДИ', hue: 152, w: 0.95, img: 'genre-indie.jpg' },
       { t: 'Вадим Адамов', img: 'home-tile-vadim-adamov-base.png', w: 1.0, g: 'ЭЛЕКТРО' },
@@ -18566,33 +19535,30 @@
       { t: 'РЭП', hue: 278, w: 1.0, img: 'genre-rap.jpg' },
       { t: 'Мия Бойка', img: 'favs-artist-mia-boyka.png', w: 0.95, g: 'ПОП' },
       { t: 'R&B', hue: 320, w: 0.9, img: 'genre-rnb.jpg' },
-      { t: 'Рамиль', img: 'favs-artist-ramil.png', w: 0.95, g: 'ПОП' },
       { t: 'МЕТАЛЛ', hue: 210, w: 0.9, img: 'genre-metal.jpg' },
       { t: 'КЛАССИКА', hue: 45, w: 0.85, img: 'genre-classic.jpg' }
     ];
     // Apple-Music-style: tapping a bubble spawns related ones.
     // genre -> representative artists; artist -> similar artists.
     var REL = {
-      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина'],
-      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons'],
-      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит'],
+      'ПОП': ['Zivert','Ваня Дмитриенко','Артур Пирожков','П.Гагарина'],
+      'РОК': ['КИНО','Би-2','Сплин','ДДТ'],
+      'ХИП-ХОП': ['Баста','Каста','Гуф','Мот'],
       'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин'],
-      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker'],
+      'ЭЛЕКТРО': ['Вадим Адамов','DJ Pitkin','Filatov & Karas','Swanky Tunes'],
       'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib'],
       'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco'],
       'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong'],
-      'РЭП': ['Eminem','Kendrick Lamar','Drake','ЛСП'],
+      'РЭП': ['Баста','Гуф','Каста','Смоки Мо'],
       'R&B': ['The Weeknd','Frank Ocean','SZA','Бьянка'],
       'МЕТАЛЛ': ['Metallica','Rammstein','Ария','S.O.A.D.'],
       'КЛАССИКА': ['Чайковский','Моцарт','L.Einaudi','H.Zimmer'],
-      'Егор Крид': ['Niletto','MONATIK','JONY','Артур Пирожков'],
-      'Макс Корж': ['Баста','Скриптонит','Каста','ЛСП'],
+      'Егор Крид': ['Niletto','Ваня Дмитриенко','Мот','Артур Пирожков'],
+      'Макс Корж': ['Баста','Каста','Гуф','Мот'],
       'Дима Билан': ['С.Лазарев','П.Гагарина','Zivert','Егор Крид'],
-      'Martin Garrix': ['David Guetta','Avicii','Tiësto','Alan Walker'],
-      'Linkin Park': ['Imagine Dragons','Papa Roach','3 Days Grace','Limp Bizkit'],
       'Вадим Адамов': ['DJ Smash','Filatov & Karas','Burito','Niletto'],
       'Мия Бойка': ['INSTASAMKA','Клава Кока','Зомб','Дора'],
-      'Рамиль': ['JONY','HammAli & Navai','Niletto','Zivert']
+      'МакSим': ['Niletto','Юлианна Караулова','Полина Гагарина','Zivert']
     };
     var MAX_BUBBLES = 80;
     var GENRE_HUE = {
@@ -18603,11 +19569,11 @@
     // Deep fallback pool so ANY bubble keeps blooming coherent "similar" ones
     // (genre-tagged) — endless Apple-Music-style expansion.
     var POOL = {
-      'ПОП': ['Zivert','MONATIK','Артур Пирожков','П.Гагарина','Niletto','JONY','Дора','Клава Кока','Dua Lipa','The Weeknd'],
-      'РОК': ['КИНО','Би-2','Сплин','Imagine Dragons','ДДТ','Nirvana','Coldplay','Muse','The Beatles','Queen'],
-      'ХИП-ХОП': ['Баста','Oxxxymiron','MORGENSHTERN','Скриптонит','Каста','ЛСП','Travis Scott','Kanye West','Тимати','Гуф'],
+      'ПОП': ['Zivert','Ваня Дмитриенко','Артур Пирожков','П.Гагарина','Niletto','МакSим','Дора','Клава Кока','Люся Чеботина','Дима Билан'],
+      'РОК': ['КИНО','Би-2','Сплин','ДДТ','Наутилус Помпилиус','Земфира','Алиса','Король и Шут'],
+      'ХИП-ХОП': ['Баста','Каста','Гуф','Мот','Тимати','Смоки Мо','Кравц','ST'],
       'ДИСКО': ['ABBA','Boney M','Modern Talking','Л.Агутин','Bee Gees','Daft Punk','Donna Summer','CHIC'],
-      'ЭЛЕКТРО': ['David Guetta','Avicii','Tiësto','Alan Walker','Calvin Harris','Skrillex','deadmau5','Zedd','ODESZA'],
+      'ЭЛЕКТРО': ['Вадим Адамов','DJ Pitkin','Filatov & Karas','Swanky Tunes','DJ Smash','Руки Вверх'],
       'ЛОФАЙ': ['Joji','Nujabes','Tomppabeats','Saib','Idealism','Jinsang','mac ayres','Powfu'],
       'ИНДИ': ['Arctic Monkeys','The 1975','Glass Animals','Mac DeMarco','Tame Impala','The Strokes','Cigarettes A.S.','Phoenix'],
       'ДЖАЗ': ['Miles Davis','Nina Simone','И.Бутман','L.Armstrong','John Coltrane','Ella Fitzgerald','Чет Бейкер','Norah Jones'],
@@ -18987,10 +19953,10 @@
     gorod:{title:'Любимка', artist:'NILETTO', source:'demo', ts:0},
     pop:{title:'Феникс', artist:'ANNA ASTI', source:'demo', ts:0},
     disco:{title:'Life', artist:'Zivert', source:'demo', ts:0},
-    rock:{title:'Enemy', artist:'Imagine Dragons', source:'demo', ts:0},
+    rock:{title:'Районы-кварталы', artist:'Звери', source:'demo', ts:0},
     hiphop:{title:'Бенз', artist:'MACAN', source:'demo', ts:0},
-    chill:{title:'Space Song', artist:'Beach House', source:'demo', ts:0},
-    lirika:{title:'Комета', artist:'JONY', source:'demo', ts:0},
+    chill:{title:'Вечно молодой', artist:'Смысловые Галлюцинации', source:'demo', ts:0},
+    lirika:{title:'Знаешь ли ты', artist:'МакSим', source:'demo', ts:0},
   };
   let active = 'gorod';
   window.GorodStations = {
@@ -19230,17 +20196,17 @@
   var FRIENDS = [
     ['Артём К.',  'Потрачу — Егор Крид',              'Город ФМ'],
     ['Соня Л.',   'Город Лирика',                     'Город Лирика'],
-    ['Данияр С.', 'Life — Zivert',                    'Город Диско'],
-    ['Марина П.', 'Kosandra — Miyagi & Andy Panda',   'Город Хип-хоп'],
+    ['Даниил С.', 'Life — Zivert',                    'Город Диско'],
+    ['Марина П.', 'Моя игра — Баста',                 'Город Хип-хоп'],
     ['Игорь В.',  'подборку «Ретро 90-х»',            'Город Диско'],
     ['Алина Т.',  'Феникс — ANNA ASTI',               'Город Поп'],
     ['Максим Р.', 'Любимка — NILETTO',                'Город ФМ'],
-    ['Камила Ж.', 'Грустный дэнс — Артик & Асти',     'Город Поп'],
-    ['Тимур А.',  'Бенз — MACAN',                     'Город Хип-хоп'],
+    ['Кира Ж.',   'Грустный дэнс — Артик & Асти',     'Город Поп'],
+    ['Фёдор А.',  'Бенз — MACAN',                     'Город Хип-хоп'],
     ['Лера М.',   'Солнце Монако — Люся Чеботина',    'Город Поп'],
     ['Никита Д.', 'Город Диско',                      'Город Диско'],
-    ['Полина Г.', 'Комета — JONY',                    'Город Лирика'],
-    ['Руслан Х.', 'Птичка — HammAli & Navai',         'Город Лирика'],
+    ['Полина Г.', 'Знаешь ли ты — МакSим',            'Город Лирика'],
+    ['Руслан Х.', 'Ты не такой — Юлианна Караулова',  'Город Лирика'],
     ['Вика С.',   'подборку «Вечер в городе»',        'Город Chill']
   ].map(function (f) {
     return { title: f[0], avatar: true, now: f[1], station: f[2], meta: 'слушает ' + f[1] };
@@ -19281,11 +20247,11 @@
     ['Русский рок навсегда', 'Выбор редактора'],
     ['Zivert',               'Чистый поп-звук'],
     ['Молодые голоса',       'За кем следить'],
-    ['SHAMAN',               'Громко и по-русски'],
+    ['Полина Гагарина',      'Громко и по-русски'],
     ['Вечерний лаунж',       'Тихий выбор редакции'],
     ['Мари Краймбрери',      'Искренне и цепко'],
     ['Городские хиты',       'Саундтрек улиц'],
-    ['JONY',                 'Мелодии на повтор']
+    ['Ваня Дмитриенко',      'Голос поколения']
   ].map(function (e) { return { title: e[0], meta: e[1] }; });
 
   /* ---- 5. Новинки (square) — 16, title «Артист — Трек» --------------------- */
@@ -19294,18 +20260,18 @@
     'ANNA ASTI — По барам',
     'Zivert — Credo',
     'Артик & Асти — Девочка танцуй',
-    'JONY — Аллея',
+    'Ваня Дмитриенко — Венера-Юпитер',
     'Егор Крид — Сердцеедка',
-    'HammAli & Navai — Прятки',
+    'Юлианна Караулова — Ты не такой',
     'Клава Кока — Покинула чат',
     'Мари Краймбрери — Пряталки',
     'Три дня дождя — Демоны',
     'Дима Билан — Молния',
     'Полина Гагарина — Кукушка',
     'Мот — Капкан',
-    'Джиган — ДНК',
-    'Rauf & Faik — Детство',
-    'Miyagi & Andy Panda — Utopia'
+    'Звери — До скорой встречи',
+    'Дора — Втюрилась',
+    'Баста — Выпускной (Медлячок)'
   ].map(function (t) { return { title: t }; });
 
   /* ---- 6. Популярное · Чарты (row) — 14, title + rank --------------------- */
@@ -19314,11 +20280,11 @@
     'ANNA ASTI — Феникс',
     'Егор Крид — Потрачу',
     'Zivert — Life',
-    'Miyagi & Andy Panda — Kosandra',
+    'Смысловые Галлюцинации — Вечно молодой',
     'Артик & Асти — Грустный дэнс',
-    'HammAli & Navai — Птичка',
-    'JONY — Комета',
-    'SHAMAN — Встанем',
+    'МакSим — Знаешь ли ты',
+    'Ваня Дмитриенко — Венера-Юпитер',
+    'Дора — Дорадура',
     'Люся Чеботина — Солнце Монако',
     'Клава Кока — Покинула чат',
     'NILETTO — Любимка',
@@ -19350,13 +20316,13 @@
     ['ANNA ASTI',              'Поп'],
     ['Баста',                  'Хип-хоп'],
     ['Артик & Асти',           'Поп'],
-    ['Miyagi & Andy Panda',    'Хип-хоп'],
-    ['JONY',                   'Поп'],
+    ['Мот',                    'Хип-хоп'],
+    ['Ваня Дмитриенко',        'Поп'],
     ['Полина Гагарина',        'Поп'],
     ['Дима Билан',             'Поп'],
-    ['SHAMAN',                 'Поп'],
+    ['Дора',                   'Поп'],
     ['Люся Чеботина',          'Поп'],
-    ['HammAli & Navai',        'Поп'],
+    ['МакSим',                 'Поп'],
     ['Григорий Лепс',          'Эстрада'],
     ['Валерий Меладзе',        'Эстрада'],
     ['Три дня дождя',          'Рок']
@@ -19367,10 +20333,10 @@
      Ведущие — демо-имена (подзаголовок полки помечен «· демо»). */
   var SHOWS = [
     { title: 'Утренний разгон',   meta: 'с Ильёй Крамером',    badge: { label: 'будни, 7:00' } },
-    { title: 'Городской чат',     meta: 'с Настей Ким',        badge: { label: 'сейчас в эфире', live: true } },
+    { title: 'Городской чат',     meta: 'с Настей Климовой',   badge: { label: 'сейчас в эфире', live: true } },
     { title: 'Дневной эфир',      meta: 'с Романом Гейко',     badge: { label: 'будни, 13:00' } },
     { title: 'Вечерний сет',      meta: 'с Дианой Соло',       badge: { label: 'будни, 18:00' } },
-    { title: 'Ночная волна',      meta: 'с Маратом Ли',        badge: { label: 'будни, 23:00' } },
+    { title: 'Ночная волна',      meta: 'с Матвеем Орловым',   badge: { label: 'будни, 23:00' } },
     { title: 'Хиты выходного',    meta: 'с Олей Ветровой',     badge: { label: 'сб–вс, 12:00' } },
     { title: 'Топ недели',        meta: 'с Егором Дубовым',    badge: { label: 'вс, 16:00' } },
     { title: 'Русский завтрак',   meta: 'с Полиной Рей',       badge: { label: 'будни, 9:00' } },
@@ -19731,7 +20697,7 @@
     var friends = [
       { title: 'Артём К.', meta: 'слушает Город ФМ' },
       { title: 'Соня Л.', meta: 'слушает «Городские хиты»' },
-      { title: 'Данияр С.', meta: 'слушает Zivert — Life' },
+      { title: 'Даниил С.', meta: 'слушает Zivert — Life' },
       { title: 'Марина П.', meta: 'слушает Город Диско' },
       { title: 'Игорь В.', meta: 'слушает подборку «90-е»' },
       { title: 'Алина Т.', meta: 'слушает Город Поп' },
