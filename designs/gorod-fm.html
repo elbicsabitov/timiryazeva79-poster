@@ -9125,6 +9125,37 @@
        Роль в localStorage `gorod-fm.role` → html[data-role]; здесь ТОЛЬКО
        видимость/гейты (демо, бэкенда нет). Правила добавляются послойно.
        ------------------------------------------------------------------------- */
+    /* --- слой 1 · гость: рейл read-only, композер закрыт до входа ---------- */
+    .rail-guest { display: none; padding: 10px 12px 12px; border-top: 1px solid var(--hairline); }
+    html[data-role="guest"] .rail-guest { display: block; }
+    html[data-role="guest"] #rail-input-form,
+    html[data-role="guest"] #rail-chips,
+    html[data-role="guest"] #rail-undo { display: none !important; }
+    .rail-guest-text { margin: 0 0 8px; font: 400 12.5px/1.5 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .rail-guest-btn { width: 100%; min-height: 44px; border: none; border-radius: var(--r-md, 12px); background: var(--brand-blue-light); color: #fff; font: 700 13.5px 'Onest', sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: filter var(--t-fast, .15s); }
+    .rail-guest-btn:hover { filter: brightness(1.12); }
+    .rail-guest-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .rail-guest-btn-note { font: 600 10px 'Onest', sans-serif; letter-spacing: .04em; text-transform: uppercase; opacity: .75; }
+
+    /* --- слои 1-2 · помеченный рекламный брейк над мини-плеером ------------ */
+    .player-ad { position: absolute; left: 12px; right: auto; max-width: min(560px, calc(100vw - 24px)); bottom: calc(100% + 8px); z-index: 61; display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--r-md, 12px); background: var(--surface-1, #14161d); border: 1px solid var(--hairline); box-shadow: 0 10px 28px rgba(0, 0, 0, .35); }
+    .player-ad[hidden] { display: none; }
+    .player-ad-badge { flex: none; font: 700 9.5px 'Onest', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 7px; }
+    .player-ad-text { flex: 1 1 auto; min-width: 0; font: 500 12.5px/1.4 'Onest', sans-serif; color: var(--text-pri); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .player-ad-timer { flex: none; font: 600 11px 'Onest', sans-serif; color: var(--text-sec); font-variant-numeric: tabular-nums; }
+    .player-ad-off { flex: none; min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 5px 12px; cursor: pointer; transition: background var(--t-fast, .15s); }
+    .player-ad-off:hover { background: var(--surf-active); }
+    .player-ad-off:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    @media (max-width: 640px) { .player-ad { left: 8px; right: 8px; } .player-ad-text { white-space: normal; } }
+
+    /* --- слой 1 · шапка карусели станций: честный масштаб ------------------
+       Живёт в свободной зоне padding-top карусели (главная уходит под fixed
+       topbar на -64px, сама карусель начинается с 96px) — поток не двигаем. */
+    .rmg-head { position: absolute; top: 66px; left: 24px; right: 24px; z-index: 5; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; justify-content: center; pointer-events: none; }
+    .rmg-head-title { margin: 0; font: 700 15px/1.2 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; }
+    .rmg-head-note { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); }
+    html[data-surface="mobile"] .rmg-head { top: 10px; }
+    @media (max-width: 640px) { .rmg-head { top: 10px; } }
     /* ===== /GOROD-L4 ===== */
   </style>
 
@@ -9637,6 +9668,11 @@
         </button>
 
         <section class="rmg-rail" id="rmg-rail" role="group" aria-roledescription="карусель" aria-label="Радиостанции">
+          <!-- GOROD-L4 слой 1: масштаб честно — в демо 7 каналов, слушать можно без входа -->
+          <div class="rmg-head" id="rmg-head">
+            <h2 class="rmg-head-title">Станции</h2>
+            <span class="rmg-head-note">в демо — 7, в рабочей версии — 1000 · слушать можно без регистрации</span>
+          </div>
           <ul class="rmg-track" id="rmg-track" role="list"><!-- cards injected by Task 3 --></ul>
         </section>
         <section class="vitrina" id="vitrina"></section>
@@ -11715,6 +11751,12 @@
           </button>
         </div>
       </form>
+
+      <!-- GOROD-L4 слой 1: гость слушает и читает; свой голос — после входа -->
+      <div class="rail-guest rail-expanded-only" id="rail-guest-note">
+        <p class="rail-guest-text">Вы в эфире как гость: все станции открыты, диджей рассказывает сам. Отвечать ему и собирать своё — после входа.</p>
+        <button class="rail-guest-btn" id="rail-guest-login" type="button">Войти <span class="rail-guest-btn-note">демо · без формы</span></button>
+      </div>
     </aside>
     <!-- /.chat-rail -->
     <!-- Mobile chat FAB — opens the rail as a full-height dialog (mobile surface / <640px web) -->
@@ -11977,6 +12019,14 @@
     <!-- Thin progress bar at very top edge -->
     <div class="player-mini-progress-bar" aria-hidden="true">
       <div class="player-mini-progress-fill" id="mini-progress-fill"></div>
+    </div>
+
+    <!-- GOROD-L4 слои 1-2: помеченный рекламный брейк (демо-ритм; подписка не видит) -->
+    <div class="player-ad" id="player-ad" hidden role="status" aria-live="polite">
+      <span class="player-ad-badge">Реклама</span>
+      <span class="player-ad-text" id="player-ad-text"></span>
+      <span class="player-ad-timer" id="player-ad-timer" aria-hidden="true">8</span>
+      <button class="player-ad-off" id="player-ad-off" type="button">Убрать рекламу</button>
     </div>
 
     <!-- Album art — real cover; color-from-art tints the player (GOROD-042/043) -->
@@ -14042,6 +14092,59 @@
     })();
   </script>
 
+  <script>
+  /* ---- GOROD-L4 слои 1-2 — рекламные брейки (демо) ------------------------ */
+  (function () {
+    'use strict';
+    /* Лист owner'а 29.07: гость и бесплатный аккаунт слушают «с небольшим
+       количеством рекламы», подписка и автор — без. Брейк помечен «Реклама»,
+       ротация из спонсоров вкуса; демо-ритм ужат, чтобы был виден на показе.
+       gorodfm_ad_less=1 (обещание «реже и точнее» из «Мой вкус») — вдвое реже. */
+    var BASE_EVERY = 100000, LEN = 8000, FIRST_AFTER = 25000;
+    var ADS = [
+      { brand: 'Яндекс Афиша', line: 'концерты ваших артистов — рядом и со скидкой' },
+      { brand: 'The Coffee', line: 'раф «Твоя волна» — −20% в приложении' },
+      { brand: 'Винил Маркет', line: 'пластинки, которые звучат теплее' }
+    ];
+    var strip, textEl, timerEl, offBtn, idx = 0, hideT = 0, tickT = 0, cntT = 0;
+    function $(id) { return document.getElementById(id); }
+    function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
+    function adFree() { return role() === 'paid' || role() === 'author'; }
+    function everyMs() {
+      var less = false; try { less = localStorage.getItem('gorodfm_ad_less') === '1'; } catch (e) {}
+      return less ? BASE_EVERY * 2 : BASE_EVERY;
+    }
+    function hide() { if (strip) strip.hidden = true; clearInterval(cntT); }
+    function show() {
+      if (adFree() || document.hidden || !strip) return;
+      var ad = ADS[idx++ % ADS.length];
+      textEl.textContent = ad.brand + ' — ' + ad.line + ' (демо)';
+      strip.hidden = false;
+      var left = Math.round(LEN / 1000);
+      timerEl.textContent = left;
+      clearInterval(cntT);
+      cntT = setInterval(function () { left--; timerEl.textContent = Math.max(left, 0); }, 1000);
+      clearTimeout(hideT); hideT = setTimeout(hide, LEN);
+    }
+    function loop() {
+      clearTimeout(tickT);
+      tickT = setTimeout(function () { show(); loop(); }, everyMs());
+    }
+    function init() {
+      strip = $('player-ad'); if (!strip) return;
+      textEl = $('player-ad-text'); timerEl = $('player-ad-timer'); offBtn = $('player-ad-off');
+      offBtn.addEventListener('click', function () {
+        hide();
+        /* развилка слоя 2: гостю — вход, аккаунту — подписка (мост в рейл, C3) */
+        if (window.GorodRailBridge && GorodRailBridge.openUpsell) GorodRailBridge.openUpsell(role());
+      });
+      document.addEventListener('gorodfm-role-changed', function () { if (adFree()) hide(); });
+      clearTimeout(tickT); tickT = setTimeout(function () { show(); loop(); }, FIRST_AFTER);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
   <!-- =======================================================================
        Город ФМ v2 — AI-product layer (onboarding bubbles + Twinr AI chat)
        Self-contained; decoupled from the main app IIFE. See
@@ -15074,6 +15177,7 @@
       renderMenuActions();
       wireRailChrome();
       buildRoomDropdown();
+      wireRoleLayer();
 
       // Native AI: the player itself is an entry point (research 07 — "AI is a layer")
       var pw = document.getElementById('player-track-reason');
@@ -15569,6 +15673,26 @@
         b.setAttribute('aria-label', 'Реакция ' + r + ' — диджею в эфир');
         b.addEventListener('click', function () { showUndo(addRoomUser(r)); djAck(); });
         chipsEl.appendChild(b);
+      });
+    }
+
+    /* ---- GOROD-L4: роль-слой в рейле — вход гостя + реакция диджея на смену слоя ---- */
+    function wireRoleLayer() {
+      var loginBtn = $('rail-guest-login');
+      if (loginBtn) loginBtn.addEventListener('click', function () {
+        if (window.GorodRole) GorodRole.set('account');
+      });
+      var ROLE_LINES = {
+        account: 'Теперь вы в эфире под своим именем: можно отвечать мне, собирать подборки и вкус. Станции как были открыты, так и остались.',
+        paid: 'Подписка активна — рекламу выключил. И главное: теперь соберём ваш собственный стрим. Карточка «Мой стрим» ждёт на главной, или напишите мне «собери мой стрим».',
+        author: 'Ваш стрим ушёл в общую витрину. Слушатели и доход — на карточке «Мой стрим», а как зарабатывать больше — спрашивайте меня прямо здесь.',
+        guest: 'Вы снова гость. Станции и эфир открыты; свой голос, подборки и стрим — после входа.'
+      };
+      document.addEventListener('gorodfm-role-changed', function (e) {
+        var role = e.detail && e.detail.role;
+        if (!ROLE_LINES[role]) return;
+        clearTimeout(dripTimer);
+        setTimeout(function () { djSpeak(ROLE_LINES[role], 9000); }, 450);
       });
     }
 
