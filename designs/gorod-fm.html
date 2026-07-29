@@ -21619,6 +21619,7 @@
   .agent-tile-badge { position: absolute; top: 12px; left: 12px; z-index: 2; padding: 4px 9px;
     border-radius: var(--r-pill); background: rgba(11,12,15,.62); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
     font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: rgba(255,255,255,.85); }
+  .agent-tile-badge--mine { background: var(--brand-blue-light); color: #fff; }
   .agent-tile-live { position: absolute; top: 12px; right: 12px; z-index: 2; padding: 4px 9px;
     border-radius: var(--r-pill); background: var(--brand-blue-light);
     font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: #fff; }
@@ -21774,7 +21775,26 @@
       });
       return list;
     }
-    function byId(id) { var m = null; agents().forEach(function (a) { if (a.id === id) m = a; }); return m; }
+    /* Слой 4: опубликованная СВОЯ станция — тайлом в группе «От слушателей»
+       (зеркалит полку витрины «Станции слушателей», иначе флоу рвётся:
+       опубликовал — а в каталоге агентов себя не видишь). */
+    function myAgent() {
+      if (!(window.GorodRole && GorodRole.get() === 'author')) return null;
+      var s = null; try { s = JSON.parse(localStorage.getItem('gorodfm_mystream') || 'null'); } catch (e) { }
+      if (!s || !s.published) return null;
+      var tr = (s.tracks && s.tracks[0]) || null;
+      return { id: 'a-mine', kind: 'author', mine: true, style: 'Ваш стиль', name: (s.name || 'Мой стрим'),
+        school: 'ваша школа', c: '#5168FC', artIdx: 1,
+        sub: (s.name || 'Мой стрим') + ' · ваша школа',
+        why: 'собран вами в диалоге с диджеем — теперь играет у всех слушателей',
+        waveLabel: 'источник:', wave: 'ваш запрос конструктору — «' + (s.desc || '') + '»',
+        np: tr ? (tr.a + ' — ' + tr.t) : '', track: tr ? { t: tr.t, a: tr.a } : null };
+    }
+    function byId(id) {
+      if (id === 'a-mine') return myAgent();
+      var m = null; agents().forEach(function (a) { if (a.id === id) m = a; });
+      return m;
+    }
 
     /* ---- превью: у стиль-агентов фото ВСЕГДА (owner 29.07: «везде картинки поставь») —
        Higgsfield-паттерн живёт на превью; тянем из существующих ассет-пулов GOROD_ART.
@@ -21798,7 +21818,8 @@
           ' aria-label="Слушать стиль ' + esc(a.style) + ' — ведёт ' + esc(a.name) + ', ' + esc(a.school) + '">' +
           '<span class="agent-tile-art" aria-hidden="true">' + artHTML(a, i, 'agent-tile-mono') + '</span>' +
           '<span class="agent-tile-scrim" aria-hidden="true"></span>' +
-          (a.kind === 'author' ? '<span class="agent-tile-badge">от слушателя</span>' : '') +
+          (a.mine ? '<span class="agent-tile-badge agent-tile-badge--mine">ваша · в эфире у всех</span>'
+            : (a.kind === 'author' ? '<span class="agent-tile-badge">от слушателя</span>' : '')) +
           '<span class="agent-tile-live" hidden>В эфире</span>' +
           '<span class="agent-tile-text">' +
             '<span class="agent-tile-style">' + esc(a.style) + '</span>' +
@@ -21832,6 +21853,7 @@
       var list = agents();
       var ed = list.filter(function (a) { return a.kind === 'ed'; });
       var au = list.filter(function (a) { return a.kind === 'author'; });
+      var mine = myAgent(); if (mine) au.unshift(mine);
       /* owner 29.07: «по группам разбить визуально» — редакция и слушатели отдельными
          грид-секциями; ghost «Свой агент» логично живёт в группе слушателей */
       mount.innerHTML =
@@ -21850,9 +21872,9 @@
             '<span class="agents-shelf-sub">по артисту в эфире, по стилю или от людей · демо</span>' +
           '</div>' +
           '<div class="agents-find-tabs" role="group" aria-label="Ось поиска агентов">' +
-            '<button type="button" class="agents-find-tab" data-ftab="artists" aria-pressed="true">По артистам</button>' +
-            '<button type="button" class="agents-find-tab" data-ftab="styles" aria-pressed="false">По стилям</button>' +
-            '<button type="button" class="agents-find-tab" data-ftab="people" aria-pressed="false">От людей</button>' +
+            [['artists', 'По артистам'], ['styles', 'По стилям'], ['people', 'От людей']].map(function (t) {
+              return '<button type="button" class="agents-find-tab" data-ftab="' + t[0] + '" aria-pressed="' + (findTab === t[0] ? 'true' : 'false') + '">' + t[1] + '</button>';
+            }).join('') +
           '</div>' +
           '<div class="agents-find-chips" id="agents-find-chips" role="group" aria-label="Значения фильтра"></div>' +
           '<ul class="agents-shelf-track" id="agents-find-results" role="list" aria-label="Найденные агенты"></ul>' +
@@ -21877,6 +21899,7 @@
       var styles = [];
       list.forEach(function (a) { if (styles.indexOf(a.style) === -1) styles.push(a.style); });
       var people = list.filter(function (a) { return a.kind === 'author'; }).map(function (a) { return { label: a.school, id: a.id }; });
+      var mine = myAgent(); if (mine) people.unshift({ label: mine.school, id: mine.id });
       return { artists: artists, styles: styles, people: people, list: list };
     }
     function findClone(a, why) {
@@ -21941,10 +21964,12 @@
       var mount = $('agents-taste'); if (!mount) return;
       var act = activeId || (window.GorodStations && GorodStations.active) || 'gorod';
       var yours = [act]; if (act !== 'gorod') yours.push('gorod'); if (act !== 'chill') yours.push('chill');
+      var listeners = ['a-matvey', 'a-sonya'];
+      if (myAgent()) { listeners.unshift('a-mine'); yours.unshift('a-mine'); }
       mount.innerHTML =
         shelfHTML('Твои агенты', 'кого ты слушал · демо', yours) +
-        shelfHTML('Под твой вкус', 'причины — в «почему?» · демо', ['chill', 'lirika', 'pop']) +
-        shelfHTML('От слушателей', 'опубликованные школы · слой автора', ['a-matvey', 'a-sonya']) +
+        shelfHTML('Под твой вкус', 'причины видны сразу · демо', ['chill', 'lirika', 'pop']) +
+        shelfHTML('От слушателей', 'опубликованные школы · слой автора', listeners) +
         shelfHTML('Новые школы', 'редакция расширяет стили', ['disco', 'rock', 'hiphop']);
       built.taste = true;
       mark(activeId || (window.GorodStations && GorodStations.active) || null);
@@ -21963,6 +21988,7 @@
         document.dispatchEvent(new CustomEvent('gorod:tune', { detail: { id: id } }));
       } else {
         /* демо-поток автора: трек в мини-плеер (канон playDemo) + честная обложка-монограмма */
+        if (!a.track) return;
         var t = $('player-track-title'), ar = $('player-track-artist'), cov = $('mini-art-img');
         if (t) t.textContent = a.track.t;
         if (ar) ar.textContent = a.name + ' · ' + a.track.a;
@@ -21971,7 +21997,8 @@
           cov.setAttribute('src', src);
           cov.setAttribute('alt', 'Обложка: ' + a.name + ' — ' + a.track.t);
         }
-        document.dispatchEvent(new CustomEvent('gorod:agent-room', { detail: { id: id } }));
+        /* у своей станции комнаты агента нет — это ваш поток, рейл остаётся как есть */
+        if (!a.mine) document.dispatchEvent(new CustomEvent('gorod:agent-room', { detail: { id: id } }));
         mark(id);
       }
     }
@@ -22018,7 +22045,7 @@
       if (popOpenBtn === btn) { closePop(); return; }
       closePop();
       $('agent-pop-why').textContent = a.why;
-      $('agent-pop-wave').innerHTML = 'выросло из волны: <b>' + esc(a.wave) + '</b>';
+      $('agent-pop-wave').innerHTML = esc(a.waveLabel || 'выросло из волны:') + ' <b>' + esc(a.wave) + '</b>';
       pop.classList.add('is-open'); pop.setAttribute('aria-hidden', 'false');
       popOpenBtn = btn; btn.setAttribute('aria-expanded', 'true');
       var r = btn.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
@@ -22067,10 +22094,16 @@
       document.addEventListener('gorod:tune', function (e) { if (e.detail && e.detail.id) mark(e.detail.id); });
       document.addEventListener('gorod:activecard', function (e) { if (e.detail && e.detail.id) mark(e.detail.id); });
       document.addEventListener('gorodfm-home-variant', sync);
-      document.addEventListener('gorodfm-role-changed', function () {
+      /* смена роли / публикация стрима: свой тайл появляется-исчезает в «От слушателей» —
+         перестраиваем построенные поверхности (rebuild редкий, состояние фильтра держит findTab/findVal) */
+      function rebuilt() {
+        if (built.home) buildHome();
+        if (built.taste) buildTaste();
         var s = document.querySelector('#agents-home [data-ghost-sub]');
         if (s) s.textContent = ghostSub();
-      });
+      }
+      document.addEventListener('gorodfm-role-changed', rebuilt);
+      document.addEventListener('gorodfm-mystream-changed', rebuilt);
       /* закрытие поповера: клик-вне, Esc, скролл, ресайз (fixed-позиция отстаёт от якоря) */
       document.addEventListener('click', function (e) {
         if (!pop || !pop.classList.contains('is-open')) return;
