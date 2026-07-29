@@ -14262,7 +14262,17 @@
 
         // 3. Restore home variant
         var savedVariant = lsGet(LS_KEYS.homeVariant, 'fab');
-        applyHomeVariant(savedVariant);
+        /* ?home=fab|drawer|agents — шарибельная ссылка на конкретный вариант главной.
+           Показывает вариант, НЕ трогая сохранённый выбор (открыл ссылку «старой» —
+           твой тумблер не перещёлкнулся); без параметра — как раньше, из LS. */
+        var urlVariant = (window.location.search.match(/[?&]home=(fab|drawer|agents)\b/) || [])[1];
+        if (urlVariant) {
+          document.documentElement.setAttribute('data-home-variant', urlVariant);
+          updateTweakButtonStates('home-variant', urlVariant);
+          document.dispatchEvent(new CustomEvent('gorodfm-home-variant', { detail: { variant: urlVariant } }));
+        } else {
+          applyHomeVariant(savedVariant);
+        }
 
         // 3b. Restore hide-flow-map
         var savedHideFlowMap = lsGet(LS_KEYS.hideFlowMap, 'false');
