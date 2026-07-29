@@ -21584,7 +21584,9 @@
   [data-home-variant="agents"] .home-side-drawer,
   [data-home-variant="agents"] .home-panel-backdrop { display: none; }
 
-  .agents-home { margin: 30px 0 34px; }  /* сверху — от карусели (топбар отбит ею); снизу — чтобы «Найти агента» не слипался с «Моим стримом» */
+  /* [data-page=home] — full-bleed (-40px по бокам); секции компенсируют это сами.
+     Держим ту же колонку, что витрина: max-width + clamp-паддинги по краям. */
+  .agents-home { max-width: 1100px; margin: 30px auto 34px; padding: 0 clamp(16px, 4vw, 28px); }
 
   /* Ритм отступов — 8pt: шапка 8 → группа (24 сверху / 12 снизу) → грид gap 16 */
   .agents-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 8px; }
