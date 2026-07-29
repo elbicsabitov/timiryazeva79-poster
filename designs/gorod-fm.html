@@ -21614,10 +21614,20 @@
   /* Карусель станций ОСТАЁТСЯ главным блоком сверху (owner 29.07: «сверху главный блок
      каруселью как в до этого дизе»), грид стилей-агентов встаёт под ней. */
   /* Вкладка «Открыть» в варианте C лишняя (owner 29.07: «будто ненужная») — discovery
-     живёт на главной: грид стилей + «Найти агента» + витрина. Роут доступен по ссылке;
+     живёт на главной: каталог «Стили и агенты». Роут доступен по ссылке;
      варианты A/B не тронуты. */
   [data-home-variant="agents"] .sidebar-item[data-route="#/podborki"],
   [data-home-variant="agents"] .tabbar-item[data-route="#/podborki"] { display: none; }
+  /* Запрос 29.07 (веч.): ПЕРВАЯ ВЕРСИЯ = карусель + каталог «Стили и агенты», всё
+     остальное с главной и из навигации спрятать. НИЧЕГО НЕ УДАЛЕНО — только display:none
+     в скоупе варианта C (owner: «на будущее оставь, если что вернём»); в A/B всё живо,
+     роуты открываются по прямым ссылкам. Входы слоёв 3-4 сохраняются: ghost «Свой агент»,
+     «От людей» в каталоге, диджей в чате, воронка подписки. */
+  [data-home-variant="agents"] [data-page="home"] .mystream,
+  [data-home-variant="agents"] [data-page="home"] .vitrina,
+  [data-home-variant="agents"] .sidebar-item[data-route="#/taste"],
+  [data-home-variant="agents"] .tabbar-item[data-route="#/taste"] { display: none; }
+  [data-home-variant="agents"] .agents-home { margin-bottom: 8px; padding-bottom: calc(var(--player-mini-h, 72px) + 24px); }
   /* вариант C не пользуется шторками A/B — их вариантные правила сюда не дотягиваются,
      а базовый .home-bottom-sheet видим по умолчанию (вскрылось на #/taste) */
   [data-home-variant="agents"] .home-bottom-sheet,
