@@ -21661,10 +21661,50 @@
   [data-surface="web"][data-home-variant="agents"] .topbar { left: 0; padding-left: 246px;
     background: transparent; border-bottom: 1px solid transparent;
     transition: background var(--t-fast), border-color var(--t-fast); }
-  [data-surface="web"][data-home-variant="agents"] .topbar.is-stuck { background: rgba(11, 12, 15, .72);
-    -webkit-backdrop-filter: blur(28px) saturate(1.4); backdrop-filter: blur(28px) saturate(1.4);
+  /* стекло по-настоящему (owner: «а где стеклянный стиль») — заливка тоньше, blur+saturate
+     сильнее: фото-контент просвечивает сквозь топбар, а не прячется за плашкой */
+  [data-surface="web"][data-home-variant="agents"] .topbar.is-stuck { background: rgba(13, 15, 20, .52);
+    -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
     border-bottom-color: var(--hairline); }
-  html[data-theme="light"][data-home-variant="agents"] .topbar.is-stuck { background: rgba(250, 250, 247, .82); }
+  html[data-theme="light"][data-home-variant="agents"] .topbar.is-stuck { background: rgba(250, 250, 247, .62); }
+  /* мини-плеер первой версии — то же стекло (в A/B прежняя плотность) */
+  [data-surface="web"][data-home-variant="agents"] .player-mini { background: rgba(11, 12, 15, .55);
+    -webkit-backdrop-filter: blur(32px) saturate(1.7); backdrop-filter: blur(32px) saturate(1.7); }
+  [data-surface="web"][data-home-variant="agents"] .player-mini:hover { background: rgba(11, 12, 15, .68); }
+
+  /* ---- БЕЛАЯ ТЕМА первой версии: правый чат и нижняя планка — светлое стекло
+     (owner 29.07: «почему в белой теме норм не показываются»; light-glass хром
+     из cont-16 выбран owner'ом). Скоуп — вариант C; тёмный хром A/B не тронут. ---- */
+  html[data-theme="light"][data-home-variant="agents"] .chat-rail {
+    background: rgba(252, 252, 250, .88); border-left-color: rgba(0, 0, 0, .09); }
+  html[data-theme="light"][data-home-variant="agents"] .rail-head { background: rgba(81, 104, 252, .08); }
+  html[data-theme="light"][data-home-variant="agents"] .rail-room-btn { color: var(--text-pri); }
+  html[data-theme="light"][data-home-variant="agents"] .rail-room-btn:hover { background: rgba(0, 0, 0, .05); }
+  html[data-theme="light"][data-home-variant="agents"] .ai-msg-bubble {
+    background: rgba(0, 0, 0, .05); color: var(--text-pri); }
+  html[data-theme="light"][data-home-variant="agents"] .ai-msg-bubble b { color: var(--text-pri); }
+  html[data-theme="light"][data-home-variant="agents"] .ai-msg--user .ai-msg-bubble,
+  html[data-theme="light"][data-home-variant="agents"] .ai-msg--mine .ai-msg-bubble {
+    background: var(--brand-blue-light); color: #fff; }
+  html[data-theme="light"][data-home-variant="agents"] .rail-composer { background: rgba(0, 0, 0, .03); }
+  html[data-theme="light"][data-home-variant="agents"] #rail-input { color: var(--text-pri); }
+  html[data-theme="light"][data-home-variant="agents"] .ai-track {
+    background: rgba(0, 0, 0, .05); border-color: rgba(0, 0, 0, .08); }
+  html[data-theme="light"][data-surface="web"][data-home-variant="agents"] .player-mini {
+    background: rgba(252, 252, 250, .66); border-top: 1px solid rgba(0, 0, 0, .09); }
+  html[data-theme="light"][data-surface="web"][data-home-variant="agents"] .player-mini:hover {
+    background: rgba(252, 252, 250, .8); }
+  /* v3 держал планку immersive-dark в light (ре-ассерт тёмных токенов на .player-mini) —
+     owner 29.07 отменил для первой версии: возвращаем light-набор (полный плеер
+     .player-full остаётся тёмным моментом, его не трогаем) */
+  html[data-theme="light"][data-home-variant="agents"] .player-mini {
+    --surface-0:#FFFFFF; --surface-1:#FFFFFF; --surface-2:#F4F4F1; --surface-3:#EBEBE6;
+    --text-pri:#1A1C1F; --text-sec:rgba(0,0,0,.60); --text-ter:rgba(0,0,0,.40); --text-quat:rgba(0,0,0,.60);
+    --hairline:rgba(0,0,0,.09); --divider:rgba(0,0,0,.07); --border-strong:rgba(0,0,0,.14);
+    --surf-hover:rgba(0,0,0,.04); --surf-active:rgba(0,0,0,.07);
+    --cover-mix-base:#FFFFFF; --accent-on-dark:#3A4ED0; --accent-text:#3A4ED0;
+    --brand-blue-light:#3346C4; --brand-blue-hover:#2A39A8;
+  }
   /* иконка-переключалка темы в топбаре (видна в первой версии; в A/B тумблер живёт в сайдбаре) */
   .topbar-theme { display: none; width: 40px; height: 40px; flex: none; align-items: center; justify-content: center;
     border: 1px solid var(--hairline); border-radius: var(--r-pill); background: var(--surface-1);
