@@ -11455,6 +11455,8 @@
           <div class="account-block account-block--first">
             <span class="account-row-k">Профиль</span>
             <span class="account-row-v">Twinr-ID <span class="account-demo">демо</span></span>
+            <!-- статус слоя доступа: гость / вошли / подписка / автор (обновляет GorodAccountRole) -->
+            <p class="account-note" id="account-role-note" aria-live="polite"></p>
             <p class="account-note">Единый вход управляется в Twinr-ID. В полной версии — почта/телефон и синк между устройствами.</p>
           </div>
 
@@ -19965,7 +19967,22 @@
       sheet.setAttribute('aria-hidden', 'false'); sheet.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       syncPills();
+      syncRole();
       var c = $('account-close'); if (c) c.focus();
+    }
+    /* статус слоя доступа + кнопка «Выйти»↔«Войти» (роль-слой появился после v3-шита) */
+    var ROLE_NOTE = {
+      guest: 'Вы слушаете как гость — для станций и эфира вход не нужен.',
+      account: 'Вы вошли. Подборки, вкус и любимое — ваши. · демо',
+      paid: 'Вы вошли, подписка активна: без рекламы, с «Моим стримом». · демо',
+      author: 'Вы автор — ваша станция в общей витрине. · демо'
+    };
+    function syncRole() {
+      var r = (window.GorodRole && GorodRole.get()) || 'guest';
+      var note = $('account-role-note');
+      if (note) note.textContent = ROLE_NOTE[r] || '';
+      var lo = $('account-logout');
+      if (lo) lo.textContent = (r === 'guest') ? 'Войти · демо' : 'Выйти';
     }
     function close() {
       if (!sheet) return;
@@ -20011,7 +20028,21 @@
       try { window.dispatchEvent(new Event('gorodfm-taste-changed')); } catch (e) {}
       ack($('account-delete'), '✓ очищено');
     }
-    function logout() { close(); location.hash = '#/home'; }
+    function logout() {
+      close();
+      /* «Выйти» написан в v3 до роль-слоя и роль не трогал — залогинившись, нельзя было
+         вернуться в гостя. Выход = роль guest (вкус/данные остаются — канон L4: вход и
+         подписка двигают только роль); диджей попрощается своей guest-репликой сам.
+         Гостю та же кнопка предлагает «Войти» (лейбл меняет syncRole). */
+      var r = (window.GorodRole && GorodRole.get()) || 'guest';
+      if (r === 'guest') {
+        if (window.GorodAuthFlow) GorodAuthFlow.login();
+        else if (window.GorodRole) GorodRole.set('account');
+        return;
+      }
+      if (window.GorodRole) GorodRole.set('guest');
+      location.hash = '#/home';
+    }
     function wire() {
       var btn = document.querySelector('.topbar-account'); if (btn) btn.addEventListener('click', open);
       var c = $('account-close'); if (c) c.addEventListener('click', close);
