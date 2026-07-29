@@ -9179,6 +9179,38 @@
     .ai-upsell-btn--pri:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
     .ai-upsell-btn:disabled { opacity: .5; cursor: default; }
     .ai-upsell-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    /* --- слой 3 · «Мой стрим»: карточка на главной -------------------------- */
+    .mystream { max-width: 1120px; margin: 8px auto 26px; padding: 0 24px; }
+    .mystream-lock, .mystream-build, .mystream-card { background: var(--surface-1, #14161d); border: 1px solid var(--hairline); border-radius: 18px; padding: 18px 20px 16px; }
+    .mystream-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .mystream-title { margin: 0; font: 700 17px/1.25 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; }
+    .mystream-badge { font: 700 9.5px 'Onest', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 8px; }
+    .mystream-badge--on { color: var(--accent-text, var(--brand-blue-light)); border-color: currentColor; }
+    .mystream-tags { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
+    .mystream-text { margin: 0 0 12px; font: 400 13.5px/1.55 'Onest', sans-serif; color: var(--text-sec); max-width: 60ch; text-wrap: pretty; }
+    .mystream-learn { margin: 0 0 10px; font: 400 12.5px/1.5 'Onest', sans-serif; color: var(--text-sec); }
+    .mystream-btn { min-height: 40px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 600 13px 'Onest', sans-serif; padding: 8px 16px; cursor: pointer; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .mystream-btn:hover { background: var(--surf-active); }
+    .mystream-btn--primary { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .mystream-btn--primary:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .mystream-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .mystream-tracks { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; }
+    .mystream-track { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid var(--divider, var(--hairline)); }
+    .mystream-track:first-child { border-top: none; }
+    .mystream-play { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--hairline); background: var(--surf-hover); color: var(--text-pri); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background var(--t-fast, .15s); }
+    .mystream-play:hover { background: var(--surf-active); }
+    .mystream-play:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .mystream-play svg { width: 14px; height: 14px; }
+    .mystream-track-meta { flex: 1 1 auto; min-width: 0; }
+    .mystream-track-title { font: 600 13.5px/1.3 'Onest', sans-serif; color: var(--text-pri); }
+    .mystream-track-why { font: 400 12px/1.45 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .mystream-notmine { flex: none; min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: transparent; color: var(--text-sec); font: 600 11.5px 'Onest', sans-serif; padding: 5px 11px; cursor: pointer; transition: background var(--t-fast, .15s), color var(--t-fast, .15s); }
+    .mystream-notmine:hover { background: var(--surf-hover); color: var(--text-pri); }
+    .mystream-notmine:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .mystream-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mystream-pubnote { font: 400 12px/1.4 'Onest', sans-serif; color: var(--text-sec); }
+    html[data-surface="mobile"] .mystream { padding: 0 16px; }
+    @media (max-width: 640px) { .mystream { padding: 0 16px; } .mystream-tags { max-width: 100%; } }
     /* ===== /GOROD-L4 ===== */
   </style>
 
@@ -9698,6 +9730,41 @@
           </div>
           <ul class="rmg-track" id="rmg-track" role="list"><!-- cards injected by Task 3 --></ul>
         </section>
+
+        <!-- GOROD-L4 слой 3: «Мой стрим» — личный поток, собирается диалогом с диджеем.
+             Имя сознательно НЕ «Моя волна» (DEBT GHS-028: бренд Яндекс Музыки). -->
+        <section class="mystream" id="mystream" aria-labelledby="mystream-title">
+          <div class="mystream-lock" id="mystream-lock">
+            <div class="mystream-row">
+              <h2 class="mystream-title" id="mystream-title">Мой стрим</h2>
+              <span class="mystream-badge">подписка</span>
+            </div>
+            <p class="mystream-text">Описываете словами, что любите, — диджей уточняет и собирает личный поток. Он меняется под настроение и учится на «Не моё».</p>
+            <button class="mystream-btn" id="mystream-lock-cta" type="button">Оформить подписку (демо)</button>
+          </div>
+          <div class="mystream-build" id="mystream-build" hidden>
+            <div class="mystream-row">
+              <h2 class="mystream-title">Мой стрим</h2>
+              <span class="mystream-badge mystream-badge--on">включено</span>
+            </div>
+            <p class="mystream-text">Потока пока нет. Соберём диалогом: расскажете, что любите, — диджей уточнит и поставит первые треки, у каждого будет «почему».</p>
+            <button class="mystream-btn mystream-btn--primary" id="mystream-build-cta" type="button">Собрать в чате</button>
+          </div>
+          <div class="mystream-card" id="mystream-card" hidden>
+            <div class="mystream-row">
+              <h2 class="mystream-title">Мой стрим</h2>
+              <span class="mystream-tags" id="mystream-tags"></span>
+            </div>
+            <p class="mystream-learn" id="mystream-learn" role="status"></p>
+            <ul class="mystream-tracks" id="mystream-tracks"></ul>
+            <div class="mystream-foot">
+              <button class="mystream-btn" id="mystream-rebuild" type="button">Пересобрать в чате</button>
+              <button class="mystream-btn mystream-btn--primary" id="mystream-publish" type="button" hidden>Отправить в витрину</button>
+              <span class="mystream-pubnote" id="mystream-pubnote" hidden></span>
+            </div>
+          </div>
+        </section>
+
         <section class="vitrina" id="vitrina"></section>
 
         <div class="home-tiles" hidden>
@@ -14233,6 +14300,81 @@
   })();
   </script>
 
+  <script>
+  /* ---- GOROD-L4 слой 3 — карточка «Мой стрим» на главной ------------------ */
+  (function () {
+    'use strict';
+    var LS = 'gorodfm_mystream';
+    var PLAY_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20" fill="currentColor"/></svg>';
+    /* Замены для «Не моё» — треки, уже живущие в приложении (экскурсы/лента) */
+    var SWAPS = [
+      { t: 'Sex on Fire', a: 'Kings of Leon', why: 'та же энергия, другой голос — проверяю границу вкуса' },
+      { t: 'Потрачу', a: 'Егор Крид', why: 'тёплый поп той же температуры — смотрю, дело было в артисте или в жанре' },
+      { t: 'Smells Like Teen Spirit', a: 'Nirvana', why: 'сырая динамика «тихо→громко» — обратная сторона того же настроения' }
+    ];
+    var swapIdx = 0;
+    var lock, lockCta, buildEl, card, tracksEl, tagsEl, learnEl;
+    function $(id) { return document.getElementById(id); }
+    function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
+    function read() { try { return JSON.parse(localStorage.getItem(LS) || 'null'); } catch (e) { return null; } }
+    function write(s) { try { localStorage.setItem(LS, JSON.stringify(s)); } catch (e) {} }
+    function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function playDemo(tr) {
+      /* демо: ставим трек в мини-плеер; диджей в рейле заметит смену и откомментирует */
+      var t = $('player-track-title'), a = $('player-track-artist');
+      if (t) t.textContent = tr.t;
+      if (a) a.textContent = 'Мой стрим · ' + tr.a;
+    }
+    function render() {
+      var r = role(), s = read();
+      var paidUp = (r === 'paid' || r === 'author');
+      if (!lock) return;
+      lock.hidden = paidUp;
+      if (!paidUp) lockCta.textContent = (r === 'guest') ? 'Войти и попробовать (демо)' : 'Оформить подписку (демо)';
+      buildEl.hidden = !(paidUp && !s);
+      card.hidden = !(paidUp && s);
+      if (paidUp && s) {
+        tagsEl.textContent = (s.vocal === 'instr' ? 'инструментал · ' : '') + (s.desc || '');
+        learnEl.textContent = (s.learned && s.learned.length)
+          ? 'Учусь: ' + s.learned[s.learned.length - 1]
+          : 'Меняется под время суток; жмите «Не моё» — поток учится.';
+        tracksEl.innerHTML = '';
+        (s.tracks || []).forEach(function (tr, i) {
+          var li = document.createElement('li'); li.className = 'mystream-track';
+          li.innerHTML = '<button type="button" class="mystream-play" aria-label="Слушать «' + esc(tr.t) + '» (демо)">' + PLAY_SVG + '</button>' +
+            '<div class="mystream-track-meta"><div class="mystream-track-title">' + esc(tr.t) + ' — ' + esc(tr.a) + '</div>' +
+            '<div class="mystream-track-why">' + esc(tr.why) + '</div></div>' +
+            '<button type="button" class="mystream-notmine" aria-label="Не моё: «' + esc(tr.t) + '» — заменить и поучиться">Не моё</button>';
+          li.querySelector('.mystream-play').addEventListener('click', function () { playDemo(tr); });
+          li.querySelector('.mystream-notmine').addEventListener('click', function () {
+            var swap = SWAPS[swapIdx++ % SWAPS.length];
+            var learned = 'реже ставлю ' + tr.a + ', попробовал ' + swap.a + ' — скажите, если снова мимо.';
+            s.tracks[i] = { t: swap.t, a: swap.a, why: swap.why };
+            s.learned = (s.learned || []).concat(learned);
+            write(s); render();
+          });
+          tracksEl.appendChild(li);
+        });
+      }
+    }
+    function init() {
+      lock = $('mystream-lock'); if (!lock) return;
+      lockCta = $('mystream-lock-cta'); buildEl = $('mystream-build'); card = $('mystream-card');
+      tracksEl = $('mystream-tracks'); tagsEl = $('mystream-tags'); learnEl = $('mystream-learn');
+      lockCta.addEventListener('click', function () {
+        if (!window.GorodRole) return;
+        GorodRole.set(role() === 'guest' ? 'account' : 'paid');
+      });
+      $('mystream-build-cta').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
+      $('mystream-rebuild').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
+      document.addEventListener('gorodfm-role-changed', render);
+      document.addEventListener('gorodfm-mystream-changed', render);
+      render();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
   <!-- =======================================================================
        Город ФМ v2 — AI-product layer (onboarding bubbles + Twinr AI chat)
        Self-contained; decoupled from the main app IIFE. See
@@ -15269,7 +15411,10 @@
         if (row) [].forEach.call(row.querySelectorAll('button'), function (x) { x.disabled = true; });
         if (kind === 'login') { if (window.GorodRole) GorodRole.set('account'); }
         else if (kind === 'paid') { if (window.GorodRole) GorodRole.set('paid'); }
-        else if (kind === 'stay') { clearTimeout(dripTimer); setTimeout(function () { djSpeak('Принято, остаёмся как есть. Реклама помечена бейджем, и её правда немного.'); }, 500); }
+        else if (kind === 'stay') {
+          if (mode === 'ai') { aiSay('Принято. Если передумаете — скажите «собери мой стрим», продолжим с этого места.'); }
+          else { clearTimeout(dripTimer); setTimeout(function () { djSpeak('Принято, остаёмся как есть. Реклама помечена бейджем, и её правда немного.'); }, 500); }
+        }
       });
 
       wireModePopover();
@@ -15825,6 +15970,74 @@
       chipsEl.appendChild(go); chipsEl.appendChild(stay);
     }
 
+    /* ---- GOROD-L4 слой 3: конструктор «Мой стрим» — диалогом в «Моём диджее».
+       Треки пула — только те, что уже живут в приложении (станции/экскурсы),
+       ничего не выдумываем; «почему» шаблонное от описания и выбора вокала. ---- */
+    var bStep = 0, bDesc = '';
+    var BUILD_POOL = [
+      { t: 'Space Song', a: 'Beach House', vocal: true, tags: ['спокой', 'инди', 'вечер', 'чилл', 'тих'], why: 'воздух и медленный пульс — ровно то настроение, что вы описали' },
+      { t: 'Комета', a: 'JONY', vocal: true, tags: ['поп', 'лирик', 'вечер', 'спокой'], why: 'тёплый вокал без давления — вход в поток, а не аттракцион' },
+      { t: 'Enemy', a: 'Imagine Dragons', vocal: true, tags: ['рок', 'энерг', 'драйв', 'спорт'], why: 'широкий припев держит энергию, которую вы просили' },
+      { t: 'Life', a: 'Zivert', vocal: true, tags: ['поп', 'диско', 'дорог', 'танц'], why: 'ровный грув — не отвлекает и не отпускает' },
+      { t: 'Бенз', a: 'MACAN', vocal: true, tags: ['хип-хоп', 'бит', 'энерг', 'спорт'], why: 'плотный бит — по вашему запросу про ритм' },
+      { t: 'Феникс', a: 'ANNA ASTI', vocal: true, tags: ['поп', 'танц', 'энерг'], why: 'подъём к припеву — маленькая победа каждые три минуты' },
+      { t: 'Weightless', a: 'Marconi Union', vocal: false, tags: ['инструмент', 'фокус', 'спокой', 'работ', 'тих'], why: 'без слов и почти без событий — фон, который не спорит с мыслями' },
+      { t: 'Intro', a: 'The xx', vocal: false, tags: ['инструмент', 'инди', 'фокус', 'работ'], why: 'минимализм с пульсом — собирает, не мешая' }
+    ];
+    function builderMatches(desc, vocal) {
+      var d = (desc || '').toLowerCase();
+      return BUILD_POOL.map(function (p) {
+        var s = 0;
+        p.tags.forEach(function (tg) { if (d.indexOf(tg) !== -1) s += 2; });
+        if (vocal === 'instr') s += p.vocal ? -2 : 3;
+        if (vocal === 'vocal' && p.vocal) s += 1;
+        return { p: p, s: s };
+      }).sort(function (a, b) { return b.s - a.s; }).slice(0, 4).map(function (x) { return x.p; });
+    }
+    function builderStart() {
+      if (!(window.GorodRole && GorodRole.atLeast('paid'))) { railEnsureOpen(); setMode('ai'); greeted = true; builderUpsell(); return; }
+      railEnsureOpen();
+      setMode('ai');
+      greeted = true;
+      bStep = 1;
+      aiSay('Соберём ваш стрим. Расскажите словами, что любите: жанры, настроение, можно примерами артистов — как объяснили бы другу.', 600)
+        .then(function () {
+          chipsEl.innerHTML = '';
+          ['Спокойный инди на вечер', 'Рок и энергия под спорт'].forEach(function (ex) {
+            var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = ex;
+            b.addEventListener('click', function () { addUser(ex); chipsEl.innerHTML = ''; builderClarify(ex); });
+            chipsEl.appendChild(b);
+          });
+        });
+    }
+    function builderClarify(text) {
+      bDesc = text; bStep = 2;
+      return aiSay('Понял: «' + esc(text) + '». Одно уточнение — со словами или инструментал? От этого зависит, сколько места отдам голосу.', 700)
+        .then(function () {
+          chipsEl.innerHTML = '';
+          [['Со словами', 'vocal'], ['Инструментал', 'instr'], ['50/50', 'mix']].forEach(function (v) {
+            var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = v[0];
+            b.addEventListener('click', function () { addUser(v[0]); chipsEl.innerHTML = ''; builderFinish(v[1]); });
+            chipsEl.appendChild(b);
+          });
+        });
+    }
+    function builderFinish(vocal) {
+      bStep = 0;
+      var tracks = builderMatches(bDesc, vocal).map(function (p) { return { t: p.t, a: p.a, why: p.why }; });
+      var stream = { desc: bDesc, vocal: vocal, tracks: tracks, learned: [], published: false };
+      try { localStorage.setItem('gorodfm_mystream', JSON.stringify(stream)); } catch (e) {}
+      document.dispatchEvent(new CustomEvent('gorodfm-mystream-changed'));
+      aiSay('Собрал — «Мой стрим» уже на главной: первые ' + tracks.length + ' трека, у каждого своё «почему». Поток будет меняться под время суток и учиться каждый раз, когда жмёте «Не моё». Могу ошибаться — но каждый выбор объясню.', 900)
+        .then(function () { setChips(DEFAULT_CHIPS); });
+    }
+    function builderUpsell() {
+      addAI('Свой стрим открывается на подписке: вы описываете словами, я собираю поток и объясняю каждый трек. Реклама при этом выключается совсем.' +
+        '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка (демо)</button>' +
+        '<button type="button" class="ai-upsell-btn" data-upsell="stay">Позже</button></div>');
+    }
+    window.GorodStreamBuilder = { start: builderStart };
+
     /* ---- GOROD-L4: роль-слой в рейле — вход гостя + реакция диджея на смену слоя ---- */
     function wireRoleLayer() {
       var loginBtn = $('rail-guest-login');
@@ -16137,7 +16350,10 @@
     var myFactIdx = -1;
 
     function handleText(text) {
+      /* GOROD-L4 слой 3: конструктор ведёт диалог — перехватывает свободный текст */
+      if (bStep === 1) return builderClarify(text);
       var t = text.toLowerCase();
+      if (/собер|собрать|мой стрим|свой стрим/.test(t)) return builderStart();
       var tags = (profile && profile.length) ? profile.join(' · ') : 'ваш вкус';
       if (/кто ты|ты кто|какой ты|о себе|представ/.test(t))
         return aiSay('Я <b>ваш диджей</b> — собран из вашего вкуса: <b>' + esc(tags) + '</b>. Диджей станции ведёт свой эфир, а я рассказываю про <b>вашу</b> музыку: откуда звук, почему цепляет, что слушать дальше.')
