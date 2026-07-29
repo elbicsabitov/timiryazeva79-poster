@@ -21601,12 +21601,14 @@
   .agent-tile-art { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
   .agent-tile-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .agent-tile-mono { font-family: 'Onest', sans-serif; font-size: 64px; font-weight: 800; opacity: .5; }
-  /* скрим только над фото — чтобы белый текст читался в обеих темах */
-  .agent-tile-scrim { position: absolute; inset: 55% 0 0 0; display: none;
-    background: linear-gradient(180deg, rgba(11,12,15,0) 0%, rgba(11,12,15,.78) 78%); }
+  /* скрим только над фото — чтобы белый текст читался в обеих темах
+     (reviewer M2: у линии заголовка альфа была ~.37 → 2.5:1; подняли высоту и плотность + тень) */
+  .agent-tile-scrim { position: absolute; inset: 40% 0 0 0; display: none;
+    background: linear-gradient(180deg, rgba(11,12,15,0) 0%, rgba(11,12,15,.62) 46%, rgba(11,12,15,.88) 82%); }
   .agent-tile--photo .agent-tile-scrim { display: block; }
-  .agent-tile--photo .agent-tile-style, .agent-tile--photo .agent-tile-sub, .agent-tile--photo .agent-tile-np { color: #fff; }
-  .agent-tile--photo .agent-tile-sub, .agent-tile--photo .agent-tile-np { color: rgba(255,255,255,.78); }
+  .agent-tile--photo .agent-tile-style, .agent-tile--photo .agent-tile-sub, .agent-tile--photo .agent-tile-np { color: #fff;
+    text-shadow: 0 1px 10px rgba(11,12,15,.65); }
+  .agent-tile--photo .agent-tile-sub, .agent-tile--photo .agent-tile-np { color: rgba(255,255,255,.82); }
 
   .agent-tile-text { position: absolute; left: 14px; right: 14px; bottom: 12px; display: flex; flex-direction: column; gap: 3px;
     padding-right: 74px; }  /* не заезжаем под кнопку «почему?» в правом нижнем углу */
@@ -21619,16 +21621,17 @@
   .agent-tile-badge { position: absolute; top: 12px; left: 12px; z-index: 2; padding: 4px 9px;
     border-radius: var(--r-pill); background: rgba(11,12,15,.62); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
     font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: rgba(255,255,255,.85); }
-  .agent-tile-badge--mine { background: var(--brand-blue-light); color: #fff; }
+  .agent-tile-badge--mine { background: #4A5FE8; color: #fff; }  /* AA, см. .agent-tile-live */
+  /* TD-GOROD-CTA-AA: #5168FC с белым мелким текстом = 4.43:1 < AA — тут заливка темнее (5.1:1, AA в обеих темах) */
   .agent-tile-live { position: absolute; top: 12px; right: 12px; z-index: 2; padding: 4px 9px;
-    border-radius: var(--r-pill); background: var(--brand-blue-light);
+    border-radius: var(--r-pill); background: #4A5FE8;
     font-family: 'Onest', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: #fff; }
   .agent-tile[aria-current="true"] .agent-tile-badge { left: 12px; }
 
   /* «почему?» — вход в единый поповер причины+провенанса */
   .agent-why { position: absolute; z-index: 3; right: 10px; bottom: 10px; padding: 5px 10px; border: 1px solid var(--hairline);
-    border-radius: var(--r-pill); background: rgba(11,12,15,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-    font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.85); cursor: pointer; }
+    border-radius: var(--r-pill); background: rgba(11,12,15,.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font-family: 'Onest', sans-serif; font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.9); cursor: pointer; }
   .agent-why::before { content: ''; position: absolute; inset: -9px; }  /* hit-зона: 26px кнопка + 2×9 = 44 (HARD GATE моб.) */
   .agent-why:hover { background: rgba(11,12,15,.8); color: #fff; }
   .agent-why:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
@@ -21644,16 +21647,18 @@
   /* ---- «Найти агента»: фильтр-каталог внизу главной ---- */
   .agents-find { margin-top: 34px; }
   .agents-find-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; }
-  .agents-find-tab { padding: 8px 14px; border: 1px solid var(--hairline); border-radius: var(--r-pill);
+  .agents-find-tab { position: relative; padding: 8px 14px; border: 1px solid var(--hairline); border-radius: var(--r-pill);
     background: var(--surface-1); font-family: 'Onest', sans-serif; font-size: 13px; font-weight: 600;
     color: var(--text-sec); cursor: pointer; transition: background var(--t-fast), color var(--t-fast); }
+  .agents-find-tab::before { content: ''; position: absolute; inset: -5px; }   /* hit 34+10 = 44 (m6) */
   .agents-find-tab:hover { color: var(--text-pri); background: var(--surface-2); }
   .agents-find-tab:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
-  .agents-find-tab[aria-pressed="true"] { background: var(--brand-blue-light); border-color: transparent; color: #fff; }
+  .agents-find-tab[aria-pressed="true"] { background: #4A5FE8; border-color: transparent; color: #fff; }  /* AA, см. .agent-tile-live */
   .agents-find-chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
-  .agents-find-chip { padding: 6px 12px; border: 1px solid var(--hairline); border-radius: var(--r-pill);
+  .agents-find-chip { position: relative; padding: 6px 12px; border: 1px solid var(--hairline); border-radius: var(--r-pill);
     background: transparent; font-family: 'Onest', sans-serif; font-size: 12.5px; font-weight: 500;
     color: var(--text-sec); cursor: pointer; transition: border-color var(--t-fast), color var(--t-fast); }
+  .agents-find-chip::before { content: ''; position: absolute; inset: -8px; }  /* hit ~29+16 = 45 (m6) */
   .agents-find-chip:hover { color: var(--text-pri); border-color: var(--border-strong); }
   .agents-find-chip:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
   .agents-find-chip[aria-pressed="true"] { border-color: var(--brand-blue-light); color: var(--accent-text); font-weight: 600; }
@@ -21709,6 +21714,14 @@
     .agents-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
     .agent-tile-style { font-size: 18px; }
     .agent-card { flex-basis: 148px; }
+    /* reviewer M1: на узком тайле текст-колонка схлопывалась до ~71px из-за резерва под пилюлю →
+       текст на всю ширину, np-строку прячем, sub держим в 2 строках, «почему?» уходит наверх
+       (заодно из-под чат-FAB, m5); у активного тайла — ниже бейджа «В эфире» */
+    .agent-tile-text { padding-right: 0; }
+    .agent-tile-np { display: none; }
+    .agent-tile-sub { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .agent-tile .agent-why { top: 10px; right: 10px; bottom: auto; }
+    .agent-tile[aria-current="true"] .agent-why { top: 44px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .agent-tile-face, .agent-pop, .agent-card-art { transition: none; }
@@ -21861,9 +21874,9 @@
           '<h2 class="agents-head-title" id="agents-home-h">Стили</h2>' +
           '<span class="agents-head-note">каждый стиль ведёт обученный агент · в демо — ' + list.length + ', в рабочей версии — тысячи школ</span>' +
         '</div>' +
-        '<div class="agents-group-label">Школы редакции <small>семь стилей — семь агентов эфира</small></div>' +
+        '<h3 class="agents-group-label">Школы редакции <small>семь стилей — семь агентов эфира</small></h3>' +
         '<ul class="agents-grid" role="list">' + ed.map(tileHTML).join('') + '</ul>' +
-        '<div class="agents-group-label">От слушателей <small>публикуют свои школы из «Моего стрима»</small></div>' +
+        '<h3 class="agents-group-label">От слушателей <small>публикуют свои школы из «Моего стрима»</small></h3>' +
         '<ul class="agents-grid" role="list">' + au.map(tileHTML).join('') + ghostHTML() + '</ul>' +
         /* owner 29.07: «внизу на главной — искать обученные станции по артистам, по стилям, от людей» */
         '<section class="agents-find" aria-labelledby="agents-find-h">' +
@@ -21969,7 +21982,7 @@
       mount.innerHTML =
         shelfHTML('Твои агенты', 'кого ты слушал · демо', yours) +
         shelfHTML('Под твой вкус', 'причины видны сразу · демо', ['chill', 'lirika', 'pop']) +
-        shelfHTML('От слушателей', 'опубликованные школы · слой автора', listeners) +
+        shelfHTML('От слушателей', 'опубликованные школы · демо', listeners) +
         shelfHTML('Новые школы', 'редакция расширяет стили', ['disco', 'rock', 'hiphop']);
       built.taste = true;
       mark(activeId || (window.GorodStations && GorodStations.active) || null);
@@ -22110,7 +22123,12 @@
         if (pop.contains(e.target) || (popOpenBtn && popOpenBtn.contains(e.target))) return;
         closePop();
       }, true);
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        var back = popOpenBtn;                     // m7: Esc возвращает фокус на кнопку-триггер
+        closePop();
+        if (back && back.focus) back.focus();
+      });
       window.addEventListener('scroll', closePop, true);
       window.addEventListener('resize', closePop);
       sync();
