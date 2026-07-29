@@ -9818,7 +9818,7 @@
               <span class="mystream-badge">подписка</span>
             </div>
             <p class="mystream-text">Описываете словами, что любите, — диджей уточняет и собирает личный поток. Он меняется под настроение, а если трек не зайдёт — жмите «Не моё», и поток подстроится.</p>
-            <button class="mystream-btn" id="mystream-lock-cta" type="button">Оформить подписку (демо)</button>
+            <button class="mystream-btn" id="mystream-lock-cta" type="button">Оформить подписку · демо</button>
           </div>
           <div class="mystream-build" id="mystream-build" hidden>
             <div class="mystream-row">
@@ -11944,8 +11944,8 @@
 
       <!-- GOROD-L4 слой 1: гость слушает и читает; свой голос — после входа -->
       <div class="rail-guest rail-expanded-only" id="rail-guest-note">
-        <p class="rail-guest-text">Вы в эфире как гость: все станции открыты, диджей рассказывает сам. Отвечать ему и собирать своё — после входа.</p>
-        <button class="rail-guest-btn" id="rail-guest-login" type="button">Войти <span class="rail-guest-btn-note">демо · без формы</span></button>
+        <p class="rail-guest-text">Слушайте свободно — я сам рассказываю, что играет и почему. Захотите ответить мне или собрать своё — войдите.</p>
+        <button class="rail-guest-btn" id="rail-guest-login" type="button">Войти <span class="rail-guest-btn-note">демо · без анкеты</span></button>
       </div>
     </aside>
     <!-- /.chat-rail -->
@@ -13026,9 +13026,9 @@
     <div class="role-gate-card">
       <div class="role-gate-kicker">откроется после входа</div>
       <h2 class="role-gate-title" id="role-gate-title">Подборки и свой вкус</h2>
-      <p class="role-gate-text" id="role-gate-text">Гостю открыты все станции и эфир диджея. После входа появится своё: подборки, вкус, любимое.</p>
+      <p class="role-gate-text" id="role-gate-text">Станции и эфир открыты и так — слушайте. А подборки, вкус и любимое — личное: появится, как только войдёте.</p>
       <div class="role-gate-actions">
-        <button class="role-gate-btn role-gate-btn--primary" id="role-gate-login" type="button">Войти <span class="role-gate-btn-note">демо · без формы</span></button>
+        <button class="role-gate-btn role-gate-btn--primary" id="role-gate-login" type="button">Войти <span class="role-gate-btn-note">демо · без анкеты</span></button>
         <button class="role-gate-btn" id="role-gate-back" type="button">Пока послушаю станции</button>
       </div>
     </div>
@@ -14350,7 +14350,7 @@
     function show() {
       if (adFree() || document.hidden || !strip) return;
       var ad = ADS[idx++ % ADS.length];
-      textEl.textContent = ad.brand + ' — ' + ad.line + ' (демо)';
+      textEl.textContent = ad.brand + ' — ' + ad.line + ' · демо';
       strip.hidden = false;
       var left = Math.round(LEN / 1000);
       timerEl.textContent = left;
@@ -14385,11 +14385,11 @@
        Страницы вкуса/подборок остаются видимыми позади размытого гейта — ценность
        видно, забор мягкий. Вход в демо мгновенный, роль двигает GorodRole. */
     var GATED = {
-      '#/podborki': { title: 'Подборки', text: 'Гостю открыты все станции и эфир. После входа диджей поможет собирать свои подборки — под настроение и ситуацию.' },
-      '#/taste': { title: 'Мой вкус', text: 'Вкус копится после входа: из него диджей собирает рекомендации, а на подписке — ваш собственный стрим.' },
-      '#/profile': { title: 'Профиль', text: 'Профиль и его настройки появляются после входа.' },
-      '#/recap': { title: 'Итоги недели', text: 'Итоги собираются из вашей истории прослушиваний — она начинается после входа.' },
-      '#/onboarding': { title: 'Сбор вкуса', text: 'Гость ничего не заполняет: слушайте станции и читайте эфир. Вход откроет сбор вкуса — из него растут рекомендации.' }
+      '#/podborki': { title: 'Подборки', text: 'Станции и эфир — открыты. Войдёте — соберём ваши подборки: под настроение, под дорогу, под вечер.' },
+      '#/taste': { title: 'Мой вкус', text: 'Войдите — и я начну запоминать, что вам заходит. Из этого соберутся рекомендации, а на подписке — ваш собственный стрим.' },
+      '#/profile': { title: 'Профиль', text: 'Профиль появится, как только войдёте.' },
+      '#/recap': { title: 'Итоги недели', text: 'Итоги я собираю из вашей истории — она начнётся с первым входом.' },
+      '#/onboarding': { title: 'Сбор вкуса', text: 'Пока вы гость, заполнять ничего не нужно — слушайте и читайте эфир. Войдёте — соберём ваш вкус, из него растут рекомендации.' }
     };
     var gate, titleEl, textEl, lastFocus = null;
     function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
@@ -14505,7 +14505,7 @@
         '</ul>' +
         '<div class="authflow-price"><b>299 ₽/мес</b><span>цена демо — сценарная</span></div>' +
         '<div class="authflow-stack">' +
-        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="sub-done">Оформить подписку (демо)</button>' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="sub-done">Оформить подписку · демо</button>' +
         '<button type="button" class="authflow-btn" data-af="close">Позже</button>' +
         '</div>');
     }
@@ -14521,7 +14521,7 @@
         '<li>Диджей подскажет, как зарабатывать больше</li>' +
         '</ul>' +
         '<div class="authflow-stack">' +
-        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="pub-done">Отправить (демо)</button>' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="pub-done">Отправить · демо</button>' +
         '<button type="button" class="authflow-btn" data-af="close">Отмена</button>' +
         '</div>');
     }
@@ -14660,7 +14660,7 @@
       var paidUp = (r === 'paid' || r === 'author');
       if (!lock) return;
       lock.hidden = paidUp;
-      if (!paidUp) lockCta.textContent = (r === 'guest') ? 'Войти и попробовать (демо)' : 'Оформить подписку (демо)';
+      if (!paidUp) lockCta.textContent = (r === 'guest') ? 'Войти и попробовать · демо' : 'Оформить подписку · демо';
       buildEl.hidden = !(paidUp && !s);
       card.hidden = !(paidUp && s);
       /* слой 4: кнопка публикации, панель автора, заметка о витрине.
@@ -14685,7 +14685,7 @@
         tracksEl.innerHTML = '';
         (s.tracks || []).forEach(function (tr, i) {
           var li = document.createElement('li'); li.className = 'mystream-track';
-          li.innerHTML = '<button type="button" class="mystream-play" aria-label="Слушать «' + esc(tr.t) + '» (демо)">' + PLAY_SVG + '</button>' +
+          li.innerHTML = '<button type="button" class="mystream-play" aria-label="Слушать «' + esc(tr.t) + '» · демо">' + PLAY_SVG + '</button>' +
             '<div class="mystream-track-meta"><div class="mystream-track-title">' + esc(tr.t) + ' — ' + esc(tr.a) + '</div>' +
             '<div class="mystream-track-why">' + esc(tr.why) + '</div>' +
             /* провенанс: трек реально подобран матчером по этому описанию — честный источник, не выдумка */
@@ -16454,7 +16454,7 @@
     }
     function builderUpsell() {
       addAI('Свой стрим открывается на подписке: вы описываете словами, я собираю поток и объясняю каждый трек. Реклама при этом выключается совсем.' +
-        '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка (демо)</button>' +
+        '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка · демо</button>' +
         '<button type="button" class="ai-upsell-btn" data-upsell="stay">Позже</button></div>');
     }
 
@@ -16494,7 +16494,7 @@
         account: 'Теперь вы в эфире под своим именем: можно отвечать мне, собирать подборки и вкус. Станции как были открыты, так и остались.',
         paid: 'Подписка активна — рекламу выключил. И главное: теперь соберём ваш собственный стрим. Карточка «Мой стрим» ждёт на главной, или напишите мне «собери мой стрим».',
         author: 'Ваш стрим ушёл в общую витрину. Слушатели и доход — на карточке «Мой стрим», а как зарабатывать больше — спрашивайте меня прямо здесь.',
-        guest: 'Вы снова гость. Станции и эфир открыты; свой голос, подборки и стрим — после входа.'
+        guest: 'Вышли — но эфир на месте, слушайте сколько угодно. Голос, подборки и стрим верну, как только вернётесь.'
       };
       document.addEventListener('gorodfm-role-changed', function (e) {
         var role = e.detail && e.detail.role;
@@ -16602,11 +16602,11 @@
       clearTimeout(dripTimer);
       if (forRole === 'guest') {
         djCard('Реклама выключается на подписке, а подписка начинается со входа — он бесплатный: появятся подборки и вкус.' +
-          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="login">Войти (демо)</button>' +
+          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="login">Войти · демо</button>' +
           '<button type="button" class="ai-upsell-btn" data-upsell="stay">Позже</button></div>', 30000);
       } else {
         djCard('Можно остаться на бесплатном — реклама помечена и нечастая. Подписка убирает её совсем и открывает ваш собственный стрим.' +
-          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка (демо)</button>' +
+          '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка · демо</button>' +
           '<button type="button" class="ai-upsell-btn" data-upsell="stay">Останусь на бесплатном</button></div>', 30000);
       }
     }
@@ -21846,13 +21846,13 @@
     }
     function ghostSub() {
       var r = (window.GorodRole && GorodRole.get()) || 'guest';
-      if (r === 'guest') return 'после входа и подписки · демо';
-      if (r === 'account') return 'на подписке · демо';
+      if (r === 'guest') return 'откроется с подпиской · демо';
+      if (r === 'account') return 'откроется с подпиской · демо';
       return 'соберём диалогом с диджеем';
     }
     function ghostHTML() {
       return '<li class="agent-tile agent-tile--ghost" data-agent-ghost>' +
-        '<button type="button" class="agent-tile-face" aria-label="Обучить своего агента — как «Мой стрим», диалогом (демо)">' +
+        '<button type="button" class="agent-tile-face" aria-label="Обучить своего агента — как «Мой стрим», диалогом · демо">' +
           '<span class="agent-ghost-plus" aria-hidden="true">＋</span>' +
           '<span class="agent-tile-text">' +
             '<span class="agent-tile-style">Свой агент</span>' +
