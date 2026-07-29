@@ -21627,6 +21627,10 @@
   [data-home-variant="agents"] [data-page="home"] .vitrina,
   [data-home-variant="agents"] .sidebar-item[data-route="#/taste"],
   [data-home-variant="agents"] .tabbar-item[data-route="#/taste"] { display: none; }
+  /* …и сама левая колонка в первой версии — только лого (owner: «пусть там лого просто»):
+     навигация из одной «Главной» смысла не несёт, тема переключается в ЛК */
+  [data-home-variant="agents"] .sidebar-nav,
+  [data-home-variant="agents"] .sidebar-footer { display: none; }
   [data-home-variant="agents"] .agents-home { margin-bottom: 8px; padding-bottom: calc(var(--player-mini-h, 72px) + 24px); }
   /* вариант C не пользуется шторками A/B — их вариантные правила сюда не дотягиваются,
      а базовый .home-bottom-sheet видим по умолчанию (вскрылось на #/taste) */
