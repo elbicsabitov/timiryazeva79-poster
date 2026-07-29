@@ -9154,8 +9154,13 @@
     .rmg-head { position: absolute; top: 66px; left: 24px; right: 24px; z-index: 5; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; justify-content: center; pointer-events: none; }
     .rmg-head-title { margin: 0; font: 700 15px/1.2 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; }
     .rmg-head-note { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); }
-    html[data-surface="mobile"] .rmg-head { top: 10px; }
-    @media (max-width: 640px) { .rmg-head { top: 10px; } }
+    /* на узких экранах зона паддинга мала — шапка встаёт в поток над каруселью */
+    html[data-surface="mobile"] .rmg-head,
+    html[data-surface="mobile"] .rmg-head-title { position: static; }
+    html[data-surface="mobile"] .rmg-head { margin: 6px 2px 10px; justify-content: flex-start; pointer-events: auto; }
+    @media (max-width: 640px) {
+      .rmg-head { position: static; margin: 6px 2px 10px; justify-content: flex-start; pointer-events: auto; }
+    }
     /* --- слой 2 · гейт гостя на страницах «своего» -------------------------- */
     .role-gate { position: fixed; inset: 0; z-index: 88; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(5, 6, 10, .55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     .role-gate[hidden] { display: none; }
@@ -9306,9 +9311,10 @@
       try { localStorage.setItem('gorod-fm.theme', 'cinema'); localStorage.setItem('gorod-fm.hide-flow-map', 'true'); } catch (e) {}
       var h = location.hash || '';
       if (h === '' || h === '#/map') {
-        var onb = false, tst = false;
-        try { onb = !!localStorage.getItem('gorodfm_onboarded'); tst = !!localStorage.getItem('gorodfm_taste'); } catch (e) {}
-        location.hash = (!onb && !tst) ? '#/onboarding' : '#/home';  // cold-start → onboarding (ВОЛНА-0); returning → home
+        var onb = false, tst = false, role = 'guest';
+        try { onb = !!localStorage.getItem('gorodfm_onboarded'); tst = !!localStorage.getItem('gorodfm_taste'); role = localStorage.getItem('gorod-fm.role') || 'guest'; } catch (e) {}
+        // GOROD-L4 слой 1: гость ничего не заполняет — cold-start ведёт в эфир; онбординг вкуса после входа
+        location.hash = (role === 'guest') ? '#/home' : ((!onb && !tst) ? '#/onboarding' : '#/home');
       }
     }
     document.addEventListener('keydown', function (e) {
