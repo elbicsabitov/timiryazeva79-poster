@@ -9799,7 +9799,7 @@
             <div class="mystream-author" id="mystream-author" hidden>
               <div class="mystream-author-stats">
                 <span class="mystream-stat"><b>214</b> слушали сегодня</span>
-                <span class="mystream-stat"><b>1 840 ₽</b> за месяц — реклама и подписки</span>
+                <span class="mystream-stat"><b>1 840 ₽</b> за месяц — реклама и платные подписки</span>
                 <span class="mystream-stat-note">цифры демо — сценарные</span>
               </div>
               <div class="mystream-author-advice">
@@ -9815,7 +9815,7 @@
             <div class="mystream-foot">
               <button class="mystream-btn" id="mystream-rebuild" type="button">Пересобрать в чате</button>
               <button class="mystream-btn mystream-btn--primary" id="mystream-publish" type="button" hidden>Отправить в витрину</button>
-              <span class="mystream-pubnote" id="mystream-pubhint" hidden>его будут слушать другие — а вы зарабатывать на рекламе и подписках</span>
+              <span class="mystream-pubnote" id="mystream-pubhint" hidden>станция станет доступна другим слушателям — а вы начнёте зарабатывать на рекламе и платных подписках</span>
               <span class="mystream-pubnote" id="mystream-pubnote" hidden></span>
             </div>
           </div>
@@ -16162,7 +16162,7 @@
       aiSay('Собрал — «Мой стрим» уже на главной: первые ' + tracks.length + ' трека, у каждого своё «почему». Поток будет меняться под время суток и учиться каждый раз, когда жмёте «Не моё». Могу ошибаться — но каждый выбор объясню.', 900)
         .then(function () {
           /* GOROD-L4: мост в слой 4 — заработок виден ДО публикации, не после */
-          return aiSay('И на вырост: когда стрим обживётся, его можно отправить в общую витрину — слушать будут другие, а зарабатывать на рекламе и подписках будете вы. Кнопка на карточке, я подскажу, как поднять доход.');
+          return aiSay('И на вырост: когда стрим обживётся, его можно отправить в общую витрину — он станет доступен другим слушателям, а вы начнёте зарабатывать на рекламе и платных подписках. Кнопка на карточке, я подскажу, как поднять доход.');
         })
         .then(function () { setChips(DEFAULT_CHIPS); });
     }
