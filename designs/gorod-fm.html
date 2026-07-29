@@ -9146,7 +9146,11 @@
     .player-ad-off { flex: none; min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 5px 12px; cursor: pointer; transition: background var(--t-fast, .15s); }
     .player-ad-off:hover { background: var(--surf-active); }
     .player-ad-off:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
-    @media (max-width: 640px) { .player-ad { left: 8px; right: 8px; } .player-ad-text { white-space: normal; } }
+    @media (max-width: 640px) { .player-ad { left: 8px; right: 8px; max-width: calc(100vw - 16px); } .player-ad-text { white-space: normal; } }
+    /* mobile: открытый рейл-диалог главнее транзиентного брейка (review L4-audit MINOR) */
+    html[data-rail-mobile="open"] .player-ad { display: none; }
+    /* web 1440: шестерёнка Tweaks не перекрывает CTA гостя (review L4-audit MINOR) */
+    @media (min-width: 641px) { html[data-role="guest"]:not([data-surface="mobile"]) .rail-guest { padding-right: 68px; } }
 
     /* --- слой 1 · шапка карусели станций: честный масштаб ------------------
        Живёт в свободной зоне padding-top карусели (главная уходит под fixed
@@ -9216,6 +9220,18 @@
     .mystream-pubnote { font: 400 12px/1.4 'Onest', sans-serif; color: var(--text-sec); }
     html[data-surface="mobile"] .mystream { padding: 0 16px; }
     @media (max-width: 640px) { .mystream { padding: 0 16px; } .mystream-tags { max-width: 100%; } }
+
+    /* --- hit-targets ≥44px на мобиле (Apple HIG, DESIGN_PROTOCOL §2.3) ------ */
+    html[data-surface="mobile"] .player-ad-off,
+    html[data-surface="mobile"] .ai-upsell-btn,
+    html[data-surface="mobile"] .mystream-notmine,
+    html[data-surface="mobile"] .mystream-advice,
+    html[data-surface="mobile"] .mystream-btn { min-height: 44px; }
+    html[data-surface="mobile"] .mystream-play { width: 44px; height: 44px; }
+    @media (max-width: 640px) {
+      .player-ad-off, .ai-upsell-btn, .mystream-notmine, .mystream-advice, .mystream-btn { min-height: 44px; }
+      .mystream-play { width: 44px; height: 44px; }
+    }
 
     /* --- слой 4 · панель автора --------------------------------------------- */
     .mystream-author { border-top: 1px solid var(--divider, var(--hairline)); padding-top: 12px; margin-bottom: 12px; }
@@ -14332,7 +14348,17 @@
       });
       document.getElementById('role-gate-back').addEventListener('click', function () { location.hash = '#/home'; });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !gate.hidden) { e.preventDefault(); location.hash = '#/home'; }
+        if (gate.hidden) return;
+        if (e.key === 'Escape') { e.preventDefault(); location.hash = '#/home'; return; }
+        /* focus-trap: модал держит Tab внутри карточки (WCAG 2.4.3) */
+        if (e.key === 'Tab') {
+          var f = [].filter.call(gate.querySelectorAll('button:not([disabled])'), function (el) { return el.offsetParent !== null; });
+          if (!f.length) return;
+          var first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+          else if (!gate.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+        }
       });
       window.addEventListener('hashchange', sync);
       document.addEventListener('gorodfm-role-changed', sync);
@@ -14402,12 +14428,14 @@
       if (!paidUp) lockCta.textContent = (r === 'guest') ? 'Войти и попробовать (демо)' : 'Оформить подписку (демо)';
       buildEl.hidden = !(paidUp && !s);
       card.hidden = !(paidUp && s);
-      /* слой 4: кнопка публикации, панель автора, заметка о витрине */
+      /* слой 4: кнопка публикации, панель автора, заметка о витрине.
+         Опубликованный стрим публикуется один раз — кнопка не возвращается
+         и при демо-откате роли в «Подписку» (review L4-audit NIT). */
       var isAuthor = (r === 'author');
-      if (publishBtn) publishBtn.hidden = !(paidUp && s && !(s.published && isAuthor));
+      if (publishBtn) publishBtn.hidden = !(paidUp && s && !s.published);
       if (authorEl) authorEl.hidden = !(isAuthor && s && s.published);
       if (pubnote) {
-        var showNote = isAuthor && s && s.published;
+        var showNote = paidUp && s && s.published;
         pubnote.hidden = !showNote;
         if (showNote) pubnote.textContent = 'В общей витрине — полка «Станции слушателей» ниже.';
       }
@@ -14431,6 +14459,10 @@
             s.tracks[i] = { t: swap.t, a: swap.a, why: swap.why };
             s.learned = (s.learned || []).concat(learned);
             write(s); render();
+            /* фокус не теряем: возвращаем на «Не моё» той же строки (список перерисован) */
+            var row = tracksEl.children[i];
+            var btn = row && row.querySelector('.mystream-notmine');
+            if (btn) btn.focus();
           });
           tracksEl.appendChild(li);
         });
