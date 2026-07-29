@@ -9211,6 +9211,18 @@
     .mystream-pubnote { font: 400 12px/1.4 'Onest', sans-serif; color: var(--text-sec); }
     html[data-surface="mobile"] .mystream { padding: 0 16px; }
     @media (max-width: 640px) { .mystream { padding: 0 16px; } .mystream-tags { max-width: 100%; } }
+
+    /* --- слой 4 · панель автора --------------------------------------------- */
+    .mystream-author { border-top: 1px solid var(--divider, var(--hairline)); padding-top: 12px; margin-bottom: 12px; }
+    .mystream-author-stats { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+    .mystream-stat { font: 400 12.5px/1.4 'Onest', sans-serif; color: var(--text-sec); }
+    .mystream-stat b { font-weight: 700; color: var(--text-pri); font-variant-numeric: tabular-nums; }
+    .mystream-stat-note { font: 600 9.5px 'Onest', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 7px; }
+    .mystream-author-label { display: block; font: 600 11.5px 'Onest', sans-serif; color: var(--text-sec); margin-bottom: 7px; }
+    .mystream-author-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .mystream-advice { min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 5px 12px; cursor: pointer; transition: background var(--t-fast, .15s); }
+    .mystream-advice:hover { background: var(--surf-active); }
+    .mystream-advice:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
     /* ===== /GOROD-L4 ===== */
   </style>
 
@@ -9757,6 +9769,23 @@
             </div>
             <p class="mystream-learn" id="mystream-learn" role="status"></p>
             <ul class="mystream-tracks" id="mystream-tracks"></ul>
+            <!-- GOROD-L4 слой 4: панель автора — станция в витрине, честные демо-цифры -->
+            <div class="mystream-author" id="mystream-author" hidden>
+              <div class="mystream-author-stats">
+                <span class="mystream-stat"><b>214</b> слушали сегодня</span>
+                <span class="mystream-stat"><b>1 840 ₽</b> за месяц — реклама и подписки</span>
+                <span class="mystream-stat-note">цифры демо — сценарные</span>
+              </div>
+              <div class="mystream-author-advice">
+                <span class="mystream-author-label">Спросить диджея, как зарабатывать больше:</span>
+                <div class="mystream-author-chips">
+                  <button type="button" class="mystream-advice" data-advice="tracks">Какие треки добавить</button>
+                  <button type="button" class="mystream-advice" data-advice="energy">Баланс энергии</button>
+                  <button type="button" class="mystream-advice" data-advice="adtime">Когда ставить рекламу</button>
+                  <button type="button" class="mystream-advice" data-advice="audience">На кого ориентироваться</button>
+                </div>
+              </div>
+            </div>
             <div class="mystream-foot">
               <button class="mystream-btn" id="mystream-rebuild" type="button">Пересобрать в чате</button>
               <button class="mystream-btn mystream-btn--primary" id="mystream-publish" type="button" hidden>Отправить в витрину</button>
@@ -14313,7 +14342,13 @@
       { t: 'Smells Like Teen Spirit', a: 'Nirvana', why: 'сырая динамика «тихо→громко» — обратная сторона того же настроения' }
     ];
     var swapIdx = 0;
-    var lock, lockCta, buildEl, card, tracksEl, tagsEl, learnEl;
+    var lock, lockCta, buildEl, card, tracksEl, tagsEl, learnEl, authorEl, publishBtn, pubnote;
+    /* слой 4: полка «Станции слушателей» в витрине — демо-станции + ваша после публикации */
+    var LISTENER_SHELF = [
+      { title: 'Ночная смена — от Марата', meta: 'спокойный поздний поток', badge: { label: 'от слушателя' } },
+      { title: 'Бег по утрам — от Сони', meta: 'ровный темп на 40 минут', badge: { label: 'от слушателя' } },
+      { title: 'Гараж 90-х — от Данияра', meta: 'гитары и кассетный шум', badge: { label: 'от слушателя' } }
+    ];
     function $(id) { return document.getElementById(id); }
     function role() { return (window.GorodRole && GorodRole.get()) || 'guest'; }
     function read() { try { return JSON.parse(localStorage.getItem(LS) || 'null'); } catch (e) { return null; } }
@@ -14325,6 +14360,27 @@
       if (t) t.textContent = tr.t;
       if (a) a.textContent = 'Мой стрим · ' + tr.a;
     }
+    /* слой 4: перестроить полку слушателей (ваша станция первой после публикации) */
+    function renderListenersShelf() {
+      var mount = document.getElementById('vitrina');
+      if (!mount || !window.GorodVitrina) return;
+      if (mount.getAttribute('data-vitrina-rendered') !== 'true') { setTimeout(renderListenersShelf, 150); return; }
+      var old = document.getElementById('vitrina-listeners'); if (old) old.remove();
+      var s = read();
+      var items = LISTENER_SHELF.slice();
+      if (role() === 'author' && s && s.published) {
+        items.unshift({ title: 'Мой стрим — ваш', meta: s.desc || 'личный поток', badge: { label: 'в эфире у всех', live: true } });
+      }
+      var shelf = GorodVitrina.renderShelf({
+        id: 'vitrina-listeners', title: 'Станции слушателей',
+        subtitle: 'Собраны в диалоге с диджеем — как «Мой стрим» · демо',
+        geometry: 'wide', items: items
+      });
+      if (!shelf) return;
+      var friends = document.getElementById('vitrina-friends');
+      if (friends && friends.nextSibling) mount.insertBefore(shelf, friends.nextSibling);
+      else mount.appendChild(shelf);
+    }
     function render() {
       var r = role(), s = read();
       var paidUp = (r === 'paid' || r === 'author');
@@ -14333,6 +14389,16 @@
       if (!paidUp) lockCta.textContent = (r === 'guest') ? 'Войти и попробовать (демо)' : 'Оформить подписку (демо)';
       buildEl.hidden = !(paidUp && !s);
       card.hidden = !(paidUp && s);
+      /* слой 4: кнопка публикации, панель автора, заметка о витрине */
+      var isAuthor = (r === 'author');
+      if (publishBtn) publishBtn.hidden = !(paidUp && s && !(s.published && isAuthor));
+      if (authorEl) authorEl.hidden = !(isAuthor && s && s.published);
+      if (pubnote) {
+        var showNote = isAuthor && s && s.published;
+        pubnote.hidden = !showNote;
+        if (showNote) pubnote.textContent = 'В общей витрине — полка «Станции слушателей» ниже.';
+      }
+      renderListenersShelf();
       if (paidUp && s) {
         tagsEl.textContent = (s.vocal === 'instr' ? 'инструментал · ' : '') + (s.desc || '');
         learnEl.textContent = (s.learned && s.learned.length)
@@ -14361,12 +14427,25 @@
       lock = $('mystream-lock'); if (!lock) return;
       lockCta = $('mystream-lock-cta'); buildEl = $('mystream-build'); card = $('mystream-card');
       tracksEl = $('mystream-tracks'); tagsEl = $('mystream-tags'); learnEl = $('mystream-learn');
+      authorEl = $('mystream-author'); publishBtn = $('mystream-publish'); pubnote = $('mystream-pubnote');
       lockCta.addEventListener('click', function () {
         if (!window.GorodRole) return;
         GorodRole.set(role() === 'guest' ? 'account' : 'paid');
       });
       $('mystream-build-cta').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
       $('mystream-rebuild').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
+      /* слой 4: публикация в витрину = переход в авторы */
+      publishBtn.addEventListener('click', function () {
+        var s = read(); if (!s) return;
+        s.published = true; write(s);
+        if (window.GorodRole && role() !== 'author') GorodRole.set('author');
+        document.dispatchEvent(new CustomEvent('gorodfm-mystream-changed'));
+      });
+      authorEl.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-advice]') : null;
+        if (!b) return;
+        if (window.GorodStreamBuilder && GorodStreamBuilder.advice) GorodStreamBuilder.advice(b.getAttribute('data-advice'));
+      });
       document.addEventListener('gorodfm-role-changed', render);
       document.addEventListener('gorodfm-mystream-changed', render);
       render();
@@ -16036,7 +16115,23 @@
         '<div class="ai-upsell-row"><button type="button" class="ai-upsell-btn ai-upsell-btn--pri" data-upsell="paid">Подписка (демо)</button>' +
         '<button type="button" class="ai-upsell-btn" data-upsell="stay">Позже</button></div>');
     }
-    window.GorodStreamBuilder = { start: builderStart };
+
+    /* ---- GOROD-L4 слой 4: советы по монетизации — 4 темы из листа owner'а -- */
+    var AUTHOR_ADVICE = {
+      tracks: ['Какие треки добавить?', 'Смотрю на дослушивания: вечер ваш поток держит, а утро провисает. Добавьте две-три вещи полегче в темпе около ста — из той же вашей ветки. Слушатель заходит до работы: дайте ему вход.'],
+      energy: ['Как сбалансировать энергию?', 'Сейчас плотные вещи стоят подряд — к третьей слушатель устаёт и уходит. Правило простое: после двух плотных — одна воздушная. Кривая удержания станет ровнее, а с ней и доход.'],
+      adtime: ['Когда ставить рекламу?', 'Не в начале часа — там входят новые, им нельзя рекламу в лоб. Лучшее окно — после третьего трека, когда слушатель уже в потоке: брейк дослушивают заметно чаще.'],
+      audience: ['На кого ориентироваться?', 'Ваш поток чаще включают вечером и в дороге — это аудитория «отпустить». Не гонитесь за чартами, держите настроение: у станции с предсказуемым слушателем реклама продаётся дороже.']
+    };
+    function authorAdvice(kind) {
+      var a = AUTHOR_ADVICE[kind]; if (!a) return;
+      railEnsureOpen(); setMode('ai'); greeted = true;
+      addUser(a[0]);
+      chipsEl.innerHTML = '';
+      aiSay(a[1] + ' <span class="ai-why">Совет сценарный — в рабочей версии посчитаю по статистике вашей станции.</span>')
+        .then(function () { setChips(DEFAULT_CHIPS); });
+    }
+    window.GorodStreamBuilder = { start: builderStart, advice: authorAdvice };
 
     /* ---- GOROD-L4: роль-слой в рейле — вход гостя + реакция диджея на смену слоя ---- */
     function wireRoleLayer() {
