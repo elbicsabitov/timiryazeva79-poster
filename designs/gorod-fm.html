@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Город ФМ — онлайн-радио платформа. Прототип интерфейса.">
   <meta name="color-scheme" content="dark">
-  <title>Город ФМ — прототип</title>
+  <title>GPT music — прототип</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -493,7 +493,8 @@
         transform: scaleX(1.05);
         transform-origin: left center;
         color: var(--text-pri);
-        text-transform: uppercase;
+        /* бренд «GPT music» (owner 29.07, GHS-034): регистр несёт сам текст — капс-трансформ снят */
+        text-transform: none;
         text-decoration: none;
         padding: 16px 6px 40px;
         display: flex;
@@ -9418,7 +9419,7 @@
          SIDEBAR — web surface only
          ================================================================== -->
     <aside class="sidebar" role="navigation" aria-label="Основная навигация">
-      <a href="#/home" class="sidebar-logo" aria-label="Город ФМ — на главную">Город.fm</a>
+      <a href="#/home" class="sidebar-logo" aria-label="GPT music — на главную">GPT&nbsp;music</a>
 
       <nav class="sidebar-nav">
         <!-- 3-tab IA (UX research 08): Главная / Мой вкус / Открыть.
@@ -10150,7 +10151,7 @@
 
           <!-- Heading band -->
           <div class="library-heading-band">
-            <p class="library-eyebrow">МЕДИАТЕКА · ГОРОД.FM</p>
+            <p class="library-eyebrow">МЕДИАТЕКА · GPT MUSIC</p>
             <span class="library-title" role="heading" aria-level="2">Твоя медиатека</span>
             <p class="library-subtitle">Твоя коллекция треков, плейлистов и подкастов · фильтр по жанру внизу</p>
           </div>
@@ -21910,89 +21911,76 @@
         '</button>' +
       '</li>';
     }
-    function buildHome() {
-      var mount = $('agents-home'); if (!mount) return;
-      var list = agents();
-      var ed = list.filter(function (a) { return a.kind === 'ed'; });
-      var au = list.filter(function (a) { return a.kind === 'author'; });
-      var mine = myAgent(); if (mine) au.unshift(mine);
-      /* owner 29.07: «по группам разбить визуально» — редакция и слушатели отдельными
-         грид-секциями; ghost «Свой агент» логично живёт в группе слушателей */
-      mount.innerHTML =
-        '<div class="agents-head">' +
-          '<h2 class="agents-head-title" id="agents-home-h">Стили</h2>' +
-          '<span class="agents-head-note">каждый стиль ведёт обученный агент — редакции или слушателя</span>' +
-        '</div>' +
-        '<h3 class="agents-group-label">Школы редакции <small>семь стилей — семь агентов эфира</small></h3>' +
-        '<ul class="agents-grid" role="list">' + ed.map(tileHTML).join('') + '</ul>' +
-        '<h3 class="agents-group-label">От слушателей <small>публикуют свои школы из «Моего стрима»</small></h3>' +
-        '<ul class="agents-grid" role="list">' + au.map(tileHTML).join('') + ghostHTML() + '</ul>' +
-        /* owner 29.07: «внизу на главной — искать обученные станции по артистам, по стилям, от людей» */
-        '<section class="agents-find" aria-labelledby="agents-find-h">' +
-          '<div class="agents-shelf-head">' +
-            '<h3 class="agents-shelf-title" id="agents-find-h">Найти агента</h3>' +
-            '<span class="agents-shelf-sub">по артисту в эфире, по стилю или от людей · демо</span>' +
-          '</div>' +
-          '<div class="agents-find-tabs" role="group" aria-label="Ось поиска агентов">' +
-            [['artists', 'По артистам'], ['styles', 'По стилям'], ['people', 'От людей']].map(function (t) {
-              return '<button type="button" class="agents-find-tab" data-ftab="' + t[0] + '" aria-pressed="' + (findTab === t[0] ? 'true' : 'false') + '">' + t[1] + '</button>';
-            }).join('') +
-          '</div>' +
-          '<div class="agents-find-chips" id="agents-find-chips" role="group" aria-label="Значения фильтра"></div>' +
-          '<ul class="agents-shelf-track" id="agents-find-results" role="list" aria-label="Найденные агенты"></ul>' +
-        '</section>';
-      built.home = true;
-      renderFind();
-      mark(activeId || (window.GorodStations && GorodStations.active) || null);
-    }
-
-    /* ---- «Найти агента»: фильтр-каталог по честным данным ----------------------
-       Артисты собираются из реального now-playing каждого агента (ничего не
-       выдумываем: артист «находит» тех агентов, в чьём потоке он звучит сейчас). */
-    var findTab = 'artists', findVal = null;
-    function findAxes() {
-      var list = agents();
-      var artists = {};                     // артист -> [{id, np}]
-      list.forEach(function (a) {
-        if (!a.np) return;
-        var artist = a.np.split(' — ')[0];
-        (artists[artist] = artists[artist] || []).push(a.id);
-      });
-      var styles = [];
-      list.forEach(function (a) { if (styles.indexOf(a.style) === -1) styles.push(a.style); });
-      var people = list.filter(function (a) { return a.kind === 'author'; }).map(function (a) { return { label: a.school, id: a.id }; });
-      var mine = myAgent(); if (mine) people.unshift({ label: mine.school, id: mine.id });
-      return { artists: artists, styles: styles, people: people, list: list };
-    }
+    /* ---- Каталог агентов с тегами (owner 29.07: «стили — это же карусель;
+       нужно упорядочивание по тегам, чтоб искать») ------------------------------
+       Один блок вместо «грид групп + отдельный поиск»: вкладки-оси → чипы-теги →
+       грид КРУПНЫХ тайлов как результат. Карусель сверху отвечает «что в эфире»,
+       каталог — «найди агента по стилю / артисту / от людей». Артисты собираются
+       из реального now-playing (ничего не выдумываем). */
+    var catTab = 'styles', catVal = 'all';
     function findClone(a, why) {
       var c = {}; for (var k in a) if (Object.prototype.hasOwnProperty.call(a, k)) c[k] = a[k];
       if (why) c.why = why;
       return c;
     }
-    function renderFind() {
-      var chipsEl = $('agents-find-chips'), resEl = $('agents-find-results');
-      if (!chipsEl || !resEl) return;
-      var ax = findAxes();
-      var chips = findTab === 'artists' ? Object.keys(ax.artists)
-        : findTab === 'styles' ? ax.styles
-        : ax.people.map(function (p) { return p.label; });
-      if (findVal == null || chips.indexOf(findVal) === -1) findVal = chips[0] || null;
-      chipsEl.innerHTML = chips.map(function (cName) {
-        return '<button type="button" class="agents-find-chip" data-fchip="' + esc(cName) + '" aria-pressed="' + (cName === findVal ? 'true' : 'false') + '">' + esc(cName) + '</button>';
-      }).join('');
-      var results = [];
-      if (findTab === 'artists' && findVal) {
-        (ax.artists[findVal] || []).forEach(function (id) {
-          var a = byId(id); if (!a) return;
-          results.push(findClone(a, 'в потоке сейчас: ' + a.np));
+    function catAll() {
+      var list = agents();
+      var mine = myAgent(); if (mine) list.push(mine);
+      return list;
+    }
+    function buildHome() {
+      var mount = $('agents-home'); if (!mount) return;
+      mount.innerHTML =
+        '<div class="agents-head">' +
+          '<h2 class="agents-head-title" id="agents-home-h">Стили и агенты</h2>' +
+          '<span class="agents-head-note">каждый стиль ведёт обученный агент — редакции или слушателя</span>' +
+        '</div>' +
+        '<div class="agents-find-tabs" role="group" aria-label="Ось поиска агентов">' +
+          [['styles', 'По стилям'], ['artists', 'По артистам'], ['people', 'От людей']].map(function (t) {
+            return '<button type="button" class="agents-find-tab" data-ftab="' + t[0] + '" aria-pressed="' + (catTab === t[0] ? 'true' : 'false') + '">' + t[1] + '</button>';
+          }).join('') +
+        '</div>' +
+        '<div class="agents-find-chips" id="agents-cat-chips" role="group" aria-label="Теги фильтра"></div>' +
+        '<ul class="agents-grid" id="agents-cat-grid" role="list" aria-label="Агенты"></ul>';
+      built.home = true;
+      renderCatalog();
+    }
+    function renderCatalog() {
+      var chipsEl = $('agents-cat-chips'), gridEl = $('agents-cat-grid');
+      if (!chipsEl || !gridEl) return;
+      var list = catAll();
+      var chips;
+      if (catTab === 'styles') {
+        chips = [['all', 'Все']];
+        list.forEach(function (a) { if (!chips.some(function (c) { return c[0] === a.style; })) chips.push([a.style, a.style]); });
+      } else if (catTab === 'artists') {
+        chips = [];
+        list.forEach(function (a) {
+          if (!a.np) return;
+          var artist = a.np.split(' — ')[0];
+          if (!chips.some(function (c) { return c[0] === artist; })) chips.push([artist, artist]);
         });
-      } else if (findTab === 'styles' && findVal) {
-        results = ax.list.filter(function (a) { return a.style === findVal; });
-      } else if (findTab === 'people' && findVal) {
-        ax.people.forEach(function (p) { if (p.label === findVal) { var a = byId(p.id); if (a) results.push(a); } });
+      } else {
+        chips = [['all', 'Все']];
+        list.forEach(function (a) { if (a.kind === 'author') chips.push([a.school, a.school]); });
       }
-      resEl.innerHTML = results.map(cardHTML).join('');
-      mark(activeId);
+      if (!chips.some(function (c) { return c[0] === catVal; })) catVal = chips.length ? chips[0][0] : null;
+      chipsEl.innerHTML = chips.map(function (c) {
+        return '<button type="button" class="agents-find-chip" data-fchip="' + esc(c[0]) + '" aria-pressed="' + (c[0] === catVal ? 'true' : 'false') + '">' + esc(c[1]) + '</button>';
+      }).join('');
+      var results;
+      if (catTab === 'styles') {
+        results = catVal === 'all' ? list : list.filter(function (a) { return a.style === catVal; });
+      } else if (catTab === 'artists') {
+        results = list.filter(function (a) { return a.np && a.np.indexOf(catVal + ' — ') === 0; })
+          .map(function (a) { return findClone(a, 'в потоке сейчас: ' + a.np); });
+      } else {
+        results = list.filter(function (a) { return a.kind === 'author' && (catVal === 'all' || a.school === catVal); });
+      }
+      /* ghost «Свой агент» — там, где смотрят чужие школы или весь каталог */
+      var ghost = (catTab === 'people' || (catTab === 'styles' && catVal === 'all')) ? ghostHTML() : '';
+      gridEl.innerHTML = results.map(tileHTML).join('') + ghost;
+      mark(activeId || (window.GorodStations && GorodStations.active) || null);
     }
 
     /* ---- ряды на «Моём вкусе» ---- */
@@ -22131,18 +22119,22 @@
         var mount = $(mountId); if (!mount) return;
         mount.addEventListener('click', function (e) {
           var ftab = e.target.closest ? e.target.closest('[data-ftab]') : null;
-          if (ftab) { findTab = ftab.getAttribute('data-ftab'); findVal = null;
+          if (ftab) { catTab = ftab.getAttribute('data-ftab'); catVal = catTab === 'artists' ? null : 'all';
             [].forEach.call(mount.querySelectorAll('[data-ftab]'), function (b) { b.setAttribute('aria-pressed', b === ftab ? 'true' : 'false'); });
-            renderFind(); return; }
+            renderCatalog(); return; }
           var fchip = e.target.closest ? e.target.closest('[data-fchip]') : null;
-          if (fchip) { findVal = fchip.getAttribute('data-fchip'); renderFind(); return; }
+          if (fchip) { catVal = fchip.getAttribute('data-fchip'); renderCatalog(); return; }
           var why = e.target.closest ? e.target.closest('.agent-why') : null;
           if (why) {
             var li = why.closest('[data-agent]');
             var a = li && byId(li.getAttribute('data-agent'));
-            /* в «Найти агента» карточка несёт контекстное «почему» (совпадение по артисту) — читаем его с карточки */
-            var whyText = li && li.querySelector('.agent-card-why') ? li.querySelector('.agent-card-why').textContent : null;
-            if (a) openPop(why, whyText ? findClone(a, whyText) : a);
+            if (a) {
+              /* в артист-фильтре причина контекстная — совпадение по живому эфиру;
+                 на карточках вкуса причина уже напечатана — читаем её же */
+              var whyText = (mountId === 'agents-home' && catTab === 'artists' && a.np) ? 'в потоке сейчас: ' + a.np
+                : (li.querySelector('.agent-card-why') ? li.querySelector('.agent-card-why').textContent : null);
+              openPop(why, whyText ? findClone(a, whyText) : a);
+            }
             return;
           }
           if (e.target.closest && e.target.closest('[data-agent-ghost]')) { ghostCta(); return; }
