@@ -9248,6 +9248,40 @@
     .mystream-advice { min-height: 32px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surf-hover); color: var(--text-pri); font: 600 12px 'Onest', sans-serif; padding: 5px 12px; cursor: pointer; transition: background var(--t-fast, .15s); }
     .mystream-advice:hover { background: var(--surf-active); }
     .mystream-advice:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    /* --- промежуточные экраны воронки: вход · подписка · публикация --------- */
+    .authflow { position: fixed; inset: 0; z-index: 92; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(5, 6, 10, .6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .authflow[hidden] { display: none; }
+    .authflow-card { position: relative; width: min(430px, 100%); background: var(--surface-1, #14161d); border: 1px solid var(--hairline); border-radius: 18px; padding: 22px 22px 20px; box-shadow: 0 24px 60px rgba(0, 0, 0, .5); }
+    .authflow-x { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: none; border-radius: 50%; background: transparent; color: var(--text-sec); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background var(--t-fast, .15s); }
+    .authflow-x:hover { background: var(--surf-hover); }
+    .authflow-x:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .authflow-x svg { width: 16px; height: 16px; }
+    .authflow-kicker { font: 700 10px 'Onest', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 8px; }
+    .authflow-title { margin: 0 0 8px; font: 700 20px/1.25 'Onest', sans-serif; color: var(--text-pri); letter-spacing: -.01em; text-wrap: balance; }
+    .authflow-text { margin: 0 0 14px; font: 400 13.5px/1.55 'Onest', sans-serif; color: var(--text-sec); text-wrap: pretty; }
+    .authflow-stack { display: flex; flex-direction: column; gap: 8px; }
+    .authflow-btn { width: 100%; min-height: 44px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 600 13.5px 'Onest', sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background var(--t-fast, .15s), filter var(--t-fast, .15s); }
+    .authflow-btn:hover { background: var(--surf-active); }
+    .authflow-btn--primary { background: var(--brand-blue-light); border-color: var(--brand-blue-light); color: #fff; }
+    .authflow-btn--primary:hover { background: var(--brand-blue-light); filter: brightness(1.12); }
+    .authflow-btn:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; }
+    .authflow-note { margin: 10px 0 0; font: 400 11.5px/1.5 'Onest', sans-serif; color: var(--text-sec); text-align: center; text-wrap: pretty; }
+    .authflow-label { display: block; font: 600 11.5px 'Onest', sans-serif; color: var(--text-sec); margin: 0 0 6px; }
+    .authflow-input { width: 100%; min-height: 44px; border: 1px solid var(--hairline); border-radius: var(--r-md, 12px); background: var(--surf-hover); color: var(--text-pri); font: 500 14px 'Onest', sans-serif; padding: 10px 12px; margin-bottom: 10px; }
+    .authflow-input:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 2px; border-color: var(--brand-blue-light); }
+    .authflow-benefits { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .authflow-benefits li { position: relative; padding-left: 24px; font: 400 13px/1.5 'Onest', sans-serif; color: var(--text-pri); text-wrap: pretty; }
+    .authflow-benefits li::before { content: ''; position: absolute; left: 2px; top: 6px; width: 12px; height: 7px; border-left: 2px solid var(--brand-blue-light); border-bottom: 2px solid var(--brand-blue-light); transform: rotate(-45deg); }
+    .authflow-price { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; }
+    .authflow-price b { font: 700 24px/1 'Onest', sans-serif; color: var(--text-pri); font-variant-numeric: tabular-nums; }
+    .authflow-price span { font: 600 9.5px 'Onest', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--text-sec); border: 1px solid var(--hairline); border-radius: 999px; padding: 2px 7px; }
+    .authflow-wait { display: flex; align-items: center; gap: 10px; font: 400 13px/1.5 'Onest', sans-serif; color: var(--text-sec); margin: 4px 0 12px; text-wrap: pretty; }
+    .authflow-spin { width: 16px; height: 16px; border: 2px solid var(--hairline); border-top-color: var(--brand-blue-light); border-radius: 50%; animation: authflow-spin .8s linear infinite; flex: none; }
+    @keyframes authflow-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .authflow-spin { animation: none; } }
+    .authflow-done { display: flex; align-items: center; gap: 12px; margin: 6px 0 4px; font: 600 14px/1.4 'Onest', sans-serif; color: var(--text-pri); }
+    .authflow-done-ic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--brand-blue-light); display: inline-flex; align-items: center; justify-content: center; }
+    .authflow-done-ic svg { width: 16px; height: 16px; stroke: #fff; }
     /* ===== /GOROD-L4 ===== */
   </style>
 
@@ -12982,6 +13016,18 @@
     </div>
   </div>
 
+  <!-- GOROD-L4: промежуточные экраны воронки — вход · подписка · публикация (демо-флоу) -->
+  <div class="authflow" id="authflow" hidden role="dialog" aria-modal="true" aria-labelledby="authflow-title">
+    <div class="authflow-card">
+      <button class="authflow-x" id="authflow-x" type="button" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="authflow-kicker" id="authflow-kicker">вход</div>
+      <h2 class="authflow-title" id="authflow-title">Свой голос в эфире</h2>
+      <div class="authflow-body" id="authflow-body"><!-- шаги рендерит GorodAuthFlow --></div>
+    </div>
+  </div>
+
   <!-- FAB to reopen tweaks after close -->
   <button
     class="tweaks-fab"
@@ -14349,7 +14395,8 @@
       titleEl = document.getElementById('role-gate-title');
       textEl = document.getElementById('role-gate-text');
       document.getElementById('role-gate-login').addEventListener('click', function () {
-        if (window.GorodRole) GorodRole.set('account');
+        if (window.GorodAuthFlow) GorodAuthFlow.login();
+        else if (window.GorodRole) GorodRole.set('account');
       });
       document.getElementById('role-gate-back').addEventListener('click', function () { location.hash = '#/home'; });
       document.addEventListener('keydown', function (e) {
@@ -14368,6 +14415,169 @@
       window.addEventListener('hashchange', sync);
       document.addEventListener('gorodfm-role-changed', sync);
       sync();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
+  <script>
+  /* ---- GOROD-L4 — промежуточные экраны воронки (вход · подписка · витрина) --
+     Owner 29.07: «продумай экраны регистрации и т.д., чтобы фулл-флоу
+     проходился как в листе». Всё демо: бэкенда нет, успех двигает роль через
+     GorodRole. Способы входа — только Telegram и почта (директива owner'а
+     15.07: Google/Apple забанены — их кнопок нет вовсе). ---- */
+  (function () {
+    'use strict';
+    var wrap, card, kicker, titleEl, body, lastFocus = null, flow = null, tgTimer = 0;
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function open(f) { flow = f; lastFocus = document.activeElement; wrap.hidden = false; render(); }
+    function close() {
+      clearTimeout(tgTimer);
+      wrap.hidden = true; flow = null;
+      if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} lastFocus = null; }
+    }
+    function focusFirst() {
+      setTimeout(function () {
+        var f = card.querySelector('input, .authflow-body button');
+        (f || $('authflow-x')).focus();
+      }, 40);
+    }
+    function set(k, t, html) { kicker.textContent = k; titleEl.textContent = t; body.innerHTML = html; focusFirst(); }
+
+    function stepLoginMethod() {
+      set('вход', 'Свой голос в эфире',
+        '<p class="authflow-text">Станции открыты и так. Вход добавит своё: отвечать диджею, собирать подборки и вкус.</p>' +
+        '<div class="authflow-stack">' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="tg">Продолжить в Telegram</button>' +
+        '<button type="button" class="authflow-btn" data-af="email">По почте</button>' +
+        '</div>' +
+        '<p class="authflow-note">Вход — только Telegram или почта.</p>');
+    }
+    function stepTg() {
+      set('вход', 'Подтвердите в Telegram',
+        '<div class="authflow-wait"><span class="authflow-spin" aria-hidden="true"></span><span>Ждём подтверждение из приложения… <b>демо: подтвердится само</b></span></div>');
+      clearTimeout(tgTimer);
+      tgTimer = setTimeout(function () { stepDone('login'); }, 1600);
+    }
+    function stepEmail() {
+      set('вход', 'Вход по почте',
+        '<label class="authflow-label" for="af-email">Почта</label>' +
+        '<input class="authflow-input" id="af-email" type="email" placeholder="you@mail.ru" autocomplete="email">' +
+        '<div class="authflow-stack"><button type="button" class="authflow-btn authflow-btn--primary" data-af="email-code">Получить код</button></div>');
+    }
+    function stepEmailCode() {
+      var v = ($('af-email') && $('af-email').value.trim()) || '';
+      if (v.indexOf('@') === -1) v = 'you@mail.ru';
+      set('вход', 'Код из письма',
+        '<p class="authflow-text">Отправили код на <b>' + esc(v) + '</b>.</p>' +
+        '<label class="authflow-label" for="af-code">Код</label>' +
+        '<input class="authflow-input" id="af-code" inputmode="numeric" value="1234" aria-describedby="af-code-note">' +
+        '<div class="authflow-stack"><button type="button" class="authflow-btn authflow-btn--primary" data-af="login-done">Войти</button></div>' +
+        '<p class="authflow-note" id="af-code-note">Демо: код подставили за вас.</p>');
+    }
+    function stepSubscribe() {
+      set('подписка', 'Эфир без рекламы и свой стрим',
+        '<ul class="authflow-benefits">' +
+        '<li>Реклама выключается совсем</li>' +
+        '<li>«Мой стрим»: описываете словами — диджей собирает поток, который учится</li>' +
+        '<li>Дальше стрим можно отправить в витрину и зарабатывать</li>' +
+        '</ul>' +
+        '<div class="authflow-price"><b>299 ₽/мес</b><span>цена демо — сценарная</span></div>' +
+        '<div class="authflow-stack">' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="sub-done">Оформить подписку (демо)</button>' +
+        '<button type="button" class="authflow-btn" data-af="close">Позже</button>' +
+        '</div>');
+    }
+    function stepPublish() {
+      var s = null; try { s = JSON.parse(localStorage.getItem('gorodfm_mystream') || 'null'); } catch (e) {}
+      var name = (s && s.name) || 'Мой стрим';
+      set('в витрину', 'Отправить станцию всем',
+        '<label class="authflow-label" for="af-name">Название станции</label>' +
+        '<input class="authflow-input" id="af-name" maxlength="36" value="' + esc(name) + '">' +
+        '<ul class="authflow-benefits">' +
+        '<li>Станет доступна другим слушателям</li>' +
+        '<li>Доход — от рекламы и платных подписок</li>' +
+        '<li>Диджей подскажет, как зарабатывать больше</li>' +
+        '</ul>' +
+        '<div class="authflow-stack">' +
+        '<button type="button" class="authflow-btn authflow-btn--primary" data-af="pub-done">Отправить (демо)</button>' +
+        '<button type="button" class="authflow-btn" data-af="close">Отмена</button>' +
+        '</div>');
+    }
+    function doneHtml(text) {
+      return '<div class="authflow-done"><span class="authflow-done-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>' + text + '</span></div>';
+    }
+    function stepDone(kind) {
+      if (kind === 'login') {
+        set('вход', 'Готово', doneHtml('Вы в эфире под своим именем.'));
+        setTimeout(function () { close(); if (window.GorodRole) GorodRole.set('account'); }, 1000);
+      } else if (kind === 'sub') {
+        set('подписка', 'Подписка активна', doneHtml('Рекламу выключил. Соберём ваш стрим?') +
+          '<div class="authflow-stack" style="margin-top:12px">' +
+          '<button type="button" class="authflow-btn authflow-btn--primary" data-af="sub-build">Собрать мой стрим</button>' +
+          '<button type="button" class="authflow-btn" data-af="close">Позже</button></div>');
+        if (window.GorodRole) GorodRole.set('paid');
+      } else if (kind === 'pub') {
+        var nameEl = $('af-name');
+        var name = (nameEl && nameEl.value.trim()) || 'Мой стрим';
+        var s = null; try { s = JSON.parse(localStorage.getItem('gorodfm_mystream') || 'null'); } catch (e) {}
+        if (s) { s.published = true; s.name = name; try { localStorage.setItem('gorodfm_mystream', JSON.stringify(s)); } catch (e) {} }
+        set('в витрину', 'В эфире у всех', doneHtml('«' + esc(name) + '» — в полке «Станции слушателей».'));
+        setTimeout(function () {
+          close();
+          if (window.GorodRole && GorodRole.get() !== 'author') GorodRole.set('author');
+          document.dispatchEvent(new CustomEvent('gorodfm-mystream-changed'));
+        }, 1100);
+      }
+    }
+    function render() {
+      if (flow === 'login') stepLoginMethod();
+      else if (flow === 'subscribe') stepSubscribe();
+      else if (flow === 'publish') stepPublish();
+    }
+    function onKey(e) {
+      if (!wrap || wrap.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') {
+        var f = [].filter.call(card.querySelectorAll('button, input'), function (el) { return el.offsetParent !== null && !el.disabled; });
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        else if (!card.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      }
+      if (e.key === 'Enter' && document.activeElement) {
+        if (document.activeElement.id === 'af-email') { e.preventDefault(); stepEmailCode(); }
+        else if (document.activeElement.id === 'af-code') { e.preventDefault(); stepDone('login'); }
+        else if (document.activeElement.id === 'af-name') { e.preventDefault(); stepDone('pub'); }
+      }
+    }
+    function init() {
+      wrap = $('authflow'); if (!wrap) return;
+      card = wrap.querySelector('.authflow-card');
+      kicker = $('authflow-kicker'); titleEl = $('authflow-title'); body = $('authflow-body');
+      $('authflow-x').addEventListener('click', close);
+      wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+      body.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-af]') : null;
+        if (!b) return;
+        var k = b.getAttribute('data-af');
+        if (k === 'tg') stepTg();
+        else if (k === 'email') stepEmail();
+        else if (k === 'email-code') stepEmailCode();
+        else if (k === 'login-done') stepDone('login');
+        else if (k === 'sub-done') stepDone('sub');
+        else if (k === 'sub-build') { close(); if (window.GorodStreamBuilder) GorodStreamBuilder.start(); }
+        else if (k === 'pub-done') stepDone('pub');
+        else if (k === 'close') close();
+      });
+      document.addEventListener('keydown', onKey);
+      window.GorodAuthFlow = {
+        login: function () { open('login'); },
+        subscribe: function () { open('subscribe'); },
+        publish: function () { open('publish'); }
+      };
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   })();
@@ -14413,7 +14623,7 @@
       var s = read();
       var items = LISTENER_SHELF.slice();
       if (role() === 'author' && s && s.published) {
-        items.unshift({ title: 'Мой стрим — ваш', meta: s.desc || 'личный поток', badge: { label: 'в эфире у всех', live: true } });
+        items.unshift({ title: (s.name || 'Мой стрим') + ' — ваш', meta: s.desc || 'личный поток', badge: { label: 'в эфире у всех', live: true } });
       }
       var shelf = GorodVitrina.renderShelf({
         id: 'vitrina-listeners', title: 'Станции слушателей',
@@ -14481,14 +14691,20 @@
       tracksEl = $('mystream-tracks'); tagsEl = $('mystream-tags'); learnEl = $('mystream-learn');
       authorEl = $('mystream-author'); publishBtn = $('mystream-publish'); pubnote = $('mystream-pubnote');
       lockCta.addEventListener('click', function () {
-        if (!window.GorodRole) return;
-        GorodRole.set(role() === 'guest' ? 'account' : 'paid');
+        if (role() === 'guest') {
+          if (window.GorodAuthFlow) GorodAuthFlow.login();
+          else if (window.GorodRole) GorodRole.set('account');
+        } else {
+          if (window.GorodAuthFlow) GorodAuthFlow.subscribe();
+          else if (window.GorodRole) GorodRole.set('paid');
+        }
       });
       $('mystream-build-cta').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
       $('mystream-rebuild').addEventListener('click', function () { if (window.GorodStreamBuilder) GorodStreamBuilder.start(); });
       /* слой 4: публикация в витрину = переход в авторы */
       publishBtn.addEventListener('click', function () {
         var s = read(); if (!s) return;
+        if (window.GorodAuthFlow) { GorodAuthFlow.publish(); return; }
         s.published = true; write(s);
         if (window.GorodRole && role() !== 'author') GorodRole.set('author');
         document.dispatchEvent(new CustomEvent('gorodfm-mystream-changed'));
@@ -15540,8 +15756,8 @@
         var kind = b.getAttribute('data-upsell');
         var row = b.closest('.ai-upsell-row');
         if (row) [].forEach.call(row.querySelectorAll('button'), function (x) { x.disabled = true; });
-        if (kind === 'login') { if (window.GorodRole) GorodRole.set('account'); }
-        else if (kind === 'paid') { if (window.GorodRole) GorodRole.set('paid'); }
+        if (kind === 'login') { if (window.GorodAuthFlow) GorodAuthFlow.login(); else if (window.GorodRole) GorodRole.set('account'); }
+        else if (kind === 'paid') { if (window.GorodAuthFlow) GorodAuthFlow.subscribe(); else if (window.GorodRole) GorodRole.set('paid'); }
         else if (kind === 'stay') {
           if (mode === 'ai') { aiSay('Принято. Если передумаете — скажите «собери мой стрим», продолжим с этого места.'); }
           else { clearTimeout(dripTimer); setTimeout(function () { djSpeak('Принято, остаёмся как есть. Реклама помечена бейджем, и её правда немного.'); }, 500); }
@@ -16193,7 +16409,8 @@
     function wireRoleLayer() {
       var loginBtn = $('rail-guest-login');
       if (loginBtn) loginBtn.addEventListener('click', function () {
-        if (window.GorodRole) GorodRole.set('account');
+        if (window.GorodAuthFlow) GorodAuthFlow.login();
+        else if (window.GorodRole) GorodRole.set('account');
       });
       var ROLE_LINES = {
         account: 'Теперь вы в эфире под своим именем: можно отвечать мне, собирать подборки и вкус. Станции как были открыты, так и остались.',
