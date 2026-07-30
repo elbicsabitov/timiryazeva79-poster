@@ -722,10 +722,12 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 }
 
 /* Промоблок — рекламная колонка с ротацией креативов.
-   Высота = высоте hero (16:9 экран + инфо-бар) через stretch — кромки сходятся
-   на любой ширине; self-promo креативы (cover) заливают колонку целиком.
-   Продаваемая IAB-зона 300×600 = верхний safe-area слота при ≥1500px
-   (на уже — формат 300×250, RUTV-124) */
+   Колонка по-прежнему тянется к плееру (stretch — кромки сходятся на любой
+   ширине), но креатив теперь честный фикс-формат: 300×600 при ≥1500px,
+   300×250 на 1100–1500px (RUTV-124). Остаток колонки — отделённый
+   брендированный добор-панель, он не продаётся и не выглядит частью
+   баннера (Стас, DFM 30.07 608252: «а это точно 300×600?» — раньше
+   cover-креатив заливал всю колонку и читался как 300×850+) */
 .promo-slot {
   position: relative;
   width: var(--promo-w);
@@ -734,6 +736,45 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lg);
   background: #101014;
+  display: flex;
+  flex-direction: column;
+}
+.promo-creative {
+  position: relative;
+  flex: 0 0 auto;
+  height: var(--promo-h);  /* IAB Half Page 300×600 */
+  overflow: hidden;
+}
+@media (max-width: 1500px) {
+  .promo-creative { height: 250px; }  /* IAB Medium Rectangle 300×250 */
+}
+.promo-fill {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px 18px;
+  text-align: center;
+  border-top: 1px solid var(--glass-border);
+  background: var(--glass-bg-strong);
+  overflow: hidden;
+  container-type: size;
+}
+.promo-fill-note {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.promo-fill-contact { font-size: 11.5px; color: var(--text-secondary); }
+/* Знак RU.TV появляется только когда добор достаточно высокий (узкий диапазон
+   1100–1500px даёт панели 250–400px — без знака там зияла дыра) */
+.promo-fill-logo { display: none; height: 30px; width: auto; color: var(--brand-pink); }
+@container (min-height: 130px) {
+  .promo-fill-logo { display: block; margin-bottom: 6px; }
 }
 .promo-tag {
   position: absolute; top: 12px; right: 12px;
@@ -818,13 +859,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 }
 
 /* =========================================================================
-   ПРОМО-ПОЛОСА — широкие баннеры-креативы после блока каналов (правка 603093)
+   ПРОМО-ПОЛОСА — широкие баннеры-креативы под окном эфира (правка 603093).
+   30.07 (Марго 608253 + Стас 608254): блок выше, видимых баннеров — 3
    ========================================================================= */
 .promo-banner {
   position: relative;
-  flex: 0 0 calc((100% - 48px) / 4);
+  flex: 0 0 calc((100% - 32px) / 3);
   min-width: 320px;
-  aspect-ratio: 2.35 / 1;
+  aspect-ratio: 2 / 1;
   scroll-snap-align: start;
   border-radius: var(--r-lg);
   overflow: hidden;
@@ -833,7 +875,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   display: flex; flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 16px 18px;
+  padding: 18px 20px;
   background-size: cover;
   background-position: center;
   box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border);
@@ -861,7 +903,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 .promo-banner-meta { position: relative; z-index: 1; display: block; }
 .promo-banner-title {
   display: block;
-  font-size: 19px;
+  font-size: 21px;
   font-weight: 800;
   color: white;
   letter-spacing: -0.02em;
@@ -871,7 +913,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 .promo-banner-sub {
   display: block;
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.4;
   color: rgba(255,255,255,0.85);
   max-width: 300px;
@@ -2116,10 +2158,29 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
           </figcaption>
         </figure>
 
-        <!-- Рекламный слот 300×600 (IAB Half Page), ротация креативов -->
+        <!-- Рекламный слот: креатив честного формата 300×600 (на 1100–1500px —
+             300×250) + брендированный добор до кромки плеера (DFM 30.07 608252) -->
         <aside class="promo-slot" id="promoSlot" aria-label="Реклама">
           <span class="promo-tag">Реклама</span>
-          <div class="promo-dots" id="promoDots" role="tablist" aria-label="Креативы"></div>
+          <div class="promo-creative" id="promoCreative">
+            <div class="promo-dots" id="promoDots" role="tablist" aria-label="Креативы"></div>
+          </div>
+          <div class="promo-fill">
+            <!-- Инлайн-копия лого (третья: topbar + drawer) — same-doc use/symbol
+                 на file:// Chromium не красит -->
+            <svg class="promo-fill-logo" viewBox="416.11 700.231 1086.721 525.264" aria-hidden="true">
+              <circle cx="1236.996" cy="960.001" r="252" fill="#fff"/>
+              <g fill="currentColor">
+                <path d="m616.94 834.844c-18.263-8.042-39.834-12.101-64.862-12.101h-124.687v273.576h77.413v-71.551h47.274c25.028 0 46.673-4.133 64.862-12.326 18.263-8.192 32.242-19.766 42.013-34.798 9.77-14.957 14.656-32.995 14.656-54.115s-4.885-38.481-14.656-53.737c-9.771-15.257-23.75-26.906-42.013-34.948zm-33.22 118.223c-8.042 6.915-20.217 10.373-36.376 10.373h-42.615v-79.744h42.615c16.159 0 28.259 3.608 36.376 10.748 8.042 7.139 12.1 16.836 12.1 29.086 0 12.252-4.058 22.623-12.1 29.537z"/>
+                <path d="m866.989 822.21v48.026c0 21.345-5.035 36.602-15.031 45.696s-22.773 13.679-38.105 13.679c-16.385 0-28.786-4.586-37.127-13.679-8.343-9.094-12.477-22.923-12.477-41.412v-52.31h-77.413v56.97c0 37.279 9.169 65.688 27.584 85.229 18.337 19.541 44.718 29.313 79.142 29.313 20.593 0 38.405-4.661 53.512-14.055 7.441-4.66 14.13-10.447 19.916-17.362v11.875c0 21.872-4.809 37.88-14.43 48.101-9.621 10.147-24.877 15.258-45.696 15.258-14.881 0-29.463-2.33-43.741-7.065-14.356-4.66-27.884-11.499-40.661-20.293l-30.064 54.715c13.829 10.973 30.589 19.691 50.431 26.155 19.766 6.538 42.238 9.77 67.191 9.77 27.359 0 51.108-5.035 71.326-15.031s35.85-24.727 46.898-44.193c11.048-19.467 16.61-43.216 16.61-71.326v-148.061h-77.788z"/>
+                <path d="m1322.075 942.935c3.232-2.63 4.885-6.614 4.885-11.875s-1.653-9.244-4.885-12.025c-3.232-2.707-8.042-4.059-14.43-4.059h-29.613v31.942h29.613c6.389.001 11.198-1.352 14.43-3.983z"/>
+                <path d="m1314.108 978.332h-36.075v33.52h36.075c6.84 0 11.95-1.428 15.258-4.283 3.306-2.857 5.035-7.141 5.035-12.703s-1.653-9.77-5.035-12.476c-3.308-2.705-8.418-4.058-15.258-4.058z"/>
+                <path d="m1236.996 704.387c-141.224 0-255.614 114.466-255.614 255.614 0 141.146 114.39 255.612 255.614 255.612 141.222 0 255.612-114.466 255.612-255.612.001-141.148-114.465-255.614-255.612-255.614zm127.393 328.141c-11.124 8.341-27.057 12.476-47.876 12.476h-83.877v-126.491h-49.83v126.491h-45.395v-126.491h-49.83v-36.602h224.572c19.391 0 34.498 3.682 45.32 11.048 10.823 7.365 16.159 17.812 16.159 31.34 0 13.529-5.035 23.6-15.181 31.116-2.18 1.653-4.661 3.082-7.216 4.36 5.336 1.727 10.221 3.907 14.28 6.838 10.297 7.366 15.484 17.964 15.484 31.793s-5.562 25.854-16.686 34.122z"/>
+              </g>
+            </svg>
+            <span class="promo-fill-note">Реклама на RU.TV</span>
+            <span class="promo-fill-contact">ad@ru.tv · +7 499 579-77-99</span>
+          </div>
         </aside>
       </div>
 
@@ -2705,10 +2766,11 @@ function renderPromoStrip() {
   `).join('');
 }
 
-// Промоблок 300×600 — ротация рекламных креативов
+// Промоблок 300×600 — ротация рекламных креативов (слайды живут в креатив-зоне
+// честного формата, не в колонке целиком — DFM 30.07 608252)
 let promoIdx = 0, promoTimer = null;
 function renderPromo() {
-  const slot = document.getElementById('promoSlot');
+  const slot = document.getElementById('promoCreative');
   const dots = document.getElementById('promoDots');
   promos.forEach((p, i) => {
     const slide = el('a', 'promo-slide', `
