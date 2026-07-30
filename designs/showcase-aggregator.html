@@ -27,7 +27,6 @@
      история: 216px = «еще уже меню» Стаса 07-16 (msg 602802) */
   --content-pad: 40px;
   --promo-w: 300px;  /* рекламный слот IAB Half Page 300×600 */
-  --promo-h: 600px;
 
   /* Brand RU.TV — официальный розовый ребрендинга (#E40087 из favicon.svg ru.tv) */
   --brand-pink: #E40087;
@@ -721,13 +720,12 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Промоблок — рекламная колонка с ротацией креативов.
-   Колонка по-прежнему тянется к плееру (stretch — кромки сходятся на любой
-   ширине), но креатив теперь честный фикс-формат: 300×600 при ≥1500px,
-   300×250 на 1100–1500px (RUTV-124). Остаток колонки — отделённый
-   брендированный добор-панель, он не продаётся и не выглядит частью
-   баннера (Стас, DFM 30.07 608252: «а это точно 300×600?» — раньше
-   cover-креатив заливал всю колонку и читался как 300×850+) */
+/* Промоблок — рекламное место справа от эфира: ОДНА статичная панель без
+   картинок-креативов, чтобы сразу читалась как рекламный блок (волна DFM
+   30.07: Стас 608251-252 «а это точно 300×600?» + 608255 «давай промоблоки
+   поправим»; owner: «одним фоном, без картинки»). Колонка тянется к плееру —
+   кромки сходятся на любой ширине; формат при продаже — 300×600 верхом
+   слота (RUTV-124) */
 .promo-slot {
   position: relative;
   width: var(--promo-w);
@@ -735,33 +733,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   overflow: hidden;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lg);
-  background: #101014;
-  display: flex;
-  flex-direction: column;
-}
-.promo-creative {
-  position: relative;
-  flex: 0 0 auto;
-  height: var(--promo-h);  /* IAB Half Page 300×600 */
-  overflow: hidden;
-}
-@media (max-width: 1500px) {
-  .promo-creative { height: 250px; }  /* IAB Medium Rectangle 300×250 */
-}
-.promo-fill {
-  flex: 1;
-  min-height: 0;
+  background: var(--glass-bg-strong);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 12px 18px;
+  padding: 18px;
   text-align: center;
-  border-top: 1px solid var(--glass-border);
-  background: var(--glass-bg-strong);
-  overflow: hidden;
-  container-type: size;
 }
 .promo-fill-note {
   font-size: 12.5px;
@@ -770,75 +749,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   letter-spacing: -0.01em;
 }
 .promo-fill-contact { font-size: 11.5px; color: var(--text-secondary); }
-/* Знак RU.TV появляется только когда добор достаточно высокий (узкий диапазон
-   1100–1500px даёт панели 250–400px — без знака там зияла дыра) */
-.promo-fill-logo { display: none; height: 30px; width: auto; color: var(--brand-pink); }
-@container (min-height: 130px) {
-  .promo-fill-logo { display: block; margin-bottom: 6px; }
-}
-.promo-tag {
-  position: absolute; top: 12px; right: 12px;
-  z-index: 3;
-  padding: 3px 9px;
-  border-radius: var(--r-pill);
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: rgba(255,255,255,0.75);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.promo-slide {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 600ms ease;
-  cursor: pointer;
-}
-.promo-slide[data-on="true"] { opacity: 1; pointer-events: auto; }
-.promo-slide::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.85) 100%);
-}
-.promo-meta {
-  position: absolute; left: 18px; right: 18px; bottom: 46px;
-  z-index: 2;
-}
-.promo-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: white;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
-}
-.promo-sub { margin-top: 6px; font-size: 12.5px; color: rgba(255,255,255,0.82); }
-.promo-cta {
-  margin-top: 12px;
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 16px;
-  border-radius: var(--r-pill);
-  background: white;
-  color: black;
-  font-size: 13px;
-  font-weight: 600;
-}
-.promo-dots {
-  position: absolute; left: 18px; bottom: 16px;
-  display: flex; gap: 6px;
-  z-index: 3;
-}
-.promo-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.35);
-  transition: background var(--t-fast), transform var(--t-fast);
-}
-.promo-dot[aria-current="true"] { background: white; transform: scale(1.2); }
-
+.promo-fill-logo { display: block; height: 30px; width: auto; color: var(--brand-pink); margin-bottom: 6px; }
 /* Подканалы RU.TV — тематические потоки под эфиром */
 /* LIVE-карточка рубрики (правка 603082 + owner 07-17: единая структура) —
    та же клип-карточка, отличие лёгкое: плашка LIVE + розовое кольцо обложки */
@@ -2158,14 +2069,9 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
           </figcaption>
         </figure>
 
-        <!-- Рекламный слот: креатив честного формата 300×600 (на 1100–1500px —
-             300×250) + брендированный добор до кромки плеера (DFM 30.07 608252) -->
+        <!-- Рекламное место: одна статичная панель без картинки — читается как
+             рекламный блок (DFM 30.07 608251-255 + owner «одним фоном») -->
         <aside class="promo-slot" id="promoSlot" aria-label="Реклама">
-          <span class="promo-tag">Реклама</span>
-          <div class="promo-creative" id="promoCreative">
-            <div class="promo-dots" id="promoDots" role="tablist" aria-label="Креативы"></div>
-          </div>
-          <div class="promo-fill">
             <!-- Инлайн-копия лого (третья: topbar + drawer) — same-doc use/symbol
                  на file:// Chromium не красит -->
             <svg class="promo-fill-logo" viewBox="416.11 700.231 1086.721 525.264" aria-hidden="true">
@@ -2180,7 +2086,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
             </svg>
             <span class="promo-fill-note">Реклама на RU.TV</span>
             <span class="promo-fill-contact">ad@ru.tv · +7 499 579-77-99</span>
-          </div>
         </aside>
       </div>
 
@@ -2568,13 +2473,6 @@ const promoStrip = [
     grad: 'linear-gradient(115deg,#FF9D2E,#7a1245)', route: 'gifts' },
 ];
 
-// Креативы рекламного промоблока 300×600
-const promos = [
-  { title: 'Звёзды Хайпа · LIVE Арена', sub: '6 декабря — большой концерт топ-артистов', cta: 'Билеты', img: 'assets/rutv/Rectangle 4322-2.png' },
-  { title: 'Полевой — премьера сериала', sub: 'Эксклюзив RU.TV уже на канале', cta: 'Смотреть', img: 'assets/rutv/image 2.png' },
-  { title: 'Статус: В сети', sub: 'Приветы и поздравления в прямом эфире', cta: 'Отправить привет', img: 'assets/rutv/Rectangle 4322-15.png' },
-];
-
 // TV-каналы — RU.TV приоритет + партнёры РМГ. Реальные images из export rutv
 const channels = [
   { code: 'RU', name: 'RU.TV', now: 'Сергей Лазарев — Шёпотом', next: '22:00 — Супер 20', progress: 64,
@@ -2766,44 +2664,8 @@ function renderPromoStrip() {
   `).join('');
 }
 
-// Промоблок 300×600 — ротация рекламных креативов (слайды живут в креатив-зоне
-// честного формата, не в колонке целиком — DFM 30.07 608252)
-let promoIdx = 0, promoTimer = null;
-function renderPromo() {
-  const slot = document.getElementById('promoCreative');
-  const dots = document.getElementById('promoDots');
-  promos.forEach((p, i) => {
-    const slide = el('a', 'promo-slide', `
-      <div class="promo-meta">
-        <div class="promo-title">${p.title}</div>
-        <div class="promo-sub">${p.sub}</div>
-        <span class="promo-cta">${p.cta}</span>
-      </div>`);
-    slide.style.cssText = bg(p);
-    slide.href = '#';
-    slide.dataset.on = i === 0 ? 'true' : 'false';
-    slide.addEventListener('click', e => e.preventDefault());
-    slot.insertBefore(slide, dots);
-  });
-  dots.innerHTML = promos.map((_, i) =>
-    `<button class="promo-dot" data-promo-dot="${i}" aria-current="${i === 0}" aria-label="Креатив ${i + 1}"></button>`
-  ).join('');
-  dots.addEventListener('click', e => {
-    const b = e.target.closest('[data-promo-dot]');
-    if (!b) return;
-    promoGo(+b.dataset.promoDot);
-    promoStart();
-  });
-}
-function promoGo(i) {
-  promoIdx = ((i % promos.length) + promos.length) % promos.length;
-  document.querySelectorAll('.promo-slide').forEach((s, j) => s.dataset.on = j === promoIdx ? 'true' : 'false');
-  document.querySelectorAll('.promo-dot').forEach((d, j) => d.setAttribute('aria-current', j === promoIdx ? 'true' : 'false'));
-}
-function promoStart() {
-  clearInterval(promoTimer);
-  promoTimer = setInterval(() => promoGo(promoIdx + 1), 6000);
-}
+// Промоблок у эфира — статичная панель без креативов (DFM 30.07); ротация
+// слайдов удалена вместе с данными promos
 
 // Каналы — страница «Каналы» (раздел спрятан в меню, правка Марго 27.07)
 function renderChannels() {
@@ -2964,8 +2826,6 @@ function renderGifts() {
   `).join('');
 }
 
-renderPromo();
-promoStart();
 renderChannels();
 renderPromoStrip();
 renderThemedRows();
