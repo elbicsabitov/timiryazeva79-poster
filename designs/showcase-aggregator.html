@@ -750,6 +750,101 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 }
 .promo-fill-contact { font-size: 11.5px; color: var(--text-secondary); }
 .promo-fill-logo { display: block; height: 30px; width: auto; color: var(--brand-pink); margin-bottom: 6px; }
+
+/* Правая колонка у эфира: рекламная панель + соцсети (правка Марго 12.08 —
+   иконки под вертикальным баннером, нижняя кромка вровень с трансляцией).
+   Колонка по-прежнему тянется к плееру; панель занимает остаток высоты */
+.promo-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+}
+.promo-col .promo-slot { flex: 1 1 auto; }
+.soc-card {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-strong);
+  box-shadow: var(--shadow-md);
+}
+[data-style="apple"] .soc-card { background: rgba(28,28,30,0.95); }
+[data-style="light"] .soc-card { background: #ffffff; box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border); }
+/* Глифы соцсетей типографикой (как полоса РМГ до официальных векторов, RUTV-133) */
+.soc-btn {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--glass-bg-weak);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast), border-color var(--t-fast);
+}
+.soc-btn:hover { background: var(--accent); border-color: transparent; color: #fff; transform: translateY(-2px); }
+
+/* =========================================================================
+   ТЕЛЕПРОГРАММА — расписание эфира на странице «Программы»
+   (правка Марго 12.08, #614227)
+   ========================================================================= */
+.sched { margin-bottom: 48px; }
+.sched-days { display: flex; gap: 8px; margin: 2px 0 16px; flex-wrap: wrap; }
+.sched-list {
+  border-radius: var(--r-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  overflow: hidden;
+  max-width: 980px;
+}
+[data-style="apple"] .sched-list { background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+[data-style="light"] .sched-list { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
+.sched-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 13px 20px;
+}
+.sched-row + .sched-row { border-top: 1px solid var(--glass-border); }
+.sched-time { font-size: 14px; font-weight: 700; font-feature-settings: "tnum"; color: var(--text-secondary); }
+.sched-name { display: block; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
+.sched-meta { display: block; font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
+.sched-row[data-now="true"] { background: var(--accent-soft); }
+.sched-row[data-now="true"] .sched-time { color: var(--accent); }
+.sched-note { font-size: 12.5px; color: var(--text-tertiary); margin-top: 10px; }
+
+/* =========================================================================
+   КОНТАКТЫ + ВЫДАЧА ПРИЗОВ — страница из меню (правка Марго 12.08)
+   ========================================================================= */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 980px;
+}
+.contact-card {
+  padding: 20px 22px;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+[data-style="apple"] .contact-card { background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+[data-style="light"] .contact-card { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
+.contact-card h3 { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; }
+.contact-card p { font-size: 13.5px; color: var(--text-secondary); line-height: 1.8; }
+.contact-card strong { color: var(--text-primary); font-weight: 700; font-feature-settings: "tnum"; }
+.contact-gifts-cta { margin-top: 18px; }
 /* Подканалы RU.TV — тематические потоки под эфиром */
 /* LIVE-карточка рубрики (правка 603082 + owner 07-17: единая структура) —
    та же клип-карточка, отличие лёгкое: плашка LIVE + розовое кольцо обложки */
@@ -1682,6 +1777,19 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   pointer-events: auto;
 }
 [data-style="apple"] .pip { background: rgba(28,28,30,0.95); }
+/* Перетаскивание окошка в любой угол (правка Марго 12.08 — «как в VK Видео»):
+   тянуть можно мышью и пальцем; отпустил — примагнитилось к ближайшему углу.
+   touch-action: none — иначе палец скроллит страницу вместо переноса */
+.pip { touch-action: none; }
+.pip[data-corner="bl"] { left: 24px; right: auto; }
+.pip[data-corner="tr"] { top: 96px; bottom: auto; }
+.pip[data-corner="tl"] { left: 24px; top: 96px; right: auto; bottom: auto; }
+.pip[data-dragging="true"] {
+  transition: none;
+  right: auto !important;
+  bottom: auto !important;
+}
+.pip[data-dragging="true"] .pip-screen { cursor: grabbing; }
 .pip-screen {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -1849,7 +1957,8 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 @media (max-width: 1100px) {
   /* сайдбар уже сужен глобально до 216px (правка 602802) — отдельный override не нужен */
   /* Промо 300×600 — десктопный формат; на узких экранах слот скрыт
-     (мобильный креатив 300×250 — отдельной задачей) */
+     (мобильный креатив 300×250 — отдельной задачей). Соцсети остаются:
+     полоса-карточка сразу под окном эфира (правка Марго 12.08 «заметнее») */
   .live-layout { grid-template-columns: 1fr; }
   .promo-slot { display: none; }
   /* эфир 16:9 теперь в базе (правка 07-22) — отдельные override'ы не нужны */
@@ -1874,9 +1983,15 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   .brand-strip { grid-template-columns: repeat(2, 1fr); }
   /* Сайдбар скрыт — переключатель тем возвращается плавающей пилюлей */
   .tweaks { display: flex; }
-  /* PiP выше Tweaks-панели, чтобы не перекрывались */
+  /* PiP выше Tweaks-панели, чтобы не перекрывались; углы-магниты с теми же
+     отступами (низ 80px — над пилюлей тем, верх 72px — под шапкой) */
   .pip { right: 12px; bottom: 80px; width: min(300px, calc(100vw - 24px)); }
+  .pip[data-corner="bl"] { left: 12px; bottom: 80px; }
+  .pip[data-corner="tr"] { right: 12px; top: 72px; }
+  .pip[data-corner="tl"] { left: 12px; top: 72px; }
   .tweaks { left: 12px; bottom: 12px; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .sched-row { grid-template-columns: 56px 1fr auto; padding: 12px 14px; }
   .app-footer { grid-template-columns: 1fr; gap: 20px; }
   .chart-grid { grid-template-columns: 1fr; }
   .program-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1949,12 +2064,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
         Программы
       </button>
-      <!-- Каналы / Артисты / Ведущие — с главной спрятаны отдельными пунктами меню
-           (правка Марго 27.07, #606696) -->
-      <button class="sb-item" data-route="channels">
-        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="3"/><path d="m8 2 4 5 4-5"/></svg>
-        Каналы
+      <!-- Ностальгия — подборки по годам, с главной в отдельную вкладку
+           (правка Марго 12.08, #614227; название рабочее — за редакцией) -->
+      <button class="sb-item" data-route="nostalgia">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 3"/></svg>
+        Ностальгия
       </button>
+      <!-- Артисты / Ведущие — спрятаны отдельными пунктами меню (правка Марго
+           27.07, #606696); «Каналы» из меню убраны (правка Марго 12.08) -->
       <button class="sb-item" data-route="artists">
         <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
         Артисты
@@ -1966,6 +2083,12 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       <button class="sb-item" data-route="gifts">
         <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
         Витрина подарков
+      </button>
+      <!-- Контакты + «Выдача призов» рядом — по аналогии с сайтом Monte Carlo
+           (правка Марго 12.08, #614227) -->
+      <button class="sb-item" data-route="contacts">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Контакты
       </button>
       <!-- Ссылка на лендинг Премии — URL вставит заказчик (href) -->
       <a class="sb-item" id="sbPremia" href="#" title="Лендинг Премии РУ.ТВ — ссылку добавит заказчик">
@@ -2069,6 +2192,10 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
           </figcaption>
         </figure>
 
+        <!-- Правая колонка у эфира: рекламная панель + соцсети канала
+             (правка Марго 12.08: иконки под вертикальным баннером,
+             нижняя кромка вровень с окном трансляции) -->
+        <div class="promo-col">
         <!-- Рекламное место: одна статичная панель без картинки — читается как
              рекламный блок (DFM 30.07 608251-255 + owner «одним фоном») -->
         <aside class="promo-slot" id="promoSlot" aria-label="Реклама">
@@ -2087,14 +2214,34 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
             <span class="promo-fill-note">Реклама на RU.TV</span>
             <span class="promo-fill-contact">ad@ru.tv · +7 499 579-77-99</span>
         </aside>
+        <!-- Соцсети канала — подняты из подвала (правка Марго 12.08: «заметнее,
+             под вертикальный баннер»); состав ОК/ВК/MAX — правка редакции №9.
+             Глифы типографикой — официальные вектора при имплементации
+             (та же рельса, что RUTV-133 для полосы РМГ) -->
+        <nav class="soc-card" aria-label="RU.TV в соцсетях">
+          <a class="soc-btn" href="#" aria-label="ВКонтакте">VK</a>
+          <a class="soc-btn" href="#" aria-label="Одноклассники">OK</a>
+          <a class="soc-btn" href="#" aria-label="Мессенджер MAX">MAX</a>
+        </nav>
+        </div>
       </div>
 
-      <!-- Порядок главной — правка Марго 27.07 (#606696): карусель баннеров сразу
-           под окном прямого эфира, дальше Программы → Свежие новости → Супер-20.
-           Каналы / Артисты / Ведущие спрятаны отдельными пунктами меню (свои страницы),
-           детский поток исключён -->
+      <!-- Порядок главной — правка Марго 12.08 (#614227) поверх 27.07 (#606696):
+           карусель баннеров сразу под окном прямого эфира, дальше Свежие новости →
+           Программы → Супер-20. Подборки по годам ушли во вкладку «Ностальгия»,
+           «Новые клипы» с главной убраны; Артисты / Ведущие — пунктами меню,
+           «Каналы» из меню убраны, детский поток исключён -->
       <section class="row-section promo-strip-section" aria-label="Промо">
         <div class="row-track" id="trackPromoStrip"></div>
+      </section>
+
+      <!-- Новости — выше программ (правка Марго 12.08) -->
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">Свежие новости</h2>
+          <a href="#news" class="row-link" data-route="news">Все новости →</a>
+        </div>
+        <div class="row-track" id="trackNews"></div>
       </section>
 
       <!-- Программы как видеоподкасты -->
@@ -2106,15 +2253,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <div class="row-track" id="trackPrograms"></div>
       </section>
 
-      <!-- Новости -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Свежие новости</h2>
-          <a href="#news" class="row-link" data-route="news">Все новости →</a>
-        </div>
-        <div class="row-track" id="trackNews"></div>
-      </section>
-
       <!-- Супер 20: на главной — топ-10, полная двадцатка по переходу -->
       <section class="row-section">
         <div class="row-head">
@@ -2124,33 +2262,8 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <div class="chart-grid" id="chartGrid"></div>
       </section>
 
-      <!-- Тематические рубрики (правки 603081-84): LIVE-поток первым, дальше клипы
-           по тегу рубрики. «Детям» снята с главной вместе с детским потоком
-           (правка Марго 27.07: «абсолютно точно исключаем „Дети“») -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">80-е</h2>
-          <a href="#video" class="row-link" data-route="video">Все 80-е →</a>
-        </div>
-        <div class="row-track" id="track80s"></div>
-      </section>
-
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">2000-е</h2>
-          <a href="#video" class="row-link" data-route="video">Все 2000-е →</a>
-        </div>
-        <div class="row-track" id="track2000s"></div>
-      </section>
-
-      <!-- Новые клипы: прямоугольные 16:9, три в ряд -->
-      <section class="row-section">
-        <div class="row-head">
-          <h2 class="row-title">Новые клипы</h2>
-          <a href="#video" class="row-link" data-route="video">Все клипы →</a>
-        </div>
-        <div class="row-track" id="trackNewClips"></div>
-      </section>
+      <!-- Тематические рубрики 80-е/2000-е переехали во вкладку «Ностальгия»,
+           «Новые клипы» с главной убраны (правка Марго 12.08, #614227) -->
 
       <!-- Полоса брендов РМГ (правка 603088): семейство станций холдинга.
            Лого — официальные вектора из футера rusradio.ru (currentColor);
@@ -2264,6 +2377,19 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <h2>Программы</h2>
         <p>Шоу и рубрики RU.TV в формате видеоподкастов — смотрите выпуски в любое время.</p>
       </div>
+      <!-- Телепрограмма — расписание эфира (правка Марго 12.08, #614227).
+           Вечерний прайм собран из заявленных времён программ; сетка демо -->
+      <section class="sched" aria-label="Телепрограмма">
+        <div class="row-head">
+          <h2 class="row-title">Телепрограмма</h2>
+        </div>
+        <div class="sched-days" id="schedDays" role="tablist" aria-label="День недели"></div>
+        <div class="sched-list" id="schedList"></div>
+        <p class="sched-note">Новости RU.TV — в начале каждого часа. Сетка — демо: программу передач пришлёт редакция.</p>
+      </section>
+      <div class="row-head">
+        <h2 class="row-title">Все программы</h2>
+      </div>
       <div class="program-grid" id="programGrid"></div>
     </section>
 
@@ -2328,15 +2454,28 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
     </section>
 
     <!-- ============================================================ -->
-    <!-- PAGE: Каналы — раздел спрятан в меню (правка Марго 27.07);    -->
-    <!-- детского канала в составе нет и не будет («исключаем Дети»)   -->
+    <!-- PAGE: Ностальгия — подборки по годам (правка Марго 12.08:     -->
+    <!-- с главной в отдельную вкладку; название рабочее — за          -->
+    <!-- редакцией). «Каналы» той же правкой убраны из меню — страница -->
+    <!-- снята вместе с пунктом                                        -->
     <!-- ============================================================ -->
-    <section class="page" data-page-id="channels">
+    <section class="page" data-page-id="nostalgia">
       <div class="page-head">
-        <h2>Каналы</h2>
-        <p>Телеканалы Русской Медиагруппы — что в онлайне прямо сейчас.</p>
+        <h2>Ностальгия</h2>
+        <p>Подборки по годам: золотая эстрада 80-х и главные хиты нулевых — эфир рубрики и клипы.</p>
       </div>
-      <div class="channel-grid" id="channelGrid"></div>
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">80-е</h2>
+        </div>
+        <div class="row-track" id="track80s"></div>
+      </section>
+      <section class="row-section">
+        <div class="row-head">
+          <h2 class="row-title">2000-е</h2>
+        </div>
+        <div class="row-track" id="track2000s"></div>
+      </section>
     </section>
 
     <!-- ============================================================ -->
@@ -2361,14 +2500,63 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       <div class="host-grid" id="hostGrid"></div>
     </section>
 
+    <!-- ============================================================ -->
+    <!-- PAGE: Контакты — рядом вкладка «Выдача призов», по аналогии   -->
+    <!-- с сайтом Monte Carlo (правка Марго 12.08, #614227). Данные —  -->
+    <!-- те же, что в подвале                                          -->
+    <!-- ============================================================ -->
+    <section class="page" data-page-id="contacts">
+      <div class="page-head">
+        <h2>Контакты</h2>
+        <p>Как связаться с каналом — и где забрать призы «Витрины подарков».</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Контакты и выдача призов" id="contactTabs">
+        <button class="tabs-btn" role="tab" data-ctab="contacts" aria-selected="true">Контакты</button>
+        <button class="tabs-btn" role="tab" data-ctab="prizes" aria-selected="false">Выдача призов</button>
+      </div>
+      <div id="contactTabContacts" role="tabpanel">
+        <div class="contact-grid">
+          <article class="contact-card">
+            <h3>Редакция</h3>
+            <p>123298, Москва, 3-я Хорошёвская, 12<br>Телефон: <strong>+7 499 579-77-09</strong><br>info@ru.tv</p>
+          </article>
+          <article class="contact-card">
+            <h3>Прямой эфир</h3>
+            <p>Телефон: <strong>+7 (495) 956-10-12</strong><br>WhatsApp: +7 495 956-10-12<br>Приветы и поздравления — через «Статус: В сети»</p>
+          </article>
+          <article class="contact-card">
+            <h3>Реклама</h3>
+            <p>ad@ru.tv<br>Телефон: <strong>+7 499 579-77-99</strong></p>
+          </article>
+          <article class="contact-card">
+            <h3>Сайт и пресса</h3>
+            <p>Техподдержка сайта: support@ru.tv<br>Пресс-релизы: press@ru.tv</p>
+          </article>
+        </div>
+      </div>
+      <div id="contactTabPrizes" role="tabpanel" hidden>
+        <div class="contact-grid">
+          <article class="contact-card">
+            <h3>Как получить приз</h3>
+            <p>1. Обменяйте баллы на приз в «Витрине подарков»<br>2. Дождитесь письма — менеджер подтвердит бронь и время визита<br>3. Заберите приз в офисе RU.TV — при получении нужен паспорт</p>
+          </article>
+          <article class="contact-card">
+            <h3>Где и когда</h3>
+            <p>123298, Москва, 3-я Хорошёвская, 12<br>По будням с <strong>12:00 до 18:00</strong><br>Вопросы: prizes@ru.tv</p>
+          </article>
+        </div>
+        <button class="btn btn-live contact-gifts-cta" data-route="gifts"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>К витрине подарков</button>
+      </div>
+    </section>
+
   </main>
 </div>
 
 <!-- =================================================================== -->
 <!-- PIP МИНИ-ПЛЕЕР — эфир всегда рядом (картинка-в-картинке)            -->
 <!-- =================================================================== -->
-<div class="pip" id="pip" data-on="false" role="complementary" aria-label="Мини-плеер эфира">
-  <div class="pip-screen" id="pipScreen" style="background-image: url('assets/rutv/hero-lazarev-shepotom.jpg');" title="Развернуть эфир">
+<div class="pip" id="pip" data-on="false" data-corner="br" role="complementary" aria-label="Мини-плеер эфира — можно перетащить в любой угол">
+  <div class="pip-screen" id="pipScreen" style="background-image: url('assets/rutv/hero-lazarev-shepotom.jpg');" title="Развернуть эфир (перетащите, чтобы переставить)">
     <span class="pip-live live-badge"><span class="live-pulse"></span>LIVE</span>
     <div class="pip-actions">
       <button class="pip-act" id="pipExpand" aria-label="Развернуть эфир">
@@ -2473,21 +2661,8 @@ const promoStrip = [
     grad: 'linear-gradient(115deg,#FF9D2E,#7a1245)', route: 'gifts' },
 ];
 
-// TV-каналы — RU.TV приоритет + партнёры РМГ. Реальные images из export rutv
-const channels = [
-  { code: 'RU', name: 'RU.TV', now: 'Сергей Лазарев — Шёпотом', next: '22:00 — Супер 20', progress: 64,
-    img: 'assets/rutv/Rectangle 4322-1.png' },
-  { code: 'РР', name: 'Русское Радио ТВ', now: 'Звёздное караоке', next: '23:00 — Хит-парад', progress: 28,
-    img: 'assets/rutv/Rectangle 4322-2.png' },
-  { code: 'D', name: 'DFM TV', now: 'Linkin Park · Roads Untraveled', next: '22:00 — Чарт DFM', progress: 42,
-    img: 'assets/rutv/Rectangle 4322-3.png' },
-  { code: 'MX', name: 'Maximum TV', now: 'Rock-новости недели', next: '22:30 — Live-концерт', progress: 18,
-    img: 'assets/rutv/Rectangle 4322-4.png' },
-  { code: 'MC', name: 'Monte Carlo TV', now: 'Шансон-вечер', next: '22:00 — Романтика', progress: 78,
-    img: 'assets/rutv/Rectangle 4322-5.png' },
-  { code: 'ХИТ', name: 'Хит FM TV', now: 'Только лучшее', next: '22:30 — Чарт', progress: 36,
-    img: 'assets/rutv/Rectangle 4322-6.png' },
-];
+// Страница «Каналы» снята вместе с пунктом меню (правка Марго 12.08) —
+// данные каналов удалены; семейство РМГ осталось полосой брендов над подвалом
 
 // Новые клипы — прямоугольные карточки 16:9, три в ряд
 const newClips = [
@@ -2667,25 +2842,8 @@ function renderPromoStrip() {
 // Промоблок у эфира — статичная панель без креативов (DFM 30.07); ротация
 // слайдов удалена вместе с данными promos
 
-// Каналы — страница «Каналы» (раздел спрятан в меню, правка Марго 27.07)
-function renderChannels() {
-  document.getElementById('channelGrid').innerHTML = channels.map(c => `
-    <article class="card-tv" tabindex="0">
-      <div class="card-tv-thumb" style="${bg(c)}">
-        <span class="card-tv-live live-badge"><span class="live-pulse"></span>LIVE</span>
-        <span class="card-tv-channel-logo">${c.code}</span>
-      </div>
-      <div class="card-tv-body">
-        <div class="card-tv-channel">${c.name}</div>
-        <div class="card-tv-now">${c.now}</div>
-        <div class="card-tv-next">Далее: ${c.next}</div>
-        <div class="card-tv-progress"><span style="width: ${c.progress}%"></span></div>
-      </div>
-    </article>
-  `).join('');
-}
-
-// Новые клипы (и «Новинки» на странице Видео) — прямоугольные 16:9
+// Новые клипы («Новинки» на странице Видео) — прямоугольные 16:9;
+// с главной ряд убран (правка Марго 12.08)
 function clipWideCard(c) {
   return `
     <article class="card-clip-wide" tabindex="0">
@@ -2698,10 +2856,6 @@ function clipWideCard(c) {
       <div class="card-clip-wide-track">${c.track}</div>
     </article>`;
 }
-function renderNewClips() {
-  document.getElementById('trackNewClips').innerHTML = newClips.map(clipWideCard).join('');
-}
-
 // Программы — радийные плитки-видеоподкасты (на главной ряд, на странице сетка 9)
 function programCard(p) {
   return `
@@ -2826,10 +2980,8 @@ function renderGifts() {
   `).join('');
 }
 
-renderChannels();
 renderPromoStrip();
 renderThemedRows();
-renderNewClips();
 renderPrograms();
 renderChart();
 renderNews();
@@ -2867,12 +3019,15 @@ const titles = {
   chart: 'Супер 20',
   news: 'Новости',
   programs: 'Программы',
-  channels: 'Каналы',
+  nostalgia: 'Ностальгия',
   artists: 'Артисты',
   hosts: 'Ведущие',
   video: 'Видео',
   gifts: 'Витрина подарков',
+  contacts: 'Контакты',
 };
+// «channels» из карты убран (правка Марго 12.08): сохранённый в localStorage
+// старый маршрут сам падает на «home» через гард setRoute
 let route = 'home';
 
 /* Меню-drawer (правка Марго 27.07: «меню слева прячем») — бургер в шапке,
@@ -2974,6 +3129,7 @@ function goLive() {
 document.getElementById('pipExpand').addEventListener('click', goLive);
 document.getElementById('pipScreen').addEventListener('click', e => {
   if (e.target.closest('.pip-act')) return;
+  if (pipWasDragged) { pipWasDragged = false; return; } // это был перенос, не клик
   goLive();
 });
 document.getElementById('liveWatchBtn').addEventListener('click', () => {
@@ -2992,7 +3148,54 @@ document.getElementById('pipPlay').addEventListener('click', () => {
 document.getElementById('pipClose').addEventListener('click', () => {
   pipDismissed = true;
   updatePip();
+  // Эфир не останавливается — окошко просто спрятано (как в VK Видео)
+  showToast('Эфир продолжается без окошка — вернуть его можно с главной');
 });
+
+/* Перетаскивание PiP в любой угол (правка Марго 12.08 — «как в VK Видео»):
+   pointer events покрывают мышь и палец; отпустил — магнит к ближайшему углу */
+let pipDrag = null;
+let pipWasDragged = false;
+pip.addEventListener('pointerdown', e => {
+  if (e.target.closest('.pip-act') || e.target.closest('.pip-play')) return;
+  pipDrag = { id: e.pointerId, x: e.clientX, y: e.clientY, rect: pip.getBoundingClientRect(), moved: false };
+  try { pip.setPointerCapture(e.pointerId); } catch (_) { /* капчер — оптимизация, перенос работает и без него */ }
+});
+pip.addEventListener('pointermove', e => {
+  if (!pipDrag || e.pointerId !== pipDrag.id) return;
+  const dx = e.clientX - pipDrag.x;
+  const dy = e.clientY - pipDrag.y;
+  if (!pipDrag.moved && Math.hypot(dx, dy) < 8) return; // порог: клик ≠ перенос
+  pipDrag.moved = true;
+  pip.dataset.dragging = 'true';
+  pip.style.left = Math.min(Math.max(pipDrag.rect.left + dx, 8), window.innerWidth - pipDrag.rect.width - 8) + 'px';
+  pip.style.top = Math.min(Math.max(pipDrag.rect.top + dy, 8), window.innerHeight - pipDrag.rect.height - 8) + 'px';
+});
+function pipDrop(e) {
+  if (!pipDrag || e.pointerId !== pipDrag.id) return;
+  if (pipDrag.moved) {
+    pipWasDragged = true; // гасим клик-развёртку, который придёт следом
+    const before = pip.getBoundingClientRect();
+    const corner = (before.top + before.height / 2 < window.innerHeight / 2 ? 't' : 'b')
+                 + (before.left + before.width / 2 < window.innerWidth / 2 ? 'l' : 'r');
+    delete pip.dataset.dragging;
+    pip.style.left = '';
+    pip.style.top = '';
+    pip.dataset.corner = corner;
+    // FLIP-доводка до угла (CSS-переход между auto-позициями не анимируется)
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const after = pip.getBoundingClientRect();
+      pip.animate(
+        [{ transform: `translate(${before.left - after.left}px, ${before.top - after.top}px)` }, { transform: 'translate(0, 0)' }],
+        { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)' }
+      );
+    }
+    setTimeout(() => { pipWasDragged = false; }, 300);
+  }
+  pipDrag = null;
+}
+pip.addEventListener('pointerup', pipDrop);
+pip.addEventListener('pointercancel', pipDrop);
 
 // Переключение потока рубрики (повторный клик — возврат к основному эфиру);
 // LIVE-плитки живут в тематических каруселях — делегат на документ
@@ -3103,14 +3306,103 @@ document.getElementById('sbPremia').addEventListener('click', function (e) {
   }
 });
 
-document.querySelectorAll('.tabs-btn').forEach(b => {
+// Вкладки новостей — селектор ограничен своей страницей: появились вторые
+// .tabs-btn (Контакты | Выдача призов) и день-пилюли телепрограммы
+document.querySelectorAll('[data-page-id="news"] .tabs-btn').forEach(b => {
   b.addEventListener('click', () => {
-    document.querySelectorAll('.tabs-btn').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+    document.querySelectorAll('[data-page-id="news"] .tabs-btn').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
     document.getElementById('newsTabNews').hidden = b.dataset.tab !== 'news';
     document.getElementById('newsTabAfisha').hidden = b.dataset.tab !== 'afisha';
     document.getElementById('tabNote').textContent = b.dataset.tab === 'news' ? 'обновлено 15 минут назад' : 'ближайшие события';
   });
 });
+
+// Контакты | Выдача призов — рядом, по аналогии с Monte Carlo (правка Марго 12.08)
+document.querySelectorAll('#contactTabs .tabs-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#contactTabs .tabs-btn').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+    document.getElementById('contactTabContacts').hidden = b.dataset.ctab !== 'contacts';
+    document.getElementById('contactTabPrizes').hidden = b.dataset.ctab !== 'prizes';
+  });
+});
+
+/* =========================================================================
+   ТЕЛЕПРОГРАММА (правка Марго 12.08) — сетка демо; вечерний прайм собран
+   из времён, заявленных у программ (Супер 20 — Пт 19:00, Русский чарт —
+   Вт 19:00, Закулисье — Ср 21:00, Звёзды Хайпа — Сб 20:00, Караоке-батл —
+   Вс 18:00, Дискотека 2000-х — Пт 22:00, Утро на RU.TV — будни 07:00)
+   ========================================================================= */
+const schedBase = {
+  budni: [
+    ['07:00', 'Утро на RU.TV', 'Прямой эфир — просыпаемся под лучшие клипы'],
+    ['10:00', 'Стол заказов', 'Интерактив: зрители выбирают клипы'],
+    ['12:00', 'Клипы: нон-стоп', 'Дневной музыкальный блок'],
+    ['15:00', 'Повтор вечернего шоу', 'Лучшее из прайма — ещё раз'],
+    ['17:00', 'Клипы: новинки', 'Свежие премьеры в ротации'],
+  ],
+  weekend: [
+    ['08:00', 'Клипы: нон-стоп', 'Утренний музыкальный блок'],
+    ['10:00', 'Стол заказов', 'Интерактив: зрители выбирают клипы'],
+    ['13:00', 'Ретро-вечер: золотая эстрада', 'Повтор концерта'],
+    ['16:00', 'Клипы: новинки', 'Свежие премьеры в ротации'],
+  ],
+};
+const schedEvening = {
+  1: [['19:00', 'Клипы: премьеры недели', 'Всё новое — одним блоком'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  2: [['19:00', 'Русский чарт', 'Хит-парад — новый выпуск'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  3: [['19:00', 'Клипы: по заявкам', 'Из «Стола заказов»'], ['21:00', 'Закулисье', 'Бэкстейдж съёмок RU.TV']],
+  4: [['19:00', 'Ретро-вечер: 80-е', 'Золотая эстрада'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  5: [['19:00', 'Супер 20', 'Главный чарт страны — прямой эфир'], ['22:00', 'Дискотека 2000-х', 'Главные песни нулевых']],
+  6: [['20:00', 'Звёзды Хайпа', 'Большое шоу — новый выпуск']],
+  0: [['18:00', 'Караоке-батл', 'Финалисты недели']],
+};
+const SCHED_NIGHT = ['00:00', 'Ночной эфир', 'Клипы до утра — без перерыва'];
+const SCHED_LABELS = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+let schedDay = new Date().getDay();
+
+function schedSlots(dow) {
+  const base = (dow === 0 || dow === 6) ? schedBase.weekend : schedBase.budni;
+  return [...base, ...(schedEvening[dow] || []), SCHED_NIGHT];
+}
+
+function renderSched() {
+  const today = new Date().getDay();
+  document.getElementById('schedDays').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => `
+    <button class="tabs-btn" role="tab" data-day="${d}" aria-selected="${d === schedDay ? 'true' : 'false'}">
+      ${SCHED_LABELS[d]}${d === today ? ' · сегодня' : ''}
+    </button>`).join('');
+
+  const slots = schedSlots(schedDay);
+  // «Сейчас» — последний начавшийся слот. Ночной 00:00 стоит в КОНЦЕ сетки —
+  // в сканер не входит (0 минут ≤ now всегда), он «сейчас» только до утра
+  let nowIdx = -1;
+  if (schedDay === today) {
+    const now = new Date().getHours() * 60 + new Date().getMinutes();
+    slots.forEach(([t], i) => {
+      if (i === slots.length - 1) return;
+      const [h, m] = t.split(':').map(Number);
+      if (h * 60 + m <= now) nowIdx = i;
+    });
+    if (nowIdx === -1) nowIdx = slots.length - 1;
+  }
+  document.getElementById('schedList').innerHTML = slots.map(([t, name, meta], i) => `
+    <div class="sched-row" data-now="${i === nowIdx ? 'true' : 'false'}">
+      <span class="sched-time">${t}</span>
+      <span>
+        <span class="sched-name">${name}</span>
+        <span class="sched-meta">${meta}</span>
+      </span>
+      ${i === nowIdx ? '<span class="live-badge"><span class="live-pulse"></span>Сейчас</span>' : ''}
+    </div>`).join('');
+}
+
+document.getElementById('schedDays').addEventListener('click', e => {
+  const b = e.target.closest('[data-day]');
+  if (!b) return;
+  schedDay = +b.dataset.day;
+  renderSched();
+});
+renderSched();
 
 /* INIT */
 applyStream();
