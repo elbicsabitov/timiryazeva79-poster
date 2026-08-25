@@ -70,32 +70,6 @@
 /* =========================================================================
    APPLE STYLE
    ========================================================================= */
-[data-style="apple"] {
-  --bg-base: #000000;
-  --bg-overlay: rgba(0,0,0,0.0);
-  --backdrop-image: none;
-
-  --glass-bg: rgba(28,28,30,0.85);
-  --glass-bg-strong: rgba(44,44,46,1);
-  --glass-bg-weak: rgba(20,20,22,0.6);
-  --glass-border: rgba(255,255,255,0.08);
-  --glass-rim: rgba(255,255,255,0.22);
-  --glass-blur: 40px;
-  --glass-blur-strong: 60px;
-
-  --accent: var(--brand-pink);
-  --accent-hover: var(--brand-pink-hot);
-  --accent-soft: rgba(228,0,135,0.16);
-  --on-accent: #ffffff;
-
-  --text-primary: #f5f5f7;
-  --text-secondary: rgba(245,245,247,0.66);
-  --text-tertiary: rgba(245,245,247,0.42);
-
-  --live-dot: var(--brand-pink);
-  --shadow-lg: 0 30px 80px rgba(0,0,0,0.85), 0 8px 24px rgba(0,0,0,0.6);
-  --shadow-md: 0 14px 36px rgba(0,0,0,0.7);
-}
 
 
 /* =========================================================================
@@ -317,13 +291,6 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   transition: opacity 800ms ease;
   pointer-events: none;
 }
-[data-style="apple"] .dynamic-backdrop { opacity: 0.42; }
-[data-style="apple"] .dynamic-backdrop::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center top, transparent 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.95) 100%);
-}
 
 /* =========================================================================
    APP SHELL
@@ -359,11 +326,6 @@ body[data-menu="open"] .sidebar {
   transform: translateX(0);
   visibility: visible;
   box-shadow: 24px 0 80px rgba(0, 0, 0, 0.4);
-}
-[data-style="apple"] .sidebar {
-  background: rgba(0,0,0,0.78);
-  backdrop-filter: blur(40px) saturate(1.4);
-  -webkit-backdrop-filter: blur(40px) saturate(1.4);
 }
 
 /* Скрим под открытым меню */
@@ -419,19 +381,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   color: white;
   font-weight: 600;
 }
-[data-style="apple"] .sb-item[aria-current="page"] {
-  background: rgba(255,255,255,0.10);
-  color: var(--text-primary);
-  position: relative;
-}
-[data-style="apple"] .sb-item[aria-current="page"]::before {
-  content: "";
-  position: absolute;
-  left: -8px; top: 50%; transform: translateY(-50%);
-  width: 3px; height: 22px;
-  background: var(--accent);
-  border-radius: 2px;
-}
 .sb-item svg {
   width: 18px; height: 18px; flex: 0 0 18px;
   stroke: currentColor; fill: none; stroke-width: 1.7;
@@ -462,11 +411,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   margin: 0 calc(var(--content-pad) * -1);
   padding-left: var(--content-pad);
   padding-right: var(--content-pad);
-}
-[data-style="apple"] .topbar {
-  background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.0));
-  backdrop-filter: blur(30px) saturate(1.4);
-  -webkit-backdrop-filter: blur(30px) saturate(1.4);
 }
 .tb-spacer { flex: 1; }
 
@@ -538,16 +482,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 }
 .tb-points:hover { background: var(--glass-bg); }
 .tb-points svg { width: 15px; height: 15px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.tb-points[data-chest="true"]::after {
-  content: "";
-  position: absolute;
-  top: 4px; right: 6px;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--brand-yellow);
-  box-shadow: 0 0 0 0 rgba(255,199,0,0.6);
-  animation: pulse 1.6s infinite;
-}
 .tb-points-float {
   position: absolute;
   right: 12px; top: -8px;
@@ -626,20 +560,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.live-viewers {
-  margin-left: auto;
-  padding: 5px 12px;
-  border-radius: var(--r-pill);
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(255,255,255,0.9);
-  font-size: 12px;
-  font-weight: 600;
-  font-feature-settings: "tnum";
-  display: inline-flex; align-items: center; gap: 7px;
-}
-.live-viewers svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .live-screen-meta {
   position: absolute; left: 22px; right: 22px; bottom: 18px;
   z-index: 2;
@@ -687,38 +607,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
   border-top: 1px solid var(--glass-border);
 }
-[data-style="apple"] .live-info { background: rgba(28,28,30,0.95); }
 .live-next { font-size: 13.5px; color: var(--text-secondary); min-width: 0; }
 .live-next strong { color: var(--text-primary); font-weight: 600; }
-.live-info-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; flex: 0 0 auto; }
 .btn-live {
   background: var(--accent);
   color: white;
   box-shadow: 0 8px 22px rgba(228,0,135,0.35);
 }
 .btn-live:hover { background: var(--accent-hover); }
-
-/* Бонус-сундук — механика Twitch: появляется у эфира раз в 15 минут */
-.chest-btn {
-  display: none;
-  align-items: center; gap: 8px;
-  padding: 10px 16px;
-  border-radius: var(--r-pill);
-  background: var(--brand-yellow);
-  color: #3a2a00;
-  font-weight: 700;
-  font-size: 13px;
-  box-shadow: 0 8px 22px rgba(255,199,0,0.35);
-  transition: transform var(--t-fast);
-  min-height: 44px;
-}
-.chest-btn[data-ready="true"] { display: inline-flex; animation: chestPop 500ms cubic-bezier(.2,.8,.2,1); }
-.chest-btn:hover { transform: scale(1.04); }
-.chest-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-@keyframes chestPop {
-  0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
 
 /* Промоблок — рекламное место справа от эфира: ОДНА статичная панель без
    картинок-креативов, чтобы сразу читалась как рекламный блок (волна DFM
@@ -766,35 +662,49 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 13px 14px;
+  gap: 10px;
+  padding: 13px 12px;
   border-radius: var(--r-lg);
   border: 1px solid var(--glass-border);
   background: var(--glass-bg-strong);
   box-shadow: var(--shadow-md);
 }
-[data-style="apple"] .soc-card { background: rgba(28,28,30,0.95); }
 [data-style="light"] .soc-card { background: #ffffff; box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border); }
 /* Глифы соцсетей типографикой (как полоса РМГ до официальных векторов, RUTV-133) */
 .soc-btn {
-  width: 52px; height: 52px;
+  /* 46px: пять кругов (+Like/RuTube, правка Марго 25.08) в колонке 300px */
+  width: 46px; height: 46px;
   border-radius: 50%;
   display: grid; place-items: center;
   background: var(--glass-bg-weak);
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
-  font-size: 13.5px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: -0.01em;
   transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast), border-color var(--t-fast);
 }
+.soc-btn-sm { font-size: 8.5px; letter-spacing: 0.02em; }
 .soc-btn:hover { background: var(--accent); border-color: transparent; color: #fff; transform: translateY(-2px); }
 
 /* =========================================================================
    ТЕЛЕПРОГРАММА — расписание эфира на странице «Программы»
    (правка Марго 12.08, #614227)
    ========================================================================= */
-.sched { margin-bottom: 48px; }
+/* Раскладка «Программ»: сетка программ слева (поднята), телепрограмма —
+   блоком справа (правка Марго 25.08, DFM #617118 п.5) */
+.programs-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 8px 36px;
+  align-items: start;
+}
+.programs-main { min-width: 0; }
+@media (max-width: 1100px) {
+  /* Узко: программы первыми, расписание следом */
+  .programs-layout { grid-template-columns: 1fr; gap: 40px; }
+}
+.sched { min-width: 0; }
 .sched-days { display: flex; gap: 8px; margin: 2px 0 16px; flex-wrap: wrap; }
 .sched-list {
   border-radius: var(--r-lg);
@@ -803,16 +713,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   overflow: hidden;
-  max-width: 980px;
 }
-[data-style="apple"] .sched-list { background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 [data-style="light"] .sched-list { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
 .sched-row {
   display: grid;
-  grid-template-columns: 72px 1fr auto;
-  gap: 16px;
+  grid-template-columns: 52px 1fr auto;
+  gap: 12px;
   align-items: center;
-  padding: 13px 20px;
+  padding: 12px 16px;
 }
 .sched-row + .sched-row { border-top: 1px solid var(--glass-border); }
 .sched-time { font-size: 14px; font-weight: 700; font-feature-settings: "tnum"; color: var(--text-secondary); }
@@ -839,7 +747,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
 }
-[data-style="apple"] .contact-card { background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 [data-style="light"] .contact-card { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
 .contact-card h3 { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; }
 .contact-card p { font-size: 13.5px; color: var(--text-secondary); line-height: 1.8; }
@@ -1100,12 +1007,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   position: relative;
 }
 .card-tv:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-[data-style="apple"] .card-tv {
-  background: rgba(28,28,30,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-[data-style="apple"] .card-tv:hover { transform: scale(1.04); }
 .card-tv-thumb {
   aspect-ratio: 16 / 9;
   background-size: cover; background-position: center;
@@ -1232,9 +1133,10 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 }
 
 /* CARD: Программа — радийная плитка (видеоподкаст) */
-.card-program { flex: 0 0 210px; scroll-snap-align: start; cursor: pointer; }
+.card-program { flex: 0 0 232px; scroll-snap-align: start; cursor: pointer; }
 .card-program-art {
-  aspect-ratio: 1 / 1;
+  /* 4:3 — «иконки чуть горизонтальные» (правка Марго 25.08, DFM #617118 п.6) */
+  aspect-ratio: 4 / 3;
   border-radius: var(--r-lg);
   position: relative;
   overflow: hidden;
@@ -1261,7 +1163,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   text-transform: uppercase;
 }
 .card-program-abbr {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 800;
   color: rgba(255,255,255,0.95);
   letter-spacing: -0.02em;
@@ -1269,6 +1171,17 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   text-wrap: balance;
 }
 .card-program-meta { margin-top: 10px; font-size: 12.5px; color: var(--text-tertiary); }
+/* Краткое описание — по образцу ru.tv/programms (правка Марго 25.08, п.6) */
+.card-program-desc {
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* CARD: Artist (round avatar) */
 .card-artist { flex: 0 0 160px; scroll-snap-align: start; cursor: pointer; text-align: center; }
@@ -1281,7 +1194,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   transition: transform var(--t-fast);
   box-shadow: var(--shadow-md);
 }
-[data-style="apple"] .card-artist-avatar { border-radius: 50%; }
 .card-artist:hover .card-artist-avatar { transform: scale(1.05); }
 .card-artist-name {
   font-size: 14px;
@@ -1331,11 +1243,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   transition: background var(--t-fast), transform var(--t-fast);
 }
 .card-news:hover { background: var(--glass-bg-strong); transform: translateY(-2px); }
-[data-style="apple"] .card-news {
-  background: rgba(28,28,30,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
 /* Правка редакции №6: миниатюры новостей — квадрат 1:1 (единый ресайз) */
 .card-news-thumb {
   border-radius: 10px;
@@ -1388,8 +1295,20 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px 24px;
+  /* Нумерация вертикально (правка Марго 25.08, DFM #617118 п.1):
+     №1-5 — левый столбец, №6-10 — правый; полная двадцатка — 1-10 / 11-20 */
+  grid-auto-flow: column;
+  grid-template-rows: repeat(5, auto);
 }
-@media (max-width: 1100px) { .chart-grid { grid-template-columns: 1fr; } }
+#chartGridFull { grid-template-rows: repeat(10, auto); }
+@media (min-width: 1101px) {
+  /* Верхняя строка правого столбца — без разделителя (он «между», не «над») */
+  #chartGrid .chart-row:nth-child(6)::before,
+  #chartGridFull .chart-row:nth-child(11)::before { display: none; }
+}
+@media (max-width: 1100px) {
+  .chart-grid { grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: none; }
+}
 
 .chart-row {
   display: grid;
@@ -1459,7 +1378,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   box-shadow: var(--shadow-md);
   margin-bottom: 40px;
 }
-[data-style="apple"] .points-hero { background: rgba(28,28,30,0.95); }
 .points-balance-label {
   font-size: 12px;
   font-weight: 700;
@@ -1518,7 +1436,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   display: flex;
   flex-direction: column;
 }
-[data-style="apple"] .gift-card { background: rgba(28,28,30,0.95); }
 .gift-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 .gift-art {
   aspect-ratio: 16 / 10;
@@ -1579,7 +1496,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   cursor: pointer;
   transition: background var(--t-fast), transform var(--t-fast);
 }
-[data-style="apple"] .afisha-card { background: rgba(28,28,30,0.95); }
 .afisha-card:hover { transform: translateY(-2px); }
 .afisha-date {
   text-align: center;
@@ -1667,8 +1583,8 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
    (auto-fill ~170-210px вместо трёх крупных колонок) */
 .program-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 20px 14px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 22px 16px;
 }
 .program-grid .card-program { flex: none; }
 .program-grid .card-program-art { padding: 12px; }
@@ -1776,7 +1692,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   transform: translateY(0);
   pointer-events: auto;
 }
-[data-style="apple"] .pip { background: rgba(28,28,30,0.95); }
 /* Перетаскивание окошка в любой угол (правка Марго 12.08 — «как в VK Видео»):
    тянуть можно мышью и пальцем; отпустил — примагнитилось к ближайшему углу.
    touch-action: none — иначе палец скроллит страницу вместо переноса */
@@ -1975,8 +1890,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   .tb-logo { height: 30px; }
   .tb-search { min-width: 0; }
   .live-info { flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
-  .live-info-actions { margin-left: 0; width: 100%; }
-  .live-info-actions .btn-live { flex: 1; justify-content: center; }
   .card-clip-wide { flex: 0 0 82%; min-width: 0; }
   .card-news { flex: 0 0 88%; min-width: 0; }
   .promo-banner { flex: 0 0 82%; min-width: 0; }
@@ -2064,11 +1977,12 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
         Программы
       </button>
-      <!-- Ностальгия — подборки по годам, с главной в отдельную вкладку
+      <!-- Подборки (экс-«Ностальгия», переименование — правка Марго 25.08,
+           DFM #617118 п.7) — подборки по годам, с главной в отдельную вкладку
            (правка Марго 12.08, #614227; название рабочее — за редакцией) -->
       <button class="sb-item" data-route="nostalgia">
         <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 3"/></svg>
-        Ностальгия
+        Подборки
       </button>
       <!-- Артисты / Ведущие — спрятаны отдельными пунктами меню (правка Марго
            27.07, #606696); «Каналы» из меню убраны (правка Марго 12.08) -->
@@ -2104,10 +2018,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       <button class="tweaks-btn" data-style-target="glass" aria-pressed="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8a7 7 0 1 1 14 0v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z"/><path d="M8 12h8" opacity="0.5"/></svg>
         Glass
-      </button>
-      <button class="tweaks-btn" data-style-target="apple" aria-pressed="false">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.86-3.08.4-1.09-.47-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-        Apple Dark
       </button>
       <button class="tweaks-btn" data-style-target="light" aria-pressed="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -2152,7 +2062,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <input type="search" name="site-search" placeholder="Найти клип, программу или артиста" aria-label="Поиск">
       </label>
       <!-- Баллы зрителя: копятся за просмотр, клик — Витрина подарков -->
-      <button class="tb-points" id="tbPoints" data-route="gifts" data-chest="false" aria-label="Ваши баллы — открыть Витрину подарков">
+      <button class="tb-points" id="tbPoints" data-route="gifts" aria-label="Ваши баллы — открыть Витрину подарков">
         <svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
         <span id="tbPointsVal">1 240</span>
         <span class="tb-points-float" id="tbPointsFloat">+10</span>
@@ -2172,7 +2082,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
             <div class="live-screen-top">
               <span class="live-badge"><span class="live-pulse"></span>В эфире</span>
               <span class="live-tag" id="liveTag">RU.TV — основной эфир</span>
-              <span class="live-viewers"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span id="liveViewers">12 407</span></span>
+              <!-- Счётчик просмотров убран (правка Марго 25.08, DFM #617118 п.4) -->
             </div>
             <div class="live-play"><span class="live-play-btn" id="livePlayIcon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
             <div class="live-screen-meta">
@@ -2181,14 +2091,9 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
             </div>
           </div>
           <figcaption class="live-info">
+            <!-- Кнопки «Смотреть эфир» и бонус-сундук убраны (правка Марго 25.08,
+                 DFM #617118 п.3): полоса оставлена анонсу, эфир кликом по экрану -->
             <div class="live-next">Далее в 22:00 — <strong>Супер 20: главный чарт страны</strong></div>
-            <div class="live-info-actions">
-              <button class="chest-btn" id="chestBtn" data-ready="false" aria-label="Забрать бонусные баллы">
-                <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
-                Забрать +50
-              </button>
-              <button class="btn btn-live" id="liveWatchBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть эфир</button>
-            </div>
           </figcaption>
         </figure>
 
@@ -2222,13 +2127,16 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
           <a class="soc-btn" href="#" aria-label="ВКонтакте">VK</a>
           <a class="soc-btn" href="#" aria-label="Одноклассники">OK</a>
           <a class="soc-btn" href="#" aria-label="Мессенджер MAX">MAX</a>
+          <!-- +Like и RuTube (правка Марго 25.08, DFM #617118 п.2) -->
+          <a class="soc-btn" href="#" aria-label="Like">Like</a>
+          <a class="soc-btn soc-btn-sm" href="#" aria-label="RuTube">RUTUBE</a>
         </nav>
         </div>
       </div>
 
       <!-- Порядок главной — правка Марго 12.08 (#614227) поверх 27.07 (#606696):
            карусель баннеров сразу под окном прямого эфира, дальше Свежие новости →
-           Программы → Супер-20. Подборки по годам ушли во вкладку «Ностальгия»,
+           Программы → Супер-20. Подборки по годам ушли во вкладку «Подборки»,
            «Новые клипы» с главной убраны; Артисты / Ведущие — пунктами меню,
            «Каналы» из меню убраны, детский поток исключён -->
       <section class="row-section promo-strip-section" aria-label="Промо">
@@ -2262,7 +2170,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <div class="chart-grid" id="chartGrid"></div>
       </section>
 
-      <!-- Тематические рубрики 80-е/2000-е переехали во вкладку «Ностальгия»,
+      <!-- Тематические рубрики 80-е/2000-е переехали во вкладку «Подборки»,
            «Новые клипы» с главной убраны (правка Марго 12.08, #614227) -->
 
       <!-- Полоса брендов РМГ (правка 603088): семейство станций холдинга.
@@ -2329,6 +2237,8 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <a href="#">ВКонтакте</a>
         <a href="#">Одноклассники</a>
         <a href="#">MAX</a>
+        <a href="#">Like</a>
+        <a href="#">RuTube</a>
         <!-- Правка 603090: Контакты и Выдача призов — после MAX -->
         <a href="#">Контакты</a>
         <a href="#">Выдача призов</a>
@@ -2377,20 +2287,25 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <h2>Программы</h2>
         <p>Шоу и рубрики RU.TV в формате видеоподкастов — смотрите выпуски в любое время.</p>
       </div>
-      <!-- Телепрограмма — расписание эфира (правка Марго 12.08, #614227).
-           Вечерний прайм собран из заявленных времён программ; сетка демо -->
-      <section class="sched" aria-label="Телепрограмма">
-        <div class="row-head">
-          <h2 class="row-title">Телепрограмма</h2>
+      <!-- Программы подняты, телепрограмма — блоком справа (правка Марго 25.08,
+           DFM #617118 п.5). Состав и краткие описания программ — по
+           ru.tv/programms (п.6); сетка расписания — демо -->
+      <div class="programs-layout">
+        <div class="programs-main">
+          <div class="row-head">
+            <h2 class="row-title">Все программы</h2>
+          </div>
+          <div class="program-grid" id="programGrid"></div>
         </div>
-        <div class="sched-days" id="schedDays" role="tablist" aria-label="День недели"></div>
-        <div class="sched-list" id="schedList"></div>
-        <p class="sched-note">Новости RU.TV — в начале каждого часа. Сетка — демо: программу передач пришлёт редакция.</p>
-      </section>
-      <div class="row-head">
-        <h2 class="row-title">Все программы</h2>
+        <aside class="sched" aria-label="Телепрограмма">
+          <div class="row-head">
+            <h2 class="row-title">Телепрограмма</h2>
+          </div>
+          <div class="sched-days" id="schedDays" role="tablist" aria-label="День недели"></div>
+          <div class="sched-list" id="schedList"></div>
+          <p class="sched-note">Новости RU.TV — в начале каждого часа. Сетка — демо: программу передач пришлёт редакция.</p>
+        </aside>
       </div>
-      <div class="program-grid" id="programGrid"></div>
     </section>
 
     <!-- ============================================================ -->
@@ -2441,10 +2356,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
             <span><strong>+10</strong> за каждые 5 минут просмотра эфира</span>
           </div>
           <div class="points-rule">
-            <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
-            <span><strong>+50</strong> бонус-сундук у эфира — раз в 15 минут</span>
-          </div>
-          <div class="points-rule">
             <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
             <span><strong>×2</strong> за серию — смотрите эфир несколько дней подряд</span>
           </div>
@@ -2454,14 +2365,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
     </section>
 
     <!-- ============================================================ -->
-    <!-- PAGE: Ностальгия — подборки по годам (правка Марго 12.08:     -->
+    <!-- PAGE: Подборки — по годам (правка Марго 12.08; имя — 25.08 п.7) -->
     <!-- с главной в отдельную вкладку; название рабочее — за          -->
     <!-- редакцией). «Каналы» той же правкой убраны из меню — страница -->
     <!-- снята вместе с пунктом                                        -->
     <!-- ============================================================ -->
     <section class="page" data-page-id="nostalgia">
       <div class="page-head">
-        <h2>Ностальгия</h2>
+        <h2>Подборки</h2>
         <p>Подборки по годам: золотая эстрада 80-х и главные хиты нулевых — эфир рубрики и клипы.</p>
       </div>
       <section class="row-section">
@@ -2594,10 +2505,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8a7 7 0 1 1 14 0v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z"/><path d="M8 12h8" opacity="0.5"/></svg>
       Glass
     </button>
-    <button class="tweaks-btn" data-style-target="apple" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.86-3.08.4-1.09-.47-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-      Apple Dark
-    </button>
     <button class="tweaks-btn" data-style-target="light" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       Light
@@ -2626,7 +2533,7 @@ const mainLive = {
 const subChannels = [
   { id: 'retro', name: '80-е',  tag: 'Золотая эстрада',    img: 'assets/rutv/Rectangle 4322-13.png',
     title: 'Эфир 80-х', sub: 'Золотая отечественная эстрада и любимые клипы' },
-  { id: '2000s', name: '2000-е', tag: 'Ностальгия',        img: 'assets/rutv/Rectangle 4322-14.png',
+  { id: '2000s', name: '2000-е', tag: 'Хиты нулевых',      img: 'assets/rutv/Rectangle 4322-14.png',
     title: 'Хиты 2000-х', sub: 'Главные песни нулевых в одном потоке' },
 ];
 
@@ -2653,8 +2560,8 @@ const clips2000s = [
 const promoStrip = [
   { kicker: 'Премия', title: 'Премия РУ.ТВ 2026', sub: 'Голосование открыто — выбирай любимых артистов', cta: 'Голосовать',
     grad: 'linear-gradient(115deg,#E40087,#5a0f3f)' },
-  { kicker: 'Концерт', title: 'Звёзды Хайпа · LIVE Арена', sub: '6 декабря — большой концерт топ-артистов', cta: 'Билеты',
-    img: 'assets/rutv/Rectangle 4322-2.png' },
+  { kicker: 'Концерт', title: 'Дискотека Дискотек · LIVE Арена', sub: '6 декабря — большой концерт звёзд 90-х и 00-х', cta: 'Билеты',
+    img: 'assets/rutv/Rectangle 4322-3.png' },
   { kicker: 'Приложение', title: 'RU.TV всегда с собой', sub: 'Эфир, клипы и баллы зрителя — в приложении', cta: 'Скачать',
     grad: 'linear-gradient(115deg,#21B5FF,#0d2545)' },
   { kicker: 'Витрина', title: 'Меняй баллы на подарки', sub: 'Худи, билеты и привет в эфире — за баллы', cta: 'К витрине',
@@ -2675,16 +2582,29 @@ const newClips = [
 ];
 
 // Программы RU.TV — 9 плиток-видеоподкастов (названия демо — сетку пришлёт канал)
+/* Состав и описания — реальная линейка ru.tv/programms (правка Марго 25.08,
+   DFM #617118 п.6); описания сжаты из текстов сайта, ведущие настоящие.
+   Времена: «Статус: в сети» будни 13:00 и «Дискотека Дискотек» вс 22:00 —
+   с сайта; остальные слоты — демо до сетки от редакции */
 const programs = [
-  { name: 'Утро на RU.TV',    meta: 'Видеоподкаст · 128 выпусков',    time: 'Будни 07:00', grad: 'linear-gradient(135deg,#FF9D2E,#E40087)' },
-  { name: 'Супер 20',         meta: 'Чарт · 46 выпусков',             time: 'Пт 19:00',    grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
-  { name: 'Стол заказов',     meta: 'Интерактив · 210 выпусков',      time: 'Ежедневно',   grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
-  { name: 'Новости RU.TV',    meta: 'Информация · короткий формат',   time: 'Каждый час',  grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
-  { name: 'Звёзды Хайпа',     meta: 'Шоу · 24 выпуска',               time: 'Сб 20:00',    grad: 'linear-gradient(135deg,#FF4D8F,#7a1245)' },
-  { name: 'Караоке-батл',     meta: 'Шоу · 58 выпусков',              time: 'Вс 18:00',    grad: 'linear-gradient(135deg,#7a2be2,#1a0d30)' },
-  { name: 'Дискотека 2000-х', meta: 'Музыкальный блок · 90 выпусков', time: 'Пт 22:00',    grad: 'linear-gradient(135deg,#FFC700,#B00068)' },
-  { name: 'Закулисье',        meta: 'Бэкстейдж · 33 выпуска',         time: 'Ср 21:00',    grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
-  { name: 'Русский чарт',     meta: 'Хит-парад · 112 выпусков',       time: 'Вт 19:00',    grad: 'linear-gradient(135deg,#E40087,#21B5FF)' },
+  { name: 'Супер 20',                meta: 'Хит-парад',                time: 'Пт 19:00',    grad: 'linear-gradient(135deg,#E40087,#5a0f3f)',
+    desc: 'Главный хит-парад RU.TV: как расставить артистов по местам, решают голоса зрителей. Итоги недели подводит Софья Курдюкова.' },
+  { name: 'Тема',                    meta: 'Ток-шоу · прямой эфир',    time: 'Будни',       grad: 'linear-gradient(135deg,#FF9D2E,#E40087)',
+    desc: 'Новый день — новая тема: ведущие обсуждают самое обсуждаемое вместе с экспертами, блогерами и зрителями.' },
+  { name: 'Статус: в сети',          meta: 'Интерактив · прямой эфир', time: 'Будни 13:00', grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)',
+    desc: 'Два часа приветов и поздравлений в прямом эфире: розыгрыши, подарки и эксклюзивные интервью с артистами.' },
+  { name: 'RUновости',               meta: 'Новости шоу-бизнеса',      time: 'Ежедневно',   grad: 'linear-gradient(135deg,#21B5FF,#0d2545)',
+    desc: 'Подробности жизни звёзд и репортажи из-за кулис концертов, премий и светских вечеринок — из первых уст.' },
+  { name: 'Дискотека Дискотек',      meta: 'Музыкальное шоу',          time: 'Вс 22:00',    grad: 'linear-gradient(135deg,#FFC700,#B00068)',
+    desc: 'Только лучшая музыка 90-х и 00-х, а в гостях — самые яркие звёзды дискотек. Ведущий — Антон Юрьев.' },
+  { name: 'Топ-чарт Rocket Records', meta: 'Чарт новых имён',          time: 'Сб',          grad: 'linear-gradient(135deg,#FF4D8F,#7a1245)',
+    desc: 'Открываем амбициозных и талантливых артистов и показываем лучшие клипы молодых имён.' },
+  { name: 'Сияй по-звёздному',       meta: 'Бьюти-проект',             time: 'Ср',          grad: 'linear-gradient(135deg,#7a2be2,#1a0d30)',
+    desc: 'Тренды в макияже, уходе и причёсках с Катей Голден: образы, как в клипах у любимых звёзд.' },
+  { name: 'Личный вопрос',           meta: 'Интервью',                 time: 'Чт',          grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)',
+    desc: 'Психологический разбор личности артистов: что скрывают песни, клипы и образы звёзд.' },
+  { name: 'Дотянись до звёзд',       meta: 'Фитнес',                   time: 'Вт',          grad: 'linear-gradient(135deg,#E40087,#21B5FF)',
+    desc: 'Тренировки под любимые клипы с Самирой Мустафаевой: топовые упражнения и спортивная мотивация.' },
 ];
 
 // Супер 20 — главный чарт RU.TV
@@ -2738,7 +2658,7 @@ const hosts = [
 // Новости RU.TV (правка 603079: заголовок + подзаголовок-лид)
 const news = [
   { tag: 'Премьера', title: 'Сергей Лазарев представил новый клип «Шёпотом»', lead: 'Премьера прошла в прямом эфире — клип уже в ротации и в разделе «Видео»', time: '15 мин назад', source: 'RU.TV News', img: 'assets/rutv/Rectangle 4322-16.png' },
-  { tag: 'Концерт', title: 'Звёзды Хайпа: большой концерт 6 декабря', lead: 'На сцене LIVE Арены — Лепс, Билан, Лобода и Меладзе; билеты уже в продаже', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-2.png' },
+  { tag: 'Концерт', title: 'Дискотека Дискотек: большой концерт 6 декабря', lead: 'На сцене LIVE Арены — звёзды 90-х и нулевых; билеты уже в продаже', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-9.png' },
   { tag: 'Чарт', title: 'JONY возглавил Супер 20', lead: '«Комета» держит первую строчку главного чарта четвёртую неделю подряд', time: '1 ч назад', source: 'RU.TV Chart', img: 'assets/rutv/Rectangle 4322-21.jpg' },
   { tag: 'Премьера', title: 'Полевой — авторский сериал стартовал на RU.TV', lead: 'Музыкальная история о пути молодого артиста — новые серии каждую неделю', time: '2 ч назад', source: 'RU.TV', img: 'assets/rutv/image 2.png' },
   { tag: 'Сервис', title: 'Запущен «Статус: В сети»', lead: 'Отправляйте приветы и поздравления прямо в эфир — из приложения и с сайта', time: '3 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-15.png' },
@@ -2747,9 +2667,9 @@ const news = [
 
 // Афиша — вкладка внутри Новостей
 const afisha = [
-  { day: '20', month: 'сен', title: 'Стол заказов — юбилейный выпуск со зрителями', place: 'Студия RU.TV · Москва', cta: 'Участвовать' },
-  { day: '03', month: 'окт', title: 'Дискотека 2000-х · Live', place: 'Санкт-Петербург · Ледовый дворец', cta: 'Билеты' },
-  { day: '06', month: 'дек', title: 'Звёзды Хайпа · LIVE Арена', place: 'Москва · LIVE Арена', cta: 'Билеты' },
+  { day: '20', month: 'сен', title: 'Статус: в сети — выпуск со зрителями в студии', place: 'Студия RU.TV · Москва', cta: 'Участвовать' },
+  { day: '03', month: 'окт', title: 'Дискотека Дискотек · Live', place: 'Санкт-Петербург · Ледовый дворец', cta: 'Билеты' },
+  { day: '06', month: 'дек', title: 'Дискотека Дискотек · LIVE Арена', place: 'Москва · LIVE Арена', cta: 'Билеты' },
   { day: '31', month: 'дек', title: 'Новогодний марафон RU.TV', place: 'Прямой эфир · весь день', cta: 'Напомнить' },
   { day: '14', month: 'фев', title: 'Романтика нулевых — большой концерт', place: 'Москва · ВТБ Арена', cta: 'Билеты' },
   { day: '—', month: '2027', title: 'Премия РУ.ТВ 2027', place: 'Дата и площадка уточняются', cta: 'Подробнее' },
@@ -2758,17 +2678,17 @@ const afisha = [
 // Видео — страница «Видео» (новинки = newClips)
 const videos = [
   { tag: 'Клип', name: 'Сергей Лазарев — Шёпотом', dur: '3:01', img: 'assets/rutv/Rectangle 4322-16.png' },
-  { tag: 'Шоу', name: 'Звёзды Хайпа · выпуск 12', dur: '52:10', img: 'assets/rutv/Rectangle 4322-2.png' },
-  { tag: 'Концерт', name: 'Дискотека 2000-х · Live', dur: '1:48:20', img: 'assets/rutv/Rectangle 4322-9.png' },
+  { tag: 'Шоу', name: 'Личный вопрос · выпуск 12', dur: '52:10', img: 'assets/rutv/Rectangle 4322-10.png' },
+  { tag: 'Концерт', name: 'Дискотека Дискотек · Live', dur: '1:48:20', img: 'assets/rutv/Rectangle 4322-9.png' },
   { tag: 'Клип', name: 'JONY — Комета', dur: '3:06', img: 'assets/rutv/Rectangle 4322-21.jpg' },
   { tag: 'Интервью', name: 'Полина Гагарина — о новом туре', dur: '24:15', img: 'assets/rutv/Rectangle 4322-18.png' },
   { tag: 'Клип', name: 'Macan — Пополам', dur: '3:18', img: 'assets/rutv/Rectangle 4322-23.jpg' },
-  { tag: 'Шоу', name: 'Караоке-батл · финал сезона', dur: '47:02', img: 'assets/rutv/Rectangle 4322-28.jpg' },
+  { tag: 'Шоу', name: 'Караоке · большой выпуск', dur: '47:02', img: 'assets/rutv/Rectangle 4322-28.jpg' },
   { tag: 'Клип', name: 'Слава Марлоу — Снова я напиваюсь', dur: '3:25', img: 'assets/rutv/Rectangle 4322-25.jpg' },
   { tag: 'Концерт', name: 'Ретро-вечер: золотая эстрада', dur: '1:32:44', img: 'assets/rutv/Rectangle 4322-13.png' },
   { tag: 'Клип', name: 'MIYAGI & Andy Panda — Минимал', dur: '3:04', img: 'assets/rutv/Rectangle 4322-22.jpg' },
   { tag: 'Интервью', name: 'Дима Билан — о новом альбоме', dur: '18:40', img: 'assets/rutv/Rectangle 4322-19.jpg' },
-  { tag: 'Шоу', name: 'Стол заказов · лучшие моменты', dur: '35:12', img: 'assets/rutv/Rectangle 4322-30.jpg' },
+  { tag: 'Шоу', name: 'Статус: в сети · лучшие моменты', dur: '35:12', img: 'assets/rutv/Rectangle 4322-30.jpg' },
 ];
 
 // Витрина подарков — обмен баллов
@@ -2865,6 +2785,7 @@ function programCard(p) {
         <span class="card-program-abbr">${p.name}</span>
       </div>
       <div class="card-program-meta">${p.meta}</div>
+      <p class="card-program-desc">${p.desc}</p>
     </article>`;
 }
 function renderPrograms() {
@@ -3003,6 +2924,9 @@ document.querySelectorAll('.tweaks-btn').forEach(btn => {
   btn.addEventListener('click', () => applyStyle(btn.dataset.styleTarget));
 });
 function applyStyle(s) {
+  // Стилей два — Glass и белый (правка Марго 25.08, DFM #617118). Сохранённый
+  // «apple» из старых версий гасим в glass: localStorage шарится между file://
+  if (s !== 'light') s = 'glass';
   root.dataset.style = s;
   localStorage.setItem(STYLE_KEY, s);
   document.querySelectorAll('.tweaks-btn').forEach(b => {
@@ -3019,7 +2943,7 @@ const titles = {
   chart: 'Супер 20',
   news: 'Новости',
   programs: 'Программы',
-  nostalgia: 'Ностальгия',
+  nostalgia: 'Подборки', // экс-«Ностальгия» — переименование Марго 25.08
   artists: 'Артисты',
   hosts: 'Ведущие',
   video: 'Видео',
@@ -3132,11 +3056,6 @@ document.getElementById('pipScreen').addEventListener('click', e => {
   if (pipWasDragged) { pipWasDragged = false; return; } // это был перенос, не клик
   goLive();
 });
-document.getElementById('liveWatchBtn').addEventListener('click', () => {
-  playing = true;
-  pipDismissed = false;
-  renderPlayState();
-});
 liveScreen.addEventListener('click', () => {
   playing = !playing;
   renderPlayState();
@@ -3210,16 +3129,13 @@ document.addEventListener('click', e => {
 
 /* =========================================================================
    БАЛЛЫ ЗРИТЕЛЯ — механика Twitch channel points.
-   В проде: +10 за 300 сек просмотра, сундук +50 раз в 900 сек.
-   Демо-таймеры ускорены (60/90 сек), чтобы механика была видна сразу.
+   В проде: +10 за 300 сек просмотра; демо-таймер ускорен (60 сек), чтобы
+   механика была видна сразу. Бонус-сундук у эфира убран (Марго 25.08, п.3).
    ========================================================================= */
 const PTS_KEY = 'showcase.points';
 const TICK_TOTAL = 60;
-const CHEST_TOTAL = 90;
 let pts = parseInt(localStorage.getItem(PTS_KEY) || '1240', 10);
 let tickLeft = TICK_TOTAL;
-let chestLeft = CHEST_TOTAL;
-let chestReady = false;
 
 const fmtPts = n => n.toLocaleString('ru-RU');
 const fmtTime = sec => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
@@ -3231,8 +3147,7 @@ function renderPoints(gain) {
   document.getElementById('pointsProgressBar').style.width = progress + '%';
   document.getElementById('pointsProgressLabel').textContent =
     playing ? `+10 баллов через ${fmtTime(tickLeft)} просмотра эфира` : 'Включите эфир, чтобы копить баллы';
-  document.getElementById('pipPointsText').textContent =
-    chestReady ? 'Сундук ждёт!' : `+10 через ${fmtTime(tickLeft)}`;
+  document.getElementById('pipPointsText').textContent = `+10 через ${fmtTime(tickLeft)}`;
   document.querySelectorAll('.gift-buy').forEach(b => { b.disabled = pts < +b.dataset.cost; });
   if (gain) {
     const f = document.getElementById('tbPointsFloat');
@@ -3253,27 +3168,8 @@ setInterval(() => {
     renderPoints(10);
     return;
   }
-  if (!chestReady) {
-    chestLeft--;
-    if (chestLeft <= 0) {
-      chestReady = true;
-      document.getElementById('chestBtn').dataset.ready = 'true';
-      document.getElementById('tbPoints').dataset.chest = 'true';
-    }
-  }
   renderPoints();
 }, 1000);
-
-document.getElementById('chestBtn').addEventListener('click', () => {
-  if (!chestReady) return;
-  pts += 50;
-  chestReady = false;
-  chestLeft = CHEST_TOTAL;
-  document.getElementById('chestBtn').dataset.ready = 'false';
-  document.getElementById('tbPoints').dataset.chest = 'false';
-  renderPoints(50);
-  showToast('+50 баллов — бонус-сундук ваш!');
-});
 
 // Обмен подарков
 document.getElementById('giftGrid').addEventListener('click', e => {
@@ -3327,34 +3223,35 @@ document.querySelectorAll('#contactTabs .tabs-btn').forEach(b => {
 });
 
 /* =========================================================================
-   ТЕЛЕПРОГРАММА (правка Марго 12.08) — сетка демо; вечерний прайм собран
-   из времён, заявленных у программ (Супер 20 — Пт 19:00, Русский чарт —
-   Вт 19:00, Закулисье — Ср 21:00, Звёзды Хайпа — Сб 20:00, Караоке-батл —
-   Вс 18:00, Дискотека 2000-х — Пт 22:00, Утро на RU.TV — будни 07:00)
+   ТЕЛЕПРОГРАММА (правка Марго 12.08; 25.08 — блоком справа, программы из
+   реальной линейки ru.tv/programms). Сетка демо; закреплено с сайта:
+   «Статус: в сети» — будни 13:00-15:00, «Дискотека Дискотек» — вс 22:00,
+   «Тема» — будни в прямом эфире; остальные слоты — до сетки от редакции
    ========================================================================= */
 const schedBase = {
   budni: [
-    ['07:00', 'Утро на RU.TV', 'Прямой эфир — просыпаемся под лучшие клипы'],
-    ['10:00', 'Стол заказов', 'Интерактив: зрители выбирают клипы'],
-    ['12:00', 'Клипы: нон-стоп', 'Дневной музыкальный блок'],
-    ['15:00', 'Повтор вечернего шоу', 'Лучшее из прайма — ещё раз'],
-    ['17:00', 'Клипы: новинки', 'Свежие премьеры в ротации'],
+    ['07:00', 'Хит за хитом', 'Утренний блок клипов — без перерыва'],
+    ['10:00', 'RUновости', 'Новости шоу-бизнеса и репортажи'],
+    ['11:00', 'Хиты Дня', 'Самое горячее в ротации'],
+    ['13:00', 'Статус: в сети', 'Приветы и поздравления — прямой эфир'],
+    ['15:00', 'Тема', 'Новый день — новая тема: прямой эфир'],
+    ['17:00', 'Новинки', 'Свежие премьеры клипов'],
   ],
   weekend: [
-    ['08:00', 'Клипы: нон-стоп', 'Утренний музыкальный блок'],
-    ['10:00', 'Стол заказов', 'Интерактив: зрители выбирают клипы'],
-    ['13:00', 'Ретро-вечер: золотая эстрада', 'Повтор концерта'],
-    ['16:00', 'Клипы: новинки', 'Свежие премьеры в ротации'],
+    ['08:00', 'Хит за хитом', 'Утренний блок клипов'],
+    ['10:00', 'Караоке', 'Пой вместе с RU.TV'],
+    ['13:00', 'Хиты Дня', 'Самое горячее в ротации'],
+    ['16:00', 'Новинки', 'Свежие премьеры клипов'],
   ],
 };
 const schedEvening = {
-  1: [['19:00', 'Клипы: премьеры недели', 'Всё новое — одним блоком'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
-  2: [['19:00', 'Русский чарт', 'Хит-парад — новый выпуск'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
-  3: [['19:00', 'Клипы: по заявкам', 'Из «Стола заказов»'], ['21:00', 'Закулисье', 'Бэкстейдж съёмок RU.TV']],
-  4: [['19:00', 'Ретро-вечер: 80-е', 'Золотая эстрада'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
-  5: [['19:00', 'Супер 20', 'Главный чарт страны — прямой эфир'], ['22:00', 'Дискотека 2000-х', 'Главные песни нулевых']],
-  6: [['20:00', 'Звёзды Хайпа', 'Большое шоу — новый выпуск']],
-  0: [['18:00', 'Караоке-батл', 'Финалисты недели']],
+  1: [['19:00', 'Топ-чарт Rocket Records', 'Новые имена — новый выпуск'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  2: [['19:00', 'Дотянись до звёзд', 'Фитнес под любимые клипы'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  3: [['19:00', 'Сияй по-звёздному', 'Бьюти-проект с Катей Голден'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  4: [['19:00', 'Личный вопрос', 'Разбор личности артистов'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  5: [['19:00', 'Супер 20', 'Главный хит-парад — прямой эфир'], ['21:00', 'Вечерний плейлист', 'Хиты в прайм-тайме']],
+  6: [['20:00', 'Караоке', 'Большой субботний выпуск']],
+  0: [['18:00', 'Хиты Дня', 'Итоги недели'], ['22:00', 'Дискотека Дискотек', 'Музыка 90-х и 00-х с Антоном Юрьевым']],
 };
 const SCHED_NIGHT = ['00:00', 'Ночной эфир', 'Клипы до утра — без перерыва'];
 const SCHED_LABELS = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
