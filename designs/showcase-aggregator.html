@@ -638,55 +638,55 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
    ТЕЛЕПРОГРАММА — расписание эфира на странице «Программы»
    (правка Марго 12.08, #614227)
    ========================================================================= */
-/* Телепрограмма-матрица (схема Стаса 26.08, DFM 617725-726, референс
-   dfm.ru/schedule «в твоей стилистике»): сверху расписание строками-днями,
-   снизу блоки программ. «Сейчас» — плиткой-акцентом, как активный слот DFM */
+/* Телепрограмма (схема Стаса 26.08, DFM 617725-728, референс dfm.ru/schedule
+   + его мокап 617728 «горизонтально по дням»): сверху — лента КОЛОНОК-ДНЕЙ,
+   в каждой вертикальный список «время · название · подпись», «Сейчас» —
+   розовой строкой; снизу — блоки программ. Сегодняшняя колонка авто-в-кадре */
 .sched { min-width: 0; margin-bottom: 46px; }
-.sched-matrix { display: flex; flex-direction: column; gap: 10px; }
-.smx-row {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: 14px;
-  align-items: stretch;
-}
-.smx-day {
-  display: flex; flex-direction: column; justify-content: center; gap: 2px;
-  padding: 10px 0 10px 14px;
-  border-left: 2px solid var(--glass-border);
-}
-.smx-row[data-today="true"] .smx-day { border-left-color: var(--accent); }
-.smx-day-date { font-size: 15px; font-weight: 800; font-feature-settings: "tnum"; letter-spacing: -0.01em; }
-.smx-day-dow { font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; }
-.smx-row[data-today="true"] .smx-day-dow { color: var(--accent); font-weight: 700; }
-.smx-slots {
-  display: flex; gap: 10px;
+.sched-matrix {
+  display: flex;
+  gap: 16px;
   overflow-x: auto;
-  scrollbar-width: none;
-  padding: 1px;
+  scroll-snap-type: x proximity;
+  padding: 2px 2px 12px;
+  scrollbar-width: thin;
 }
-.smx-slots::-webkit-scrollbar { display: none; }
-.smx-slot {
-  flex: 1 0 148px;
+.smx-col {
+  flex: 0 0 368px;
   min-width: 0;
-  padding: 11px 14px 12px;
-  border-radius: var(--r-md);
-  background: var(--glass-bg);
+  scroll-snap-align: start;
+}
+.smx-col-head {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 2px 6px 10px;
+}
+.smx-col-date { font-size: 15px; font-weight: 800; font-feature-settings: "tnum"; letter-spacing: -0.01em; }
+.smx-col-dow { font-size: 12.5px; color: var(--text-tertiary); }
+.smx-col[data-today="true"] .smx-col-dow { color: var(--accent); font-weight: 700; }
+.smx-list {
+  border-radius: var(--r-lg);
   border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  overflow: hidden;
 }
-[data-style="light"] .smx-slot { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
-.smx-slot-name { font-size: 13.5px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
-.smx-slot-time { margin-top: 5px; font-size: 12px; color: var(--text-tertiary); font-feature-settings: "tnum"; display: inline-flex; align-items: center; gap: 6px; }
-.smx-slot[data-now="true"] {
-  background: var(--accent);
-  border-color: transparent;
-  box-shadow: 0 10px 26px rgba(228,0,135,0.35);
+[data-style="light"] .smx-list { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
+.smx-col[data-today="true"] .smx-list { box-shadow: var(--shadow-md), inset 0 0 0 1.5px rgba(228,0,135,0.45); }
+.smx-row {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 16px;
 }
-.smx-slot[data-now="true"] .smx-slot-name { color: #fff; }
-.smx-slot[data-now="true"] .smx-slot-time { color: rgba(255,255,255,0.85); }
-.smx-now-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: pulse 1.6s infinite; flex: 0 0 auto; }
-.sched-note { font-size: 12.5px; color: var(--text-tertiary); margin-top: 12px; }
+.smx-row + .smx-row { border-top: 1px solid var(--glass-border); }
+.smx-time { font-size: 14px; font-weight: 700; font-feature-settings: "tnum"; color: var(--text-secondary); }
+.smx-name { display: block; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.smx-meta { display: block; font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+.smx-row[data-now="true"] { background: var(--accent-soft); }
+.smx-row[data-now="true"] .smx-time { color: var(--accent); }
+.sched-note { font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
 
 /* =========================================================================
    КОНТАКТЫ + ВЫДАЧА ПРИЗОВ — страница из меню (правка Марго 12.08)
@@ -1862,7 +1862,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   .pip[data-corner="tl"] { left: 12px; top: 72px; }
   .tweaks { left: 12px; bottom: 12px; }
   .contact-grid { grid-template-columns: 1fr; }
-  .smx-row { grid-template-columns: 64px minmax(0, 1fr); gap: 10px; }
+  .smx-col { flex-basis: 316px; }
   .app-footer { grid-template-columns: 1fr; gap: 20px; }
   .chart-grid { grid-template-columns: 1fr; }
   .program-grid { grid-template-columns: repeat(2, 1fr); }
@@ -3206,26 +3206,17 @@ function schedSlots(dow) {
   return [...base, ...(schedEvening[dow] || []), SCHED_NIGHT];
 }
 
-// Длительность слота до следующего; ночной (последний) — «до утра»
-function slotDur(slots, i) {
-  if (i === slots.length - 1) return 'до утра';
-  const [h1, m1] = slots[i][0].split(':').map(Number);
-  const [h2, m2] = slots[i + 1][0].split(':').map(Number);
-  let mins = (h2 * 60 + m2) - (h1 * 60 + m1);
-  if (mins <= 0) mins += 24 * 60; // следующий слот за полночью
-  const h = Math.floor(mins / 60), m = mins % 60;
-  return [h ? `${h} ч` : '', m ? `${m} мин` : ''].filter(Boolean).join(' ');
-}
-
-// Матрица неделей (схема Стаса 26.08, референс dfm.ru/schedule): строки-дни
-// Пн-Вс текущей недели с датами; «Сейчас» — только в сегодняшней строке
-// (ночной 00:00 стоит в конце сетки и в сканер не входит — он до утра)
+// Лента колонок-дней (Стас 26.08, DFM 617728 «горизонтально по дням» + его
+// мокап: наш вертикальный список в каждой колонке). «Сейчас» — только в
+// сегодняшней колонке (ночной 00:00 в конце сетки и вне сканера — до утра);
+// сегодняшняя колонка авто-прокручивается в кадр
 function renderSched() {
   const now = new Date();
   const monday = new Date(now);
   monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
   const mins = now.getHours() * 60 + now.getMinutes();
-  document.getElementById('schedMatrix').innerHTML = Array.from({ length: 7 }, (_, i) => {
+  const matrix = document.getElementById('schedMatrix');
+  matrix.innerHTML = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
     const dow = d.getDay();
@@ -3242,19 +3233,26 @@ function renderSched() {
     }
     const date = String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0');
     return `
-    <div class="smx-row" data-today="${isToday ? 'true' : 'false'}">
-      <div class="smx-day">
-        <span class="smx-day-date">${date}</span>
-        <span class="smx-day-dow">${SCHED_LABELS[dow]}${isToday ? ' · сегодня' : ''}</span>
+    <div class="smx-col" data-today="${isToday ? 'true' : 'false'}">
+      <div class="smx-col-head">
+        <span class="smx-col-date">${date}</span>
+        <span class="smx-col-dow">${SCHED_LABELS[dow]}${isToday ? ' · сегодня' : ''}</span>
       </div>
-      <div class="smx-slots">${slots.map(([t, name], j) => `
-        <div class="smx-slot" data-now="${j === nowIdx ? 'true' : 'false'}">
-          <div class="smx-slot-name">${name}</div>
-          <div class="smx-slot-time">${j === nowIdx ? '<span class="smx-now-dot"></span>' : ''}${t} · ${slotDur(slots, j)}</div>
+      <div class="smx-list">${slots.map(([t, name, meta], j) => `
+        <div class="smx-row" data-now="${j === nowIdx ? 'true' : 'false'}">
+          <span class="smx-time">${t}</span>
+          <span>
+            <span class="smx-name">${name}</span>
+            <span class="smx-meta">${meta}</span>
+          </span>
+          ${j === nowIdx ? '<span class="live-badge"><span class="live-pulse"></span>Сейчас</span>' : ''}
         </div>`).join('')}
       </div>
     </div>`;
   }).join('');
+  // Сегодня — в кадр (без smooth: это первичная раскладка, не переход)
+  const today = matrix.querySelector('.smx-col[data-today="true"]');
+  if (today) matrix.scrollLeft = Math.max(0, today.offsetLeft - matrix.offsetLeft - 2);
 }
 renderSched();
 
