@@ -638,47 +638,55 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
    ТЕЛЕПРОГРАММА — расписание эфира на странице «Программы»
    (правка Марго 12.08, #614227)
    ========================================================================= */
-/* Раскладка «Программ»: сетка программ слева (поднята), телепрограмма —
-   блоком справа (правка Марго 25.08, DFM #617118 п.5) */
-.programs-layout {
+/* Телепрограмма-матрица (схема Стаса 26.08, DFM 617725-726, референс
+   dfm.ru/schedule «в твоей стилистике»): сверху расписание строками-днями,
+   снизу блоки программ. «Сейчас» — плиткой-акцентом, как активный слот DFM */
+.sched { min-width: 0; margin-bottom: 46px; }
+.sched-matrix { display: flex; flex-direction: column; gap: 10px; }
+.smx-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 8px 36px;
-  align-items: start;
-  /* Запас под плавающее окошко эфира (Стас 26.08, DFM 617711): PiP на этой
-     странице встаёт слева внизу — отступ даёт доскроллить карточки из-под него */
-  padding-bottom: 240px;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
 }
-.programs-main { min-width: 0; }
-@media (max-width: 1100px) {
-  /* Узко: программы первыми, расписание следом */
-  .programs-layout { grid-template-columns: 1fr; gap: 40px; }
+.smx-day {
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  padding: 10px 0 10px 14px;
+  border-left: 2px solid var(--glass-border);
 }
-.sched { min-width: 0; }
-.sched-days { display: flex; gap: 8px; margin: 2px 0 16px; flex-wrap: wrap; }
-.sched-list {
-  border-radius: var(--r-lg);
-  border: 1px solid var(--glass-border);
+.smx-row[data-today="true"] .smx-day { border-left-color: var(--accent); }
+.smx-day-date { font-size: 15px; font-weight: 800; font-feature-settings: "tnum"; letter-spacing: -0.01em; }
+.smx-day-dow { font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; }
+.smx-row[data-today="true"] .smx-day-dow { color: var(--accent); font-weight: 700; }
+.smx-slots {
+  display: flex; gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 1px;
+}
+.smx-slots::-webkit-scrollbar { display: none; }
+.smx-slot {
+  flex: 1 0 148px;
+  min-width: 0;
+  padding: 11px 14px 12px;
+  border-radius: var(--r-md);
   background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
-  overflow: hidden;
 }
-[data-style="light"] .sched-list { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
-.sched-row {
-  display: grid;
-  grid-template-columns: 52px 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 16px;
+[data-style="light"] .smx-slot { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
+.smx-slot-name { font-size: 13.5px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+.smx-slot-time { margin-top: 5px; font-size: 12px; color: var(--text-tertiary); font-feature-settings: "tnum"; display: inline-flex; align-items: center; gap: 6px; }
+.smx-slot[data-now="true"] {
+  background: var(--accent);
+  border-color: transparent;
+  box-shadow: 0 10px 26px rgba(228,0,135,0.35);
 }
-.sched-row + .sched-row { border-top: 1px solid var(--glass-border); }
-.sched-time { font-size: 14px; font-weight: 700; font-feature-settings: "tnum"; color: var(--text-secondary); }
-.sched-name { display: block; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
-.sched-meta { display: block; font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
-.sched-row[data-now="true"] { background: var(--accent-soft); }
-.sched-row[data-now="true"] .sched-time { color: var(--accent); }
-.sched-note { font-size: 12.5px; color: var(--text-tertiary); margin-top: 10px; }
+.smx-slot[data-now="true"] .smx-slot-name { color: #fff; }
+.smx-slot[data-now="true"] .smx-slot-time { color: rgba(255,255,255,0.85); }
+.smx-now-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: pulse 1.6s infinite; flex: 0 0 auto; }
+.sched-note { font-size: 12.5px; color: var(--text-tertiary); margin-top: 12px; }
 
 /* =========================================================================
    КОНТАКТЫ + ВЫДАЧА ПРИЗОВ — страница из меню (правка Марго 12.08)
@@ -1854,7 +1862,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   .pip[data-corner="tl"] { left: 12px; top: 72px; }
   .tweaks { left: 12px; bottom: 12px; }
   .contact-grid { grid-template-columns: 1fr; }
-  .sched-row { grid-template-columns: 56px 1fr auto; padding: 12px 14px; }
+  .smx-row { grid-template-columns: 64px minmax(0, 1fr); gap: 10px; }
   .app-footer { grid-template-columns: 1fr; gap: 20px; }
   .chart-grid { grid-template-columns: 1fr; }
   .program-grid { grid-template-columns: repeat(2, 1fr); }
@@ -2235,25 +2243,21 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <h2>Программы</h2>
         <p>Шоу и рубрики RU.TV в формате видеоподкастов — смотрите выпуски в любое время.</p>
       </div>
-      <!-- Программы подняты, телепрограмма — блоком справа (правка Марго 25.08,
-           DFM #617118 п.5). Состав и краткие описания программ — по
-           ru.tv/programms (п.6); сетка расписания — демо -->
-      <div class="programs-layout">
-        <div class="programs-main">
-          <div class="row-head">
-            <h2 class="row-title">Все программы</h2>
-          </div>
-          <div class="program-grid" id="programGrid"></div>
+      <!-- Схема Стаса 26.08 (DFM 617725-726, референс dfm.ru/schedule):
+           СВЕРХУ телепрограмма-матрица неделей — строки-дни с датами, плитки
+           слотов с длительностью, «Сейчас» акцентом; СНИЗУ блоки программ.
+           Состав и описания программ — по ru.tv/programms; сетка — демо -->
+      <section class="sched" aria-label="Телепрограмма">
+        <div class="row-head">
+          <h2 class="row-title">Телепрограмма</h2>
         </div>
-        <aside class="sched" aria-label="Телепрограмма">
-          <div class="row-head">
-            <h2 class="row-title">Телепрограмма</h2>
-          </div>
-          <div class="sched-days" id="schedDays" role="tablist" aria-label="День недели"></div>
-          <div class="sched-list" id="schedList"></div>
-          <p class="sched-note">Новости RU.TV — в начале каждого часа. Сетка — демо: программу передач пришлёт редакция.</p>
-        </aside>
+        <div class="sched-matrix" id="schedMatrix"></div>
+        <p class="sched-note">Новости RU.TV — в начале каждого часа. Сетка — демо: программу передач пришлёт редакция.</p>
+      </section>
+      <div class="row-head">
+        <h2 class="row-title">Все программы</h2>
       </div>
+      <div class="program-grid" id="programGrid"></div>
     </section>
 
     <!-- ============================================================ -->
@@ -2982,10 +2986,6 @@ function renderPlayState() {
 function updatePip() {
   const on = !pipDismissed && (route !== 'home' || !heroVisible);
   pip.dataset.on = on ? 'true' : 'false';
-  // Умный дефолт-угол (Стас 26.08, DFM 617711 «справа перекрывает плеер»):
-  // на «Программах» правый низ занят телепрограммой — окошко само встаёт
-  // слева; после ручного переноса выбор пользователя не трогаем
-  if (!pipUserPlaced) pip.dataset.corner = route === 'programs' ? 'bl' : 'br';
 }
 
 if ('IntersectionObserver' in window) {
@@ -3027,7 +3027,6 @@ document.getElementById('pipClose').addEventListener('click', () => {
    pointer events покрывают мышь и палец; отпустил — магнит к ближайшему углу */
 let pipDrag = null;
 let pipWasDragged = false;
-let pipUserPlaced = false; // после ручного переноса маршрутный дефолт-угол отключается
 pip.addEventListener('pointerdown', e => {
   if (e.target.closest('.pip-act') || e.target.closest('.pip-play')) return;
   pipDrag = { id: e.pointerId, x: e.clientX, y: e.clientY, rect: pip.getBoundingClientRect(), moved: false };
@@ -3054,7 +3053,6 @@ function pipDrop(e) {
     pip.style.left = '';
     pip.style.top = '';
     pip.dataset.corner = corner;
-    pipUserPlaced = true;
     // FLIP-доводка до угла (CSS-переход между auto-позициями не анимируется)
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const after = pip.getBoundingClientRect();
@@ -3202,50 +3200,62 @@ const schedEvening = {
 };
 const SCHED_NIGHT = ['00:00', 'Ночной эфир', 'Клипы до утра — без перерыва'];
 const SCHED_LABELS = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-let schedDay = new Date().getDay();
 
 function schedSlots(dow) {
   const base = (dow === 0 || dow === 6) ? schedBase.weekend : schedBase.budni;
   return [...base, ...(schedEvening[dow] || []), SCHED_NIGHT];
 }
 
-function renderSched() {
-  const today = new Date().getDay();
-  document.getElementById('schedDays').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => `
-    <button class="tabs-btn" role="tab" data-day="${d}" aria-selected="${d === schedDay ? 'true' : 'false'}">
-      ${SCHED_LABELS[d]}${d === today ? ' · сегодня' : ''}
-    </button>`).join('');
-
-  const slots = schedSlots(schedDay);
-  // «Сейчас» — последний начавшийся слот. Ночной 00:00 стоит в КОНЦЕ сетки —
-  // в сканер не входит (0 минут ≤ now всегда), он «сейчас» только до утра
-  let nowIdx = -1;
-  if (schedDay === today) {
-    const now = new Date().getHours() * 60 + new Date().getMinutes();
-    slots.forEach(([t], i) => {
-      if (i === slots.length - 1) return;
-      const [h, m] = t.split(':').map(Number);
-      if (h * 60 + m <= now) nowIdx = i;
-    });
-    if (nowIdx === -1) nowIdx = slots.length - 1;
-  }
-  document.getElementById('schedList').innerHTML = slots.map(([t, name, meta], i) => `
-    <div class="sched-row" data-now="${i === nowIdx ? 'true' : 'false'}">
-      <span class="sched-time">${t}</span>
-      <span>
-        <span class="sched-name">${name}</span>
-        <span class="sched-meta">${meta}</span>
-      </span>
-      ${i === nowIdx ? '<span class="live-badge"><span class="live-pulse"></span>Сейчас</span>' : ''}
-    </div>`).join('');
+// Длительность слота до следующего; ночной (последний) — «до утра»
+function slotDur(slots, i) {
+  if (i === slots.length - 1) return 'до утра';
+  const [h1, m1] = slots[i][0].split(':').map(Number);
+  const [h2, m2] = slots[i + 1][0].split(':').map(Number);
+  let mins = (h2 * 60 + m2) - (h1 * 60 + m1);
+  if (mins <= 0) mins += 24 * 60; // следующий слот за полночью
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return [h ? `${h} ч` : '', m ? `${m} мин` : ''].filter(Boolean).join(' ');
 }
 
-document.getElementById('schedDays').addEventListener('click', e => {
-  const b = e.target.closest('[data-day]');
-  if (!b) return;
-  schedDay = +b.dataset.day;
-  renderSched();
-});
+// Матрица неделей (схема Стаса 26.08, референс dfm.ru/schedule): строки-дни
+// Пн-Вс текущей недели с датами; «Сейчас» — только в сегодняшней строке
+// (ночной 00:00 стоит в конце сетки и в сканер не входит — он до утра)
+function renderSched() {
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const mins = now.getHours() * 60 + now.getMinutes();
+  document.getElementById('schedMatrix').innerHTML = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const dow = d.getDay();
+    const isToday = d.toDateString() === now.toDateString();
+    const slots = schedSlots(dow);
+    let nowIdx = -1;
+    if (isToday) {
+      slots.forEach(([t], j) => {
+        if (j === slots.length - 1) return;
+        const [h, m] = t.split(':').map(Number);
+        if (h * 60 + m <= mins) nowIdx = j;
+      });
+      if (nowIdx === -1) nowIdx = slots.length - 1;
+    }
+    const date = String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0');
+    return `
+    <div class="smx-row" data-today="${isToday ? 'true' : 'false'}">
+      <div class="smx-day">
+        <span class="smx-day-date">${date}</span>
+        <span class="smx-day-dow">${SCHED_LABELS[dow]}${isToday ? ' · сегодня' : ''}</span>
+      </div>
+      <div class="smx-slots">${slots.map(([t, name], j) => `
+        <div class="smx-slot" data-now="${j === nowIdx ? 'true' : 'false'}">
+          <div class="smx-slot-name">${name}</div>
+          <div class="smx-slot-time">${j === nowIdx ? '<span class="smx-now-dot"></span>' : ''}${t} · ${slotDur(slots, j)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
 renderSched();
 
 /* INIT */
