@@ -1887,6 +1887,212 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   }
 }
 
+/* =========================================================================
+   ВНУТРЯНКИ (v2.15, запрос Лёши DFM 617812): крошки, программа, плееры,
+   новость, персоны, форма обратной связи
+   ========================================================================= */
+/* Крошки + «Назад» */
+.crumbs-bar { display: flex; align-items: center; gap: 14px; margin: 2px 0 24px; }
+.btn-back {
+  display: inline-flex; align-items: center; gap: 7px; flex: none;
+  padding: 8px 14px; border-radius: var(--r-pill);
+  background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border);
+  color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background var(--t-fast);
+}
+.btn-back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-back:hover { background: var(--glass-bg-strong); }
+.crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; font-size: 13px; color: var(--text-tertiary); min-width: 0; }
+.crumbs a { color: var(--text-secondary); cursor: pointer; }
+.crumbs a:hover { color: var(--text-primary); }
+.crumbs-sep { opacity: 0.55; }
+.crumbs-here { color: var(--text-primary); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 460px; }
+
+/* Шапка внутрянки: арт + текст (программа, персоны) */
+.dv-hero { display: flex; gap: 32px; align-items: flex-start; }
+.dv-art {
+  flex: 0 0 248px; aspect-ratio: 1 / 1; border-radius: var(--r-lg);
+  position: relative; overflow: hidden; padding: 18px;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
+  box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border);
+}
+.dv-art-name { font-size: 26px; font-weight: 800; color: rgba(255,255,255,0.95); letter-spacing: -0.02em; line-height: 1.05; text-wrap: balance; }
+.dv-ava {
+  flex: 0 0 208px; width: 208px; height: 208px; border-radius: 50%;
+  background-size: cover; background-position: center;
+  box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+}
+.dv-ava-initials { font-size: 56px; font-weight: 800; color: rgba(255,255,255,0.95); letter-spacing: -0.02em; }
+.dv-body { min-width: 0; padding-top: 4px; }
+.dv-title { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+.dv-meta { margin-top: 10px; font-size: 14px; color: var(--text-tertiary); }
+.dv-desc { margin-top: 14px; font-size: 15.5px; line-height: 1.65; color: var(--text-secondary); max-width: 640px; }
+.dv-chips { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px;
+  border-radius: var(--r-pill); background: var(--glass-bg);
+  box-shadow: inset 0 0 0 1px var(--glass-border);
+  font-size: 12.5px; font-weight: 600; color: var(--text-secondary);
+}
+.chip-accent { background: var(--accent-soft); color: var(--accent); box-shadow: none; cursor: pointer; }
+.dv-actions { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; }
+.dv-sec { margin-top: 42px; }
+.dv-h3 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 18px; }
+.ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 22px 16px; }
+
+/* Кнопки-действия (лайк/поделиться/напомнить) */
+.act-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px;
+  border-radius: var(--r-pill); background: var(--glass-bg);
+  box-shadow: inset 0 0 0 1px var(--glass-border);
+  color: var(--text-primary); font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: background var(--t-fast);
+}
+.act-btn svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.act-btn:hover { background: var(--glass-bg-strong); }
+.act-btn[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); box-shadow: none; }
+.act-btn[aria-pressed="true"] svg { fill: currentColor; }
+
+/* Плеер (поток и материал) — запрос Лёши: «все элементы управления» */
+.player-screen {
+  aspect-ratio: 16 / 9; border-radius: var(--r-xl); position: relative; overflow: hidden;
+  background-size: cover; background-position: center;
+  box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border);
+  /* theater-паттерн: экран целиком с контролами в кадре, по центру */
+  width: min(100%, calc((100vh - 230px) * 16 / 9));
+  margin-inline: auto;
+}
+.watch-below, .player-wrap { max-width: min(100%, calc((100vh - 230px) * 16 / 9)); margin-inline: auto; }
+.player-top { position: absolute; top: 16px; left: 16px; right: 16px; display: flex; align-items: center; gap: 10px; z-index: 2; }
+.pc-shade { position: absolute; left: 0; right: 0; bottom: 0; height: 148px; background: linear-gradient(180deg, transparent, rgba(0,0,0,0.72)); }
+.pc-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.pc-bigplay {
+  width: 84px; height: 84px; border-radius: 50%; cursor: pointer;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform var(--t-fast), background var(--t-fast);
+}
+.pc-bigplay:hover { transform: scale(1.06); background: var(--accent); }
+.pc-bigplay svg { width: 34px; height: 34px; fill: #fff; margin-left: 3px; }
+.pc-bar { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 18px 14px; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
+.pc-progress { position: relative; height: 5px; border-radius: var(--r-pill); background: rgba(255,255,255,0.22); cursor: pointer; }
+.pc-progress:hover { height: 7px; }
+.pc-buf { position: absolute; inset: 0 auto 0 0; border-radius: var(--r-pill); background: rgba(255,255,255,0.3); }
+.pc-fill { position: absolute; inset: 0 auto 0 0; border-radius: var(--r-pill); background: var(--accent); }
+.pc-knob { position: absolute; right: -7px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.45); }
+.pc-row { display: flex; align-items: center; gap: 4px; }
+.pc-btn {
+  width: 38px; height: 38px; border-radius: var(--r-sm); cursor: pointer; flex: none;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  transition: background var(--t-fast);
+}
+.pc-btn:hover { background: rgba(255,255,255,0.16); }
+.pc-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pc-btn svg .f { fill: currentColor; stroke: none; }
+.pc-time { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.85); margin: 0 8px; font-variant-numeric: tabular-nums; }
+.pc-flex { flex: 1; }
+.pc-vol { display: flex; align-items: center; gap: 6px; }
+.pc-volbar { width: 74px; height: 5px; border-radius: var(--r-pill); background: rgba(255,255,255,0.22); cursor: pointer; position: relative; }
+.pc-volfill { position: absolute; inset: 0 auto 0 0; border-radius: var(--r-pill); background: #fff; }
+.pc-quality { position: relative; }
+.pc-qbtn { width: auto; padding: 0 12px; font-size: 12.5px; font-weight: 700; }
+.pc-qmenu {
+  position: absolute; right: 0; bottom: 46px; min-width: 128px; padding: 6px;
+  border-radius: var(--r-md); background: rgba(12,10,16,0.92);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.14);
+}
+.pc-qmenu button { display: block; width: 100%; text-align: left; padding: 8px 12px; border-radius: var(--r-xs); font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); cursor: pointer; }
+.pc-qmenu button:hover { background: rgba(255,255,255,0.12); }
+.pc-qmenu button[aria-pressed="true"] { color: var(--accent-hover); }
+.pc-live-pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: var(--r-pill); background: var(--accent); color: #fff; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; }
+.watch-below { margin-top: 22px; display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap; }
+.watch-info { min-width: 0; flex: 1 1 380px; }
+.watch-title { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+.watch-meta { margin-top: 8px; font-size: 13.5px; color: var(--text-tertiary); }
+.watch-meta a { color: var(--accent); cursor: pointer; font-weight: 600; }
+.watch-actions { display: flex; gap: 10px; flex: none; padding-top: 4px; }
+.lv-list { display: flex; flex-direction: column; gap: 6px; max-width: 720px; }
+.lv-slot {
+  display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: baseline;
+  padding: 12px 16px; border-radius: var(--r-md);
+  background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+.lv-slot[data-now="true"] { background: var(--accent-soft); box-shadow: none; }
+.lv-time { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.lv-slot[data-now="true"] .lv-time { color: var(--accent); }
+.lv-name { font-size: 14.5px; font-weight: 700; }
+.lv-sub { display: block; margin-top: 2px; font-size: 12.5px; color: var(--text-tertiary); }
+
+/* Новость-статья */
+.article { max-width: 880px; }
+.article-title { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margin-top: 12px; text-wrap: balance; }
+.article-meta { margin-top: 12px; font-size: 13.5px; color: var(--text-tertiary); }
+.article-cover {
+  margin-top: 24px; aspect-ratio: 16 / 9; border-radius: var(--r-xl);
+  background-size: cover; background-position: center;
+  box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border);
+}
+.article-body { margin-top: 26px; }
+.article-body p { font-size: 16.5px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 18px; max-width: 760px; }
+.article-body p strong { color: var(--text-primary); }
+.news-grid-related { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.news-grid-related .card-news { flex: none; }
+
+/* Форма обратной связи (Контакты) */
+.fb-wrap { max-width: 680px; }
+.fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fb-field { display: flex; flex-direction: column; gap: 7px; }
+.fb-field-wide { grid-column: 1 / -1; }
+.fb-field label { font-size: 12.5px; font-weight: 700; color: var(--text-secondary); }
+.fb-field input, .fb-field select, .fb-field textarea {
+  font: inherit; font-size: 14px; color: var(--text-primary);
+  padding: 12px 14px; border-radius: var(--r-md); border: none;
+  background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border);
+  outline: none; transition: box-shadow var(--t-fast);
+}
+.fb-field input:focus, .fb-field select:focus, .fb-field textarea:focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.fb-field textarea { min-height: 128px; resize: vertical; }
+.fb-field select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+.fb-select { position: relative; }
+.fb-select::after { content: ''; position: absolute; right: 16px; bottom: 19px; width: 8px; height: 8px; border-right: 2px solid var(--text-tertiary); border-bottom: 2px solid var(--text-tertiary); transform: rotate(45deg); pointer-events: none; }
+.fb-agree { display: flex; align-items: flex-start; gap: 10px; margin-top: 16px; font-size: 13px; color: var(--text-secondary); cursor: pointer; max-width: 560px; }
+.fb-agree input { width: 17px; height: 17px; margin-top: 1px; accent-color: var(--accent); flex: none; cursor: pointer; }
+.fb-note { margin-top: 14px; font-size: 12.5px; color: var(--text-tertiary); }
+.fb-send { margin-top: 18px; }
+
+/* Кнопка разворота эфира на hero (вход в плеер потока) */
+.live-expand {
+  margin-left: auto; width: 38px; height: 38px; border-radius: var(--r-sm); cursor: pointer; flex: none;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  background: rgba(0,0,0,0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: background var(--t-fast);
+}
+.live-expand:hover { background: var(--accent); }
+.live-expand svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; }
+
+/* Кликабельные карточки: курсор на всём, что открывает внутрянку */
+[data-open-program], [data-open-video], [data-open-news], [data-open-artist], [data-open-host], [data-open-clip], [data-open-ep], [data-open-chart] { cursor: pointer; }
+
+@media (max-width: 900px) {
+  .crumbs-here { max-width: 160px; }
+  .dv-hero { flex-direction: column; gap: 20px; }
+  .dv-art { flex-basis: auto; width: min(320px, 100%); }
+  .dv-ava { flex-basis: auto; width: 168px; height: 168px; }
+  .dv-title { font-size: 30px; }
+  .article-title { font-size: 28px; }
+  .news-grid-related { grid-template-columns: 1fr; }
+  .fb-grid { grid-template-columns: 1fr; }
+  .pc-volbar { display: none; }
+  .pc-time { margin: 0 4px; }
+  .pc-bigplay { width: 64px; height: 64px; }
+  .pc-bigplay svg { width: 26px; height: 26px; }
+  .watch-title { font-size: 21px; }
+  .lv-slot { grid-template-columns: 52px 1fr; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
@@ -2044,6 +2250,9 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
               <span class="live-badge"><span class="live-pulse"></span>В эфире</span>
               <span class="live-tag" id="liveTag">RU.TV — основной эфир</span>
               <!-- Счётчик просмотров убран (правка Марго 25.08, DFM #617118 п.4) -->
+              <button class="live-expand" id="liveExpand" aria-label="Открыть плеер эфира" title="Открыть плеер эфира">
+                <svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+              </button>
             </div>
             <div class="live-play"><span class="live-play-btn" id="livePlayIcon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
             <div class="live-screen-meta">
@@ -2386,6 +2595,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       <div class="tabs" role="tablist" aria-label="Контакты и выдача призов" id="contactTabs">
         <button class="tabs-btn" role="tab" data-ctab="contacts" aria-selected="true">Контакты</button>
         <button class="tabs-btn" role="tab" data-ctab="prizes" aria-selected="false">Выдача призов</button>
+        <button class="tabs-btn" role="tab" data-ctab="feedback" aria-selected="false">Обратная связь</button>
       </div>
       <div id="contactTabContacts" role="tabpanel">
         <div class="contact-grid">
@@ -2420,7 +2630,52 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         </div>
         <button class="btn btn-live contact-gifts-cta" data-route="gifts"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>К витрине подарков</button>
       </div>
+      <!-- Вкладка «Обратная связь» (запрос Лёши DFM 617812) -->
+      <div id="contactTabFeedback" role="tabpanel" hidden>
+        <div class="fb-wrap">
+          <form class="fb-grid" id="fbForm" novalidate>
+            <div class="fb-field">
+              <label for="fbName">Имя</label>
+              <input id="fbName" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" required>
+            </div>
+            <div class="fb-field">
+              <label for="fbEmail">Почта</label>
+              <input id="fbEmail" name="email" type="email" autocomplete="email" placeholder="Куда прислать ответ" required>
+            </div>
+            <div class="fb-field fb-field-wide fb-select">
+              <label for="fbTopic">Тема</label>
+              <select id="fbTopic" name="topic">
+                <option>Вопрос по эфиру</option>
+                <option>Реклама и партнёрства</option>
+                <option>Витрина подарков и призы</option>
+                <option>Сайт и приложение</option>
+                <option>Другое</option>
+              </select>
+            </div>
+            <div class="fb-field fb-field-wide">
+              <label for="fbMsg">Сообщение</label>
+              <textarea id="fbMsg" name="message" placeholder="Расскажите, чем помочь" required></textarea>
+            </div>
+          </form>
+          <label class="fb-agree">
+            <input type="checkbox" id="fbAgree">
+            <span>Согласен на обработку персональных данных — они нужны только для ответа на обращение</span>
+          </label>
+          <button class="btn btn-live fb-send" id="fbSend"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Отправить</button>
+          <p class="fb-note">Обычно отвечаем в течение двух рабочих дней. Срочное — в «Прямой эфир»: +7 (495) 956-10-12.</p>
+        </div>
+      </div>
     </section>
+
+    <!-- =============================================================== -->
+    <!-- ВНУТРЯНКИ (v2.15, запрос Лёши DFM 617812): контент рендерится JS -->
+    <!-- =============================================================== -->
+    <section class="page" data-page-id="program-view"><div id="programView"></div></section>
+    <section class="page" data-page-id="live-view"><div id="liveView"></div></section>
+    <section class="page" data-page-id="watch"><div id="watchView"></div></section>
+    <section class="page" data-page-id="news-view"><div id="newsView"></div></section>
+    <section class="page" data-page-id="artist-view"><div id="artistView"></div></section>
+    <section class="page" data-page-id="host-view"><div id="hostView"></div></section>
 
   </main>
 </div>
@@ -2617,14 +2872,45 @@ const hosts = [
   { name: 'Лиза Морская', initials: 'ЛМ', grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
 ];
 
-// Новости RU.TV (правка 603079: заголовок + подзаголовок-лид)
+// Новости RU.TV (правка 603079: заголовок + подзаголовок-лид).
+// body — абзацы внутрянки (v2.15, запрос Лёши 617812); тексты демо
 const news = [
-  { tag: 'Премьера', title: 'Сергей Лазарев представил новый клип «Шёпотом»', lead: 'Премьера прошла в прямом эфире — клип уже в ротации и в разделе «Видео»', time: '15 мин назад', source: 'RU.TV News', img: 'assets/rutv/Rectangle 4322-16.png' },
-  { tag: 'Концерт', title: 'Дискотека Дискотек: большой концерт 6 декабря', lead: 'На сцене LIVE Арены — звёзды 90-х и нулевых; билеты уже в продаже', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-9.png' },
-  { tag: 'Чарт', title: 'JONY возглавил Супер 20', lead: '«Комета» держит первую строчку главного чарта четвёртую неделю подряд', time: '1 ч назад', source: 'RU.TV Chart', img: 'assets/rutv/Rectangle 4322-21.jpg' },
-  { tag: 'Премьера', title: 'Полевой — авторский сериал стартовал на RU.TV', lead: 'Музыкальная история о пути молодого артиста — новые серии каждую неделю', time: '2 ч назад', source: 'RU.TV', img: 'assets/rutv/image 2.png' },
-  { tag: 'Сервис', title: 'Запущен «Статус: В сети»', lead: 'Отправляйте приветы и поздравления прямо в эфир — из приложения и с сайта', time: '3 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-15.png' },
-  { tag: 'Спецпроект', title: 'Анна Семенович: мастер-класс для детей', lead: 'Фигурное катание со звездой — запись открыта, участие бесплатное', time: '4 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-1.png' },
+  { tag: 'Премьера', title: 'Сергей Лазарев представил новый клип «Шёпотом»', lead: 'Премьера прошла в прямом эфире — клип уже в ротации и в разделе «Видео»', time: '15 мин назад', source: 'RU.TV News', img: 'assets/rutv/Rectangle 4322-16.png',
+    body: [
+      'Премьера прошла в прямом эфире RU.TV: сразу после показа клип занял верхнюю строчку зрительского голосования и вошёл в плотную ротацию канала.',
+      '<strong>«Шёпотом»</strong> — новая работа артиста, снятая одним длинным кадром: камера следует за героями через несколько локаций, а свет и хореография меняются в такт композиции.',
+      'Клип уже доступен в разделе «Видео», а история его создания — в ближайшем выпуске «RUновостей». Следите за эфиром: расписание — на странице «Программы».',
+    ] },
+  { tag: 'Концерт', title: 'Дискотека Дискотек: большой концерт 6 декабря', lead: 'На сцене LIVE Арены — звёзды 90-х и нулевых; билеты уже в продаже', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-9.png',
+    body: [
+      '6 декабря на LIVE Арене пройдёт большой концерт «Дискотека Дискотек» — праздник главных хитов 90-х и нулевых с ведущим шоу Антоном Юрьевым.',
+      'В программе — живые выступления звёзд эпохи, совместные номера и караоке-блоки со зрительным залом. Полный состав участников канал объявит в эфире шоу.',
+      'Билеты уже в продаже на сайте площадки. Телеверсию концерта RU.TV покажет в новогодней сетке — следите за анонсами в «RUновостях».',
+    ] },
+  { tag: 'Чарт', title: 'JONY возглавил Супер 20', lead: '«Комета» держит первую строчку главного чарта четвёртую неделю подряд', time: '1 ч назад', source: 'RU.TV Chart', img: 'assets/rutv/Rectangle 4322-21.jpg',
+    body: [
+      '«Комета» JONY четвёртую неделю подряд удерживает первую строчку «Супер 20» — главного хит-парада RU.TV, судьбу которого решают голоса зрителей.',
+      'Ближайшие преследователи — Сергей Лазарев с «Шёпотом» и MIYAGI & Andy Panda с «Минималом»: разрыв между первой тройкой минимальный за сезон.',
+      'Голосование за следующий выпуск уже открыто — поддержать любимый клип можно на странице «Супер 20». Итоги недели — в пятницу в 19:00.',
+    ] },
+  { tag: 'Премьера', title: 'Полевой — авторский сериал стартовал на RU.TV', lead: 'Музыкальная история о пути молодого артиста — новые серии каждую неделю', time: '2 ч назад', source: 'RU.TV', img: 'assets/rutv/image 2.png',
+    body: [
+      'На RU.TV стартовал «Полевой» — авторский музыкальный сериал о пути молодого артиста: от первых демо и клубных сцен до большого эфира.',
+      'Каждая серия — отдельная глава с живой музыкой, реальными площадками и камео артистов канала. Новые эпизоды выходят раз в неделю.',
+      'Первая серия уже в разделе «Видео»; расписание показов в эфире — на странице «Программы».',
+    ] },
+  { tag: 'Сервис', title: 'Запущен «Статус: В сети»', lead: 'Отправляйте приветы и поздравления прямо в эфир — из приложения и с сайта', time: '3 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-15.png',
+    body: [
+      'RU.TV запустил обновлённый интерактив «Статус: в сети» — теперь передать привет или поздравление в прямой эфир можно прямо с сайта и из приложения.',
+      'Сообщения попадают к ведущим дневного шоу: два часа приветов, розыгрышей и интервью с артистами по будням с 13:00 до 15:00.',
+      'За отправленные приветы начисляются баллы — их можно обменять на подарки в «Витрине»: от стикерпаков до билетов на Премию РУ.ТВ.',
+    ] },
+  { tag: 'Спецпроект', title: 'Анна Семенович: мастер-класс для детей', lead: 'Фигурное катание со звездой — запись открыта, участие бесплатное', time: '4 ч назад', source: 'RU.TV', img: 'assets/rutv/Rectangle 4322-1.png',
+    body: [
+      'RU.TV открывает запись на детский мастер-класс по фигурному катанию — занятие проведёт Анна Семенович, мастер спорта и звезда канала.',
+      'Участие бесплатное: приглашаются дети от 6 до 12 лет с любым уровнем подготовки, коньки и защита — на площадке.',
+      'Запись — через форму «Обратная связь» в разделе «Контакты»: укажите тему «Другое» и возраст ребёнка. Количество мест ограничено.',
+    ] },
 ];
 
 // Афиша — вкладка внутри Новостей
@@ -2728,7 +3014,7 @@ function renderPromoStrip() {
 // с главной ряд убран (правка Марго 12.08)
 function clipWideCard(c) {
   return `
-    <article class="card-clip-wide" tabindex="0">
+    <article class="card-clip-wide" tabindex="0" data-open-clip="${encodeURIComponent(JSON.stringify({ tag: 'Клип', name: `${c.artist} — ${c.track}`, dur: c.dur, img: c.img || '', grad: c.grad || '' }))}">
       <div class="card-clip-wide-thumb" style="${bg(c)}">
         ${c.img ? '' : `<span class="card-clip-wide-label">${c.artist}</span>`}
         <span class="card-clip-wide-duration">${c.dur}</span>
@@ -2739,9 +3025,9 @@ function clipWideCard(c) {
     </article>`;
 }
 // Программы — радийные плитки-видеоподкасты (на главной ряд, на странице сетка 9)
-function programCard(p) {
+function programCard(p, i) {
   return `
-    <article class="card-program" tabindex="0">
+    <article class="card-program" tabindex="0" data-open-program="${i}">
       <div class="card-program-art" style="background: ${p.grad};">
         <span class="card-program-time">${p.time}</span>
         <span class="card-program-abbr">${p.name}</span>
@@ -2759,7 +3045,7 @@ function chartRow(c) {
   const rank = String(c.rank).padStart(2, '0');
   const trendUp = c.trend.startsWith('+');
   return `
-    <article class="chart-row" tabindex="0">
+    <article class="chart-row" tabindex="0" data-open-chart="${c.rank}">
       <div>
         <div class="chart-rank">${rank}</div>
         <div class="chart-rank-trend">${trendUp ? '▲' : '▼'} ${c.trend.replace(/[+−-]/,'')}</div>
@@ -2783,8 +3069,8 @@ function renderChart() {
 
 // Артисты — страница «Артисты» (раздел спрятан в меню, правка Марго 27.07)
 function renderArtists() {
-  document.getElementById('artistGrid').innerHTML = artists.map(a => `
-    <article class="card-artist" tabindex="0">
+  document.getElementById('artistGrid').innerHTML = artists.map((a, i) => `
+    <article class="card-artist" tabindex="0" data-open-artist="${i}">
       <div class="card-artist-avatar" style="${bg(a)}"></div>
       <div class="card-artist-name">${a.name}</div>
       <div class="card-artist-meta">${a.meta}</div>
@@ -2794,17 +3080,17 @@ function renderArtists() {
 
 // Ведущие — страница «Ведущие» (раздел спрятан в меню, правка Марго 27.07)
 function renderHosts() {
-  document.getElementById('hostGrid').innerHTML = hosts.map(h => `
-    <article class="card-host" tabindex="0">
+  document.getElementById('hostGrid').innerHTML = hosts.map((h, i) => `
+    <article class="card-host" tabindex="0" data-open-host="${i}">
       <div class="card-host-art" style="background: ${h.grad};"><span class="card-host-initials">${h.initials}</span></div>
       <div class="card-host-name">${h.name}</div>
     </article>
   `).join('');
 }
 
-function newsCard(n) {
+function newsCard(n, i) {
   return `
-    <article class="card-news" tabindex="0">
+    <article class="card-news" tabindex="0" data-open-news="${i}">
       <div class="card-news-thumb" style="${bg(n)}"></div>
       <div class="card-news-body">
         <div class="card-news-tag">${n.tag}</div>
@@ -2837,8 +3123,8 @@ function renderAfisha() {
 
 function renderVideos() {
   document.getElementById('trackVideoNew').innerHTML = newClips.map(clipWideCard).join('');
-  document.getElementById('videoGrid').innerHTML = videos.map(v => `
-    <article class="video-card" tabindex="0">
+  document.getElementById('videoGrid').innerHTML = videos.map((v, i) => `
+    <article class="video-card" tabindex="0" data-open-video="${i}">
       <div class="video-card-thumb" style="${bg(v)}">
         <span class="video-card-tag">${v.tag}</span>
         <span class="video-card-duration">${v.dur}</span>
@@ -2911,6 +3197,13 @@ const titles = {
   video: 'Видео',
   gifts: 'Витрина подарков',
   contacts: 'Контакты',
+  // Внутрянки (v2.15, запрос Лёши 617812) — заголовок уточняет open-функция
+  'program-view': 'Программа',
+  'live-view': 'Прямой эфир',
+  'watch': 'Просмотр',
+  'news-view': 'Новость',
+  'artist-view': 'Артист',
+  'host-view': 'Ведущий',
 };
 // «channels» из карты убран (правка Марго 12.08): сохранённый в localStorage
 // старый маршрут сам падает на «home» через гард setRoute
@@ -2928,8 +3221,18 @@ menuBtn.addEventListener('click', () => setMenu(document.body.dataset.menu !== '
 document.getElementById('menuScrim').addEventListener('click', () => setMenu(false));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
 
+// Стек переходов — кнопка «Назад» на внутрянках (v2.15)
+const routeStack = [];
+let navBack = false;
+function goBack() {
+  navBack = true;
+  setRoute(routeStack.pop() || 'home');
+  navBack = false;
+}
+
 function setRoute(r) {
   if (!titles[r]) r = 'home';
+  if (!navBack && route !== r) routeStack.push(route);
   route = r;
   document.querySelectorAll('.page').forEach(p => {
     p.dataset.active = p.dataset.pageId === r ? 'true' : 'false';
@@ -2951,6 +3254,7 @@ function setRoute(r) {
 }
 
 document.querySelectorAll('[data-route]').forEach(n => {
+  n.dataset.rb = '1'; // помечен: слушатель навешен напрямую (динамику ведёт делегат)
   n.addEventListener('click', e => {
     e.preventDefault();
     setRoute(n.dataset.route);
@@ -2998,7 +3302,9 @@ function renderPlayState() {
 
 // PiP показывается, когда эфир играет «за кадром»: другой раздел или hero вне вьюпорта
 function updatePip() {
-  const on = !pipDismissed && (route !== 'home' || !heroVisible);
+  // На плеере потока окошко спрятано — там и так весь эфир; на просмотре
+  // материала тоже — играет материал, а не эфир (и не перекрывает контролы)
+  const on = !pipDismissed && route !== 'live-view' && route !== 'watch' && (route !== 'home' || !heroVisible);
   pip.dataset.on = on ? 'true' : 'false';
 }
 
@@ -3016,11 +3322,17 @@ function goLive() {
   setRoute('home');
   renderPlayState();
 }
-document.getElementById('pipExpand').addEventListener('click', goLive);
+// «Развернуть» из PiP и клик по окошку ведут в полный плеер потока (v2.15)
+document.getElementById('pipExpand').addEventListener('click', () => openLive());
 document.getElementById('pipScreen').addEventListener('click', e => {
   if (e.target.closest('.pip-act')) return;
   if (pipWasDragged) { pipWasDragged = false; return; } // это был перенос, не клик
-  goLive();
+  openLive();
+});
+// Кнопка разворота на hero главной — тоже в плеер потока (клик мимо паузы)
+document.getElementById('liveExpand').addEventListener('click', e => {
+  e.stopPropagation();
+  openLive();
 });
 liveScreen.addEventListener('click', () => {
   playing = !playing;
@@ -3172,13 +3484,28 @@ document.querySelectorAll('[data-page-id="news"] .tabs-btn').forEach(b => {
   });
 });
 
-// Контакты | Выдача призов — рядом, по аналогии с Monte Carlo (правка Марго 12.08)
+// Контакты | Выдача призов | Обратная связь (третья вкладка — Лёша 617812)
+function setCtab(tab) {
+  document.querySelectorAll('#contactTabs .tabs-btn').forEach(x => x.setAttribute('aria-selected', x.dataset.ctab === tab ? 'true' : 'false'));
+  document.getElementById('contactTabContacts').hidden = tab !== 'contacts';
+  document.getElementById('contactTabPrizes').hidden = tab !== 'prizes';
+  document.getElementById('contactTabFeedback').hidden = tab !== 'feedback';
+  localStorage.setItem('showcase.ctab', tab);
+}
 document.querySelectorAll('#contactTabs .tabs-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('#contactTabs .tabs-btn').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
-    document.getElementById('contactTabContacts').hidden = b.dataset.ctab !== 'contacts';
-    document.getElementById('contactTabPrizes').hidden = b.dataset.ctab !== 'prizes';
-  });
+  b.addEventListener('click', () => setCtab(b.dataset.ctab));
+});
+
+// Форма обратной связи — демо-отправка (данные никуда не уходят)
+document.getElementById('fbSend').addEventListener('click', () => {
+  const name = document.getElementById('fbName').value.trim();
+  const email = document.getElementById('fbEmail').value.trim();
+  const msg = document.getElementById('fbMsg').value.trim();
+  if (!name || !email || !msg) { showToast('Заполните имя, почту и сообщение'); return; }
+  if (!document.getElementById('fbAgree').checked) { showToast('Нужно согласие на обработку данных'); return; }
+  document.getElementById('fbForm').reset();
+  document.getElementById('fbAgree').checked = false;
+  showToast('Спасибо! Ответим на почту в течение двух рабочих дней');
 });
 
 /* =========================================================================
@@ -3278,11 +3605,504 @@ function renderSched() {
 }
 renderSched();
 
+/* =========================================================================
+   ВНУТРЯНКИ (v2.15, запрос Лёши DFM 617812): программа, плеер потока и
+   материала, новость, персоны + крошки и «Назад»
+   ========================================================================= */
+const DETAIL_KEY = 'showcase.detail';
+let detail = { program: 0, video: 0, news: 0, artist: 0, host: 0, watch: null };
+try { detail = Object.assign(detail, JSON.parse(localStorage.getItem(DETAIL_KEY) || '{}')); } catch (e) {}
+function saveDetail() { localStorage.setItem(DETAIL_KEY, JSON.stringify(detail)); }
+
+// SVG-глифы контролов (stroke, наследуют currentColor)
+const IC = {
+  back: '<svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>',
+  play: '<svg viewBox="0 0 24 24"><path class="f" d="M8 5v14l11-7z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24"><path class="f" d="M6 4h4v16H6z"/><path class="f" d="M14 4h4v16h-4z"/></svg>',
+  vol: '<svg viewBox="0 0 24 24"><path class="f" d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>',
+  mute: '<svg viewBox="0 0 24 24"><path class="f" d="M11 5 6 9H2v6h4l5 4z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></svg>',
+  pip: '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><rect class="f" x="11" y="11" width="8" height="6" rx="1.5"/></svg>',
+  fs: '<svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>',
+  minify: '<svg viewBox="0 0 24 24"><path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="m14 10 7-7"/><path d="m3 21 7-7"/></svg>',
+  heart: '<svg viewBox="0 0 24 24"><path d="M19 14c1.5-1.4 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3.4 1-4.5 2.5C10.9 4 9.3 3 7.5 3A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.1 3 5.5l7 7z"/></svg>',
+  share: '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>',
+  bell: '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>',
+};
+
+function crumbsBar(trail, here) {
+  const items = trail.map(t => `<a data-route="${t.r}">${t.t}</a><span class="crumbs-sep">/</span>`).join('');
+  return `<div class="crumbs-bar">
+    <button class="btn-back" data-back>${IC.back}Назад</button>
+    <nav class="crumbs" aria-label="Хлебные крошки">${items}<span class="crumbs-here">${here}</span></nav>
+  </div>`;
+}
+
+// Слоты программы в недельной сетке: «Будни 13:00» / «Пт 19:00» (из телепрограммы)
+function scheduleSlotsFor(name) {
+  const byTime = {};
+  for (const dow of [1, 2, 3, 4, 5, 6, 0]) {
+    for (const [t, n] of schedSlots(dow)) {
+      if (n !== name) continue;
+      (byTime[t] = byTime[t] || new Set()).add(dow);
+    }
+  }
+  return Object.entries(byTime).map(([t, days]) => {
+    const wk = [1, 2, 3, 4, 5].every(d => days.has(d));
+    if (wk && days.size === 5) return `Будни ${t}`;
+    if (days.size === 7) return `Ежедневно ${t}`;
+    return [...days].map(d => `${SCHED_LABELS[d]} ${t}`).join(' · ');
+  });
+}
+
+// Выпуски программы — демо-медиатека (16:9, стандарт «всё видео 1920×1080»)
+const EP_IMGS = ['assets/rutv/Rectangle 4322-10.png', 'assets/rutv/Rectangle 4322-9.png', 'assets/rutv/Rectangle 4322-28.jpg', 'assets/rutv/Rectangle 4322-13.png', 'assets/rutv/Rectangle 4322-30.jpg', 'assets/rutv/Rectangle 4322-25.jpg'];
+const EP_DATES = ['22 августа', '15 августа', '8 августа', '1 августа', '25 июля', '18 июля'];
+const EP_DURS = ['52:10', '48:33', '51:02', '47:45', '53:18', '49:57'];
+function programEpisodes(p, pi) {
+  return EP_DATES.map((date, i) => ({
+    tag: 'Выпуск', name: `${p.name} · выпуск ${132 - i}`, sub: date,
+    dur: EP_DURS[(pi + i) % EP_DURS.length], img: EP_IMGS[(pi + i) % EP_IMGS.length],
+  }));
+}
+
+function epCard(ep, pi, ei) {
+  return `
+    <article class="video-card" tabindex="0" data-open-ep="${pi}:${ei}">
+      <div class="video-card-thumb" style="${bg(ep)}">
+        <span class="video-card-tag">${ep.tag}</span>
+        <span class="video-card-duration">${ep.dur}</span>
+      </div>
+      <div class="video-card-name">${ep.name}</div>
+    </article>`;
+}
+
+/* ---------- Программа ---------- */
+function renderProgramView() {
+  const i = detail.program, p = programs[i];
+  if (!p) return;
+  const slots = scheduleSlotsFor(p.name);
+  const eps = programEpisodes(p, i);
+  document.getElementById('programView').innerHTML = `
+    ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'programs', t: 'Программы' }], p.name)}
+    <div class="dv-hero">
+      <div class="dv-art" style="background:${p.grad};">
+        <span class="card-program-time">${p.time}</span>
+        <span class="dv-art-name">${p.name}</span>
+      </div>
+      <div class="dv-body">
+        <h1 class="dv-title">${p.name}</h1>
+        <div class="dv-meta">${p.meta} · В эфире: ${p.time}</div>
+        <p class="dv-desc">${p.desc}</p>
+        ${slots.length ? `<div class="dv-chips">${slots.map(s => `<span class="chip">${s}</span>`).join('')}</div>` : ''}
+        <div class="dv-actions">
+          <button class="btn btn-live" data-open-live><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть эфир</button>
+          <button class="act-btn" data-toast="Напомним о ближайшем эфире «${p.name}»">${IC.bell}Напомнить</button>
+        </div>
+      </div>
+    </div>
+    <div class="dv-sec">
+      <h3 class="dv-h3">Выпуски</h3>
+      <div class="ep-grid">${eps.map((ep, ei) => epCard(ep, i, ei)).join('')}</div>
+    </div>`;
+}
+function openProgram(i) {
+  detail.program = i; saveDetail();
+  renderProgramView();
+  setRoute('program-view');
+  document.title = `${programs[i].name} — RU.TV`;
+}
+
+/* ---------- Плеер: общий каркас контролов ---------- */
+function playerBar(kind) {
+  const live = kind === 'live';
+  return `
+    ${live ? '' : `<div class="pc-progress" data-seek>
+      <div class="pc-buf" style="width:64%"></div>
+      <div class="pc-fill" style="width:38%"><span class="pc-knob"></span></div>
+    </div>`}
+    <div class="pc-row">
+      <button class="pc-btn" data-pc-play aria-label="${live ? 'Пауза' : 'Смотреть'}">${live ? IC.pause : IC.play}</button>
+      <div class="pc-vol">
+        <button class="pc-btn" data-pc-mute aria-label="Звук">${IC.vol}</button>
+        <div class="pc-volbar" data-volbar><div class="pc-volfill" style="width:70%"></div></div>
+      </div>
+      ${live
+        ? '<span class="pc-live-pill"><span class="live-pulse"></span>LIVE</span>'
+        : '<span class="pc-time" data-pc-time>1:09 / 3:01</span>'}
+      <span class="pc-flex"></span>
+      <div class="pc-quality">
+        <button class="pc-btn pc-qbtn" data-qmenu aria-haspopup="menu">1080p</button>
+        <div class="pc-qmenu" hidden role="menu">
+          ${['Авто', '1080p', '720p', '480p'].map(q => `<button role="menuitemradio" data-q="${q}" aria-pressed="${q === '1080p'}">${q}</button>`).join('')}
+        </div>
+      </div>
+      ${live
+        ? `<button class="pc-btn" data-pc-minify aria-label="Свернуть в окошко" title="Свернуть в окошко">${IC.minify}</button>`
+        : `<button class="pc-btn" data-pc-pip aria-label="Мини-плеер" title="Мини-плеер">${IC.pip}</button>`}
+      <button class="pc-btn" data-pc-fs aria-label="На весь экран" title="На весь экран">${IC.fs}</button>
+    </div>`;
+}
+
+/* ---------- Плеер потока (эфир) ---------- */
+function renderLiveView() {
+  const s = currentStream();
+  const now = new Date();
+  const slots = schedSlots(now.getDay());
+  const mins = now.getHours() * 60 + now.getMinutes();
+  let nowIdx = -1;
+  slots.forEach(([t], j) => {
+    if (j === slots.length - 1) return;
+    const [h, m] = t.split(':').map(Number);
+    if (h * 60 + m <= mins) nowIdx = j;
+  });
+  if (nowIdx === -1) nowIdx = slots.length - 1;
+  const upcoming = slots.slice(nowIdx, nowIdx + 4);
+  document.getElementById('liveView').innerHTML = `
+    ${crumbsBar([{ r: 'home', t: 'Главная' }], 'Прямой эфир')}
+    <div class="player-screen" style="${bg(s)}">
+      <div class="player-top">
+        <span class="live-badge"><span class="live-pulse"></span>В эфире</span>
+        <span class="live-tag">${s.id === 'main' ? 'RU.TV — основной эфир' : `RU.TV · ${s.name}`}</span>
+      </div>
+      <div class="pc-shade"></div>
+      <div class="pc-center"><button class="pc-bigplay" data-pc-play aria-label="Пауза">${playing ? IC.pause : IC.play}</button></div>
+      <div class="pc-bar">${playerBar('live')}</div>
+    </div>
+    <div class="watch-below">
+      <div class="watch-info">
+        <h1 class="watch-title">${s.title}</h1>
+        <div class="watch-meta">Сейчас в эфире · ${s.sub}</div>
+      </div>
+      <div class="watch-actions">
+        <button class="act-btn" data-like>${IC.heart}В избранное</button>
+        <button class="act-btn" data-share>${IC.share}Поделиться</button>
+      </div>
+    </div>
+    <div class="dv-sec">
+      <h3 class="dv-h3">Далее в эфире</h3>
+      <div class="lv-list">
+        ${upcoming.map(([t, n, meta], j) => `
+          <div class="lv-slot" data-now="${j === 0 ? 'true' : 'false'}">
+            <span class="lv-time">${t}</span>
+            <span><span class="lv-name">${n}</span>${j === 0 ? ' <span class="chip chip-accent" style="padding:3px 9px;font-size:11px;">сейчас</span>' : ''}<span class="lv-sub">${meta}</span></span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+function openLive() {
+  pipDismissed = false;
+  renderLiveView();
+  setRoute('live-view');
+}
+
+/* ---------- Плеер материала (клип/выпуск) ---------- */
+function durToText(dur) { return dur || '3:01'; }
+function renderWatch() {
+  const v = detail.watch || Object.assign({ artist: '' }, videos[0]);
+  const from = v.from || { r: 'video', t: 'Видео' };
+  const artist = artists.findIndex(a => (v.name || '').startsWith(a.name));
+  const related = videos.filter(x => x.name !== v.name).slice(0, 4);
+  document.getElementById('watchView').innerHTML = `
+    ${crumbsBar([{ r: 'home', t: 'Главная' }, from], v.name)}
+    <div class="player-screen" style="${bg(v)}">
+      <div class="player-top"><span class="video-card-tag">${v.tag || 'Клип'}</span></div>
+      <div class="pc-shade"></div>
+      <div class="pc-center"><button class="pc-bigplay" data-pc-play aria-label="Смотреть">${IC.play}</button></div>
+      <div class="pc-bar">${playerBar('vod')}</div>
+    </div>
+    <div class="watch-below">
+      <div class="watch-info">
+        <h1 class="watch-title">${v.name}</h1>
+        <div class="watch-meta">${v.tag || 'Клип'} · ${durToText(v.dur)}${artist >= 0 ? ` · <a data-open-artist="${artist}">Об артисте</a>` : ''}</div>
+      </div>
+      <div class="watch-actions">
+        <button class="act-btn" data-like>${IC.heart}В избранное</button>
+        <button class="act-btn" data-share>${IC.share}Поделиться</button>
+      </div>
+    </div>
+    <div class="dv-sec">
+      <h3 class="dv-h3">Смотрите также</h3>
+      <div class="ep-grid">
+        ${related.map(x => `
+          <article class="video-card" tabindex="0" data-open-video="${videos.indexOf(x)}">
+            <div class="video-card-thumb" style="${bg(x)}">
+              <span class="video-card-tag">${x.tag}</span>
+              <span class="video-card-duration">${x.dur}</span>
+            </div>
+            <div class="video-card-name">${x.name}</div>
+          </article>`).join('')}
+      </div>
+    </div>`;
+  const t = document.querySelector('#watchView [data-pc-time]');
+  if (t) t.textContent = `1:09 / ${durToText(v.dur)}`;
+}
+function openWatch(v) {
+  detail.watch = v; saveDetail();
+  renderWatch();
+  setRoute('watch');
+  document.title = `${v.name} — RU.TV`;
+}
+
+/* ---------- Новость ---------- */
+function renderNewsView() {
+  const i = detail.news, n = news[i];
+  if (!n) return;
+  const related = news.map((x, xi) => xi).filter(xi => xi !== i).slice(0, 3);
+  document.getElementById('newsView').innerHTML = `
+    ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'news', t: 'Новости' }], n.title)}
+    <div class="article">
+      <span class="chip chip-accent">${n.tag}</span>
+      <h1 class="article-title">${n.title}</h1>
+      <div class="article-meta">${n.time} · ${n.source}</div>
+      <div class="article-cover" style="${bg(n)}" role="img" aria-label="${n.title}"></div>
+      <div class="article-body">
+        <p><strong>${n.lead}.</strong></p>
+        ${(n.body || []).map(p => `<p>${p}</p>`).join('')}
+      </div>
+      <div class="watch-actions" style="margin-top: 6px;">
+        <button class="act-btn" data-share>${IC.share}Поделиться</button>
+      </div>
+    </div>
+    <div class="dv-sec">
+      <h3 class="dv-h3">Читайте также</h3>
+      <div class="news-grid-related">${related.map(xi => newsCard(news[xi], xi)).join('')}</div>
+    </div>`;
+}
+function openNews(i) {
+  detail.news = i; saveDetail();
+  renderNewsView();
+  setRoute('news-view');
+  document.title = `${news[i].title} — RU.TV`;
+}
+
+/* ---------- Персона: артист ---------- */
+function renderArtistView() {
+  const i = detail.artist, a = artists[i];
+  if (!a) return;
+  const pos = chart.find(c => c.artist === a.name);
+  const clips = videos.map((v, vi) => vi).filter(vi => videos[vi].name.startsWith(a.name));
+  const anews = news.map((n, ni) => ni).filter(ni => news[ni].title.includes(a.name));
+  const rail = clips.length ? clips : videos.map((v, vi) => vi).slice(0, 4);
+  document.getElementById('artistView').innerHTML = `
+    ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'artists', t: 'Артисты' }], a.name)}
+    <div class="dv-hero">
+      <div class="dv-ava" style="${bg(a)}"></div>
+      <div class="dv-body">
+        <h1 class="dv-title">${a.name}</h1>
+        <div class="dv-meta">${a.meta}</div>
+        <p class="dv-desc">Клипы и живые выступления артиста — в эфире RU.TV и в разделе «Видео»; позиции недели — в хит-параде «Супер 20», судьбу которого решают голоса зрителей.</p>
+        <div class="dv-chips">
+          ${pos ? `<span class="chip chip-accent" data-route="chart">№${pos.rank} в Супер 20</span>` : ''}
+          <span class="chip">${a.meta}</span>
+        </div>
+        <div class="dv-actions">
+          <button class="act-btn" data-like>${IC.heart}В избранное</button>
+          <button class="act-btn" data-share>${IC.share}Поделиться</button>
+        </div>
+      </div>
+    </div>
+    <div class="dv-sec">
+      <h3 class="dv-h3">${clips.length ? 'Клипы и материалы' : 'Сейчас в ротации'}</h3>
+      <div class="ep-grid">
+        ${rail.map(vi => `
+          <article class="video-card" tabindex="0" data-open-video="${vi}">
+            <div class="video-card-thumb" style="${bg(videos[vi])}">
+              <span class="video-card-tag">${videos[vi].tag}</span>
+              <span class="video-card-duration">${videos[vi].dur}</span>
+            </div>
+            <div class="video-card-name">${videos[vi].name}</div>
+          </article>`).join('')}
+      </div>
+    </div>
+    ${anews.length ? `
+    <div class="dv-sec">
+      <h3 class="dv-h3">Новости</h3>
+      <div class="news-grid-related">${anews.map(ni => newsCard(news[ni], ni)).join('')}</div>
+    </div>` : ''}`;
+}
+function openArtist(i) {
+  detail.artist = i; saveDetail();
+  renderArtistView();
+  setRoute('artist-view');
+  document.title = `${artists[i].name} — RU.TV`;
+}
+
+/* ---------- Персона: ведущий (связь ведущий↔программа — правка редакции №8) ---------- */
+function renderHostView() {
+  const i = detail.host, h = hosts[i];
+  if (!h) return;
+  const leads = [programs[i % programs.length], programs[(i + 3) % programs.length]];
+  document.getElementById('hostView').innerHTML = `
+    ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'hosts', t: 'Ведущие' }], h.name)}
+    <div class="dv-hero">
+      <div class="dv-ava" style="background:${h.grad};"><span class="dv-ava-initials">${h.initials}</span></div>
+      <div class="dv-body">
+        <h1 class="dv-title">${h.name}</h1>
+        <div class="dv-meta">Ведущий RU.TV</div>
+        <p class="dv-desc">Голос и лицо эфира RU.TV: прямые включения, интервью с артистами и фирменные рубрики канала. Биографию и фото пришлёт редакция.</p>
+        <div class="dv-actions">
+          <button class="act-btn" data-share>${IC.share}Поделиться</button>
+        </div>
+      </div>
+    </div>
+    <div class="dv-sec">
+      <h3 class="dv-h3">Ведёт программы</h3>
+      <div class="ep-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+        ${leads.map(p => programCard(p, programs.indexOf(p))).join('')}
+      </div>
+    </div>`;
+}
+function openHost(i) {
+  detail.host = i; saveDetail();
+  renderHostView();
+  setRoute('host-view');
+  document.title = `${hosts[i].name} — RU.TV`;
+}
+
+/* ---------- Делегат кликов: динамические карточки, крошки, контролы ---------- */
+function parseClipAttr(el) {
+  try { return JSON.parse(decodeURIComponent(el.dataset.openClip)); } catch (e) { return null; }
+}
+document.addEventListener('click', e => {
+  const back = e.target.closest('[data-back]');
+  if (back) { goBack(); return; }
+  const dyn = e.target.closest('[data-route]');
+  if (dyn && !dyn.dataset.rb) { e.preventDefault(); setRoute(dyn.dataset.route); return; }
+  const toastEl = e.target.closest('[data-toast]');
+  if (toastEl) { showToast(toastEl.dataset.toast); return; }
+  const like = e.target.closest('[data-like]');
+  if (like) {
+    const on = like.getAttribute('aria-pressed') === 'true';
+    like.setAttribute('aria-pressed', on ? 'false' : 'true');
+    showToast(on ? 'Убрали из избранного' : 'Добавили в избранное');
+    return;
+  }
+  const share = e.target.closest('[data-share]');
+  if (share) { showToast('Ссылка скопирована'); return; }
+  const oLive = e.target.closest('[data-open-live]');
+  if (oLive) { openLive(); return; }
+  const oProg = e.target.closest('[data-open-program]');
+  if (oProg) { openProgram(+oProg.dataset.openProgram); return; }
+  const oVid = e.target.closest('[data-open-video]');
+  if (oVid) { const vi = +oVid.dataset.openVideo; openWatch(Object.assign({ from: { r: 'video', t: 'Видео' } }, videos[vi])); return; }
+  const oEp = e.target.closest('[data-open-ep]');
+  if (oEp) {
+    const [pi, ei] = oEp.dataset.openEp.split(':').map(Number);
+    const ep = programEpisodes(programs[pi], pi)[ei];
+    openWatch(Object.assign({ from: { r: 'program-view', t: programs[pi].name } }, ep));
+    return;
+  }
+  const oClip = e.target.closest('[data-open-clip]');
+  if (oClip) { const c = parseClipAttr(oClip); if (c) openWatch(Object.assign({ from: { r: 'video', t: 'Видео' } }, c)); return; }
+  const oChart = e.target.closest('[data-open-chart]');
+  if (oChart) {
+    if (e.target.closest('.chart-actions')) return; // лайки чарта — не переход
+    const c = chart.find(x => x.rank === +oChart.dataset.openChart);
+    if (c) openWatch({ tag: 'Клип', name: `${c.artist} — ${c.track}`, dur: `3:${String(10 + (c.rank * 7) % 50).padStart(2, '0')}`, img: c.img, from: { r: 'chart', t: 'Супер 20' } });
+    return;
+  }
+  const oNews = e.target.closest('[data-open-news]');
+  if (oNews) { openNews(+oNews.dataset.openNews); return; }
+  const oArt = e.target.closest('[data-open-artist]');
+  if (oArt) { openArtist(+oArt.dataset.openArtist); return; }
+  const oHost = e.target.closest('[data-open-host]');
+  if (oHost) { openHost(+oHost.dataset.openHost); return; }
+
+  /* Контролы плеера (демо-механика) */
+  const pcPlay = e.target.closest('[data-pc-play]');
+  if (pcPlay) {
+    const view = pcPlay.closest('.page');
+    if (view && view.dataset.pageId === 'live-view') {
+      playing = !playing;
+      renderPlayState();
+      view.querySelectorAll('[data-pc-play]').forEach(b => { b.innerHTML = playing ? IC.pause : IC.play; });
+    } else if (view) {
+      const on = pcPlay.dataset.on === 'true';
+      view.querySelectorAll('[data-pc-play]').forEach(b => { b.dataset.on = on ? 'false' : 'true'; b.innerHTML = on ? IC.play : IC.pause; });
+    }
+    return;
+  }
+  const seek = e.target.closest('[data-seek]');
+  if (seek) {
+    const r = seek.getBoundingClientRect();
+    const pct = Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100));
+    seek.querySelector('.pc-fill').style.width = pct.toFixed(1) + '%';
+    const view = seek.closest('.page');
+    const timeEl = view && view.querySelector('[data-pc-time]');
+    if (timeEl) {
+      const total = timeEl.textContent.split('/')[1].trim();
+      const parts = total.split(':').map(Number);
+      const totalS = parts.length === 3 ? parts[0] * 3600 + parts[1] * 60 + parts[2] : parts[0] * 60 + parts[1];
+      const curS = Math.round(totalS * pct / 100);
+      const mm = Math.floor(curS / 60), ss = String(curS % 60).padStart(2, '0');
+      timeEl.textContent = `${parts.length === 3 ? Math.floor(curS / 3600) + ':' + String(Math.floor(curS % 3600 / 60)).padStart(2, '0') + ':' + ss : mm + ':' + ss} / ${total}`;
+    }
+    return;
+  }
+  const mute = e.target.closest('[data-pc-mute]');
+  if (mute) {
+    const on = mute.dataset.muted === 'true';
+    mute.dataset.muted = on ? 'false' : 'true';
+    mute.innerHTML = on ? IC.vol : IC.mute;
+    const bar = mute.parentElement.querySelector('.pc-volfill');
+    if (bar) bar.style.width = on ? '70%' : '0%';
+    return;
+  }
+  const volbar = e.target.closest('[data-volbar]');
+  if (volbar) {
+    const r = volbar.getBoundingClientRect();
+    const pct = Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100));
+    volbar.querySelector('.pc-volfill').style.width = pct.toFixed(0) + '%';
+    const m = volbar.parentElement.querySelector('[data-pc-mute]');
+    if (m) { m.dataset.muted = pct === 0 ? 'true' : 'false'; m.innerHTML = pct === 0 ? IC.mute : IC.vol; }
+    return;
+  }
+  const qbtn = e.target.closest('[data-qmenu]');
+  if (qbtn) {
+    const menu = qbtn.parentElement.querySelector('.pc-qmenu');
+    menu.hidden = !menu.hidden;
+    return;
+  }
+  const qopt = e.target.closest('[data-q]');
+  if (qopt) {
+    const wrap = qopt.closest('.pc-quality');
+    wrap.querySelector('.pc-qbtn').textContent = qopt.dataset.q;
+    wrap.querySelectorAll('[data-q]').forEach(b => b.setAttribute('aria-pressed', b === qopt ? 'true' : 'false'));
+    wrap.querySelector('.pc-qmenu').hidden = true;
+    showToast(`Качество: ${qopt.dataset.q}`);
+    return;
+  }
+  document.querySelectorAll('.pc-qmenu:not([hidden])').forEach(m => { if (!m.closest('.pc-quality').contains(e.target)) m.hidden = true; });
+  const minify = e.target.closest('[data-pc-minify]');
+  if (minify) { goBack(); showToast('Эфир — в окошке справа'); return; }
+  const pcPip = e.target.closest('[data-pc-pip]');
+  if (pcPip) { showToast('Мини-плеер работает для прямого эфира'); return; }
+  const pcFs = e.target.closest('[data-pc-fs]');
+  if (pcFs) { showToast('Полный экран включится в реализации плеера'); return; }
+});
+
+// Enter/Space открывают карточку с клавиатуры (карточки — article[tabindex])
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const t = e.target.closest('[data-open-program],[data-open-video],[data-open-news],[data-open-artist],[data-open-host],[data-open-clip],[data-open-ep],[data-open-chart]');
+  if (t && !e.target.closest('button, a, input, textarea, select')) { e.preventDefault(); t.click(); }
+});
+
 /* INIT */
 applyStream();
 renderPlayState();
 renderPoints();
-setRoute(localStorage.getItem(ROUTE_KEY) || 'home');
+// Внутрянки восстанавливаются из showcase.detail (в т.ч. для капчер-рельсы)
+const bootRoute = localStorage.getItem(ROUTE_KEY) || 'home';
+if (bootRoute === 'program-view') renderProgramView();
+else if (bootRoute === 'live-view') renderLiveView();
+else if (bootRoute === 'watch') renderWatch();
+else if (bootRoute === 'news-view') renderNewsView();
+else if (bootRoute === 'artist-view') renderArtistView();
+else if (bootRoute === 'host-view') renderHostView();
+const savedCtab = localStorage.getItem('showcase.ctab');
+if (savedCtab === 'prizes' || savedCtab === 'feedback') setCtab(savedCtab);
+setRoute(bootRoute);
 </script>
 </body>
 </html>
