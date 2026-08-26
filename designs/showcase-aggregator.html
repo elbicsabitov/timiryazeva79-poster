@@ -43,7 +43,6 @@
 [data-style="glass"] {
   --bg-base: #08070d;
   --bg-overlay: rgba(8,7,13,0.42);
-  --backdrop-image: url('assets/rutv/hero-lazarev-shepotom.jpg');
 
   --glass-bg: rgba(40,40,46,0.36);
   --glass-bg-strong: rgba(46,44,54,0.52);
@@ -78,7 +77,6 @@
 [data-style="light"] {
   --bg-base: #f5f5f7;
   --bg-overlay: rgba(245,245,247,0.85);
-  --backdrop-image: none;
 
   --glass-bg: rgba(255,255,255,0.92);
   --glass-bg-strong: #ffffff;
@@ -103,7 +101,6 @@
 }
 [data-style="light"] body { background: var(--bg-base); }
 [data-style="light"] .app-backdrop { background: var(--bg-base); }
-[data-style="light"] .app-backdrop::after { display: none; }
 
 [data-style="light"] .sidebar {
   background: rgba(255,255,255,0.85);
@@ -127,13 +124,11 @@
 [data-style="light"] .topbar {
   background: linear-gradient(180deg, rgba(245,245,247,0.92), rgba(245,245,247,0));
 }
-[data-style="light"] .tb-search,
-[data-style="light"] .tb-points {
+[data-style="light"] .tb-search {
   background: rgba(0,0,0,0.05);
   border: 0;
 }
-[data-style="light"] .tb-search:hover,
-[data-style="light"] .tb-points:hover {
+[data-style="light"] .tb-search:hover {
   background: rgba(0,0,0,0.08);
 }
 
@@ -268,28 +263,14 @@ h1,h2,h3,h4 { text-wrap: balance; margin: 0; line-height: 1.1; }
   background: var(--bg-base);
 }
 [data-style="glass"] .app-backdrop {
-  background-image: var(--backdrop-image);
-  background-size: cover;
-  background-position: center;
-  filter: saturate(1.08) brightness(0.95);
-}
-[data-style="glass"] .app-backdrop::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(8,7,13,0.55) 0%, rgba(8,7,13,0.82) 60%, rgba(8,7,13,0.94) 100%);
-}
-.dynamic-backdrop {
-  position: fixed;
-  inset: -10%;
-  z-index: -1;
-  background-image: var(--hero-image, none);
-  background-size: cover;
-  background-position: center;
-  filter: blur(80px) saturate(1.3);
-  opacity: 0;
-  transition: opacity 800ms ease;
-  pointer-events: none;
+  /* Нейтральный градиент-фон вместо кадра артиста (Стас 26.08, DFM
+     617668 + 617672 «может градиенты какие-то»): мягкие брендовые
+     свечения на тёмной базе, панели-стёкла читаются без затемнения */
+  background:
+    radial-gradient(56% 42% at 14% -6%, rgba(228,0,135,0.30), transparent 70%),
+    radial-gradient(48% 38% at 90% 8%, rgba(122,43,226,0.26), transparent 72%),
+    radial-gradient(70% 56% at 50% 116%, rgba(33,181,255,0.16), transparent 74%),
+    linear-gradient(180deg, #120b1a 0%, #0a0812 52%, #08070d 100%);
 }
 
 /* =========================================================================
@@ -463,40 +444,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 }
 .tb-search input::placeholder { color: var(--text-tertiary); }
 
-/* Баллы зрителя (механика Twitch channel points) — видны на всех страницах */
-.tb-points {
-  position: relative;
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 10px 16px;
-  border-radius: var(--r-pill);
-  background: var(--glass-bg-weak);
-  border: 1px solid var(--glass-border);
-  color: var(--text-primary);
-  font-size: 13.5px;
-  font-weight: 700;
-  font-feature-settings: "tnum";
-  transition: background var(--t-fast);
-  min-height: 42px;
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-.tb-points:hover { background: var(--glass-bg); }
-.tb-points svg { width: 15px; height: 15px; stroke: var(--brand-yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.tb-points-float {
-  position: absolute;
-  right: 12px; top: -8px;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--brand-yellow);
-  opacity: 0;
-  pointer-events: none;
-}
-.tb-points-float[data-anim="true"] { animation: ptsFloat 1.4s ease forwards; }
-@keyframes ptsFloat {
-  0% { opacity: 0; transform: translateY(6px); }
-  25% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-20px); }
-}
 .tb-avatar {
   width: 42px; height: 42px;
   border-radius: var(--r-pill);
@@ -1930,7 +1877,6 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 <body>
 
 <div class="app-backdrop" aria-hidden="true"></div>
-<div class="dynamic-backdrop" aria-hidden="true" id="dynamicBackdrop"></div>
 
 
 <div class="app">
@@ -2061,12 +2007,9 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="search" name="site-search" placeholder="Найти клип, программу или артиста" aria-label="Поиск">
       </label>
-      <!-- Баллы зрителя: копятся за просмотр, клик — Витрина подарков -->
-      <button class="tb-points" id="tbPoints" data-route="gifts" aria-label="Ваши баллы — открыть Витрину подарков">
-        <svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-        <span id="tbPointsVal">1 240</span>
-        <span class="tb-points-float" id="tbPointsFloat">+10</span>
-      </button>
+      <!-- Пилюля баллов в правом верхнем углу скрыта (Стас 26.08, DFM
+           617674-675 «вот это скроем»); механика жива: баланс — на
+           Витрине подарков (пункт меню), тикер — в PiP -->
       <div class="tb-avatar">ЭС</div>
     </header>
 
@@ -3143,7 +3086,7 @@ const fmtPts = n => n.toLocaleString('ru-RU');
 const fmtTime = sec => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 
 function renderPoints(gain) {
-  document.getElementById('tbPointsVal').textContent = fmtPts(pts);
+  // Пилюля баллов из топбара скрыта (Стас 26.08) — баланс живёт на Витрине
   document.getElementById('giftsBalance').textContent = fmtPts(pts);
   const progress = Math.round((1 - tickLeft / TICK_TOTAL) * 100);
   document.getElementById('pointsProgressBar').style.width = progress + '%';
@@ -3151,13 +3094,6 @@ function renderPoints(gain) {
     playing ? `+10 баллов через ${fmtTime(tickLeft)} просмотра эфира` : 'Включите эфир, чтобы копить баллы';
   document.getElementById('pipPointsText').textContent = `+10 через ${fmtTime(tickLeft)}`;
   document.querySelectorAll('.gift-buy').forEach(b => { b.disabled = pts < +b.dataset.cost; });
-  if (gain) {
-    const f = document.getElementById('tbPointsFloat');
-    f.textContent = `+${gain}`;
-    f.dataset.anim = 'false';
-    void f.offsetWidth;
-    f.dataset.anim = 'true';
-  }
   localStorage.setItem(PTS_KEY, String(pts));
 }
 
