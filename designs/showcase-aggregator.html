@@ -645,6 +645,9 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   grid-template-columns: minmax(0, 1fr) 360px;
   gap: 8px 36px;
   align-items: start;
+  /* Запас под плавающее окошко эфира (Стас 26.08, DFM 617711): PiP на этой
+     странице встаёт слева внизу — отступ даёт доскроллить карточки из-под него */
+  padding-bottom: 240px;
 }
 .programs-main { min-width: 0; }
 @media (max-width: 1100px) {
@@ -2979,6 +2982,10 @@ function renderPlayState() {
 function updatePip() {
   const on = !pipDismissed && (route !== 'home' || !heroVisible);
   pip.dataset.on = on ? 'true' : 'false';
+  // Умный дефолт-угол (Стас 26.08, DFM 617711 «справа перекрывает плеер»):
+  // на «Программах» правый низ занят телепрограммой — окошко само встаёт
+  // слева; после ручного переноса выбор пользователя не трогаем
+  if (!pipUserPlaced) pip.dataset.corner = route === 'programs' ? 'bl' : 'br';
 }
 
 if ('IntersectionObserver' in window) {
@@ -3020,6 +3027,7 @@ document.getElementById('pipClose').addEventListener('click', () => {
    pointer events покрывают мышь и палец; отпустил — магнит к ближайшему углу */
 let pipDrag = null;
 let pipWasDragged = false;
+let pipUserPlaced = false; // после ручного переноса маршрутный дефолт-угол отключается
 pip.addEventListener('pointerdown', e => {
   if (e.target.closest('.pip-act') || e.target.closest('.pip-play')) return;
   pipDrag = { id: e.pointerId, x: e.clientX, y: e.clientY, rect: pip.getBoundingClientRect(), moved: false };
@@ -3046,6 +3054,7 @@ function pipDrop(e) {
     pip.style.left = '';
     pip.style.top = '';
     pip.dataset.corner = corner;
+    pipUserPlaced = true;
     // FLIP-доводка до угла (CSS-переход между auto-позициями не анимируется)
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const after = pip.getBoundingClientRect();
