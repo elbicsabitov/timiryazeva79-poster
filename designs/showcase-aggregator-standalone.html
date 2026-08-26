@@ -669,7 +669,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
-  overflow: hidden;
+  /* Потолок высоты дня: когда редакция пришлёт полную сетку и слотов станет
+     больше, колонка НЕ растянет страницу — список скроллится внутри себя,
+     сегодняшний автоматически подкручен к «Сейчас» (вопрос owner'а 26.08) */
+  max-height: 574px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--glass-border) transparent;
 }
 [data-style="light"] .smx-list { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: var(--shadow-md); }
 .smx-col[data-today="true"] .smx-list { box-shadow: var(--shadow-md), inset 0 0 0 1.5px rgba(228,0,135,0.45); }
@@ -2252,7 +2259,10 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
           <h2 class="row-title">Телепрограмма</h2>
         </div>
         <div class="sched-matrix" id="schedMatrix"></div>
-        <p class="sched-note">Новости RU.TV — в начале каждого часа. Сетка — демо: программу передач пришлёт редакция.</p>
+        <!-- Дисклеймер «сетка — демо» снят по слову owner'а 26.08 («это
+             лишнее»); факт остаётся внутренним — реальную программу передач
+             пришлёт редакция (RUTV-137) -->
+        <p class="sched-note">Новости RU.TV — в начале каждого часа.</p>
       </section>
       <div class="row-head">
         <h2 class="row-title">Все программы</h2>
@@ -2934,6 +2944,10 @@ function setRoute(r) {
   setMenu(false);
   window.scrollTo({ top: 0, behavior: 'smooth' });
   updatePip();
+  // Телепрограмма: авто-позиционирование (сегодня в кадр, список к «Сейчас»)
+  // считается по геометрии — пересчитываем на ВИДИМОЙ странице (при init
+  // страница скрыта, размеры нулевые), заодно освежая «Сейчас» по часам
+  if (r === 'programs' && typeof renderSched === 'function') renderSched();
 }
 
 document.querySelectorAll('[data-route]').forEach(n => {
@@ -3250,7 +3264,15 @@ function renderSched() {
       </div>
     </div>`;
   }).join('');
-  // Сегодня — в кадр (без smooth: это первичная раскладка, не переход)
+  // Сегодня — в кадр (без smooth: это первичная раскладка, не переход);
+  // внутри сегодняшней колонки — подкрутка списка к «Сейчас» (при полной
+  // сетке от редакции слоты не влезают в потолок 574px — список скроллится)
+  const todayList = matrix.querySelector('.smx-col[data-today="true"] .smx-list');
+  const nowRow = todayList && todayList.querySelector('.smx-row[data-now="true"]');
+  if (todayList && nowRow) {
+    const delta = nowRow.getBoundingClientRect().top - todayList.getBoundingClientRect().top;
+    todayList.scrollTop = Math.max(0, delta - todayList.clientHeight / 2 + nowRow.offsetHeight / 2);
+  }
   const today = matrix.querySelector('.smx-col[data-today="true"]');
   if (today) matrix.scrollLeft = Math.max(0, today.offsetLeft - matrix.offsetLeft - 2);
 }
