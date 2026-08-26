@@ -1100,8 +1100,8 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 /* CARD: Программа — радийная плитка (видеоподкаст) */
 .card-program { flex: 0 0 232px; scroll-snap-align: start; cursor: pointer; }
 .card-program-art {
-  /* 4:3 — «иконки чуть горизонтальные» (правка Марго 25.08, DFM #617118 п.6) */
-  aspect-ratio: 4 / 3;
+  /* 1:1 — постеры программ = квадраты 1000×1000, как блок станций на РР (Стас/Лёша 26.08, DFM 617787/617789; перекрывает 4:3 Марго 25.08) */
+  aspect-ratio: 1 / 1;
   border-radius: var(--r-lg);
   position: relative;
   overflow: hidden;
