@@ -2015,6 +2015,8 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 .watch-meta a { color: var(--accent); cursor: pointer; font-weight: 600; }
 .watch-actions { display: flex; gap: 10px; flex: none; padding-top: 4px; }
 .lv-list { display: flex; flex-direction: column; gap: 6px; max-width: 720px; }
+/* v2.16.1: под плеером список идёт по колонке плеера (player-wrap) в две колонки — не «криво» слева */
+.player-wrap .lv-list { max-width: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .lv-slot {
   display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: baseline;
   padding: 12px 16px; border-radius: var(--r-md);
@@ -2236,6 +2238,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   .pc-bigplay svg { width: 26px; height: 26px; }
   .watch-title { font-size: 21px; }
   .lv-slot { grid-template-columns: 52px 1fr; }
+  .player-wrap .lv-list { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4041,7 +4044,7 @@ function renderLiveView() {
     if (h * 60 + m <= mins) nowIdx = j;
   });
   if (nowIdx === -1) nowIdx = slots.length - 1;
-  const upcoming = slots.slice(nowIdx, nowIdx + 4);
+  const upcoming = slots.slice(nowIdx, nowIdx + 6);
   document.getElementById('liveView').innerHTML = `
     ${crumbsBar([{ r: 'home', t: 'Главная' }], 'Прямой эфир')}
     <div class="player-screen" style="${bg(s)}">
@@ -4063,7 +4066,7 @@ function renderLiveView() {
         <button class="act-btn" data-share>${IC.share}Поделиться</button>
       </div>
     </div>
-    <div class="dv-sec">
+    <div class="dv-sec player-wrap">
       <h3 class="dv-h3">Далее в эфире</h3>
       <div class="lv-list">
         ${upcoming.map(([t, n, meta], j) => `
@@ -4111,7 +4114,7 @@ function renderWatch() {
         <button class="act-btn" data-share>${IC.share}Поделиться</button>
       </div>
     </div>
-    <div class="dv-sec">
+    <div class="dv-sec player-wrap">
       <h3 class="dv-h3">Смотрите также</h3>
       <div class="ep-grid">
         ${related.map(x => `
