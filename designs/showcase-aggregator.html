@@ -2073,6 +2073,151 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 .live-expand:hover { background: var(--accent); }
 .live-expand svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; }
 
+/* =========================================================================
+   v2.16 (08.09) — ВНУТРЯНКИ ПО ОБРАЗЦУ САЙТОВ РМГ (owner 04.09: «корректить по
+   примерам прошлых проектов»): rusradio.ru/shows (чипы ведущих в шапке, постер
+   справа), rusradio.ru/persons (аватар+био, «Новости», сетка треков),
+   rusradio.ru/news (тег-чипы, чип персоны, обложка 16:9, правая колонка 300×600),
+   ru.tv/programms (сетка выпусков с гостем, «Больше», список программ справа,
+   «другие программы»), ru.tv/air/vjs (портретные карточки ведущих)
+   ========================================================================= */
+.dv-layout { display: grid; grid-template-columns: minmax(0, 1fr) var(--promo-w); gap: 40px; align-items: start; }
+.dv-main { min-width: 0; }
+/* Статья: мера строки как на rusradio.ru (колонка ≤1100px, реклама сразу справа, дальний правый край — зона PiP) */
+.dv-layout-article { grid-template-columns: minmax(0, 1100px) var(--promo-w); justify-content: start; }
+.dv-side { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.side-card {
+  border-radius: var(--r-lg); padding: 16px 18px 12px;
+  background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+.side-card h4 { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px; }
+.side-list { display: flex; flex-direction: column; }
+.side-list a {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin: 0 -10px;
+  border-radius: var(--r-sm); font-size: 13.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.side-list a:hover { background: var(--glass-bg-strong); color: var(--text-primary); }
+.side-list a[aria-current="true"] { color: var(--accent); background: var(--accent-soft); }
+.side-list i { flex: none; width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-style: normal; font-size: 9.5px; font-weight: 800; color: #fff; background-size: cover; background-position: center; }
+.side-list small { margin-left: auto; font-size: 11.5px; font-weight: 600; color: var(--text-tertiary); white-space: nowrap; }
+.side-list a[aria-current="true"] small { color: var(--accent); }
+/* Рекламное место 300×600 на внутрянках — как на rusradio.ru и ru.tv (RUTV-124) */
+.dv-side .promo-slot { width: 100%; min-height: 600px; }
+.side-news { display: flex; flex-direction: column; gap: 12px; padding-bottom: 4px; }
+.side-news a { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: center; cursor: pointer; }
+.side-news i { display: block; aspect-ratio: 16 / 9; border-radius: 8px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 1px var(--glass-border); }
+.side-news b { display: block; font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--text-primary); }
+.side-news a:hover b { color: var(--accent); }
+.side-news small { display: block; margin-top: 3px; font-size: 11.5px; color: var(--text-tertiary); }
+.side-chart { display: flex; flex-direction: column; gap: 2px; }
+.side-chart a { display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: baseline; padding: 6px 0; cursor: pointer; }
+.side-chart a b { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.side-chart a b + small { display: block; font-size: 11.5px; color: var(--text-tertiary); }
+.side-chart a > small { font-size: 12px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* Чипы персон (rusradio.ru: ведущие под названием шоу, артист под заголовком новости) */
+.person-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.person-chip {
+  display: inline-flex; align-items: center; gap: 8px; padding: 4px 13px 4px 4px;
+  border-radius: var(--r-pill); background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border);
+  font-size: 13px; font-weight: 600; color: var(--text-primary); cursor: pointer; transition: background var(--t-fast);
+}
+.person-chip:hover { background: var(--glass-bg-strong); }
+.person-chip i { width: 28px; height: 28px; border-radius: 50%; flex: none; display: grid; place-items: center; font-style: normal; font-size: 10px; font-weight: 800; color: #fff; background-size: cover; background-position: center; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.tag-row .chip { font-size: 12px; padding: 6px 12px; }
+.chip[data-route] { cursor: pointer; }
+
+/* Программа: текст слева + квадратный постер справа (rusradio.ru/shows; 1:1 — стандарт RUTV-143) */
+.pv-hero { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 40px; align-items: start; }
+.pv-poster {
+  aspect-ratio: 1 / 1; border-radius: var(--r-xl); position: relative; overflow: hidden; padding: 20px;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px var(--glass-border);
+}
+.pv-poster .dv-art-name { font-size: 30px; }
+.pv-sched { margin-top: 16px; font-size: 15px; color: var(--text-secondary); }
+.pv-sched strong { color: var(--text-primary); }
+.dv-desc + .dv-desc { margin-top: 10px; }
+.dv-role { margin-top: 10px; font-size: 14.5px; font-weight: 600; color: var(--text-secondary); }
+
+/* Сетка выпусков 16:9 с гостем и play-кружком (ru.tv/programms) + «Больше» */
+.ep-grid-3 { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+.ep-guest { font-size: 12.5px; color: var(--text-tertiary); margin-top: 3px; }
+.ep-play {
+  position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%;
+  background: rgba(0,0,0,0.42); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: grid; place-items: center; opacity: 0; transition: opacity var(--t-fast); z-index: 1;
+}
+.video-card:hover .ep-play, .video-card:focus-visible .ep-play { opacity: 1; }
+.ep-play svg { width: 18px; height: 18px; margin-left: 2px; }
+.ep-play svg .f { fill: #fff; }
+.btn-more {
+  display: flex; margin: 24px auto 0; padding: 11px 28px; border-radius: var(--r-pill);
+  background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border);
+  color: var(--text-primary); font-size: 14px; font-weight: 700; cursor: pointer; transition: background var(--t-fast), color var(--t-fast);
+}
+.btn-more:hover { background: var(--accent); color: #fff; box-shadow: none; }
+
+/* Новость: заголовок + круглая «Поделиться» справа, цитата-врезка, строка источника (rusradio.ru/news) */
+.article { max-width: none; }
+.article-head { display: flex; align-items: flex-start; gap: 18px; }
+.article-head .article-title { flex: 1; margin-top: 0; }
+.share-round {
+  flex: none; width: 42px; height: 42px; border-radius: 50%; margin-top: 4px; cursor: pointer;
+  display: grid; place-items: center; background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border); color: var(--text-primary);
+}
+.share-round svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.share-round:hover { background: var(--glass-bg-strong); }
+.article-body blockquote {
+  margin: 4px 0 20px; padding: 4px 0 4px 18px; border-left: 3px solid var(--accent); max-width: 760px;
+  font-size: 17px; line-height: 1.6; font-weight: 600; font-style: italic; color: var(--text-primary);
+}
+.article-body blockquote cite { display: block; margin-top: 8px; font-size: 13px; font-style: normal; font-weight: 500; color: var(--text-tertiary); }
+.article-src { margin-top: 6px; font-size: 13px; color: var(--text-tertiary); }
+.article-src span { color: var(--text-secondary); }
+
+/* Ведущий: портрет 3:4 (ru.tv/air/vjs) — фото пришлёт RU.TV (RUTV-145), пока монограмма */
+.host-portrait {
+  flex: 0 0 236px; aspect-ratio: 3 / 4; border-radius: var(--r-xl); position: relative; overflow: hidden;
+  display: grid; place-items: center; box-shadow: var(--shadow-md), inset 0 0 0 1px var(--glass-border);
+}
+.host-portrait::after { content: ''; position: absolute; inset: auto 0 0 0; height: 42%; background: linear-gradient(180deg, transparent, rgba(0,0,0,0.42)); }
+.host-portrait .dv-ava-initials { font-size: 64px; }
+.soc-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.soc-row .chip { cursor: pointer; }
+.soc-row .chip:hover { color: var(--text-primary); background: var(--glass-bg-strong); }
+
+/* Горизонтальные ряды «похожее» (артисты / ведущие / программы) */
+.sim-row { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 0 8px; scrollbar-width: none; }
+.sim-row::-webkit-scrollbar { display: none; }
+.sim-row .card-artist { flex: 0 0 150px; }
+.sim-row .card-host { flex: 0 0 168px; }
+.sim-row .card-program { flex: 0 0 200px; }
+.sim-row .card-program-art { padding: 12px; }
+.sim-row .card-program-abbr { font-size: 19px; }
+.sim-row .card-program-time { font-size: 9.5px; padding: 3px 8px; }
+.sim-row .card-program-desc { display: none; }
+
+/* Обратная связь: форма + контакты справа (одна страница — как на ru.tv/aboutrutv/contacts) */
+.fb-layout { display: grid; grid-template-columns: minmax(0, 680px) var(--promo-w); gap: 40px; align-items: start; }
+.fb-aside { display: flex; flex-direction: column; gap: 14px; }
+.fb-aside .contact-card { padding: 16px 18px; }
+
+@media (max-width: 1100px) {
+  .dv-layout { grid-template-columns: 1fr; gap: 28px; }
+  .dv-side .promo-slot { display: none; }   /* мобильный формат рекламы — RUTV-124 */
+  .fb-layout { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (max-width: 900px) {
+  .pv-hero { grid-template-columns: 1fr; gap: 20px; }
+  .pv-poster { width: min(320px, 100%); order: -1; }
+  .ep-grid-3 { grid-template-columns: 1fr; }
+  .host-portrait { flex-basis: auto; width: 200px; }
+  .article-head { gap: 12px; }
+}
+
 /* Кликабельные карточки: курсор на всём, что открывает внутрянку */
 [data-open-program], [data-open-video], [data-open-news], [data-open-artist], [data-open-host], [data-open-clip], [data-open-ep], [data-open-chart] { cursor: pointer; }
 
@@ -2632,6 +2777,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       </div>
       <!-- Вкладка «Обратная связь» (запрос Лёши DFM 617812) -->
       <div id="contactTabFeedback" role="tabpanel" hidden>
+        <div class="fb-layout">
         <div class="fb-wrap">
           <form class="fb-grid" id="fbForm" novalidate>
             <div class="fb-field">
@@ -2664,11 +2810,27 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
           <button class="btn btn-live fb-send" id="fbSend"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Отправить</button>
           <p class="fb-note">Обычно отвечаем в течение двух рабочих дней. Срочное — в «Прямой эфир»: +7 (495) 956-10-12.</p>
         </div>
+        <!-- v2.16: контакты рядом с формой — как на ru.tv/aboutrutv/contacts (одна страница) -->
+        <aside class="fb-aside" aria-label="Контакты">
+          <article class="contact-card">
+            <h3>Редакция</h3>
+            <p>123298, Москва, 3-я Хорошёвская, 12<br>Телефон: <strong>+7 499 579-77-09</strong><br>info@ru.tv</p>
+          </article>
+          <article class="contact-card">
+            <h3>Прямой эфир</h3>
+            <p>Телефон: <strong>+7 (495) 956-10-12</strong><br>Приветы и поздравления — через «Статус: В сети»</p>
+          </article>
+          <article class="contact-card">
+            <h3>Реклама</h3>
+            <p>ad@ru.tv<br>Телефон: <strong>+7 499 579-77-99</strong></p>
+          </article>
+        </aside>
+        </div>
       </div>
     </section>
 
     <!-- =============================================================== -->
-    <!-- ВНУТРЯНКИ (v2.15, запрос Лёши DFM 617812): контент рендерится JS -->
+    <!-- ВНУТРЯНКИ (v2.15, запрос Лёши DFM 617812; v2.16 — по образцу сайтов РМГ): контент рендерится JS -->
     <!-- =============================================================== -->
     <section class="page" data-page-id="program-view"><div id="programView"></div></section>
     <section class="page" data-page-id="live-view"><div id="liveView"></div></section>
@@ -2864,12 +3026,17 @@ const artists = [
 // Правка редакции №8: только имя и фамилия, БЕЗ привязки к программам —
 // связь ведущий↔программа показывать на личной странице ведущего
 const hosts = [
-  { name: 'Алекс Морозов', initials: 'АМ', grad: 'linear-gradient(135deg,#E40087,#5a0f3f)' },
-  { name: 'Кристина Ветрова', initials: 'КВ', grad: 'linear-gradient(135deg,#21B5FF,#0d2545)' },
-  { name: 'Даня Соколов', initials: 'ДС', grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)' },
-  { name: 'Мия Орлова', initials: 'МО', grad: 'linear-gradient(135deg,#FF9D2E,#7a3a00)' },
-  { name: 'Тимур Волков', initials: 'ТВ', grad: 'linear-gradient(135deg,#FFC700,#B00068)' },
-  { name: 'Лиза Морская', initials: 'ЛМ', grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)' },
+  // Реальный состав — ru.tv/air/vjs (08.09.2026) + ведущие программ из описаний ru.tv/programms;
+  // фото и биографии пришлёт RU.TV (RUTV-122/145) — пока монограммы и демо-био
+  { name: 'Иван Чуйков',       initials: 'ИЧ', grad: 'linear-gradient(135deg,#E40087,#5a0f3f)', role: 'Виджей RU.TV' },
+  { name: 'Макс Кобзов',       initials: 'МК', grad: 'linear-gradient(135deg,#21B5FF,#0d2545)', role: 'Виджей RU.TV' },
+  { name: 'Мария Валуйская',   initials: 'МВ', grad: 'linear-gradient(135deg,#C724B1,#2a0d3a)', role: 'Виджей RU.TV' },
+  { name: 'Ксения Акчурина',   initials: 'КА', grad: 'linear-gradient(135deg,#FF9D2E,#7a3a00)', role: 'Виджей RU.TV' },
+  { name: 'Артём Иванов',      initials: 'АИ', grad: 'linear-gradient(135deg,#FFC700,#B00068)', role: 'Виджей RU.TV' },
+  { name: 'Катя Голден',       initials: 'КГ', grad: 'linear-gradient(135deg,#7a2be2,#1a0d30)', role: 'Ведущая «Сияй по-звёздному»' },
+  { name: 'Самира Мустафаева', initials: 'СМ', grad: 'linear-gradient(135deg,#E40087,#21B5FF)', role: 'Ведущая «Дотянись до звёзд»' },
+  { name: 'Антон Юрьев',       initials: 'АЮ', grad: 'linear-gradient(135deg,#FF4D8F,#7a1245)', role: 'Ведущий «Дискотеки Дискотек»' },
+  { name: 'Софья Курдюкова',   initials: 'СК', grad: 'linear-gradient(135deg,#1a8a5a,#0d251a)', role: 'Ведущая «Супер 20»' },
 ];
 
 // Новости RU.TV (правка 603079: заголовок + подзаголовок-лид).
@@ -3609,6 +3776,100 @@ renderSched();
    ВНУТРЯНКИ (v2.15, запрос Лёши DFM 617812): программа, плеер потока и
    материала, новость, персоны + крошки и «Назад»
    ========================================================================= */
+/* Связки и наполнение внутрянок v2.16 (образец — сайты РМГ). Источники: ведущие
+   4 программ — описания ru.tv/programms (Супер 20 — Софья Курдюкова, Дискотека
+   Дискотек — Антон Юрьев, Сияй по-звёздному — Катя Голден, Дотянись до звёзд —
+   Самира Мустафаева); гости «Дискотеки Дискотек» — выпуски на ru.tv/programms/
+   diskoteka-diskotek. Остальные связки, гости, био и цитаты — демо (RUTV-147) */
+const PROGRAM_HOSTS = {
+  'Супер 20': [8], 'Тема': [0, 3], 'Статус: в сети': [1, 2], 'RUновости': [4],
+  'Дискотека Дискотек': [7], 'Топ-чарт Rocket Records': [1], 'Сияй по-звёздному': [5],
+  'Личный вопрос': [3], 'Дотянись до звёзд': [6],
+};
+const PROGRAM_LONG = {
+  'Супер 20': 'Двадцать главных клипов недели по голосам зрителей: позиции обновляются каждую пятницу, а за любимый клип можно голосовать на сайте и в приложении.',
+  'Тема': 'Прямой эфир без заготовленных ответов: звонки зрителей, гости в студии и реакция на главные события дня.',
+  'Статус: в сети': 'Передайте привет или поздравление прямо в эфир — с сайта и из приложения. За приветы начисляются баллы, которые обмениваются на подарки в «Витрине».',
+  'RUновости': 'Короткие выпуски в начале каждого часа и большой итоговый выпуск вечером: премьеры, чарты, афиша и закулисье.',
+  'Дискотека Дискотек': 'Каждое воскресенье — новый гость из эпохи дискотек: живые истории, хиты в студии и караоке со зрителями.',
+  'Топ-чарт Rocket Records': 'Чарт молодых исполнителей лейбла: новые имена, свежие клипы и голосование за открытие месяца.',
+  'Сияй по-звёздному': 'Пошаговые образы из клипов: макияж, уход и причёски, которые можно повторить дома.',
+  'Личный вопрос': 'Разговор один на один: что стоит за песнями, клипами и образами артистов — без глянца.',
+  'Дотянись до звёзд': 'Полчаса движения под клипы из ротации: разминка, силовой блок и растяжка — уровень подбирает ведущая.',
+};
+const PROGRAM_GUESTS = {
+  'Дискотека Дискотек': ['Катя Лель', 'Сергей Васюта и группа «Сладкий сон»', 'Вирус!', 'Антон Зацепин', 'Gold Strelki', 'Алексей Елистратов «REVOльVERS»', 'Шура', 'Отпетые Мошенники', 'Демо', 'Натали', 'Андрей Губин', 'Игорь Николаев'],
+};
+const DEMO_GUESTS = ['Сергей Лазарев', 'Полина Гагарина', 'JONY', 'Григорий Лепс', 'MIYAGI & Andy Panda', 'HammAli & Navai', 'Macan', 'Анна Семенович', 'Дима Билан', 'Zivert', 'Клава Кока', 'Артур Пирожков'];
+const NEWS_TAGS = {
+  'Премьера': ['#Клипы', '#Эфир'], 'Концерт': ['#Афиша', '#Концерты'], 'Чарт': ['#Супер 20', '#Голосование'],
+  'Сервис': ['#Сайт и приложение', '#Витрина'], 'Спецпроект': ['#Спецпроекты', '#Дети'],
+};
+const NEWS_QUOTES = [
+  ['«Шёпотом» — самая тихая и самая личная моя история. Мы снимали её одним кадром, чтобы ничего не спрятать за монтажом', 'Сергей Лазарев — в эфире «RUновостей»'],
+  ['Это будет не концерт, а машина времени: три часа хитов, под которые танцевала вся страна', 'Антон Юрьев, ведущий «Дискотеки Дискотек»'],
+  ['Четыре недели подряд — это уже не случайность. Спасибо всем, кто голосует каждую пятницу', 'JONY — в эфире «Супер 20»'],
+  ['Мы хотели показать путь артиста честно: от репетиционной базы до первого большого эфира', 'Продюсер сериала «Полевой»'],
+  ['Теперь передать привет в эфир можно за минуту — с телефона, не дожидаясь звонка в студию', 'Редакция «Статус: в сети»'],
+  ['Лёд не про рекорды, а про радость движения — приходите с детьми, всё остальное мы возьмём на себя', 'Анна Семенович'],
+];
+const ARTIST_BIO = {
+  'Сергей Лазарев': 'Певец, актёр и телеведущий, дважды представлял Россию на «Евровидении» и дважды входил в тройку лучших. На RU.TV — постоянный участник «Супер 20» и «Премии РУ.ТВ».',
+  'Полина Гагарина': 'Певица и актриса, финалистка «Евровидения-2015», обладательница «Премии РУ.ТВ». В ротации канала — клипы, живые выступления и интервью программы «Личный вопрос».',
+  'Григорий Лепс': 'Певец и продюсер, народный артист России. На RU.TV — клипы, концертные записи и выпуски с его участием.',
+  'JONY': 'Певец и автор песен, один из самых ротируемых артистов последних лет. «Комета» четвёртую неделю держит первую строчку «Супер 20».',
+  'MIYAGI & Andy Panda': 'Дуэт из Владикавказа, хип-хоп и мелодичный рэп. В ротации RU.TV — клипы и концертные версии главных треков.',
+  'HammAli & Navai': 'Поп-дуэт, авторы хитов «Птичка» и «Прятки». В эфире RU.TV — клипы и живые выступления с «Премии РУ.ТВ».',
+};
+const HOST_BIO = {
+  default: ['В эфире RU.TV: прямые включения, интервью с артистами и фирменные рубрики канала.', 'Биографию, фото и ссылки на соцсети пришлёт редакция — карточка обновится автоматически.'],
+};
+const MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const DOW_HUMAN = { 'Пн': 'по понедельникам', 'Вт': 'по вторникам', 'Ср': 'по средам', 'Чт': 'по четвергам', 'Пт': 'по пятницам', 'Сб': 'по субботам', 'Вс': 'по воскресеньям', 'Будни': 'по будням', 'Ежедневно': 'ежедневно' };
+// «Пт 19:00» → «по пятницам в 19:00» (шапка шоу на rusradio.ru пишет расписание словами)
+function humanSlot(s) {
+  const m = s.match(/^(\S+)(?:\s+(\d{1,2}:\d{2}))?$/);
+  if (!m) return s;
+  const d = DOW_HUMAN[m[1]] || m[1];
+  return m[2] ? `${d} в ${m[2]}` : d;
+}
+function scheduleText(p, slots) {
+  const list = slots.length ? slots.flatMap(s => s.split(' · ')) : [p.time];
+  return list.map(humanSlot).join(', ');
+}
+function todayText() { const d = new Date(); return `${d.getDate()} ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`; }
+
+/* ---------- Правая колонка внутрянок (rusradio.ru + ru.tv: разделы + рекламное место 300×600) ---------- */
+function promoSlotHTML() {
+  const s = document.getElementById('promoSlot');
+  return `<aside class="promo-slot" aria-label="Реклама">${s ? s.innerHTML : ''}</aside>`;
+}
+function sideProgramsList(active) {
+  return `<div class="side-card"><h4>Программы канала</h4><div class="side-list">
+    ${programs.map((p, i) => `<a data-open-program="${i}" aria-current="${i === active ? 'true' : 'false'}"><i style="background:${p.grad}"></i>${p.name}<small>${p.time}</small></a>`).join('')}
+  </div></div>`;
+}
+function sideHostsList(active) {
+  return `<div class="side-card"><h4>Ведущие RU.TV</h4><div class="side-list">
+    ${hosts.map((h, i) => `<a data-open-host="${i}" aria-current="${i === active ? 'true' : 'false'}"><i style="background:${h.grad}">${h.initials}</i>${h.name}</a>`).join('')}
+  </div></div>`;
+}
+function sideNewsList(exclude) {
+  const items = news.map((n, i) => i).filter(i => i !== exclude).slice(0, 4);
+  return `<div class="side-card"><h4>Ещё новости</h4><div class="side-news">
+    ${items.map(i => `<a data-open-news="${i}"><i style="${bg(news[i])}"></i><span><b>${news[i].title}</b><small>${news[i].time} · ${news[i].source}</small></span></a>`).join('')}
+  </div></div>`;
+}
+function sideChart() {
+  return `<div class="side-card"><h4>Супер 20 · сейчас</h4><div class="side-chart">
+    ${chart.slice(0, 5).map(c => `<a data-open-chart="${c.rank}"><small>${String(c.rank).padStart(2, '0')}</small><span><b>${c.artist}</b><small>${c.track}</small></span></a>`).join('')}
+    <a data-route="chart" style="grid-template-columns:1fr;color:var(--accent);font-size:13px;font-weight:700;">Вся двадцатка →</a>
+  </div></div>`;
+}
+function hostChip(i) { const h = hosts[i]; return h ? `<a class="person-chip" data-open-host="${i}"><i style="background:${h.grad}">${h.initials}</i>${h.name}</a>` : ''; }
+function artistChip(i) { const a = artists[i]; return a ? `<a class="person-chip" data-open-artist="${i}"><i style="${bg(a)}"></i>${a.name}</a>` : ''; }
+function programsOfHost(hi) { return programs.map((p, i) => i).filter(i => (PROGRAM_HOSTS[programs[i].name] || []).includes(hi)); }
+
 const DETAIL_KEY = 'showcase.detail';
 let detail = { program: 0, video: 0, news: 0, artist: 0, host: 0, watch: null };
 try { detail = Object.assign(detail, JSON.parse(localStorage.getItem(DETAIL_KEY) || '{}')); } catch (e) {}
@@ -3654,14 +3915,16 @@ function scheduleSlotsFor(name) {
   });
 }
 
-// Выпуски программы — демо-медиатека (16:9, стандарт «всё видео 1920×1080»)
+// Выпуски программы — демо-медиатека (16:9, стандарт «всё видео 1920×1080»); подпись = гость
+// выпуска, как на ru.tv/programms («Дискотека Дискотек · Катя Лель»)
 const EP_IMGS = ['assets/rutv/Rectangle 4322-10.png', 'assets/rutv/Rectangle 4322-9.png', 'assets/rutv/Rectangle 4322-28.jpg', 'assets/rutv/Rectangle 4322-13.png', 'assets/rutv/Rectangle 4322-30.jpg', 'assets/rutv/Rectangle 4322-25.jpg'];
-const EP_DATES = ['22 августа', '15 августа', '8 августа', '1 августа', '25 июля', '18 июля'];
+const EP_DATES = ['6 сентября', '30 августа', '23 августа', '16 августа', '9 августа', '2 августа', '26 июля', '19 июля', '12 июля', '5 июля', '28 июня', '21 июня'];
 const EP_DURS = ['52:10', '48:33', '51:02', '47:45', '53:18', '49:57'];
 function programEpisodes(p, pi) {
+  const guests = PROGRAM_GUESTS[p.name] || DEMO_GUESTS.slice(pi).concat(DEMO_GUESTS.slice(0, pi));
   return EP_DATES.map((date, i) => ({
-    tag: 'Выпуск', name: `${p.name} · выпуск ${132 - i}`, sub: date,
-    dur: EP_DURS[(pi + i) % EP_DURS.length], img: EP_IMGS[(pi + i) % EP_IMGS.length],
+    tag: p.name, guest: guests[i % guests.length], name: `${p.name} · ${guests[i % guests.length]}`,
+    sub: `Выпуск ${140 - i} · ${date}`, dur: EP_DURS[(pi + i) % EP_DURS.length], img: EP_IMGS[(pi + i) % EP_IMGS.length],
   }));
 }
 
@@ -3670,39 +3933,61 @@ function epCard(ep, pi, ei) {
     <article class="video-card" tabindex="0" data-open-ep="${pi}:${ei}">
       <div class="video-card-thumb" style="${bg(ep)}">
         <span class="video-card-tag">${ep.tag}</span>
+        <span class="ep-play" aria-hidden="true">${IC.play}</span>
         <span class="video-card-duration">${ep.dur}</span>
       </div>
-      <div class="video-card-name">${ep.name}</div>
+      <div class="video-card-name">${ep.guest || ep.name}</div>
+      <div class="ep-guest">${ep.sub}</div>
     </article>`;
 }
+const EPS_SHOWN = 8;
 
-/* ---------- Программа ---------- */
+/* ---------- Программа (образец: rusradio.ru/shows — чипы ведущих, расписание словами, постер справа;
+   ru.tv/programms — сетка выпусков с гостем, «Больше», список программ справа, «другие программы») ---------- */
 function renderProgramView() {
   const i = detail.program, p = programs[i];
   if (!p) return;
   const slots = scheduleSlotsFor(p.name);
   const eps = programEpisodes(p, i);
+  const hostIdx = PROGRAM_HOSTS[p.name] || [];
+  const others = programs.map((x, xi) => xi).filter(xi => xi !== i);
   document.getElementById('programView').innerHTML = `
     ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'programs', t: 'Программы' }], p.name)}
-    <div class="dv-hero">
-      <div class="dv-art" style="background:${p.grad};">
-        <span class="card-program-time">${p.time}</span>
-        <span class="dv-art-name">${p.name}</span>
-      </div>
-      <div class="dv-body">
-        <h1 class="dv-title">${p.name}</h1>
-        <div class="dv-meta">${p.meta} · В эфире: ${p.time}</div>
-        <p class="dv-desc">${p.desc}</p>
-        ${slots.length ? `<div class="dv-chips">${slots.map(s => `<span class="chip">${s}</span>`).join('')}</div>` : ''}
-        <div class="dv-actions">
-          <button class="btn btn-live" data-open-live><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть эфир</button>
-          <button class="act-btn" data-toast="Напомним о ближайшем эфире «${p.name}»">${IC.bell}Напомнить</button>
+    <div class="dv-layout">
+      <div class="dv-main">
+        <div class="pv-hero">
+          <div class="dv-body">
+            <h1 class="dv-title">${p.name}</h1>
+            <div class="dv-meta">${p.meta}</div>
+            ${hostIdx.length ? `<div class="person-chips">${hostIdx.map(hostChip).join('')}</div>` : ''}
+            <p class="pv-sched">В эфире <strong>${scheduleText(p, slots)}</strong>. Повторы — в сетке на странице «Программы».</p>
+            <p class="dv-desc">${p.desc}</p>
+            ${PROGRAM_LONG[p.name] ? `<p class="dv-desc">${PROGRAM_LONG[p.name]}</p>` : ''}
+            <div class="dv-actions">
+              <button class="btn btn-live" data-open-live><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Смотреть эфир</button>
+              <button class="act-btn" data-toast="Напомним о ближайшем эфире «${p.name}»">${IC.bell}Напомнить</button>
+              <button class="act-btn" data-share>${IC.share}Поделиться</button>
+            </div>
+          </div>
+          <div class="pv-poster" style="background:${p.grad};" role="img" aria-label="Постер программы ${p.name}">
+            <span class="card-program-time">${p.time}</span>
+            <span class="dv-art-name">${p.name}</span>
+          </div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Выпуски</h3>
+          <div class="ep-grid ep-grid-3" data-ep-grid="${i}">${eps.slice(0, EPS_SHOWN).map((ep, ei) => epCard(ep, i, ei)).join('')}</div>
+          ${eps.length > EPS_SHOWN ? `<button class="btn-more" data-more-eps="${i}">Больше выпусков</button>` : ''}
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Другие программы</h3>
+          <div class="sim-row">${others.map(xi => programCard(programs[xi], xi)).join('')}</div>
         </div>
       </div>
-    </div>
-    <div class="dv-sec">
-      <h3 class="dv-h3">Выпуски</h3>
-      <div class="ep-grid">${eps.map((ep, ei) => epCard(ep, i, ei)).join('')}</div>
+      <aside class="dv-side">
+        ${sideProgramsList(i)}
+        ${promoSlotHTML()}
+      </aside>
     </div>`;
 }
 function openProgram(i) {
@@ -3801,6 +4086,7 @@ function renderWatch() {
   const v = detail.watch || Object.assign({ artist: '' }, videos[0]);
   const from = v.from || { r: 'video', t: 'Видео' };
   const artist = artists.findIndex(a => (v.name || '').startsWith(a.name));
+  const pos = artist >= 0 ? chart.find(c => c.artist === artists[artist].name && (v.name || '').includes(c.track)) : null;
   const related = videos.filter(x => x.name !== v.name).slice(0, 4);
   document.getElementById('watchView').innerHTML = `
     ${crumbsBar([{ r: 'home', t: 'Главная' }, from], v.name)}
@@ -3813,7 +4099,12 @@ function renderWatch() {
     <div class="watch-below">
       <div class="watch-info">
         <h1 class="watch-title">${v.name}</h1>
-        <div class="watch-meta">${v.tag || 'Клип'} · ${durToText(v.dur)}${artist >= 0 ? ` · <a data-open-artist="${artist}">Об артисте</a>` : ''}</div>
+        <div class="watch-meta">${v.tag || 'Клип'} · ${durToText(v.dur)}${pos ? ` · №${pos.rank} в «Супер 20»` : ''}</div>
+        <div class="person-chips" style="margin-top: 10px;">
+          ${artist >= 0 ? artistChip(artist) : ''}
+          ${pos ? `<span class="chip chip-accent" data-route="chart">№${pos.rank} в Супер 20 · ${pos.trend}</span>` : ''}
+          <span class="chip">#${v.tag || 'Клип'}</span>
+        </div>
       </div>
       <div class="watch-actions">
         <button class="act-btn" data-like>${IC.heart}В избранное</button>
@@ -3847,25 +4138,45 @@ function openWatch(v) {
 function renderNewsView() {
   const i = detail.news, n = news[i];
   if (!n) return;
+  const ai = artists.findIndex(a => n.title.includes(a.name));
   const related = news.map((x, xi) => xi).filter(xi => xi !== i).slice(0, 3);
+  const tags = ['#' + n.tag].concat(ai >= 0 ? ['#' + artists[ai].name] : [], NEWS_TAGS[n.tag] || []);
+  const body = n.body || [];
+  const q = NEWS_QUOTES[i];
   document.getElementById('newsView').innerHTML = `
     ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'news', t: 'Новости' }], n.title)}
-    <div class="article">
-      <span class="chip chip-accent">${n.tag}</span>
-      <h1 class="article-title">${n.title}</h1>
-      <div class="article-meta">${n.time} · ${n.source}</div>
-      <div class="article-cover" style="${bg(n)}" role="img" aria-label="${n.title}"></div>
-      <div class="article-body">
-        <p><strong>${n.lead}.</strong></p>
-        ${(n.body || []).map(p => `<p>${p}</p>`).join('')}
+    <div class="dv-layout dv-layout-article">
+      <div class="dv-main">
+        <div class="article">
+          <div class="article-head">
+            <h1 class="article-title">${n.title}</h1>
+            <button class="share-round" data-share aria-label="Поделиться" title="Поделиться">${IC.share}</button>
+          </div>
+          <div class="tag-row">${tags.map((t, k) => k === 0 ? `<span class="chip chip-accent" data-route="news">${t}</span>` : `<span class="chip">${t}</span>`).join('')}</div>
+          ${ai >= 0 ? `<div class="person-chips">${artistChip(ai)}</div>` : ''}
+          <div class="article-meta">${n.time} · ${n.source}</div>
+          <div class="article-cover" style="${bg(n)}" role="img" aria-label="${n.title}"></div>
+          <div class="article-body">
+            <p><strong>${n.lead}.</strong></p>
+            ${body[0] ? `<p>${body[0]}</p>` : ''}
+            ${q ? `<blockquote>${q[0]}<cite>— ${q[1]}</cite></blockquote>` : ''}
+            ${body.slice(1).map(p => `<p>${p}</p>`).join('')}
+          </div>
+          <div class="article-src">Источник: <span>${n.source}</span> \\ Фото: <span>пресс-служба артиста</span> · ${todayText()}</div>
+          <div class="watch-actions" style="margin-top: 16px;">
+            <button class="act-btn" data-share>${IC.share}Поделиться</button>
+            <button class="act-btn" data-route="news">Все новости</button>
+          </div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Читайте также</h3>
+          <div class="news-grid-related">${related.map(xi => newsCard(news[xi], xi)).join('')}</div>
+        </div>
       </div>
-      <div class="watch-actions" style="margin-top: 6px;">
-        <button class="act-btn" data-share>${IC.share}Поделиться</button>
-      </div>
-    </div>
-    <div class="dv-sec">
-      <h3 class="dv-h3">Читайте также</h3>
-      <div class="news-grid-related">${related.map(xi => newsCard(news[xi], xi)).join('')}</div>
+      <aside class="dv-side">
+        ${sideNewsList(i)}
+        ${promoSlotHTML()}
+      </aside>
     </div>`;
 }
 function openNews(i) {
@@ -3880,45 +4191,86 @@ function renderArtistView() {
   const i = detail.artist, a = artists[i];
   if (!a) return;
   const pos = chart.find(c => c.artist === a.name);
-  const clips = videos.map((v, vi) => vi).filter(vi => videos[vi].name.startsWith(a.name));
+  const own = videos.map((v, vi) => vi).filter(vi => videos[vi].name.startsWith(a.name)).map(vi => videos[vi]);
+  chart.filter(c => c.artist === a.name).forEach(c => {
+    const name = `${c.artist} — ${c.track}`;
+    if (!own.some(v => v.name === name)) own.push({ tag: 'Клип', name, dur: `3:${String(10 + (c.rank * 7) % 50).padStart(2, '0')}`, img: c.img });
+  });
+  // Живые записи — демо-наполнение персоны (RUTV-147); форматы реальные: «Премия РУ.ТВ», «Личный вопрос»
+  own.push({ tag: 'Концерт', name: `${a.name} — live на «Премии РУ.ТВ»`, dur: '4:12', img: EP_IMGS[(i + 1) % EP_IMGS.length] });
+  own.push({ tag: 'Интервью', name: `${a.name} — «Личный вопрос»`, dur: '26:40', img: EP_IMGS[(i + 3) % EP_IMGS.length] });
+  const rotation = videos.filter(v => !v.name.startsWith(a.name)).slice(0, 4);
   const anews = news.map((n, ni) => ni).filter(ni => news[ni].title.includes(a.name));
-  const rail = clips.length ? clips : videos.map((v, vi) => vi).slice(0, 4);
+  const newsIdx = anews.concat(news.map((n, ni) => ni).filter(ni => !anews.includes(ni))).slice(0, 3);  // как на rusradio.ru/persons — ряд из трёх
+  const similar = artists.map((x, xi) => xi).filter(xi => xi !== i);
+  const clipCard = v => `
+    <article class="video-card" tabindex="0" data-open-clip="${encodeURIComponent(JSON.stringify(v))}">
+      <div class="video-card-thumb" style="${bg(v)}">
+        <span class="video-card-tag">${v.tag}</span>
+        <span class="ep-play" aria-hidden="true">${IC.play}</span>
+        <span class="video-card-duration">${v.dur}</span>
+      </div>
+      <div class="video-card-name">${v.name}</div>
+    </article>`;
   document.getElementById('artistView').innerHTML = `
     ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'artists', t: 'Артисты' }], a.name)}
-    <div class="dv-hero">
-      <div class="dv-ava" style="${bg(a)}"></div>
-      <div class="dv-body">
-        <h1 class="dv-title">${a.name}</h1>
-        <div class="dv-meta">${a.meta}</div>
-        <p class="dv-desc">Клипы и живые выступления артиста — в эфире RU.TV и в разделе «Видео»; позиции недели — в хит-параде «Супер 20», судьбу которого решают голоса зрителей.</p>
-        <div class="dv-chips">
-          ${pos ? `<span class="chip chip-accent" data-route="chart">№${pos.rank} в Супер 20</span>` : ''}
-          <span class="chip">${a.meta}</span>
-        </div>
-        <div class="dv-actions">
-          <button class="act-btn" data-like>${IC.heart}В избранное</button>
-          <button class="act-btn" data-share>${IC.share}Поделиться</button>
-        </div>
-      </div>
-    </div>
-    <div class="dv-sec">
-      <h3 class="dv-h3">${clips.length ? 'Клипы и материалы' : 'Сейчас в ротации'}</h3>
-      <div class="ep-grid">
-        ${rail.map(vi => `
-          <article class="video-card" tabindex="0" data-open-video="${vi}">
-            <div class="video-card-thumb" style="${bg(videos[vi])}">
-              <span class="video-card-tag">${videos[vi].tag}</span>
-              <span class="video-card-duration">${videos[vi].dur}</span>
+    <div class="dv-layout">
+      <div class="dv-main">
+        <div class="dv-hero">
+          <div class="dv-ava" style="${bg(a)}" role="img" aria-label="${a.name}"></div>
+          <div class="dv-body">
+            <h1 class="dv-title">${a.name}</h1>
+            <div class="dv-meta">${a.meta}${pos ? ` · №${pos.rank} в «Супер 20»` : ''}</div>
+            <p class="dv-desc">${ARTIST_BIO[a.name] || `Клипы и живые выступления артиста — в эфире RU.TV и в разделе «Видео»; позиции недели — в хит-параде «Супер 20».`}</p>
+            <div class="dv-chips">
+              ${pos ? `<span class="chip chip-accent" data-route="chart">№${pos.rank} в Супер 20 · ${pos.trend}</span>` : ''}
+              ${a.meta.split(' · ').map(g => `<span class="chip">#${g}</span>`).join('')}
             </div>
-            <div class="video-card-name">${videos[vi].name}</div>
-          </article>`).join('')}
+            <div class="dv-actions">
+              <button class="act-btn" data-like>${IC.heart}В избранное</button>
+              <button class="act-btn" data-share>${IC.share}Поделиться</button>
+            </div>
+          </div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Новости</h3>
+          <div class="news-grid-related">${newsIdx.map(ni => newsCard(news[ni], ni)).join('')}</div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Клипы и выступления</h3>
+          <div class="ep-grid ep-grid-3">${own.map(clipCard).join('')}</div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Сейчас в ротации</h3>
+          <div class="ep-grid ep-grid-3">
+            ${rotation.map(x => `
+              <article class="video-card" tabindex="0" data-open-video="${videos.indexOf(x)}">
+                <div class="video-card-thumb" style="${bg(x)}">
+                  <span class="video-card-tag">${x.tag}</span>
+                  <span class="ep-play" aria-hidden="true">${IC.play}</span>
+                  <span class="video-card-duration">${x.dur}</span>
+                </div>
+                <div class="video-card-name">${x.name}</div>
+              </article>`).join('')}
+          </div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Похожие артисты</h3>
+          <div class="sim-row">
+            ${similar.map(xi => `
+              <article class="card-artist" tabindex="0" data-open-artist="${xi}">
+                <div class="card-artist-avatar" style="${bg(artists[xi])}"></div>
+                <div class="card-artist-name">${artists[xi].name}</div>
+                <div class="card-artist-meta">${artists[xi].meta}</div>
+              </article>`).join('')}
+          </div>
+        </div>
       </div>
-    </div>
-    ${anews.length ? `
-    <div class="dv-sec">
-      <h3 class="dv-h3">Новости</h3>
-      <div class="news-grid-related">${anews.map(ni => newsCard(news[ni], ni)).join('')}</div>
-    </div>` : ''}`;
+      <aside class="dv-side">
+        ${sideChart()}
+        ${promoSlotHTML()}
+      </aside>
+    </div>`;
 }
 function openArtist(i) {
   detail.artist = i; saveDetail();
@@ -3931,25 +4283,57 @@ function openArtist(i) {
 function renderHostView() {
   const i = detail.host, h = hosts[i];
   if (!h) return;
-  const leads = [programs[i % programs.length], programs[(i + 3) % programs.length]];
+  let leads = programsOfHost(i);
+  if (!leads.length) leads = [i % programs.length];           // демо-связка, пока редакция не дала состав (RUTV-122)
+  const eps = leads.flatMap(pi => programEpisodes(programs[pi], pi).slice(0, 4).map((ep, ei) => epCard(ep, pi, ei))).slice(0, 4);
+  const others = hosts.map((x, xi) => xi).filter(xi => xi !== i);
+  const bio = HOST_BIO[h.name] || HOST_BIO.default;
   document.getElementById('hostView').innerHTML = `
     ${crumbsBar([{ r: 'home', t: 'Главная' }, { r: 'hosts', t: 'Ведущие' }], h.name)}
-    <div class="dv-hero">
-      <div class="dv-ava" style="background:${h.grad};"><span class="dv-ava-initials">${h.initials}</span></div>
-      <div class="dv-body">
-        <h1 class="dv-title">${h.name}</h1>
-        <div class="dv-meta">Ведущий RU.TV</div>
-        <p class="dv-desc">Голос и лицо эфира RU.TV: прямые включения, интервью с артистами и фирменные рубрики канала. Биографию и фото пришлёт редакция.</p>
-        <div class="dv-actions">
-          <button class="act-btn" data-share>${IC.share}Поделиться</button>
+    <div class="dv-layout">
+      <div class="dv-main">
+        <div class="dv-hero">
+          <div class="host-portrait" style="background:${h.grad};" role="img" aria-label="${h.name}"><span class="dv-ava-initials">${h.initials}</span></div>
+          <div class="dv-body">
+            <h1 class="dv-title">${h.name}</h1>
+            <div class="dv-role">${h.role || 'Ведущий RU.TV'}</div>
+            <div class="person-chips">${leads.map(pi => `<a class="person-chip" data-open-program="${pi}"><i style="background:${programs[pi].grad}"></i>${programs[pi].name}</a>`).join('')}</div>
+            <p class="dv-desc">${bio[0]}</p>
+            <p class="dv-desc">${bio[1] || ''}</p>
+            <div class="soc-row">
+              <span class="chip" data-toast="Ссылки на соцсети ведущих пришлёт редакция">VK</span>
+              <span class="chip" data-toast="Ссылки на соцсети ведущих пришлёт редакция">Telegram</span>
+              <span class="chip" data-toast="Ссылки на соцсети ведущих пришлёт редакция">MAX</span>
+            </div>
+            <div class="dv-actions">
+              <button class="act-btn" data-share>${IC.share}Поделиться</button>
+            </div>
+          </div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Ведёт программы</h3>
+          <div class="sim-row">${leads.map(pi => programCard(programs[pi], pi)).join('')}</div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Выпуски с участием</h3>
+          <div class="ep-grid ep-grid-3">${eps.join('')}</div>
+        </div>
+        <div class="dv-sec">
+          <h3 class="dv-h3">Другие ведущие</h3>
+          <div class="sim-row">
+            ${others.map(xi => `
+              <article class="card-host" tabindex="0" data-open-host="${xi}">
+                <div class="card-host-art" style="background: ${hosts[xi].grad};"><span class="card-host-initials">${hosts[xi].initials}</span></div>
+                <div class="card-host-name">${hosts[xi].name}</div>
+                <div class="card-host-meta">${hosts[xi].role || 'Ведущий RU.TV'}</div>
+              </article>`).join('')}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="dv-sec">
-      <h3 class="dv-h3">Ведёт программы</h3>
-      <div class="ep-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
-        ${leads.map(p => programCard(p, programs.indexOf(p))).join('')}
-      </div>
+      <aside class="dv-side">
+        ${sideHostsList(i)}
+        ${promoSlotHTML()}
+      </aside>
     </div>`;
 }
 function openHost(i) {
@@ -3999,6 +4383,14 @@ document.addEventListener('click', e => {
     if (e.target.closest('.chart-actions')) return; // лайки чарта — не переход
     const c = chart.find(x => x.rank === +oChart.dataset.openChart);
     if (c) openWatch({ tag: 'Клип', name: `${c.artist} — ${c.track}`, dur: `3:${String(10 + (c.rank * 7) % 50).padStart(2, '0')}`, img: c.img, from: { r: 'chart', t: 'Супер 20' } });
+    return;
+  }
+  const more = e.target.closest('[data-more-eps]');
+  if (more) {
+    const pi = +more.dataset.moreEps;
+    const grid = document.querySelector(`[data-ep-grid="${pi}"]`);
+    if (grid) grid.innerHTML = programEpisodes(programs[pi], pi).map((ep, ei) => epCard(ep, pi, ei)).join('');
+    more.remove();
     return;
   }
   const oNews = e.target.closest('[data-open-news]');
