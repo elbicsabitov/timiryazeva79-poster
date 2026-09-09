@@ -1,7 +1,7 @@
 # NEXT — design-project
 <!-- Single source of truth for "where to start next". Read FIRST on resume.
      Keep ## NEXT <= ~8 lines; it POINTS, detail stays in STATE/docs. -->
-_updated: 2026-09-08_
+_updated: 2026-09-09_
 
 ## NEXT
 ▶▶ **«ПЕРВАЯ ВЕРСИЯ» GPT music ГОТОВА и показана owner'у** (29.07 веч., спека + ~20 live-правок owner'а за сессию): вариант C `?home=agents` — плавающий вордмарк **GPT music** (колонки нет) → карусель станций (старт с 3-й ячейки disco, соседи с двух сторон) → каталог «Стили и агенты» (вкладки-оси По стилям/По артистам/От людей → чипы-теги → грид крупных фото-тайлов; ред. агенты = станции 1:1, авторские ✦-комнаты в рейле, свой тайл после публикации) → всё остальное скрыто display:none (вернуть = снять правило, GHS-047). **Три темы**: тёмная / светлая / «Стекло» (glassmorphism + цветная подсветка) — топбар-цикл (солнце/искра/луна), автослежение за системой (GorodThemeAuto), light-хром светлый (рейл+планка; v3-ре-ассерт перебит). Reviewer-пасс 2M+6m закрыт; humanization всех флоу; «Выйти» чинит роль (GHS-044). Ссылки: `?home=agents` (новая) vs `?home=fab` (старая). Коммиты `6b70a18..` (~19), детали DEBT GHS-038..049.
@@ -25,6 +25,7 @@ _updated: 2026-09-08_
 <!-- dated, newest first, append-only -->
 
 ## JOURNAL
+- 2026-09-09 — RU.TV v2.17 передача: поставка без подписи Saved 622620 + список 622621 (форвард/ответ за owner); фигма 32 фрейма v2.17; гейт tools/check_capture_sync.py в rutv-ветке; вход = NEXT.md worktree .worktrees/rutv-v2
 - 2026-09-09 — RU.TV v2.17 (ветка feat/rutv-showcase-v2, worktree .worktrees/rutv-v2, NEXT.md ТАМ): правки Лёши/Стаса из DFM 08.09 внесены; Saved zip 622615 + HTML 622616 — форвард и ответ за owner (драфт в сешн-логе 09.09); фигма 32 фрейма заменены, страница v2.17
 - 2026-09-08 — RU.TV: v2.16.1 скинута Стасу 08.09 (HTML 622254 + список экранов 622261) — мяч у Стаса/Лёши, ждём реакции; вход = NEXT.md ветки feat/rutv-showcase-v2 (worktree .worktrees/rutv-v2)
 - 2026-09-08 — RU.TV v2.16.1 (ветка feat/rutv-showcase-v2, worktree .worktrees/rutv-v2, NEXT.md ТАМ): внутрянки пересобраны по образцу сайтов РМГ по обещанию Стасу 04.09; поставка Saved zip 622253 + HTML 622254 (форвард в DFM + ответ Стасу — за owner); фигма kn7zZnwAHCdWEzCS1KpIYv 36 фреймов заменены, 69 итого, страница v2.16.1; DEBT блок v2.16/v2.16.1, RUTV-148..151
