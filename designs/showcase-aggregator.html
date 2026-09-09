@@ -133,7 +133,6 @@
 }
 
 [data-style="light"] .card-tv,
-[data-style="light"] .card-news,
 [data-style="light"] .afisha-card,
 [data-style="light"] .gift-card,
 [data-style="light"] .points-hero {
@@ -144,7 +143,6 @@
   box-shadow: var(--shadow-md);
 }
 [data-style="light"] .card-tv:hover,
-[data-style="light"] .card-news:hover,
 [data-style="light"] .afisha-card:hover,
 [data-style="light"] .gift-card:hover {
   background: #ffffff;
@@ -189,7 +187,6 @@
 }
 
 [data-style="light"] .chart-rank { color: var(--accent); }
-[data-style="light"] .row-link { color: var(--accent); }
 [data-style="light"] .card-news-tag { color: var(--accent); }
 [data-style="light"] .tb-avatar { border: 0; }
 
@@ -931,13 +928,23 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   font-weight: 700;
   letter-spacing: -0.015em;
 }
-.row-link {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
-  display: inline-flex; align-items: center; gap: 4px;
+/* v2.17 (Лёша DFM 622390 «удобнее, когда заголовок ряда кликабельный… в Супер 20
+   из-за узкого формата теряется переход ко всей двадцатке»): заголовок ряда /
+   раздела = ссылка в раздел с шевроном — как «Новости ›» на rusradio.ru;
+   дублирующая ссылка «Все … →» справа снята (одна аффорданс на ряд) */
+.row-title a, .dv-h3 a, .side-card h4 a {
+  color: inherit; text-decoration: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 0.2em;
+  transition: color var(--t-fast);
 }
-.row-link:hover { color: var(--text-primary); }
+.row-chev {
+  width: 0.78em; height: 0.78em; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round;
+  opacity: 0.55;
+  transition: transform var(--t-fast), opacity var(--t-fast);
+}
+.row-title a:hover, .dv-h3 a:hover, .side-card h4 a:hover { color: var(--accent); }
+.row-title a:hover .row-chev, .dv-h3 a:hover .row-chev, .side-card h4 a:hover .row-chev { transform: translateX(2px); opacity: 1; }
 /* Правка 603086 («лесенка») + уточнение owner 07-17: выезд каруселей под
    правый край экрана — НОРМА (bleed оставлен); лесенку убирает единый ШАГ
    карточек между рядами (крупные ряды = 4 колонки, швы совпадают вертикально).
@@ -1190,32 +1197,32 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 .card-host-name { margin-top: 10px; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 .card-host-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
 
-/* CARD: News — правка 603079: крупнее, В РЯДУ ТРИ (не 4-5) + подзаголовок-лид */
+/* CARD: News — v2.17 «как на РР» (Стас DFM 622401-403 + Лёша 622390): было
+   бокс с квадратной миниатюрой 128px слева → стало как карточка новости
+   rusradio.ru/news: обложка 16:9 СВЕРХУ, подписи снизу, без стеклянного бокса
+   (структура = клип-карточки). Формат картинки ОДИН — 16:9 (1920×1080), тот же,
+   что обложка статьи (rusradio.ru: cover aspect-ratio 1920/1080): редактор готовит
+   одну картинку, «внутри кропнется» исчезает. Углы обложки скруглены ВСЕ четыре
+   (Стас: «только в галерее нижние края скругляем» — на РР низ квадратный).
+   Ряд = 4 колонки: швы бит-в-бит с Каналами/Промо (лесенка, owner 07-17) */
 .card-news {
-  flex: 0 0 calc((100% - 32px) / 3);
-  min-width: 340px;
+  flex: 0 0 calc((100% - 48px) / 4);
+  min-width: 280px;
   scroll-snap-align: start;
-  display: grid;
-  grid-template-columns: 128px 1fr;
-  gap: 16px;
-  padding: 16px;
-  border-radius: var(--r-lg);
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  display: flex; flex-direction: column;
   cursor: pointer;
-  transition: background var(--t-fast), transform var(--t-fast);
 }
-.card-news:hover { background: var(--glass-bg-strong); transform: translateY(-2px); }
-/* Правка редакции №6: миниатюры новостей — квадрат 1:1 (единый ресайз) */
 .card-news-thumb {
-  border-radius: 10px;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
   background-size: cover; background-position: center;
   border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 12px;
+  transition: transform var(--t-fast);
 }
-.card-news-body { display: flex; flex-direction: column; }
+.card-news:hover .card-news-thumb { transform: scale(1.02); }
+.card-news-body { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .card-news-tag {
   font-size: 11px;
   font-weight: 700;
@@ -1225,7 +1232,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   margin-bottom: 6px;
 }
 .card-news-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.01em;
@@ -1486,9 +1493,14 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 }
 .afisha-cta:hover { background: var(--accent); border-color: transparent; color: white; }
 
-/* Сетка новостей на странице Новости */
-.news-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-.news-grid .card-news { flex: none; }
+/* Сетка новостей на странице Новости — 4 колонки, как rusradio.ru/news (v2.17) */
+.news-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px 16px; }
+.news-grid .card-news { flex: none; min-width: 0; }
+/* Тег-чипы над сеткой — фильтр по теме, как на rusradio.ru/news (v2.17) */
+.news-tags { margin: -6px 0 22px; }
+.news-tags .chip { border: 0; font-family: inherit; cursor: pointer; transition: background var(--t-fast), color var(--t-fast); }
+.news-tags .chip:hover { background: var(--glass-bg-strong); color: var(--text-primary); }
+.news-tags .chip-accent:hover { background: var(--accent-soft); color: var(--accent); }
 
 /* =========================================================================
    ВИДЕО — грид и программы
@@ -1843,7 +1855,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   .promo-slot { display: none; }
   /* эфир 16:9 теперь в базе (правка 07-22) — отдельные override'ы не нужны */
   .afisha-list { grid-template-columns: 1fr; }
-  .news-grid { grid-template-columns: 1fr; }
+  .news-grid { grid-template-columns: repeat(2, 1fr); }
   .app-footer { grid-template-columns: repeat(2, 1fr); gap: 28px; }
   .points-hero { grid-template-columns: 1fr; }
 }
@@ -1857,6 +1869,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
   .live-info { flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
   .card-clip-wide { flex: 0 0 82%; min-width: 0; }
   .card-news { flex: 0 0 88%; min-width: 0; }
+  .news-grid { grid-template-columns: 1fr; }
   .promo-banner { flex: 0 0 82%; min-width: 0; }
   .brand-strip { grid-template-columns: repeat(2, 1fr); }
   /* Сайдбар скрыт — переключатель тем возвращается плавающей пилюлей */
@@ -1891,17 +1904,10 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
    ВНУТРЯНКИ (v2.15, запрос Лёши DFM 617812): крошки, программа, плееры,
    новость, персоны, форма обратной связи
    ========================================================================= */
-/* Крошки + «Назад» */
-.crumbs-bar { display: flex; align-items: center; gap: 14px; margin: 2px 0 24px; }
-.btn-back {
-  display: inline-flex; align-items: center; gap: 7px; flex: none;
-  padding: 8px 14px; border-radius: var(--r-pill);
-  background: var(--glass-bg); box-shadow: inset 0 0 0 1px var(--glass-border);
-  color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer;
-  transition: background var(--t-fast);
-}
-.btn-back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.btn-back:hover { background: var(--glass-bg-strong); }
+/* Крошки. v2.17: кнопка «Назад» снята (Лёша DFM 622390: «в крошках я уже могу
+   кликнуть на любой уровень, кнопка назад дублирует функционал и немного путает»)
+   — навигация назад = кликабельные крошки */
+.crumbs-bar { display: flex; align-items: center; margin: 2px 0 24px; }
 .crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; font-size: 13px; color: var(--text-tertiary); min-width: 0; }
 .crumbs a { color: var(--text-secondary); cursor: pointer; }
 .crumbs a:hover { color: var(--text-primary); }
@@ -2041,7 +2047,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
 .article-body p { font-size: 16.5px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 18px; max-width: 760px; }
 .article-body p strong { color: var(--text-primary); }
 .news-grid-related { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.news-grid-related .card-news { flex: none; }
+.news-grid-related .card-news { flex: none; min-width: 0; }
 
 /* Форма обратной связи (Контакты) */
 .fb-wrap { max-width: 680px; }
@@ -2463,11 +2469,11 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <div class="row-track" id="trackPromoStrip"></div>
       </section>
 
-      <!-- Новости — выше программ (правка Марго 12.08) -->
+      <!-- Новости — выше программ (правка Марго 12.08); v2.17: карточки «как на РР»
+           (обложка 16:9 сверху, 4 в ряд), заголовок ряда — ссылка (Лёша 622390) -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Свежие новости</h2>
-          <a href="#news" class="row-link" data-route="news">Все новости →</a>
+          <h2 class="row-title"><a href="#news" data-route="news">Свежие новости<svg class="row-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a></h2>
         </div>
         <div class="row-track" id="trackNews"></div>
       </section>
@@ -2475,8 +2481,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       <!-- Программы как видеоподкасты -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Программы</h2>
-          <a href="#programs" class="row-link" data-route="programs">Все программы →</a>
+          <h2 class="row-title"><a href="#programs" data-route="programs">Программы<svg class="row-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a></h2>
         </div>
         <div class="row-track" id="trackPrograms"></div>
       </section>
@@ -2484,8 +2489,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
       <!-- Супер 20: на главной — топ-10, полная двадцатка по переходу -->
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">Супер 20</h2>
-          <a href="#chart" class="row-link" data-route="chart">Вся двадцатка →</a>
+          <h2 class="row-title"><a href="#chart" data-route="chart">Супер 20<svg class="row-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a></h2>
         </div>
         <div class="chart-grid" id="chartGrid"></div>
       </section>
@@ -2592,6 +2596,7 @@ body[data-menu="open"] .tweaks { opacity: 0; pointer-events: none; }
         <span class="tab-note" id="tabNote">обновлено 15 минут назад</span>
       </div>
       <div id="newsTabNews" role="tabpanel">
+        <div class="tag-row news-tags" id="newsTags" role="group" aria-label="Темы новостей"></div>
         <div class="news-grid" id="newsGrid"></div>
       </div>
       <div id="newsTabAfisha" role="tabpanel" hidden>
@@ -3051,7 +3056,7 @@ const news = [
       '<strong>«Шёпотом»</strong> — новая работа артиста, снятая одним длинным кадром: камера следует за героями через несколько локаций, а свет и хореография меняются в такт композиции.',
       'Клип уже доступен в разделе «Видео», а история его создания — в ближайшем выпуске «RUновостей». Следите за эфиром: расписание — на странице «Программы».',
     ] },
-  { tag: 'Концерт', title: 'Дискотека Дискотек: большой концерт 6 декабря', lead: 'На сцене LIVE Арены — звёзды 90-х и нулевых; билеты уже в продаже', time: '32 мин назад', source: 'LIVE Арена', img: 'assets/rutv/Rectangle 4322-9.png',
+  { tag: 'Концерт', title: 'Дискотека Дискотек: большой концерт 6 декабря', lead: 'На сцене LIVE Арены — звёзды 90-х и нулевых; билеты уже в продаже', time: '32 мин назад', source: 'LIVE Арена', pos: 'center 15%', img: 'assets/rutv/Rectangle 4322-9.png',
     body: [
       '6 декабря на LIVE Арене пройдёт большой концерт «Дискотека Дискотек» — праздник главных хитов 90-х и нулевых с ведущим шоу Антоном Юрьевым.',
       'В программе — живые выступления звёзд эпохи, совместные номера и караоке-блоки со зрительным залом. Полный состав участников канал объявит в эфире шоу.',
@@ -3132,7 +3137,9 @@ function el(tag, cls, html) {
 }
 
 function bg(item) {
-  if (item.img) return `background-image: url('${encodeURI(item.img)}'); background-size: cover; background-position: center;`;
+  // item.pos — фокус кропа (v2.17): картинка новости ОДНА для карточки и статьи,
+  // у квадратных демо-фото лицо в верхней трети → 'center 15%'
+  if (item.img) return `background-image: url('${encodeURI(item.img)}'); background-size: cover; background-position: ${item.pos || 'center'};`;
   if (item.grad) return `background: ${item.grad};`;
   return '';
 }
@@ -3270,9 +3277,19 @@ function newsCard(n, i) {
       </div>
     </article>`;
 }
+// v2.17: тег-чипы над сеткой «Новости» — фильтр по теме (как на rusradio.ru/news);
+// чип #тега в статье ведёт сюда с уже выбранной темой
+let newsFilter = '';
+function renderNewsTags() {
+  const tags = [...new Set(news.map(n => n.tag))];
+  document.getElementById('newsTags').innerHTML = ['', ...tags].map(t =>
+    `<button type="button" class="chip${t === newsFilter ? ' chip-accent' : ''}" data-news-tag="${t}" aria-pressed="${t === newsFilter ? 'true' : 'false'}">${t ? '#' + t : 'Все'}</button>`).join('');
+}
 function renderNews() {
   document.getElementById('trackNews').innerHTML = news.map(newsCard).join('');
-  document.getElementById('newsGrid').innerHTML = news.map(newsCard).join('');
+  const list = news.map((n, i) => i).filter(i => !newsFilter || news[i].tag === newsFilter);
+  document.getElementById('newsGrid').innerHTML = list.map(i => newsCard(news[i], i)).join('');
+  renderNewsTags();
 }
 
 function renderAfisha() {
@@ -3391,7 +3408,8 @@ menuBtn.addEventListener('click', () => setMenu(document.body.dataset.menu !== '
 document.getElementById('menuScrim').addEventListener('click', () => setMenu(false));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
 
-// Стек переходов — кнопка «Назад» на внутрянках (v2.15)
+// Стек переходов (v2.15) — с v2.17 кнопки «Назад» нет (крошки), стек нужен
+// только «Свернуть в окошко» в плеере эфира: возврат туда, откуда развернули
 const routeStack = [];
 let navBack = false;
 function goBack() {
@@ -3848,25 +3866,24 @@ function promoSlotHTML() {
   return `<aside class="promo-slot" aria-label="Реклама">${s ? s.innerHTML : ''}</aside>`;
 }
 function sideProgramsList(active) {
-  return `<div class="side-card"><h4>Программы канала</h4><div class="side-list">
+  return `<div class="side-card">${sideH4('Программы канала', 'programs')}<div class="side-list">
     ${programs.map((p, i) => `<a data-open-program="${i}" aria-current="${i === active ? 'true' : 'false'}"><i style="background:${p.grad}"></i>${p.name}<small>${p.time}</small></a>`).join('')}
   </div></div>`;
 }
 function sideHostsList(active) {
-  return `<div class="side-card"><h4>Ведущие RU.TV</h4><div class="side-list">
+  return `<div class="side-card">${sideH4('Ведущие RU.TV', 'hosts')}<div class="side-list">
     ${hosts.map((h, i) => `<a data-open-host="${i}" aria-current="${i === active ? 'true' : 'false'}"><i style="background:${h.grad}">${h.initials}</i>${h.name}</a>`).join('')}
   </div></div>`;
 }
 function sideNewsList(exclude) {
   const items = news.map((n, i) => i).filter(i => i !== exclude).slice(0, 4);
-  return `<div class="side-card"><h4>Ещё новости</h4><div class="side-news">
+  return `<div class="side-card">${sideH4('Ещё новости', 'news')}<div class="side-news">
     ${items.map(i => `<a data-open-news="${i}"><i style="${bg(news[i])}"></i><span><b>${news[i].title}</b><small>${news[i].time} · ${news[i].source}</small></span></a>`).join('')}
   </div></div>`;
 }
 function sideChart() {
-  return `<div class="side-card"><h4>Супер 20 · сейчас</h4><div class="side-chart">
+  return `<div class="side-card">${sideH4('Супер 20 · сейчас', 'chart')}<div class="side-chart">
     ${chart.slice(0, 5).map(c => `<a data-open-chart="${c.rank}"><small>${String(c.rank).padStart(2, '0')}</small><span><b>${c.artist}</b><small>${c.track}</small></span></a>`).join('')}
-    <a data-route="chart" style="grid-template-columns:1fr;color:var(--accent);font-size:13px;font-weight:700;">Вся двадцатка →</a>
   </div></div>`;
 }
 function hostChip(i) { const h = hosts[i]; return h ? `<a class="person-chip" data-open-host="${i}"><i style="background:${h.grad}">${h.initials}</i>${h.name}</a>` : ''; }
@@ -3880,7 +3897,7 @@ function saveDetail() { localStorage.setItem(DETAIL_KEY, JSON.stringify(detail))
 
 // SVG-глифы контролов (stroke, наследуют currentColor)
 const IC = {
-  back: '<svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>',
+  chev: '<svg class="row-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>',
   play: '<svg viewBox="0 0 24 24"><path class="f" d="M8 5v14l11-7z"/></svg>',
   pause: '<svg viewBox="0 0 24 24"><path class="f" d="M6 4h4v16H6z"/><path class="f" d="M14 4h4v16h-4z"/></svg>',
   vol: '<svg viewBox="0 0 24 24"><path class="f" d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>',
@@ -3893,10 +3910,14 @@ const IC = {
   bell: '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>',
 };
 
+// v2.17 (Лёша 622390): заголовок раздела внутрянки / боковой карточки — ссылка
+// в раздел с шевроном (как «Новости ›» на rusradio.ru)
+function secH3(text, r) { return `<h3 class="dv-h3"><a data-route="${r}">${text}${IC.chev}</a></h3>`; }
+function sideH4(text, r) { return `<h4><a data-route="${r}">${text}${IC.chev}</a></h4>`; }
+
 function crumbsBar(trail, here) {
   const items = trail.map(t => `<a data-route="${t.r}">${t.t}</a><span class="crumbs-sep">/</span>`).join('');
   return `<div class="crumbs-bar">
-    <button class="btn-back" data-back>${IC.back}Назад</button>
     <nav class="crumbs" aria-label="Хлебные крошки">${items}<span class="crumbs-here">${here}</span></nav>
   </div>`;
 }
@@ -3983,7 +4004,7 @@ function renderProgramView() {
           ${eps.length > EPS_SHOWN ? `<button class="btn-more" data-more-eps="${i}">Больше выпусков</button>` : ''}
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Другие программы</h3>
+          ${secH3('Другие программы', 'programs')}
           <div class="sim-row">${others.map(xi => programCard(programs[xi], xi)).join('')}</div>
         </div>
       </div>
@@ -4067,7 +4088,7 @@ function renderLiveView() {
       </div>
     </div>
     <div class="dv-sec player-wrap">
-      <h3 class="dv-h3">Далее в эфире</h3>
+      ${secH3('Далее в эфире', 'programs')}
       <div class="lv-list">
         ${upcoming.map(([t, n, meta], j) => `
           <div class="lv-slot" data-now="${j === 0 ? 'true' : 'false'}">
@@ -4115,7 +4136,7 @@ function renderWatch() {
       </div>
     </div>
     <div class="dv-sec player-wrap">
-      <h3 class="dv-h3">Смотрите также</h3>
+      ${secH3('Смотрите также', 'video')}
       <div class="ep-grid">
         ${related.map(x => `
           <article class="video-card" tabindex="0" data-open-video="${videos.indexOf(x)}">
@@ -4155,7 +4176,7 @@ function renderNewsView() {
             <h1 class="article-title">${n.title}</h1>
             <button class="share-round" data-share aria-label="Поделиться" title="Поделиться">${IC.share}</button>
           </div>
-          <div class="tag-row">${tags.map((t, k) => k === 0 ? `<span class="chip chip-accent" data-route="news">${t}</span>` : `<span class="chip">${t}</span>`).join('')}</div>
+          <div class="tag-row">${tags.map((t, k) => k === 0 ? `<span class="chip chip-accent" data-news-tag="${n.tag}">${t}</span>` : `<span class="chip">${t}</span>`).join('')}</div>
           ${ai >= 0 ? `<div class="person-chips">${artistChip(ai)}</div>` : ''}
           <div class="article-meta">${n.time} · ${n.source}</div>
           <div class="article-cover" style="${bg(n)}" role="img" aria-label="${n.title}"></div>
@@ -4172,7 +4193,7 @@ function renderNewsView() {
           </div>
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Читайте также</h3>
+          ${secH3('Читайте также', 'news')}
           <div class="news-grid-related">${related.map(xi => newsCard(news[xi], xi)).join('')}</div>
         </div>
       </div>
@@ -4236,15 +4257,15 @@ function renderArtistView() {
           </div>
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Новости</h3>
+          ${secH3('Новости', 'news')}
           <div class="news-grid-related">${newsIdx.map(ni => newsCard(news[ni], ni)).join('')}</div>
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Клипы и выступления</h3>
+          ${secH3('Клипы и выступления', 'video')}
           <div class="ep-grid ep-grid-3">${own.map(clipCard).join('')}</div>
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Сейчас в ротации</h3>
+          ${secH3('Сейчас в ротации', 'video')}
           <div class="ep-grid ep-grid-3">
             ${rotation.map(x => `
               <article class="video-card" tabindex="0" data-open-video="${videos.indexOf(x)}">
@@ -4258,7 +4279,7 @@ function renderArtistView() {
           </div>
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Похожие артисты</h3>
+          ${secH3('Похожие артисты', 'artists')}
           <div class="sim-row">
             ${similar.map(xi => `
               <article class="card-artist" tabindex="0" data-open-artist="${xi}">
@@ -4314,7 +4335,7 @@ function renderHostView() {
           </div>
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Ведёт программы</h3>
+          ${secH3('Ведёт программы', 'programs')}
           <div class="sim-row">${leads.map(pi => programCard(programs[pi], pi)).join('')}</div>
         </div>
         <div class="dv-sec">
@@ -4322,7 +4343,7 @@ function renderHostView() {
           <div class="ep-grid ep-grid-3">${eps.join('')}</div>
         </div>
         <div class="dv-sec">
-          <h3 class="dv-h3">Другие ведущие</h3>
+          ${secH3('Другие ведущие', 'hosts')}
           <div class="sim-row">
             ${others.map(xi => `
               <article class="card-host" tabindex="0" data-open-host="${xi}">
@@ -4351,8 +4372,8 @@ function parseClipAttr(el) {
   try { return JSON.parse(decodeURIComponent(el.dataset.openClip)); } catch (e) { return null; }
 }
 document.addEventListener('click', e => {
-  const back = e.target.closest('[data-back]');
-  if (back) { goBack(); return; }
+  const nt = e.target.closest('[data-news-tag]');
+  if (nt) { newsFilter = nt.dataset.newsTag; renderNews(); if (route !== 'news') setRoute('news'); return; }
   const dyn = e.target.closest('[data-route]');
   if (dyn && !dyn.dataset.rb) { e.preventDefault(); setRoute(dyn.dataset.route); return; }
   const toastEl = e.target.closest('[data-toast]');
